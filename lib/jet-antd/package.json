@@ -1,0 +1,38 @@
+{
+  "name": "@jet-lab/jet-antd",
+  "version": "0.4.3",
+  "description": "Jet UI stylings and Antd component overrides",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jet-lab/jet-v1-react.git"
+  },
+  "keywords": [
+    "solana",
+    "jet",
+    "antd",
+    "ui",
+    "component",
+    "style"
+  ],
+  "author": "",
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/jet-lab/jet-v1-react/issues"
+  },
+  "homepage": "https://github.com/jet-lab/jet-v1-react#readme",
+  "files": [
+    "lib",
+    "package.json",
+    "LICENSE"
+  ],
+  "directories": {
+    "lib": "lib"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

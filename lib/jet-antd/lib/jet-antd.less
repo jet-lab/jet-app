@@ -1,0 +1,2076 @@
+/**************************
+  This is a stylesheet for both Jet UI stylings
+  and targeted Antd component stylings. Please review our frontend
+  documentation for best development/design practices.
+  
+  *Note* Do not include any antd default stylesheets in your app.
+***************************/
+
+/***************************
+  Fonts / Icons
+***************************/
+
+// Poppins
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+/***************************
+  Jet Variables
+***************************/
+:root {
+  // Light theme color variables
+  --lt-black: 69, 69, 69;
+  --lt-dark-grey: 148, 148, 148;
+  --lt-grey: 216, 223, 236;
+  --lt-light-grey: 225, 231, 241;
+  --lt-white: 229, 235, 244;
+
+  // Dark theme color variables
+  --dt-black: 255, 255, 255;
+  --dt-dark-grey: 107, 104, 104;
+  --dt-grey: 30, 30, 35;
+  --dt-light-grey: 28, 28, 35;
+  --dt-white: 35, 35, 35;
+
+  // Reference color variables (set to light theme by default)
+  --black: var(--lt-black);
+  --dark-grey: var(--lt-dark-grey);
+  --grey: var(--lt-grey);
+  --light-grey: var(--lt-light-grey);
+  --white: var(--lt-white);
+
+  // Light theme shadow variables
+  --lt-light-shadow: rgba(255, 255, 255, 1);
+  --lt-dark-shadow: rgba(0, 0, 0, 0.25);
+
+  // Dark theme shadow variables
+  --dt-light-shadow: rgba(255, 255, 255, 0.1);
+  --dt-dark-shadow: rgba(0, 0, 0, 0.5);
+
+  // Reference shadow variables (set to light theme by default)
+  --light-shadow: var(--lt-light-shadow);
+  --dark-shadow: var(--lt-dark-shadow);
+
+  // Other root colors
+  --jet-green: @jet-green;
+  --jet-blue: @jet-blue;
+  --success: @success;
+  --failure: @failure;
+}
+
+// Base colors
+@black: rgb(var(--black));
+@dark-grey: rgb(var(--dark-grey));
+@grey: rgb(var(--grey));
+@light-grey: rgb(var(--light-grey));
+@white: rgb(var(--white));
+@jet-green: #3d9e83;
+@jet-blue: #278db6;
+@success: #53bd9f;
+@warning: #e3cb79;
+@failure: #ec6a69;
+@gradient: linear-gradient(135deg, @jet-green 25%, @jet-blue 85%);
+
+// Base shadow elements
+@light-shadow: var(--light-shadow);
+@dark-shadow: var(--dark-shadow);
+
+// Regular neu shadows
+@neu-shadow-low: -3px -3px 6px @light-shadow, 3px 3px 6px @dark-shadow;
+@neu-shadow: -4px -4px 8px @light-shadow, 4px 4px 8px @dark-shadow;
+
+// Inset neu shadows
+@neu-shadow-inset-low: inset -1.5px -1.5px 3.5px @light-shadow, inset 1.5px 1.5px 3.5px @dark-shadow;
+@neu-shadow-inset: inset -2px -2px 5px @light-shadow, inset 2px 2px 5px @dark-shadow;
+
+// Color neu shadows
+@neu-shadow-inset-success: inset -2px -2px 4px #78d6bb, inset 2px 2px 4px #28866c;
+@neu-shadow-inset-failure: inset -2px -2px 4px #f58d8d, inset 2px 2px 4px #c94646;
+@neu-shadow-inset-gradient-low: inset -1px -1.25px 3px #45b2dd, inset 1px 1.25px 3px #20755d;
+@neu-shadow-inset-gradient: inset -1.5px -1.5px 4px #45b2dd, inset 1.5px 1.5px 4px #20755d;
+
+// Drop shadow
+@drop-shadow: 0 3px 6px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.15);
+
+// Border radius
+@border-radius: 4px;
+@btn-radius: 3px;
+@round-radius: 50px;
+
+// Nav
+@nav-height: 55px;
+
+// Button padding
+@btn-padding: 6px 14px 5px 14px;
+@secondary-btn-padding: 5px 12px 4px 12px;
+
+// Fonts
+@xs-font-size: 10px;
+@sm-font-size: 12px;
+@base-font-size: 14px;
+@lg-font-size: 18px;
+@header-font-size: 30px;
+
+@header-weight: 300;
+@subheader-weight: 500;
+@bold-weight: 550;
+
+// Opacities
+@subtle-opacity: 0.93;
+@disabled-opacity: 0.725;
+
+// Standardized spacing
+@spacing-xs: 4px;
+@spacing-sm: 8px;
+@spacing-md: 12px;
+@spacing-lg: 18px;
+@spacing-xl: 24px;
+
+// View width clamp
+@view-clamp: clamp(250px, calc(100% - @spacing-sm * 2), 1150px);
+
+// Transition Duration
+@transition-duration: 0.1s;
+
+/***************************
+  General Jet UI Styles / Boilerplate
+***************************/
+
+::-webkit-scrollbar {
+  display: none;
+}
+*:focus-visible {
+  outline: unset;
+}
+* {
+  font-family: 'Poppins', Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+body {
+  position: relative;
+  margin: 0;
+  margin-top: @nav-height;
+  background: @white;
+  color: @black;
+  overflow-x: hidden;
+  letter-spacing: 0.25px;
+  width: 100vw;
+  min-height: calc(100vh - (@nav-height + 30px));
+  padding-bottom: 30px;
+
+  &.ant-scrolling-effect {
+    overflow: unset !important;
+  }
+}
+
+// Flexbox
+.flex {
+  display: flex;
+}
+.flex-centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.align-center {
+  align-items: center;
+}
+.align-evenly {
+  align-items: space-evenly;
+}
+.align-between {
+  align-items: space-between;
+}
+.align-start {
+  align-items: flex-start;
+}
+.align-end {
+  align-items: flex-end;
+}
+.justify-center {
+  justify-content: center;
+}
+.justify-evenly {
+  justify-content: space-evenly;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.justify-start {
+  justify-content: flex-start;
+}
+.justify-end {
+  justify-content: flex-end;
+}
+.column {
+  flex-direction: column;
+}
+
+// Text
+h1,
+h2,
+h3,
+h4,
+p,
+th,
+td,
+span {
+  position: relative;
+  margin: @spacing-xs;
+  text-decoration: none;
+  color: @black;
+  font-size: @base-font-size;
+  font-style: normal;
+  font-weight: normal;
+}
+h1 {
+  font-size: @header-font-size;
+  font-weight: @header-weight;
+  line-height: 35px;
+}
+h2 {
+  font-weight: @subheader-weight;
+  line-height: 21px;
+  text-transform: uppercase;
+}
+h3,
+h4 {
+  font-weight: 500;
+}
+a,
+i {
+  text-decoration: none;
+  margin: @spacing-xs;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-touch-callout: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  font-style: normal;
+
+  &:-webkit-any-link {
+    color: inherit;
+  }
+}
+span {
+  opacity: @subtle-opacity;
+  font-size: @sm-font-size;
+}
+.text-gradient {
+  opacity: 1;
+  background-image: @gradient;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.text-gradient-btn {
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: @gradient;
+    opacity: 0;
+  }
+
+  &:hover {
+    &::after {
+      opacity: 1;
+    }
+  }
+  &.disabled {
+    &:hover {
+      &::after {
+        opacity: 0;
+      }
+    }
+  }
+}
+.text-btn {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+  &.disabled {
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+.success-text {
+  color: @success;
+}
+.warning-text {
+  color: @warning;
+}
+.failure-text {
+  color: @failure;
+}
+.semi-bold-text {
+  font-weight: @subheader-weight;
+}
+.bold-text {
+  font-weight: @bold-weight;
+}
+.center-text {
+  text-align: center;
+}
+
+// Views
+.view-container {
+  width: @view-clamp;
+  padding: @spacing-lg @spacing-sm;
+  margin: 0 auto;
+  transition: margin-left @transition-duration;
+}
+
+/***************************
+  Jet / Antd Components
+***************************/
+
+// Disabled elements
+*[disabled],
+.disabled {
+  cursor: not-allowed;
+  opacity: @disabled-opacity;
+}
+
+// Buttons
+button,
+.ant-btn {
+  position: relative;
+  background: @gradient;
+  border: none;
+  border-radius: @btn-radius;
+  padding: @btn-padding;
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-touch-callout: none;
+  margin: @spacing-xs;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: @sm-font-size;
+  font-weight: @subheader-weight;
+  color: @white;
+  span {
+    text-transform: inherit;
+    letter-spacing: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+    margin: unset;
+  }
+
+  &:hover,
+  &:active {
+    opacity: @subtle-opacity;
+  }
+  &:active {
+    box-shadow: @neu-shadow-inset-gradient;
+  }
+
+  // Secondary / Connect button
+  &.secondary-btn,
+  &-background-ghost {
+    background: unset;
+    border: 1px solid @dark-grey;
+    padding: @secondary-btn-padding;
+    color: @dark-grey;
+    span {
+      color: inherit;
+    }
+
+    &:hover,
+    &:active {
+      background: rgba(var(--grey), 0.1);
+      opacity: @disabled-opacity;
+    }
+    &:active {
+      box-shadow: unset;
+      background: rgba(var(--grey), 0.25);
+    }
+  }
+
+  // Tertiary button
+  &.tertiary-btn,
+  &-dashed {
+    background: unset;
+    span {
+      background-image: @gradient;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      width: calc(100% + 2px);
+      height: calc(100% + 2px);
+      border-radius: @btn-radius;
+      background: @gradient;
+      z-index: -1;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      height: 100%;
+      border-radius: calc(@btn-radius - 1px);
+      background: @white;
+      z-index: -1;
+    }
+
+    &:hover {
+      opacity: 1;
+
+      span,
+      &::before,
+      &::after {
+        opacity: @subtle-opacity;
+      }
+    }
+    &:active {
+      &::after {
+        background: @gradient;
+      }
+
+      span {
+        background-image: unset;
+        -webkit-background-clip: unset;
+        -webkit-text-fill-color: unset;
+      }
+    }
+  }
+
+  // Smaller button
+  &.small-btn,
+  &.small-btn span {
+    font-size: @xs-font-size;
+  }
+
+  // Error button
+  &.error-btn,
+  &-dangerous {
+    background: @failure;
+
+    &:active {
+      box-shadow: @neu-shadow-inset-failure;
+    }
+  }
+
+  // Disabled
+  &.disabled,
+  &[disabled] {
+    &:hover {
+      opacity: @disabled-opacity;
+    }
+    &.secondary-btn:hover {
+      background: inherit;
+    }
+    &:active {
+      box-shadow: unset;
+    }
+  }
+
+  // Antd circle button
+  &.ant-btn-circle {
+    padding: @spacing-xs calc(@spacing-sm - 1px);
+    border-radius: @round-radius;
+  }
+
+  // Antd button loader icon
+  &-loading-icon {
+    display: none;
+  }
+}
+
+// General Input
+input {
+  width: 100%;
+  height: 55px;
+  padding: 0 @spacing-lg;
+  margin: @spacing-xs 0;
+  box-shadow: @neu-shadow-inset;
+  background: @white;
+  color: @black;
+  font-size: @base-font-size;
+  border: none;
+  border-radius: @border-radius;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-box-sizing: border-box;
+
+  &::placeholder {
+    opacity: @disabled-opacity;
+  }
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  &:focus {
+    box-shadow: @neu-shadow-inset-low;
+  }
+  &.error {
+    border: 1px solid @failure;
+
+    &::placeholder {
+      color: @failure;
+    }
+  }
+
+  &[type='number'] {
+    -moz-appearance: textfield;
+  }
+
+  // Antd checkbox
+  &[type='checkbox'] {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    opacity: 0;
+    + span {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      top: -3px;
+      left: 0;
+      opacity: 1;
+      border-radius: @btn-radius;
+      box-shadow: @neu-shadow-inset;
+      background: @grey;
+      cursor: pointer;
+      margin: unset;
+
+      &:hover {
+        box-shadow: @neu-shadow-inset-low;
+      }
+    }
+
+    &:checked {
+      + span {
+        box-shadow: @neu-shadow-inset-gradient;
+        background: @gradient;
+        &::before,
+        &::after {
+          content: '';
+          position: absolute;
+          top: 8.5px;
+          left: 1px;
+          width: 16px;
+          height: 1px;
+          background: @white;
+          transform: rotate(45deg);
+        }
+        &::after {
+          left: unset;
+          right: 1px;
+          transform: rotate(-45deg);
+        }
+
+        &:hover {
+          box-shadow: @neu-shadow-inset-gradient-low;
+        }
+      }
+    }
+  }
+}
+
+// General table
+table {
+  position: relative;
+  width: 100%;
+  border-radius: @border-radius;
+  border-collapse: separate;
+  border-spacing: 0 @spacing-xs;
+  background: @white;
+  color: @black;
+  margin: @spacing-sm 0;
+
+  thead {
+    position: relative;
+
+    tr {
+      &:hover,
+      &:active {
+        background: inherit;
+        box-shadow: unset;
+      }
+    }
+    th {
+      background: inherit;
+      padding: inherit;
+      color: inherit;
+      opacity: @subtle-opacity;
+      min-width: 60px;
+      font-weight: @bold-weight;
+      font-size: @xs-font-size;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      text-align: center;
+
+      &:first-of-type {
+        padding-left: @spacing-md;
+        text-align: left;
+      }
+      &:last-of-type {
+        min-width: unset;
+      }
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 1px;
+      background: @gradient;
+      border-bottom: 2px solid @white;
+    }
+  }
+  tr {
+    border-radius: @border-radius;
+    cursor: pointer;
+    transition: unset;
+
+    &:hover {
+      background: @grey;
+    }
+    &:active {
+      box-shadow: @neu-shadow-inset;
+    }
+
+    // If you don't want row interactions
+    &.no-interaction {
+      cursor: unset;
+      td {
+        cursor: unset;
+      }
+
+      &:hover {
+        background: inherit;
+      }
+      &:active {
+        box-shadow: unset;
+      }
+    }
+  }
+  td {
+    background: inherit;
+    padding: inherit;
+    color: inherit;
+    opacity: @subtle-opacity;
+    position: relative;
+    font-size: @base-font-size;
+    border-radius: unset;
+    padding: @spacing-md;
+    background: transparent;
+    text-align: center;
+    cursor: pointer;
+    opacity: @subtle-opacity;
+
+    &:first-of-type {
+      padding-left: @spacing-md;
+      border-top-left-radius: @border-radius;
+      border-bottom-left-radius: @border-radius;
+      text-align: left;
+    }
+    &:last-of-type {
+      padding-left: @spacing-lg;
+      border-top-right-radius: @border-radius;
+      border-bottom-right-radius: @border-radius;
+    }
+  }
+}
+// Antd pagination of table
+.ant-table-wrapper {
+  position: relative;
+
+  .ant-pagination {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    padding: unset;
+    margin: unset;
+    font-size: @sm-font-size;
+
+    button {
+      background: unset;
+      margin: unset;
+      color: @black;
+    }
+  }
+}
+
+// Antd Divider
+.ant-divider {
+  width: 100%;
+  height: 3px;
+  margin: @spacing-sm 0;
+  border-radius: @border-radius;
+  box-shadow: @neu-shadow-inset-low;
+  background: @grey;
+}
+
+// Antd modal
+.ant-modal-wrap {
+  width: 100%;
+  height: calc(100% - @nav-height);
+  position: fixed;
+  top: @nav-height;
+  left: 0;
+  background: rgba(var(--light-grey), 0.95);
+  z-index: 1000;
+
+  .ant-modal-content {
+    position: fixed;
+    top: calc(50% + @nav-height / 2);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 275px;
+    box-shadow: @neu-shadow-low;
+    background: @light-grey;
+    border-radius: @border-radius;
+    padding: @spacing-sm @spacing-lg;
+
+    .ant-modal-title {
+      font-size: @header-font-size;
+      font-weight: @header-weight;
+      line-height: @header-font-size;
+      padding: @spacing-lg 0 @spacing-sm 0;
+    }
+
+    .ant-modal-body {
+      padding: @spacing-md 0;
+    }
+
+    .ant-modal-footer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column-reverse;
+      padding: @spacing-sm 0;
+
+      .ant-btn:first-of-type {
+        background: unset;
+        border: unset;
+        color: @black;
+
+        &:hover {
+          text-decoration: underline;
+        }
+        &:active {
+          box-shadow: unset;
+          opacity: @disabled-opacity;
+        }
+      }
+    }
+
+    .ant-modal-close {
+      position: absolute;
+      top: 0;
+      right: @spacing-md;
+      padding: unset;
+      margin: unset;
+      background: unset;
+      opacity: @subtle-opacity;
+      z-index: 1000;
+      cursor: pointer;
+      span {
+        display: none;
+      }
+
+      &::after {
+        content: '+';
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 28px;
+        font-weight: 200;
+        transform: rotate(45deg);
+        color: @black;
+        opacity: @disabled-opacity;
+      }
+
+      &:hover {
+        &::after {
+          opacity: 1;
+        }
+      }
+
+      &:active {
+        box-shadow: unset;
+      }
+    }
+
+    button {
+      width: 95%;
+      margin-left: 2.5%;
+    }
+  }
+}
+// Have to do this so the modal goes away, weirdly enough
+.ant-fade-leave-active {
+  + .ant-modal-wrap {
+    display: none;
+  }
+}
+
+// Antd Switch
+.ant-switch {
+  position: relative;
+  margin: @spacing-sm 0;
+  height: 30px;
+  min-width: 30px;
+  background: @grey;
+  border-radius: @round-radius;
+  box-shadow: @neu-shadow-inset;
+  cursor: pointer;
+  padding: 0 @spacing-md;
+
+  &-handle {
+    position: absolute;
+    top: 6px;
+    left: 7px;
+    width: 17px;
+    height: 17px;
+    border-radius: @round-radius;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: @grey;
+      box-shadow: @neu-shadow-inset-low;
+      border-radius: @round-radius;
+    }
+  }
+  span {
+    color: @dark-grey;
+    margin: 0 0 0 20px;
+  }
+
+  &:hover {
+    box-shadow: @neu-shadow-inset-low;
+  }
+  &-checked {
+    background: @gradient;
+    box-shadow: @neu-shadow-inset-gradient;
+
+    .ant-switch-handle {
+      top: 7px;
+      left: unset;
+      right: 7px;
+
+      &::before {
+        background: @white;
+        box-shadow: @neu-shadow-inset-low;
+      }
+    }
+    span {
+      color: @white;
+      margin: 0 20px 0 0;
+    }
+
+    &:hover {
+      background: @gradient;
+      box-shadow: @neu-shadow-inset-gradient-low;
+    }
+
+    // Checked and disabled
+    &.ant-switch-disabled:hover {
+      opacity: @disabled-opacity;
+      box-shadow: @neu-shadow-inset-gradient;
+    }
+  }
+
+  // Unchecked and disabled
+  &-disabled {
+    cursor: not-allowed;
+    opacity: @disabled-opacity;
+
+    &:hover {
+      opacity: @disabled-opacity;
+      box-shadow: @neu-shadow-inset;
+    }
+  }
+
+  // Secondary switch
+  &.secondary-switch {
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: inset -1.5px -1.5px 3.5px var(--dt-light-shadow), inset 1.5px 1.5px 3.5px var(--dt-dark-shadow);
+
+    .ant-switch-handle {
+      &::before {
+        background: rgba(255, 255, 255, 0.4);
+        box-shadow: inset -1.5px -1.5px 3.5px var(--dt-light-shadow), inset 1.5px 1.5px 3.5px var(--dt-dark-shadow);
+      }
+    }
+    span {
+      color: rgb(var(--lt-white));
+      opacity: @disabled-opacity;
+      -webkit-text-fill-color: unset;
+    }
+
+    &.ant-switch-checked {
+      background: @gradient;
+      box-shadow: @neu-shadow-inset-gradient-low;
+
+      .ant-switch-handle {
+        &::before {
+          background: rgba(0, 0, 0, 0.75);
+        }
+      }
+    }
+  }
+}
+
+// Antd Tooltip
+.ant-tooltip {
+  pointer-events: none;
+  position: absolute;
+  max-width: 200px;
+  left: 50%;
+  top: calc(50% - 50px);
+  transform: translate(-50%, -50%);
+  background: @light-grey;
+  color: @black;
+  padding: @spacing-sm;
+  border-radius: @border-radius;
+  box-shadow: @drop-shadow;
+  opacity: @subtle-opacity;
+  z-index: 10;
+
+  &-arrow {
+    pointer-events: none;
+    position: absolute;
+    overflow: hidden;
+    bottom: calc(0% - 7px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 9px solid @light-grey;
+    z-index: 9;
+  }
+  &-inner {
+    pointer-events: none;
+    font-size: @sm-font-size;
+  }
+
+  // Other placements
+  &-placement-left .ant-tooltip-arrow {
+    top: calc(50% - 6px);
+    left: calc(100% + 3px);
+    border-top: 7px solid transparent;
+    border-left: 9px solid @light-grey;
+    border-right: unset;
+    border-bottom: 5px solid transparent;
+  }
+  &-placement-right .ant-tooltip-arrow {
+    top: calc(50% - 6px);
+    left: calc(0% - 3px);
+    border-top: 5px solid transparent;
+    border-left: unset;
+    border-right: 9px solid @light-grey;
+    border-bottom: 7px solid transparent;
+  }
+  &-placement-bottom .ant-tooltip-arrow {
+    top: calc(0% - 7px);
+    border-top: unset;
+    border-left: 5px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 9px solid @light-grey;
+  }
+
+  // When mouse leaves + when hidden
+  &-hidden,
+  &.ant-zoom-big-fast-leave {
+    display: none;
+  }
+  // Slider tooltip follow pattern
+  // TODO: fix tooltip not catching up at first due to below classes:
+  &.ant-zoom-down-enter,
+  &.ant-zoom-down-enter-active,
+  &.ant-zoom-down {
+  }
+  &.ant-zoom-down-leave,
+  &.ant-zoom-down-leave-active {
+    display: none;
+  }
+}
+
+// Antd select
+.ant-select {
+  min-width: 175px;
+  margin: @spacing-sm 0;
+  padding: 0;
+  font-size: @base-font-size;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: @round-radius;
+  box-shadow: @neu-shadow-low;
+  padding: @spacing-sm @spacing-sm;
+  cursor: pointer;
+
+  &-selector {
+    width: 100%;
+  }
+  &-selection-search {
+    display: none;
+  }
+  &-selection-item {
+    padding: @spacing-xs;
+    font-size: @base-font-size;
+    opacity: @subtle-opacity;
+  }
+  &-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: @spacing-sm;
+    margin: unset;
+  }
+
+  &-dropdown {
+    position: absolute;
+    overflow: hidden;
+    font-size: inherit;
+    background-color: @grey;
+    border-radius: @border-radius;
+    box-shadow: @drop-shadow;
+    outline: none;
+    pointer-events: unset !important;
+
+    &::before {
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: -7px;
+      z-index: -9999;
+      opacity: 0.0001;
+      content: '';
+    }
+
+    // For when dropdown is not visible
+    &.ant-slide-up-leave-active {
+      display: none;
+    }
+  }
+  &-item {
+    padding: @spacing-sm @spacing-md;
+    font-size: @base-font-size;
+    opacity: @subtle-opacity;
+    cursor: pointer;
+    img {
+      width: 20px;
+      height: auto;
+      margin-right: @spacing-sm;
+    }
+
+    &-option-state {
+      display: none;
+    }
+    &-option-active {
+      background: @gradient;
+      color: @white;
+    }
+    &-option-content {
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+// Antd Dropdown Menu
+.ant-dropdown {
+  position: absolute;
+  left: calc(50% - 70px);
+  top: calc(50% - 50px);
+  transform: translate(-50%, -50%);
+  background: @light-grey;
+  color: @black;
+  border-radius: @border-radius;
+  box-shadow: @neu-shadow-low;
+  overflow: hidden;
+  pointer-events: unset !important;
+
+  &::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: -7px;
+    z-index: -9999;
+    opacity: 0.0001;
+    content: '';
+  }
+
+  &-menu {
+    list-style: none;
+    padding: unset;
+    margin: unset;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    cursor: pointer;
+
+    &-item {
+      position: relative;
+      width: 100%;
+      padding: @spacing-xs @spacing-lg;
+      border-bottom: 1px solid @white;
+
+      &:hover,
+      &-active,
+      &.active {
+        background: @gradient;
+
+        .ant-dropdown-menu-title-content {
+          color: @white;
+        }
+      }
+      &:last-of-type {
+        border-bottom: none;
+      }
+
+      .ant-dropdown-menu-title-content {
+        font-size: @base-font-size;
+        opacity: @subtle-opacity;
+      }
+    }
+  }
+
+  // When mouse leaves + hidden
+  &-hidden,
+  &.ant-slide-up-leave-active {
+    display: none;
+  }
+}
+
+// Antd Collapse
+.ant-collapse {
+  width: 100%;
+  max-width: 400px;
+  border-radius: @border-radius;
+  box-shadow: @neu-shadow-low;
+  overflow: hidden;
+  margin: @spacing-sm 0;
+
+  &-content {
+    padding: @spacing-lg;
+    opacity: @subtle-opacity;
+    height: unset !important;
+    border-radius: @border-radius;
+
+    &-inactive,
+    &-hidden {
+      display: none;
+    }
+  }
+
+  &-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    cursor: pointer;
+    padding: @spacing-md @spacing-lg;
+    padding-right: @spacing-xl;
+    background: @light-grey;
+    opacity: @subtle-opacity;
+    font-size: @base-font-size;
+
+    .anticon {
+      color: @dark-grey;
+      opacity: @disabled-opacity;
+    }
+    span {
+      margin-right: @spacing-sm;
+    }
+  }
+}
+
+// Antd Card
+.ant-card {
+  width: 95%;
+  max-width: 250px;
+  padding: @spacing-lg;
+  border-radius: @border-radius;
+  box-shadow: @neu-shadow;
+  margin: @spacing-xs 0;
+  &.clickable {
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: @neu-shadow-low;
+    }
+    &:active {
+      box-shadow: @neu-shadow-inset;
+    }
+    &.active {
+      box-shadow: @neu-shadow-inset-low;
+    }
+  }
+
+  // Optional cover image
+  &-cover {
+    max-width: 300px;
+
+    img {
+      width: 100%;
+    }
+  }
+  // Card heading, w/optional extra element(s)
+  &-head {
+    position: relative;
+    margin-bottom: @spacing-md;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0px;
+      width: 100%;
+      height: 2px;
+      border-radius: @border-radius;
+      box-shadow: @neu-shadow-inset-low;
+      background: @grey;
+    }
+
+    &-wrapper {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding-bottom: @spacing-xs;
+
+      .ant-card-head-title {
+        opacity: @subtle-opacity;
+      }
+      .ant-card-extra {
+        margin-left: @spacing-xl;
+        font-size: @sm-font-size;
+      }
+    }
+  }
+  // Optional card tabs
+  .ant-tabs-nav-operations {
+    display: none;
+  }
+  .ant-tabs-nav-list {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    .ant-tabs-tab {
+      position: relative;
+      margin-right: @spacing-md;
+      opacity: @disabled-opacity;
+      cursor: pointer;
+      font-size: @sm-font-size;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0.5px;
+        width: 100%;
+        height: 1px;
+        border-radius: @round-radius;
+        background: @gradient;
+        opacity: 0;
+      }
+      &:hover,
+      &.ant-tabs-tab-active {
+        opacity: 1;
+        background-image: @gradient;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      &.ant-tabs-tab-active::before {
+        opacity: 1;
+      }
+    }
+  }
+  // Body content of card
+  &-body {
+    padding: @spacing-xs 0;
+  }
+}
+
+// Antd Timeline
+.ant-timeline {
+  box-sizing: border-box;
+  color: @black;
+  font-size: @base-font-size;
+  margin: @spacing-sm 0;
+  padding: 0;
+  list-style: none;
+
+  &-item {
+    position: relative;
+    padding-bottom: 18px;
+    font-size: inherit;
+
+    &-tail {
+      position: absolute;
+      top: 10px;
+      left: 6px;
+      height: calc(100% - 10px);
+      border-left: 2px solid @grey;
+    }
+    &-head {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: @gradient;
+      border: 2px solid @grey;
+      border-radius: 100px;
+    }
+    &-content {
+      position: relative;
+      top: -4px;
+      margin: 0 0 0 24px;
+      word-break: break-word;
+      opacity: @subtle-opacity;
+    }
+
+    &-last {
+      .ant-timeline-item-tail {
+        display: none;
+      }
+    }
+
+    // Incomplete timeline item
+    &.incomplete {
+      .ant-timeline-item-head {
+        background: @grey;
+      }
+      .ant-timeline-item-content {
+        opacity: @disabled-opacity;
+      }
+    }
+  }
+}
+
+// Antd Slider
+.ant-slider {
+  position: relative;
+  width: 90%;
+  margin: @spacing-sm auto;
+  cursor: pointer;
+
+  &-rail {
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    background-color: rgba(var(--black), 0.5);
+    border-radius: @round-radius;
+  }
+  &-track {
+    position: absolute;
+    height: 4px;
+    background: @gradient;
+    border-radius: @round-radius;
+  }
+  &-step {
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    border-radius: @round-radius;
+  }
+  &-handle {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    margin-top: -5px;
+    background: @grey;
+    box-shadow: @neu-shadow-inset-low;
+    border-radius: @round-radius;
+    border: 1px solid @jet-blue;
+    cursor: pointer;
+  }
+  &-mark {
+    position: absolute;
+    top: 8px;
+    left: 0;
+    width: 100%;
+    font-size: @sm-font-size;
+
+    &-text {
+      position: absolute;
+      color: @black;
+      cursor: pointer;
+      opacity: @disabled-opacity;
+      font-size: @xs-font-size;
+    }
+  }
+
+  &-disabled {
+    opacity: @disabled-opacity;
+    cursor: not-allowed;
+
+    .ant-slider-handle {
+      pointer-events: none;
+    }
+  }
+}
+
+// Antd Skeleton
+.ant-skeleton {
+  display: table;
+  width: 100%;
+  margin: @spacing-sm 0;
+
+  &-content {
+    display: table-cell;
+    width: 100%;
+    vertical-align: top;
+
+    .ant-skeleton-title {
+      width: 30%;
+      height: 10px;
+      margin: unset;
+      background: @grey;
+      border-radius: @btn-radius;
+    }
+    .ant-skeleton-paragraph {
+      margin-top: @spacing-sm;
+      border-radius: @btn-radius;
+      padding: unset;
+
+      li {
+        width: 100%;
+        height: 10px;
+        margin-top: @spacing-xs;
+        list-style: none;
+        background: @grey;
+        border-radius: @btn-radius;
+      }
+    }
+  }
+}
+
+// Antd list
+.ant-list {
+  position: relative;
+  margin: @spacing-sm 0;
+  padding: @spacing-xs @spacing-sm;
+  border-radius: @border-radius;
+  box-shadow: @neu-shadow-low;
+  color: @black;
+  font-size: @base-font-size;
+  list-style: none;
+
+  &-items {
+    padding: unset;
+  }
+  &-item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: @spacing-sm;
+    color: @black;
+    border-bottom: 2px solid @grey;
+    &:last-of-type {
+      border: unset;
+    }
+
+    &-meta {
+      display: flex;
+      flex: 1;
+      align-items: flex-start;
+      max-width: 100%;
+
+      &-title {
+        margin: unset;
+        opacity: @subtle-opacity;
+
+        a {
+          margin: unset;
+        }
+      }
+      &-description {
+        opacity: @disabled-opacity;
+      }
+    }
+    &-action {
+      display: flex;
+      flex: 0 0 auto;
+      margin-left: @spacing-lg;
+      font-size: @sm-font-size;
+      list-style: none;
+      opacity: 1;
+      background-image: @gradient;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+  &-something-after-last-item {
+    padding-bottom: @spacing-lg;
+  }
+}
+
+// Antd Badge
+.ant-badge {
+  opacity: 1;
+  margin: unset;
+  sup {
+    position: absolute;
+    bottom: 1px;
+    margin-left: 2px;
+    border-radius: @round-radius;
+    padding: 1px 5px 0 5px;
+    // shimmer
+    background: #e5ebf4 -webkit-gradient(linear, 100% 0, 0 0, from(#e5ebf4), color-stop(0.5, #a9aaab), to(#e5ebf4));
+    background-position: 50px top;
+    background-size: 50px 100%;
+    background-repeat: no-repeat;
+    animation-name: shimmer;
+    animation-duration: 5.5s;
+    animation-iteration-count: infinite;
+  }
+  span {
+    margin: unset;
+    font-weight: @bold-weight;
+    font-size: @xs-font-size;
+    background-image: @gradient;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+// Badge Shimmer Animation
+@keyframes shimmer {
+  0% {
+    background-position: -50px top;
+  }
+  70% {
+    background-position: 200px top;
+  }
+  100% {
+    background-position: 200px top;
+  }
+}
+
+// Antd Tag
+.ant-tag {
+  padding: @spacing-xs @spacing-sm;
+  border-radius: @btn-radius;
+  box-shadow: @neu-shadow-low;
+  background: @grey;
+  span {
+    margin: 0 0 0 @spacing-sm;
+  }
+
+  &-has-color {
+    color: @white;
+  }
+  &-hidden {
+    display: none;
+  }
+}
+
+// Antd Progress
+.ant-progress {
+  margin: @spacing-sm 0;
+  padding: 0;
+  color: @black;
+  font-size: @base-font-size;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &-show-info {
+    .ant-progress-outer {
+      width: calc(90% - 20px);
+    }
+
+    .ant-progress-text {
+      width: 30px;
+      margin-left: @spacing-sm;
+      color: @black;
+      font-size: @sm-font-size;
+      white-space: nowrap;
+      word-break: normal;
+    }
+  }
+  &-status-exception {
+    .anticon {
+      color: @failure;
+    }
+  }
+  &-status-success {
+    .anticon {
+      color: @success;
+    }
+  }
+  &-line {
+    position: relative;
+    width: 100%;
+    font-size: inherit;
+
+    .ant-progress-outer {
+      width: inherit;
+
+      .ant-progress-inner {
+        position: relative;
+        width: inherit;
+        overflow: hidden;
+        background-color: @grey;
+        border-radius: @round-radius;
+
+        .ant-progress-bg {
+          background: @gradient;
+          border-radius: @round-radius;
+        }
+        .ant-progress-success-bg {
+          position: absolute;
+          top: 0;
+          left: 0;
+          background: @success;
+          border-radius: @round-radius;
+        }
+      }
+    }
+  }
+  // TODO: finish circle styling and options
+  &-circle {
+    position: relative;
+    &-path {
+      stroke: @jet-blue;
+    }
+
+    .ant-progress-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+    }
+  }
+}
+
+// Antd Notification / Message
+.ant-notification,
+.ant-message {
+  position: fixed;
+  opacity: @subtle-opacity;
+  z-index: 10000;
+
+  &-notice {
+    position: relative;
+    width: 250px;
+    padding: @spacing-md;
+    margin: @spacing-md;
+    border-radius: @border-radius;
+    box-shadow: @drop-shadow;
+    background: @white;
+
+    &-message {
+      font-weight: @subheader-weight;
+      font-size: @base-font-size;
+      margin-top: -5px;
+      border-bottom: 1px solid rgba(var(--light-grey), 0.25);
+    }
+    &-success &-message {
+      color: @success;
+    }
+    &-error &-message {
+      color: @failure;
+    }
+    &-description {
+      opacity: @subtle-opacity;
+      font-size: @base-font-size;
+      padding-top: @spacing-xs;
+    }
+
+    &-close {
+      width: 20px;
+      position: absolute;
+      top: -3px;
+      right: @spacing-md;
+      margin: unset;
+      z-index: 1000;
+      cursor: pointer;
+      span {
+        display: none;
+      }
+
+      &::after {
+        content: '+';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        font-size: 24px;
+        font-weight: 200;
+        transform: translate(-50%, -50%);
+        transform: rotate(45deg);
+        opacity: @disabled-opacity;
+      }
+
+      &:hover {
+        &::after {
+          opacity: 1;
+        }
+      }
+    }
+
+    &-icon,
+    .anticon {
+      display: none;
+    }
+  }
+
+  // When notification goes away
+  &-fade-leave {
+    display: none;
+  }
+}
+.ant-message {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+
+  &-notice {
+    width: unset;
+    background: @gradient;
+
+    span {
+      opacity: 1;
+      color: @white;
+      font-size: @base-font-size;
+    }
+  }
+
+  // When message goes away
+  .ant-move-up-leave-active {
+    display: none;
+  }
+}
+
+// Jet Navbar
+.navbar-container {
+  position: fixed;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  width: 100vw;
+  background: @gradient;
+  z-index: 10000;
+  svg path {
+    fill: rgb(var(--lt-white));
+  }
+
+  nav {
+    width: clamp(250px, 95%, 1750px);
+    height: @nav-height;
+
+    button {
+      margin-left: @spacing-lg;
+      border-color: rgb(var(--lt-white));
+      color: rgb(var(--lt-white));
+
+      svg {
+        opacity: @disabled-opacity;
+        margin-right: @spacing-sm;
+      }
+    }
+
+    .logo {
+      width: 185px;
+      cursor: pointer;
+      margin: unset;
+    }
+
+    .nav-link {
+      position: relative;
+      margin: 0 @spacing-lg;
+      opacity: @subtle-opacity;
+      letter-spacing: 2px;
+      font-size: @sm-font-size;
+      font-weight: @bold-weight;
+      text-transform: uppercase;
+      color: rgb(var(--lt-white));
+  
+      &.active,
+      &:hover {
+        opacity: 1;
+        text-decoration: underline;
+      }
+    }
+
+    &.mobile {
+      display: none;
+      transition: margin-left @transition-duration;
+
+      .account {
+        margin-bottom: -2px;
+      }
+      .logo {
+        width: 170px;
+      }
+      .hamburger {
+        margin: @spacing-xs;
+        width: 20px;
+        height: 17px;
+        cursor: pointer;
+
+        span {
+          width: 100%;
+          height: 2px;
+          background: rgb(var(--lt-white));
+          margin: unset;
+        }
+
+        &.close {
+          justify-content: center;
+
+          span {
+            transform: rotate(45deg);
+            margin-top: -2px;
+          }
+          span:first-of-type {
+            transform: rotate(-45deg);
+            margin-top: unset;
+          }
+          span:last-of-type {
+            display: none;
+          }
+        }
+      }
+
+      // Mobile Drawer
+      .drawer {
+        position: absolute;
+        width: 50%;
+        height: calc(100vh - (@spacing-xl * 2));
+        top: 0;
+        left: 100vw;
+        padding: @spacing-xl 0;
+        background: rgb(var(--dt-grey));
+        color: rgb(var(--lt-white));
+        transition: left @transition-duration;
+
+        &-top {
+          height: 70%;
+          .nav-link, button {
+            margin: @spacing-xl auto;
+          }
+        }
+
+        &-bottom {
+          height: 30%;
+          .footer-link {
+            font-size: @sm-font-size;
+            opacity: @disabled-opacity;
+          }
+          .ant-switch {
+            margin: @spacing-lg 0;
+          }
+        }
+      }
+    }
+  }
+
+  // Drawer Opened
+  &.drawer-open {
+    .mobile {
+      margin-left: -100vw;
+
+      .drawer {
+        left: 50vw;
+      }
+    }
+
+    & + .view-container {
+      margin-left: -50vw;
+    }
+  }
+}
+
+// Jet Connect Wallet Modal
+.connect-wallet-modal {
+  img {
+    margin-bottom: @spacing-sm;
+  }
+
+  .wallets {
+    margin: @spacing-md;
+    position: relative;
+
+    .wallet {
+      width: 200px;
+      margin: @spacing-xs 0;
+      padding: @spacing-sm @spacing-lg;
+      cursor: pointer;
+      border-radius: 50px;
+
+      img {
+        margin: 0 @spacing-md;
+      }
+      p {
+        font-size: @base-font-size;
+      }
+      span {
+        font-size: @sm-font-size;
+        margin: @spacing-sm;
+      }
+      svg {
+        opacity: 0;
+        margin: 0 0 0 @spacing-lg;
+
+        path {
+          fill: @jet-green;
+        }
+      }
+      &.active,
+      &:active,
+      &:hover {
+        background: @grey;
+        box-shadow: @neu-shadow-inset-low;
+
+        svg {
+          opacity: 1;
+        }
+      }
+      &:active {
+        box-shadow: @neu-shadow-inset;
+      }
+    }
+  }
+}
+
+// Jet terms and conditions
+.terms-privacy {
+  position: absolute;
+  bottom: @spacing-xs;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+
+  span {
+    opacity: @disabled-opacity;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+// Mobile styling
+@media screen and (max-width: 600px) {
+  body {
+    width: 100%;
+    min-height: calc((1vh * 100) - (@nav-height + 30px));
+    margin: @nav-height 0 0 0;
+  }
+  input {
+    font-size: @sm-font-size;
+  }
+  // Mobile browsers do a weird thing to the ::after element's position
+  // so we replace the pseudo-element border with a plain green border on each <th>
+  table {
+    thead {
+      th {
+        border-bottom: 1px solid @jet-green;
+      }
+      &:after {
+        display: none;
+      }
+    }
+  }
+
+  // Views
+  .view-container {
+    margin: 0;
+  }
+
+  // Antd Modal
+  .ant-modal-wrap {
+    top: @nav-height;
+    left: 0;
+    width: 100%;
+    height: calc(100% - @nav-height);
+    opacity: 1;
+
+    .ant-modal-content {
+      position: fixed;
+      left: 50%;
+      top: calc(50% + (@nav-height / 2));
+    }
+  }
+
+  // Antd Notification / Message
+  .ant-notification,
+  .ant-message {
+    left: 50%;
+    right: unset;
+    transform: translateX(-50%);
+  }
+
+  // Jet Navbar
+  .navbar-container {
+    nav {
+      width: calc(100% - (@spacing-sm * 2));
+      padding: 0 @spacing-sm;
+      &.desktop {
+        display: none;
+      }
+      &.mobile {
+        display: flex;
+      }
+
+      .left-container {
+        &-logo {
+          width: 140px;
+        }
+        &-hamburger {
+          display: flex;
+        }
+      }
+
+      .right-container {
+        .nav-link, button {
+          display: none;
+        }
+        &-hamburger {
+          display: flex;
+        }
+      }
+    }
+    &-drawer.open {
+      display: flex;
+
+      .nav-link {
+        margin: @spacing-sm 0;
+      }
+    }
+  }
+
+  // Jet Connect Wallet Modal
+  .connect-wallet-modal {
+    span {
+      font-size: @xs-font-size;
+    }
+
+    .ant-modal-content {
+      width: 100%;
+      box-shadow: unset;
+    }
+  }
+}
