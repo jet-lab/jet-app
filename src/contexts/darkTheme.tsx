@@ -12,10 +12,10 @@ const DarkThemeContext = createContext<DarkTheme>({
 
 // Dark theme context provider
 export function DarkThemeProvider(props: { children: any }) {
-  const preference = localStorage.getItem('jetDarkTheme');
+  const preference = localStorage.getItem('jetDarkUI');
   const [darkTheme, setDarkTheme] = useState(preference ? preference === 'true' : true);
   useEffect(() => {
-    localStorage.setItem('jetDarkTheme', JSON.stringify(darkTheme));
+    localStorage.setItem('jetDarkUI', JSON.stringify(darkTheme));
     ['black', 'dark-grey', 'grey', 'light-grey', 'white', 'light-shadow', 'dark-shadow'].forEach(color => {
       document.documentElement.style.setProperty(`--${color}`, `var(--${darkTheme ? 'dt' : 'lt'}-${color})`);
     });
