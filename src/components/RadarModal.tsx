@@ -106,7 +106,7 @@ export function RadarModal() {
                 </td>
                 <td>
                   {currentReserve?.abbrev && protocol.rates[currentReserve.abbrev] 
-                    ? `${Math.ceil((protocol.rates[currentReserve.abbrev].borrow * 100) * 100) / 100}%` 
+                    ? `-${Math.ceil((protocol.rates[currentReserve.abbrev].borrow * 100) * 100) / 100}%` 
                       : '--'}
                 </td>
               </tr>
