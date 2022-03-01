@@ -4,7 +4,7 @@
   <h1>Jet Protocol</h1>
 
   <p>
-    <strong>Jet V1</strong>
+    <strong>Jet App</strong>
   </p>
 
   <p>
@@ -23,45 +23,11 @@
 - **Jet Protocol is in active development so all APIs and behaviours are subject to change.**
 - **This is experimental unaudited software. Use at your own risk.**
 
-## Contributing
-
-### Install Anchor
-
-Directions can be found [here](https://project-serum.github.io/anchor/getting-started/installation.html).
-
-### Build, deploy, and test programs
-
-You may also need to install the NPM dependencies for tests
-
 ```
 npm install
 ```
 
-You can use anchor to build and test the program.
-
-```
-anchor test
-```
-
-## Run Frontend
-
-First startup a local validator and deploy
-
-```
-npm install
-cd scripts
-./localnet-start.sh
-vi app/.env # Set REACT_APP_CLUSTER = localnet
-```
-
-Install any other NPM dependencies
-
-```
-cd app
-npm install
-```
-
-`npm run dev` to run live-reloading dev environment
+`npm run start` to run live-reloading dev environment
 
 `npm run build` to compile app to the /build directory
 
