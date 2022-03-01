@@ -496,6 +496,7 @@ export function TradePanel() {
             adjustCollateralizationRatio();
           }}
           tipFormatter={(value) => value + '%'}
+          tooltipPlacement="bottom"
           marks={{
             0: '0%',
             25: '25%',
