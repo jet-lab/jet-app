@@ -57,7 +57,7 @@ export function UserContextProvider(props: { children: any }) {
       'ETH': {} as Asset
     }
   });
-  const [position, setPosition] = useState<Obligation>({} as unknown as Obligation);
+  const [position, setPosition] = useState<Obligation>({depositedValue: 0, borrowedValue: 0, colRatio: 0, utilizationRate: 0});
   const [walletBalances, setWalletBalances] = useState<Record<string, number>>({'USDC': 0, 'SOL': 0, 'BTC': 0, 'ETH': 0});
   const [collateralBalances, setCollateralBalances] = useState<Record<string, number>>({'USDC': 0, 'SOL': 0, 'BTC': 0, 'ETH': 0});
   const [loanBalances, setLoanBalances] = useState<Record<string, number>>({'USDC': 0, 'SOL': 0, 'BTC': 0, 'ETH': 0});
@@ -196,43 +196,30 @@ export function UserContextProvider(props: { children: any }) {
     asset.collateralBalance = asset.collateralNoteBalance.mulb(reserve.depositNoteExchangeRate).divb(new BN(Math.pow(10, 15)));
 
     // Update user obligation balances
-    const userCollateralBalances = collateralBalances;
-    const userLoanBalances = loanBalances;
-    userCollateralBalances[reserve.abbrev] = asset.collateralBalance.tokens;
-    userLoanBalances[reserve.abbrev] = asset.loanBalance.tokens;
-    setCollateralBalances({...userCollateralBalances});
-    setLoanBalances({...userLoanBalances});
-
-    // Update user position object for UI
-    const userPosition = {
-      depositedValue: 0,
-      borrowedValue: 0,
-      colRatio: 0,
-      utilizationRate: 0
-    }
+    collateralBalances[reserve.abbrev] = asset.collateralBalance.tokens;
+    loanBalances[reserve.abbrev] = asset.loanBalance.tokens;
 
     //update user positions 
-    for (let t in assets?.tokens) {
-      userPosition.depositedValue += collateralBalances[t] * market.reserves[t].price;
-      userPosition.borrowedValue += loanBalances[t] * market.reserves[t].price;
-      userPosition.colRatio = userPosition.borrowedValue ? userPosition.depositedValue / userPosition.borrowedValue : 0;
-      userPosition.utilizationRate = userPosition.depositedValue ? userPosition.borrowedValue / userPosition.depositedValue : 0;
+    for (let t in assets.tokens) {
+      position.depositedValue += collateralBalances[t] * market.reserves[t].price;
+      position.borrowedValue += loanBalances[t] * market.reserves[t].price;
+      position.colRatio = position.borrowedValue ? position.depositedValue / position.borrowedValue : 0;
+      position.utilizationRate = position.depositedValue ? position.borrowedValue / position.depositedValue : 0;
     }
-    setPosition({...userPosition});
 
     // Max deposit
     asset.maxDepositAmount = walletBalances[reserve.abbrev];
 
     // Max withdraw
-    asset.maxWithdrawAmount = userPosition.borrowedValue
-      ? (userPosition.depositedValue - (market.programMinColRatio * userPosition.borrowedValue)) / reserve.price
+    asset.maxWithdrawAmount = position.borrowedValue
+      ? (position.depositedValue - (market.minColRatio * position.borrowedValue)) / reserve.price
         : asset.collateralBalance.tokens;
     if (asset.maxWithdrawAmount > asset.collateralBalance.tokens) {
       asset.maxWithdrawAmount = asset.collateralBalance.tokens;
     }
 
     // Max borrow
-    asset.maxBorrowAmount = ((userPosition.depositedValue / market.minColRatio) - userPosition.borrowedValue) / reserve.price;
+    asset.maxBorrowAmount = ((position.depositedValue / market.minColRatio) - position.borrowedValue) / reserve.price;
     if (asset.maxBorrowAmount > reserve.availableLiquidity.tokens) {
       asset.maxBorrowAmount = reserve.availableLiquidity.tokens;
     }
@@ -244,10 +231,11 @@ export function UserContextProvider(props: { children: any }) {
       asset.maxRepayAmount = asset.loanBalance.tokens;
     }
 
-    if (assets) {
-      assets.tokens[reserve.abbrev] = asset;
-      setAssets({...assets});
-    }
+    assets.tokens[reserve.abbrev] = asset;
+    setCollateralBalances({...collateralBalances});
+    setLoanBalances({...loanBalances});
+    setAssets({...assets});
+    setPosition({...position});
   };
 
   // When wallet connects, subscribe to assets
