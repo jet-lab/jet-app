@@ -36,13 +36,12 @@ export function JetInput(props: {
         />
         {props.currency && currentReserve && (
           <>
-            <img 
-              src={`img/cryptos/${currentReserve.abbrev}.png`} 
-              alt={`${currentReserve.abbrev} Logo`} 
-            />
+            <img src={`img/cryptos/${currentReserve.abbrev}.png`} alt={`${currentReserve.abbrev} Logo`} />
             <div className="asset-abbrev-usd flex align-end justify-center column">
               <span>{currentReserve.abbrev}</span>
-              <span>≈ {currencyFormatter((Number(props.value) ?? 0) * (currentReserve ? currentReserve.price : 0), true, 2)}</span>
+              <span>
+                ≈ {currencyFormatter((Number(props.value) ?? 0) * (currentReserve ? currentReserve.price : 0), true, 2)}
+              </span>
             </div>
           </>
         )}
@@ -54,10 +53,7 @@ export function JetInput(props: {
             props.submit();
           }
         }}>
-        {props.loading 
-          ? <Loader button /> 
-            : <ArrowIcon width={30} />
-        }
+        {props.loading ? <Loader button /> : <ArrowIcon width={30} />}
       </div>
     </div>
   );

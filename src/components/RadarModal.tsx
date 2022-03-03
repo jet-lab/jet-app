@@ -47,7 +47,7 @@ export function RadarModal() {
               protocol.rates[r.asset] = {
                 deposit: r.deposit,
                 borrow: r.borrow
-              }
+              };
             }
           }
         }
@@ -64,9 +64,7 @@ export function RadarModal() {
     <Modal footer={null} visible={radarOpen} className="radar-modal" onCancel={() => setRadarOpen(false)}>
       <div className="radar-modal-header flex-centered">
         <RadarIcon width="25px" />
-        <h1>
-          {dictionary.copilot.radar.toUpperCase()}
-        </h1>
+        <h1>{dictionary.copilot.radar.toUpperCase()}</h1>
       </div>
       <div className="table-container">
         <table className="no-interaction">
@@ -100,14 +98,14 @@ export function RadarModal() {
                   />
                 </td>
                 <td>
-                  {currentReserve?.abbrev && protocol.rates[currentReserve.abbrev] 
-                    ? `${Math.ceil((protocol.rates[currentReserve.abbrev].deposit * 100) * 100) / 100}%` 
-                      : '--'}
+                  {currentReserve?.abbrev && protocol.rates[currentReserve.abbrev]
+                    ? `${Math.ceil(protocol.rates[currentReserve.abbrev].deposit * 100 * 100) / 100}%`
+                    : '--'}
                 </td>
                 <td>
-                  {currentReserve?.abbrev && protocol.rates[currentReserve.abbrev] 
-                    ? `-${Math.ceil((protocol.rates[currentReserve.abbrev].borrow * 100) * 100) / 100}%` 
-                      : '--'}
+                  {currentReserve?.abbrev && protocol.rates[currentReserve.abbrev]
+                    ? `-${Math.ceil(protocol.rates[currentReserve.abbrev].borrow * 100 * 100) / 100}%`
+                    : '--'}
                 </td>
               </tr>
             ))}

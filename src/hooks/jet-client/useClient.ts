@@ -24,10 +24,10 @@ const confirmOptions = {
   skipPreflight: false,
   commitment: 'recent',
   preflightCommitment: 'recent'
-} as ConfirmOptions
+} as ConfirmOptions;
 
 export function useConfirmOptions() {
-  return confirmOptions
+  return confirmOptions;
 }
 
 export function useWalletAddress() {
@@ -41,7 +41,10 @@ export function useProvider() {
   const wallet = useWallet();
   const confirmOptions = useConfirmOptions();
 
-  return useMemo(() => new anchor.Provider(connection, wallet as any, confirmOptions), [connection, wallet, confirmOptions]);
+  return useMemo(
+    () => new anchor.Provider(connection, wallet as any, confirmOptions),
+    [connection, wallet, confirmOptions]
+  );
 }
 
 export function useProgram() {
@@ -51,71 +54,78 @@ export function useProgram() {
 }
 
 export function useClient() {
-  const provider = useProvider()
-  const [client, setClient] = useState<JetClient | undefined>()
+  const provider = useProvider();
+  const [client, setClient] = useState<JetClient | undefined>();
 
   useEffect(() => {
-    let abort = false
+    let abort = false;
     JetClient.connect(provider)
       .then(newClient => !abort && setClient(newClient))
-      .catch(console.error)
+      .catch(console.error);
 
-    return () => { abort = true }
-  }, [provider])
+    return () => {
+      abort = true;
+    };
+  }, [provider]);
 
-  return client
+  return client;
 }
 
 export function useMarket() {
-  const client = useClient()
-  const [market, setMarket] = useState<JetMarket | undefined>()
+  const client = useClient();
+  const [market, setMarket] = useState<JetMarket | undefined>();
   useEffect(() => {
-    let abort = false
+    let abort = false;
     if (client) {
       JetMarket.load(client, JET_MARKET_ADDRESS)
         .then(newMarket => !abort && setMarket(newMarket))
-        .catch(console.error)
+        .catch(console.error);
     }
 
-    return () => { abort = true }
-  }, [client])
+    return () => {
+      abort = true;
+    };
+  }, [client]);
 
-  return market
+  return market;
 }
 
 export function useReserves() {
   const client = useClient();
   const market = useMarket();
-  const [reserves, setReserves] = useState<JetReserve[]>([])
+  const [reserves, setReserves] = useState<JetReserve[]>([]);
   useEffect(() => {
     let abort = false;
     if (client && market) {
-      JetReserve.loadMultiple(client, market)
-        .then(reserves => !abort && setReserves(reserves));
+      JetReserve.loadMultiple(client, market).then(reserves => !abort && setReserves(reserves));
     }
-    return () => { abort = true; }
-  }, [client, market])
-  
+    return () => {
+      abort = true;
+    };
+  }, [client, market]);
+
   return reserves;
 }
 
 export function useUser() {
-  const client = useClient()
-  const market = useMarket()
+  const client = useClient();
+  const market = useMarket();
   const reserves = useReserves();
-  const walletAddress = useWalletAddress()
-  const [user, setUser] = useState<JetUser | undefined>()
+  const walletAddress = useWalletAddress();
+  const [user, setUser] = useState<JetUser | undefined>();
 
   useEffect(() => {
-    let abort = false
+    let abort = false;
     if (client && market && walletAddress) {
       JetUser.load(client, market, reserves, walletAddress)
         .then(newUser => !abort && setUser(newUser))
-        .catch(console.error)
+        .catch(console.error);
     }
 
-    return () => { abort = true }
-  }, [client, market, walletAddress])
+    return () => {
+      abort = true;
+    };
+  }, [client, market, walletAddress]);
 
-  return user
+  return user;
 }

@@ -3,31 +3,40 @@ import { BN } from '@project-serum/anchor';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { coder, idl, useProvider } from '../../hooks/jet-client/useClient';
 import type { MarketAccount, Reserve } from '../models/JetTypes';
-import { parsePriceData } from "@pythnetwork/client";
-import { getAccountInfoAndSubscribe, getBorrowRate, getCcRate, getDepositRate, getMintInfoAndSubscribe, getTokenAccountAndSubscribe, parseMarketAccount, parseReserveAccount } from "../util/programUtil";
-import { MarketReserveInfoList } from "../util/layout";
+import { parsePriceData } from '@pythnetwork/client';
+import {
+  getAccountInfoAndSubscribe,
+  getBorrowRate,
+  getCcRate,
+  getDepositRate,
+  getMintInfoAndSubscribe,
+  getTokenAccountAndSubscribe,
+  parseMarketAccount,
+  parseReserveAccount
+} from '../util/programUtil';
+import { MarketReserveInfoList } from '../util/layout';
 import { parseIdlMetadata } from '../util/programUtil';
 import { TokenAmount } from '../util/tokens';
 
 // Market context
 export interface Market {
-  marketInit: boolean,
-  setMarketInit: (init: boolean) => void,
-  accountPubkey: PublicKey,
-  setAccountPubkey: (key: PublicKey) => void,
-  account: AccountInfo<MarketAccount>,
-  setAccount: (account: AccountInfo<MarketAccount>) => void,
-  authorityPubkey: PublicKey,
-  setAuthorityPubkey: (key: PublicKey) => void,
-  minColRatio: number,
-  programMinColRatio: number,
-  totalBorrowed: number,
-  setTotalBorrowed: (tvl: number) => void,
-  totalSupply: number,
-  setTotalSupply: (tvl: number) => void,
-  reserves: Record<string, Reserve>,
-  setReserves: (reserves: Record<string, Reserve>) => void
-};
+  marketInit: boolean;
+  setMarketInit: (init: boolean) => void;
+  accountPubkey: PublicKey;
+  setAccountPubkey: (key: PublicKey) => void;
+  account: AccountInfo<MarketAccount>;
+  setAccount: (account: AccountInfo<MarketAccount>) => void;
+  authorityPubkey: PublicKey;
+  setAuthorityPubkey: (key: PublicKey) => void;
+  minColRatio: number;
+  programMinColRatio: number;
+  totalBorrowed: number;
+  setTotalBorrowed: (tvl: number) => void;
+  totalSupply: number;
+  setTotalSupply: (tvl: number) => void;
+  reserves: Record<string, Reserve>;
+  setReserves: (reserves: Record<string, Reserve>) => void;
+}
 const MarketContext = createContext<Market>({
   minColRatio: 1.3,
   programMinColRatio: 1.25,
@@ -64,8 +73,8 @@ export function MarketContextProvider(props: { children: any }) {
   async function subscribeToMarket(reserves: Record<string, Reserve>) {
     let promise: Promise<number>;
     const promises: Promise<number>[] = [];
-  
-    // Market subscription 
+
+    // Market subscription
     promise = getAccountInfoAndSubscribe(connection, idlMetadata.market.market, (account: any) => {
       if (account != null) {
         console.assert(MarketReserveInfoList.span === 12288);
@@ -76,9 +85,9 @@ export function MarketContextProvider(props: { children: any }) {
               reserves[abbrev].liquidationPremium = reserveStruct.liquidationBonus;
               reserves[abbrev].depositNoteExchangeRate = reserveStruct.depositNoteExchangeRate;
               reserves[abbrev].loanNoteExchangeRate = reserveStruct.loanNoteExchangeRate;
-  
+
               deriveValues(reserves, reserves[abbrev]);
-              setReserves({...reserves});
+              setReserves({ ...reserves });
               break;
             }
           }
@@ -86,69 +95,77 @@ export function MarketContextProvider(props: { children: any }) {
       }
     });
     promises.push(promise);
-  
+
     for (const reserveMeta of idlMetadata.reserves) {
       // Reserve
       promise = getAccountInfoAndSubscribe(connection, reserveMeta.accounts.reserve, (account: any) => {
         if (account != null) {
           const decoded = parseReserveAccount(account.data, coder);
-  
+
           reserves[reserveMeta.abbrev].maximumLTV = decoded.config.minCollateralRatio;
           reserves[reserveMeta.abbrev].liquidationPremium = decoded.config.liquidationPremium;
-          reserves[reserveMeta.abbrev].outstandingDebt = new TokenAmount(decoded.state.outstandingDebt, reserveMeta.decimals).divb(new BN(Math.pow(10, 15)));
+          reserves[reserveMeta.abbrev].outstandingDebt = new TokenAmount(
+            decoded.state.outstandingDebt,
+            reserveMeta.decimals
+          ).divb(new BN(Math.pow(10, 15)));
           reserves[reserveMeta.abbrev].accruedUntil = decoded.state.accruedUntil;
           reserves[reserveMeta.abbrev].config = decoded.config;
-  
+
           deriveValues(reserves, reserves[reserveMeta.abbrev]);
-          setReserves({...reserves});
+          setReserves({ ...reserves });
         }
       });
       promises.push(promise);
-  
+
       // Deposit Note Mint
       promise = getMintInfoAndSubscribe(connection, reserveMeta.accounts.depositNoteMint, (amount: any) => {
         if (amount != null) {
           reserves[reserveMeta.abbrev].depositNoteMint = amount;
-  
+
           deriveValues(reserves, reserves[reserveMeta.abbrev]);
-          setReserves({...reserves});
+          setReserves({ ...reserves });
         }
       });
       promises.push(promise);
-  
+
       // Loan Note Mint
       promise = getMintInfoAndSubscribe(connection, reserveMeta.accounts.loanNoteMint, (amount: any) => {
         if (amount != null) {
           reserves[reserveMeta.abbrev].loanNoteMint = amount;
-  
+
           deriveValues(reserves, reserves[reserveMeta.abbrev]);
-          setReserves({...reserves});
+          setReserves({ ...reserves });
         }
       });
       promises.push(promise);
-  
+
       // Reserve Vault
-      promise = getTokenAccountAndSubscribe(connection, reserveMeta.accounts.vault, reserveMeta.decimals, (amount: any) => {
-        if (amount != null) {
-          reserves[reserveMeta.abbrev].availableLiquidity = amount;
-  
-          deriveValues(reserves, reserves[reserveMeta.abbrev]);
-          setReserves({...reserves});
+      promise = getTokenAccountAndSubscribe(
+        connection,
+        reserveMeta.accounts.vault,
+        reserveMeta.decimals,
+        (amount: any) => {
+          if (amount != null) {
+            reserves[reserveMeta.abbrev].availableLiquidity = amount;
+
+            deriveValues(reserves, reserves[reserveMeta.abbrev]);
+            setReserves({ ...reserves });
+          }
         }
-      });
+      );
       promises.push(promise);
-  
+
       // Reserve Token Mint
       promise = getMintInfoAndSubscribe(connection, reserveMeta.accounts.tokenMint, (amount: any) => {
         if (amount != null) {
           reserves[reserveMeta.abbrev].tokenMint = amount;
-  
+
           deriveValues(reserves, reserves[reserveMeta.abbrev]);
-          setReserves({...reserves});
+          setReserves({ ...reserves });
         }
       });
       promises.push(promise);
-  
+
       // Pyth Price
       promise = getAccountInfoAndSubscribe(connection, reserveMeta.accounts.pythPrice, (account: any) => {
         if (account != null) {
@@ -156,22 +173,23 @@ export function MarketContextProvider(props: { children: any }) {
           if (price) {
             reserves[reserveMeta.abbrev].price = price;
             deriveValues(reserves, reserves[reserveMeta.abbrev]);
-            setReserves({...reserves});
+            setReserves({ ...reserves });
           }
         }
       });
       promises.push(promise);
     }
-  
+
     return await Promise.all(promises).then(() => setMarketInit(true));
-  };
+  }
 
   // Derive market reserve and user asset values, update global objects
   function deriveValues(reserves: Record<string, Reserve>, reserve: Reserve) {
     // Derive market reserve values
     reserve.marketSize = reserve.outstandingDebt.add(reserve.availableLiquidity);
-    reserve.utilizationRate = reserve.marketSize.isZero() ? 0
-        : reserve.outstandingDebt.tokens / reserve.marketSize.tokens;
+    reserve.utilizationRate = reserve.marketSize.isZero()
+      ? 0
+      : reserve.outstandingDebt.tokens / reserve.marketSize.tokens;
     const ccRate = getCcRate(reserve.config, reserve.utilizationRate);
     reserve.borrowRate = getBorrowRate(ccRate, reserve.config.manageFeeRate);
     reserve.depositRate = getDepositRate(ccRate, reserve.utilizationRate);
@@ -187,7 +205,7 @@ export function MarketContextProvider(props: { children: any }) {
     }
     setTotalBorrowed(borrowed);
     setTotalSupply(supply);
-  };
+  }
 
   // Init reserves and subscribe
   useEffect(() => {
@@ -240,7 +258,7 @@ export function MarketContextProvider(props: { children: any }) {
         loanNoteMintPubkey: reserveMeta.accounts.loanNoteMint,
         loanNoteMint: TokenAmount.zero(reserveMeta.decimals),
         pythPricePubkey: reserveMeta.accounts.pythPrice,
-        pythProductPubkey: reserveMeta.accounts.pythProduct,
+        pythProductPubkey: reserveMeta.accounts.pythProduct
       };
       reserves[reserveMeta.abbrev] = reserve;
     }
@@ -248,10 +266,10 @@ export function MarketContextProvider(props: { children: any }) {
     // Update market accounts and reserves
     setAccountPubkey(idlMetadata.market.market);
     setAuthorityPubkey(idlMetadata.market.marketAuthority);
-    setReserves({...reserves});
+    setReserves({ ...reserves });
     subscribeToMarket(reserves);
   }, []);
-  
+
   return (
     <MarketContext.Provider
       value={{
