@@ -89,7 +89,7 @@
 @neu-shadow-inset-gradient: inset -1.5px -1.5px 4px #45b2dd, inset 1.5px 1.5px 4px #20755d;
 
 // Drop shadow
-@drop-shadow: 0 3px 6px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.15);
+@drop-shadow: 0 3px 6px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.2);
 
 // Border radius
 @border-radius: 4px;
@@ -115,8 +115,9 @@
 @bold-weight: 550;
 
 // Opacities
-@subtle-opacity: 0.93;
+@subtle-opacity: 0.95;
 @disabled-opacity: 0.725;
+@half-opacity: 0.5;
 
 // Standardized spacing
 @spacing-xs: 4px;
@@ -609,7 +610,7 @@ table {
       background: inherit;
       padding: inherit;
       color: inherit;
-      opacity: @subtle-opacity;
+      opacity: @half-opacity;
       min-width: 60px;
       font-weight: @bold-weight;
       font-size: @xs-font-size;

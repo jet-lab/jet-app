@@ -872,6 +872,7 @@ svg path {
             min-width: 100px;
           }
           &.native-toggle-container {
+            opacity: 1;
             padding-bottom: 3px;
           }
         }
@@ -926,11 +927,14 @@ svg path {
                 fill: @jet-green;
               }
             }
+            &.user-wallet-value {
+              color: @black;
+            }
             &.user-collateral-value {
               color: @jet-green;
             }
-            &.user-loan-value, &.user-wallet-value {
-              color: @jet-blue;
+            &.user-loan-value {
+              color: @failure;
             }
             svg {
               margin-bottom: -4px;

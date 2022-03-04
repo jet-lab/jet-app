@@ -198,14 +198,18 @@ export function UserContextProvider(props: { children: any }) {
     // Update user obligation balances
     collateralBalances[reserve.abbrev] = asset.collateralBalance.tokens;
     loanBalances[reserve.abbrev] = asset.loanBalance.tokens;
+    setCollateralBalances({...collateralBalances});
+    setLoanBalances({...loanBalances});
 
     //update user positions 
+    const updatedPosition: Obligation = {depositedValue: 0, borrowedValue: 0, colRatio: 0, utilizationRate: 0}
     for (let t in assets.tokens) {
-      position.depositedValue += collateralBalances[t] * market.reserves[t].price;
-      position.borrowedValue += loanBalances[t] * market.reserves[t].price;
-      position.colRatio = position.borrowedValue ? position.depositedValue / position.borrowedValue : 0;
-      position.utilizationRate = position.depositedValue ? position.borrowedValue / position.depositedValue : 0;
+      updatedPosition.depositedValue += collateralBalances[t] * market.reserves[t].price;
+      updatedPosition.borrowedValue += loanBalances[t] * market.reserves[t].price;
+      updatedPosition.colRatio = position.borrowedValue ? position.depositedValue / position.borrowedValue : 0;
+      updatedPosition.utilizationRate = position.depositedValue ? position.borrowedValue / position.depositedValue : 0;
     }
+    setPosition(updatedPosition);
 
     // Max deposit
     asset.maxDepositAmount = walletBalances[reserve.abbrev];
@@ -232,10 +236,7 @@ export function UserContextProvider(props: { children: any }) {
     }
 
     assets.tokens[reserve.abbrev] = asset;
-    setCollateralBalances({...collateralBalances});
-    setLoanBalances({...loanBalances});
     setAssets({...assets});
-    setPosition({...position});
   };
 
   // When wallet connects, subscribe to assets
