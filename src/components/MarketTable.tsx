@@ -40,9 +40,9 @@ export function MarketTable() {
 
   // If in development, can request airdrop for testing
   const doAirdrop = async (reserve: Reserve): Promise<void> => {
-    let amount = TokenAmount.tokens("100", reserve.decimals);
-    if(reserve.tokenMintPubkey.equals(NATIVE_MINT)) {
-      amount = TokenAmount.tokens("1", reserve.decimals);
+    let amount = TokenAmount.tokens('100', reserve.decimals);
+    if (reserve.tokenMintPubkey.equals(NATIVE_MINT)) {
+      amount = TokenAmount.tokens('1', reserve.decimals);
     }
 
     const [res] = await airdrop(reserve.abbrev, amount.amount);
@@ -50,8 +50,8 @@ export function MarketTable() {
       notification.success({
         message: dictionary.copilot.alert.success,
         description: dictionary.copilot.alert.airdropSuccess
-        .replaceAll('{{UI AMOUNT}}', amount.uiAmount)
-        .replaceAll('{{RESERVE ABBREV}}', reserve.abbrev)
+          .replaceAll('{{UI AMOUNT}}', amount.uiAmount)
+          .replaceAll('{{RESERVE ABBREV}}', reserve.abbrev)
       });
     } else if (res === TxnResponse.Failed) {
       notification.error({
@@ -187,9 +187,13 @@ export function MarketTable() {
                   </td>
                   <td
                     className={
-                      user.walletInit && user.loanBalances[reserve.abbrev] ? 'user-loan-value text-btn semi-bold-text' : ''
+                      user.walletInit && user.loanBalances[reserve.abbrev]
+                        ? 'user-loan-value text-btn semi-bold-text'
+                        : ''
                     }
-                    onClick={() => (user.walletInit && user.loanBalances[reserve.abbrev] ? setCurrentAction('repay') : null)}>
+                    onClick={() =>
+                      user.walletInit && user.loanBalances[reserve.abbrev] ? setCurrentAction('repay') : null
+                    }>
                     {user.walletInit
                       ? user.loanBalances[reserve.abbrev] > 0 && user.loanBalances[reserve.abbrev] < 0.0005
                         ? '~0'

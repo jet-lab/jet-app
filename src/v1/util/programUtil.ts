@@ -1,108 +1,134 @@
-import { BN } from "@project-serum/anchor";
-import * as anchor from "@project-serum/anchor";
-import { MintInfo, MintLayout, AccountInfo as TokenAccountInfo, AccountLayout as TokenAccountLayout } from "@solana/spl-token";
-import { AccountInfo, Commitment, ConfirmOptions, Connection, Context, PublicKey, Signer, Transaction, TransactionInstruction } from "@solana/web3.js";
-import { Buffer } from "buffer";
-import type { HasPublicKey, IdlMetadata, JetMarketReserveInfo, MarketAccount, ObligationAccount, ObligationPositionStruct, ReserveAccount, ReserveConfigStruct, ReserveStateStruct, ToBytes } from "../models/JetTypes";
-import { TxnResponse } from "../models/JetTypes";
-import { MarketReserveInfoList, PositionInfoList, ReserveStateLayout } from "./layout";
-import { TokenAmount } from "./tokens";
-import { idl } from "../../hooks/jet-client/useClient";
+import { BN } from '@project-serum/anchor';
+import * as anchor from '@project-serum/anchor';
+import {
+  MintInfo,
+  MintLayout,
+  AccountInfo as TokenAccountInfo,
+  AccountLayout as TokenAccountLayout
+} from '@solana/spl-token';
+import {
+  AccountInfo,
+  Commitment,
+  ConfirmOptions,
+  Connection,
+  Context,
+  PublicKey,
+  Signer,
+  Transaction,
+  TransactionInstruction
+} from '@solana/web3.js';
+import { Buffer } from 'buffer';
+import type {
+  HasPublicKey,
+  IdlMetadata,
+  JetMarketReserveInfo,
+  MarketAccount,
+  ObligationAccount,
+  ObligationPositionStruct,
+  ReserveAccount,
+  ReserveConfigStruct,
+  ReserveStateStruct,
+  ToBytes
+} from '../models/JetTypes';
+import { TxnResponse } from '../models/JetTypes';
+import { MarketReserveInfoList, PositionInfoList, ReserveStateLayout } from './layout';
+import { TokenAmount } from './tokens';
+import { idl } from '../../hooks/jet-client/useClient';
 
 // Find PDA functions and jet algorithms that are reimplemented here
 export const SOL_DECIMALS = 9;
-export const NULL_PUBKEY = new PublicKey("11111111111111111111111111111111");
+export const NULL_PUBKEY = new PublicKey('11111111111111111111111111111111');
 
 // Find PDA addresses
 /** Find market authority. */
-export const findMarketAuthorityAddress = async (program: anchor.Program, market: PublicKey)
-  : Promise<[marketAuthorityPubkey: PublicKey, marketAuthorityBump: number]> => {
-  return findProgramAddress(
-    program.programId,
-    [market.toBuffer()]
-  );
+export const findMarketAuthorityAddress = async (
+  program: anchor.Program,
+  market: PublicKey
+): Promise<[marketAuthorityPubkey: PublicKey, marketAuthorityBump: number]> => {
+  return findProgramAddress(program.programId, [market.toBuffer()]);
 };
 
 /** Find reserve deposit note mint. */
-export const findDepositNoteMintAddress = async (program: anchor.Program, reserve: PublicKey, reserveTokenMint: PublicKey)
-  : Promise<[depositNoteMintPubkey: PublicKey, depositNoteMintBump: number]> => {
-  return await findProgramAddress(
-    program.programId,
-    ["deposits", reserve, reserveTokenMint],
-  );
+export const findDepositNoteMintAddress = async (
+  program: anchor.Program,
+  reserve: PublicKey,
+  reserveTokenMint: PublicKey
+): Promise<[depositNoteMintPubkey: PublicKey, depositNoteMintBump: number]> => {
+  return await findProgramAddress(program.programId, ['deposits', reserve, reserveTokenMint]);
 };
 
 /** Find reserve loan note mint. */
-export const findLoanNoteMintAddress = async (program: anchor.Program, reserve: PublicKey, reserveTokenMint: PublicKey)
-  : Promise<[loanNoteMintPubkey: PublicKey, loanNoteMintBump: number]> => {
-  return await findProgramAddress(
-    program.programId,
-    ["loans", reserve, reserveTokenMint]
-  );
+export const findLoanNoteMintAddress = async (
+  program: anchor.Program,
+  reserve: PublicKey,
+  reserveTokenMint: PublicKey
+): Promise<[loanNoteMintPubkey: PublicKey, loanNoteMintBump: number]> => {
+  return await findProgramAddress(program.programId, ['loans', reserve, reserveTokenMint]);
 };
 
 /** Find reserve deposit note destination account for wallet. */
-export const findDepositNoteDestAddress = async (program: anchor.Program, reserve: PublicKey, wallet: PublicKey)
-  : Promise<[depositNoteDestPubkey: PublicKey, depositNoteDestBump: number]> => {
-  return await findProgramAddress(
-    program.programId,
-    [reserve, wallet]
-  );
+export const findDepositNoteDestAddress = async (
+  program: anchor.Program,
+  reserve: PublicKey,
+  wallet: PublicKey
+): Promise<[depositNoteDestPubkey: PublicKey, depositNoteDestBump: number]> => {
+  return await findProgramAddress(program.programId, [reserve, wallet]);
 };
 
 /** Find reserve vault token account. */
-export const findVaultAddress = async (program: anchor.Program, market: PublicKey, reserve: PublicKey)
-  : Promise<[vaultPubkey: PublicKey, vaultBump: number]> => {
-  return await findProgramAddress(
-    program.programId,
-    [market, reserve]
-  );
+export const findVaultAddress = async (
+  program: anchor.Program,
+  market: PublicKey,
+  reserve: PublicKey
+): Promise<[vaultPubkey: PublicKey, vaultBump: number]> => {
+  return await findProgramAddress(program.programId, [market, reserve]);
 };
 
-export const findFeeNoteVault = async (program: anchor.Program, reserve: PublicKey)
-  : Promise<[feeNoteVaultPubkey: PublicKey, feeNoteVaultBump: number]> => {
-  return await findProgramAddress(program.programId, [
-    "fee-vault",
-    reserve,
-  ]);
+export const findFeeNoteVault = async (
+  program: anchor.Program,
+  reserve: PublicKey
+): Promise<[feeNoteVaultPubkey: PublicKey, feeNoteVaultBump: number]> => {
+  return await findProgramAddress(program.programId, ['fee-vault', reserve]);
 };
 
 /** Find reserve deposit note account for wallet */
-export const findDepositNoteAddress = async (program: anchor.Program, reserve: PublicKey, wallet: PublicKey)
-  : Promise<[depositNotePubkey: PublicKey, depositAccountBump: number]> => {
-  return await findProgramAddress(
-    program.programId,
-    ["deposits", reserve, wallet]
-  );
+export const findDepositNoteAddress = async (
+  program: anchor.Program,
+  reserve: PublicKey,
+  wallet: PublicKey
+): Promise<[depositNotePubkey: PublicKey, depositAccountBump: number]> => {
+  return await findProgramAddress(program.programId, ['deposits', reserve, wallet]);
 };
 
-/** 
+/**
  * Find the obligation for the wallet.
  */
-export const findObligationAddress = async (program: anchor.Program, market: PublicKey, wallet: PublicKey)
-  : Promise<[obligationPubkey: PublicKey, obligationBump: number]> => {
-  return await findProgramAddress(
-    program.programId,
-    ["obligation", market, wallet]
-  );
+export const findObligationAddress = async (
+  program: anchor.Program,
+  market: PublicKey,
+  wallet: PublicKey
+): Promise<[obligationPubkey: PublicKey, obligationBump: number]> => {
+  return await findProgramAddress(program.programId, ['obligation', market, wallet]);
 };
 
 /** Find loan note token account for the reserve, obligation and wallet. */
-export const findLoanNoteAddress = async (program: anchor.Program, reserve: PublicKey, obligation: PublicKey, wallet: PublicKey)
-  : Promise<[loanNotePubkey: PublicKey, loanNoteBump: number]> => {
-  return await findProgramAddress(
-    program.programId,
-    ["loan", reserve, obligation, wallet]
-  );
+export const findLoanNoteAddress = async (
+  program: anchor.Program,
+  reserve: PublicKey,
+  obligation: PublicKey,
+  wallet: PublicKey
+): Promise<[loanNotePubkey: PublicKey, loanNoteBump: number]> => {
+  return await findProgramAddress(program.programId, ['loan', reserve, obligation, wallet]);
 };
 
 /** Find collateral account for the reserve, obligation and wallet. */
-export const findCollateralAddress = async (program: anchor.Program, reserve: PublicKey, obligation: PublicKey, wallet: PublicKey)
-  : Promise<[collateralPubkey: PublicKey, collateralBump: number]> => {
-  return await findProgramAddress(
-    program.programId,
-    ["collateral", reserve, obligation, wallet]
-  );
+export const findCollateralAddress = async (
+  program: anchor.Program,
+  reserve: PublicKey,
+  obligation: PublicKey,
+  wallet: PublicKey
+): Promise<[collateralPubkey: PublicKey, collateralBump: number]> => {
+  return await findProgramAddress(program.programId, ['collateral', reserve, obligation, wallet]);
 };
 
 /**
@@ -115,12 +141,12 @@ export const findProgramAddress = async (
   programId: PublicKey,
   seeds: (HasPublicKey | ToBytes | Uint8Array | string)[]
 ): Promise<[PublicKey, number]> => {
-  const seed_bytes = seeds.map((s) => {
-    if (typeof s === "string") {
+  const seed_bytes = seeds.map(s => {
+    if (typeof s === 'string') {
       return new TextEncoder().encode(s);
-    } else if ("publicKey" in s) {
+    } else if ('publicKey' in s) {
       return s.publicKey.toBytes();
-    } else if ("toBytes" in s) {
+    } else if ('toBytes' in s) {
       return s.toBytes();
     } else {
       return s;
@@ -147,18 +173,23 @@ export const getTokenAccountAndSubscribe = async function (
   callback: (amount: TokenAmount | undefined, context: Context) => void,
   commitment?: Commitment
 ): Promise<number> {
-  return await getAccountInfoAndSubscribe(connection, publicKey, (account, context) => {
-    if (account !== null) {
-      if (account.data.length !== 165) {
-        console.log('account data length', account.data.length);
+  return await getAccountInfoAndSubscribe(
+    connection,
+    publicKey,
+    (account, context) => {
+      if (account !== null) {
+        if (account.data.length !== 165) {
+          console.log('account data length', account.data.length);
+        }
+        const decoded = parseTokenAccount(account, publicKey);
+        const amount = TokenAmount.tokenAccount(decoded.data, decimals);
+        callback(amount, context);
+      } else {
+        callback(undefined, context);
       }
-      const decoded = parseTokenAccount(account, publicKey);
-      const amount = TokenAmount.tokenAccount(decoded.data, decimals);
-      callback(amount, context);
-    } else {
-      callback(undefined, context);
-    }
-  }, commitment);
+    },
+    commitment
+  );
 };
 
 /**
@@ -177,15 +208,20 @@ export const getMintInfoAndSubscribe = async function (
   callback: (amount: TokenAmount | undefined, context: Context) => void,
   commitment?: Commitment | undefined
 ): Promise<number> {
-  return await getAccountInfoAndSubscribe(connection, publicKey, (account, context) => {
-    if (account !== null) {
-      let mintInfo = MintLayout.decode(account.data) as MintInfo;
-      let amount = TokenAmount.mint(mintInfo);
-      callback(amount, context);
-    } else {
-      callback(undefined, context);
-    }
-  }, commitment);
+  return await getAccountInfoAndSubscribe(
+    connection,
+    publicKey,
+    (account, context) => {
+      if (account !== null) {
+        let mintInfo = MintLayout.decode(account.data) as MintInfo;
+        let amount = TokenAmount.mint(mintInfo);
+        callback(amount, context);
+      } else {
+        callback(undefined, context);
+      }
+    },
+    commitment
+  );
 };
 
 /**
@@ -206,17 +242,22 @@ export const getProgramAccountInfoAndSubscribe = async function <T>(
   callback: (acc: AccountInfo<T> | undefined, context: Context) => void,
   commitment?: Commitment | undefined
 ): Promise<number> {
-  return await getAccountInfoAndSubscribe(connection, publicKey, (account, context) => {
-    if (account !== null) {
-      const decoded: AccountInfo<T> = {
-        ...account,
-        data: coder.accounts.decode(accountType, account.data) as T,
-      };
-      callback(decoded, context);
-    } else {
-      callback(undefined, context);
-    }
-  }, commitment);
+  return await getAccountInfoAndSubscribe(
+    connection,
+    publicKey,
+    (account, context) => {
+      if (account !== null) {
+        const decoded: AccountInfo<T> = {
+          ...account,
+          data: coder.accounts.decode(accountType, account.data) as T
+        };
+        callback(decoded, context);
+      } else {
+        callback(undefined, context);
+      }
+    },
+    commitment
+  );
 };
 
 /**
@@ -267,20 +308,17 @@ export const sendTransaction = async (
   skipConfirmation?: boolean
 ): Promise<[res: TxnResponse, txid: string[]]> => {
   if (!provider.wallet?.publicKey) {
-    throw new Error("Wallet is not connected");
-    
+    throw new Error('Wallet is not connected');
   }
   // Building phase
   let transaction = new Transaction();
   transaction.instructions = instructions;
-  transaction.recentBlockhash = (
-    await provider.connection.getRecentBlockhash()
-  ).blockhash;
+  transaction.recentBlockhash = (await provider.connection.getRecentBlockhash()).blockhash;
   transaction.feePayer = provider.wallet.publicKey;
 
   // Signing phase
   if (signers && signers.length > 0) {
-    transaction.partialSign(...signers)
+    transaction.partialSign(...signers);
   }
   try {
     transaction = await provider.wallet.signTransaction(transaction);
@@ -292,21 +330,13 @@ export const sendTransaction = async (
 
   // Sending phase
   const rawTransaction = transaction.serialize();
-  const txid = await provider.connection.sendRawTransaction(
-    rawTransaction,
-    provider.opts
-  );
+  const txid = await provider.connection.sendRawTransaction(rawTransaction, provider.opts);
   console.log(`Transaction ${explorerUrl(txid)} ${rawTransaction.byteLength} of 1232 bytes...`, transaction);
 
   // Confirming phase
   let res = TxnResponse.Success;
   if (!skipConfirmation) {
-    const status = (
-      await provider.connection.confirmTransaction(
-        txid,
-        provider.opts.commitment
-      )
-    ).value;
+    const status = (await provider.connection.confirmTransaction(txid, provider.opts.commitment)).value;
 
     if (status?.err && txid.length) {
       res = TxnResponse.Failed;
@@ -315,7 +345,10 @@ export const sendTransaction = async (
   return [res, [txid]];
 };
 
-export interface InstructionAndSigner { ix: TransactionInstruction[], signers?: Signer[] };
+export interface InstructionAndSigner {
+  ix: TransactionInstruction[];
+  signers?: Signer[];
+}
 
 export const sendAllTransactions = async (
   provider: anchor.Provider,
@@ -323,7 +356,7 @@ export const sendAllTransactions = async (
   skipConfirmation?: boolean
 ): Promise<[res: TxnResponse, txids: string[]]> => {
   if (!provider.wallet?.publicKey) {
-    throw new Error("Wallet is not connected");
+    throw new Error('Wallet is not connected');
   }
 
   // Building and partial sign phase
@@ -338,7 +371,7 @@ export const sendAllTransactions = async (
     transaction.recentBlockhash = recentBlockhash.blockhash;
     transaction.feePayer = provider.wallet.publicKey;
     if (tx.signers && tx.signers.length > 0) {
-      transaction.partialSign(...tx.signers)
+      transaction.partialSign(...tx.signers);
     }
     txs.push(transaction);
   }
@@ -355,15 +388,14 @@ export const sendAllTransactions = async (
     } else {
       signedTransactions = await provider.wallet.signAllTransactions(txs);
     }
-  }
-  catch (err) {
+  } catch (err) {
     console.log('Signing All Transactions Failed', err);
     // wallet refused to sign
     return [TxnResponse.Cancelled, []];
   }
 
   // Sending phase
-  console.log("Transactions", txs);
+  console.log('Transactions', txs);
   let res = TxnResponse.Success;
   const txids: string[] = [];
   for (let i = 0; i < signedTransactions.length; i++) {
@@ -377,7 +409,7 @@ export const sendAllTransactions = async (
     const opts: ConfirmOptions = {
       ...provider.opts,
       skipPreflight: skipPreflightSimulation
-    }
+    };
 
     const rawTransaction = transaction.serialize();
     const txid = await provider.connection.sendRawTransaction(rawTransaction, opts);
@@ -386,12 +418,7 @@ export const sendAllTransactions = async (
 
     // Confirming phase
     if (!skipConfirmation) {
-      const status = (
-        await provider.connection.confirmTransaction(
-          txid,
-          provider.opts.commitment
-        )
-      ).value;
+      const status = (await provider.connection.confirmTransaction(txid, provider.opts.commitment)).value;
 
       if (status?.err) {
         res = TxnResponse.Failed;
@@ -402,8 +429,8 @@ export const sendAllTransactions = async (
 };
 
 export const explorerUrl = (txid: string) => {
-  const clusterParam = process.env.REACT_APP_CLUSTER === 'devnet' ? `?cluster=devnet` : "";
-  return `https://explorer.solana.com/transaction/${txid}${clusterParam}`
+  const clusterParam = process.env.REACT_APP_CLUSTER === 'devnet' ? `?cluster=devnet` : '';
+  return `https://explorer.solana.com/transaction/${txid}${clusterParam}`;
 };
 
 export const parseTokenAccount = (account: AccountInfo<Buffer>, accountPubkey: PublicKey) => {
@@ -417,21 +444,21 @@ export const parseTokenAccount = (account: AccountInfo<Buffer>, accountPubkey: P
       address: accountPubkey,
       mint: new PublicKey(data.mint),
       owner: new PublicKey(data.owner),
-      amount: new BN(data.amount, undefined, "le"),
+      amount: new BN(data.amount, undefined, 'le'),
       delegate: (data as any).delegateOption ? new PublicKey(data.delegate!) : null,
-      delegatedAmount: new BN(data.delegatedAmount, undefined, "le"),
+      delegatedAmount: new BN(data.delegatedAmount, undefined, 'le'),
       isInitialized: (data as any).state !== 0,
       isFrozen: (data as any).state === 2,
       isNative: !!(data as any).isNativeOption,
-      rentExemptReserve: new BN(0, undefined, "le"), //  Todo: calculate. I believe this is lamports minus rent for wrapped sol
-      closeAuthority: (data as any).closeAuthorityOption ? new PublicKey(data.closeAuthority!) : null,
+      rentExemptReserve: new BN(0, undefined, 'le'), //  Todo: calculate. I believe this is lamports minus rent for wrapped sol
+      closeAuthority: (data as any).closeAuthorityOption ? new PublicKey(data.closeAuthority!) : null
     }
-  }
+  };
   return decoded;
 };
 
 export const parseMarketAccount = (account: Buffer, coder: anchor.Coder) => {
-  let market = coder.accounts.decode<MarketAccount>("Market", account);
+  let market = coder.accounts.decode<MarketAccount>('Market', account);
 
   let reserveInfoData = new Uint8Array(market.reserves as any as number[]);
   let reserveInfoList = MarketReserveInfoList.decode(reserveInfoData) as JetMarketReserveInfo[];
@@ -441,7 +468,7 @@ export const parseMarketAccount = (account: Buffer, coder: anchor.Coder) => {
 };
 
 export const parseReserveAccount = (account: Buffer, coder: anchor.Coder) => {
-  let reserve = coder.accounts.decode<ReserveAccount>("Reserve", account);
+  let reserve = coder.accounts.decode<ReserveAccount>('Reserve', account);
 
   const reserveState = ReserveStateLayout.decode(Buffer.from(reserve.state as any as number[])) as ReserveStateStruct;
 
@@ -450,7 +477,7 @@ export const parseReserveAccount = (account: Buffer, coder: anchor.Coder) => {
 };
 
 export const parseObligationAccount = (account: Buffer, coder: anchor.Coder) => {
-  let obligation = coder.accounts.decode<ObligationAccount>("Obligation", account);
+  let obligation = coder.accounts.decode<ObligationAccount>('Obligation', account);
 
   const parsePosition = (position: any) => {
     const pos: ObligationPositionStruct = {
@@ -458,24 +485,22 @@ export const parseObligationAccount = (account: Buffer, coder: anchor.Coder) => 
       amount: new BN(position.amount),
       side: position.side,
       reserveIndex: position.reserveIndex,
-      _reserved: [],
+      _reserved: []
     };
     return pos;
-  }
+  };
 
-  obligation.collateral = PositionInfoList
-    .decode(Buffer.from(obligation.collateral as any as number[]))
-    .map(parsePosition);
+  obligation.collateral = PositionInfoList.decode(Buffer.from(obligation.collateral as any as number[])).map(
+    parsePosition
+  );
 
-  obligation.loans = PositionInfoList
-    .decode(Buffer.from(obligation.loans as any as number[]))
-    .map(parsePosition);
+  obligation.loans = PositionInfoList.decode(Buffer.from(obligation.loans as any as number[])).map(parsePosition);
 
   return obligation;
 };
 
 export const parseU192 = (data: Buffer | number[]) => {
-  return new BN(data, undefined, "le");
+  return new BN(data, undefined, 'le');
 };
 
 export const parseIdlMetadata = (idlMetadata: IdlMetadata): IdlMetadata => {
@@ -486,10 +511,10 @@ export const parseIdlMetadata = (idlMetadata: IdlMetadata): IdlMetadata => {
     reserves: idlMetadata.reserves.map(reserve => {
       return {
         ...reserve,
-        accounts: toPublicKeys(reserve.accounts),
-      }
+        accounts: toPublicKeys(reserve.accounts)
+      };
     }) as any
-  }
+  };
 };
 
 /**
@@ -503,7 +528,7 @@ export function toPublicKeys(obj: Record<string, string | PublicKey | HasPublicK
   for (const key in obj) {
     const value = obj[key];
 
-    if (typeof value === "string") {
+    if (typeof value === 'string') {
       newObj[key] = new PublicKey(value);
     } else if ('publicKey' in value) {
       newObj[key] = value.publicKey;
@@ -516,16 +541,16 @@ export function toPublicKeys(obj: Record<string, string | PublicKey | HasPublicK
 }
 
 /** Linear interpolation between (x0, y0) and (x1, y1)
-*/
+ */
 const interpolate = (x: number, x0: number, x1: number, y0: number, y1: number): number => {
   console.assert!(x >= x0);
   console.assert!(x <= x1);
 
   return y0 + ((x - x0) * (y1 - y0)) / (x1 - x0);
-}
+};
 
-/** Continuous Compounding Rate 
-*/
+/** Continuous Compounding Rate
+ */
 export const getCcRate = (reserveConfig: ReserveConfigStruct, utilRate: number): number => {
   const basisPointFactor = 10000;
   let util1 = reserveConfig.utilizationRate1 / basisPointFactor;
@@ -545,7 +570,7 @@ export const getCcRate = (reserveConfig: ReserveConfigStruct, utilRate: number):
 };
 
 /** Borrow rate
-*/
+ */
 export const getBorrowRate = (ccRate: number, fee: number): number => {
   const basisPointFactor = 10000;
   fee = fee / basisPointFactor;
@@ -556,7 +581,7 @@ export const getBorrowRate = (ccRate: number, fee: number): number => {
 };
 
 /** Deposit rate
-*/
+ */
 export const getDepositRate = (ccRate: number, utilRatio: number): number => {
   const secondsPerYear: number = 365 * 24 * 60 * 60;
   const rt = ccRate / secondsPerYear;
@@ -569,9 +594,9 @@ export const getDepositRate = (ccRate: number, utilRatio: number): number => {
  * @param error An error object from anchor.
  * @returns A stringified error.
  */
- export const transactionErrorToString = (error: any) => {
+export const transactionErrorToString = (error: any) => {
   if (error.code) {
-    return `Code ${error.code}: ${error.msg}\n${error.logs}\n${error.stack}`
+    return `Code ${error.code}: ${error.msg}\n${error.logs}\n${error.stack}`;
   } else {
     return `${error} ${getErrNameAndMsg(Number(getCustomProgramErrorCode(JSON.stringify(error))[1]))}`;
   }
@@ -581,7 +606,7 @@ export const getDepositRate = (ccRate: number, utilRatio: number): number => {
 export const getErrNameAndMsg = (errCode: number): string => {
   const code = Number(errCode);
 
-  if (code >=100 && code < 300) {
+  if (code >= 100 && code < 300) {
     return `This is an Anchor program error code ${code}. Please check here: https://github.com/project-serum/anchor/blob/master/lang/src/error.rs`;
   }
 
@@ -590,22 +615,22 @@ export const getErrNameAndMsg = (errCode: number): string => {
     if (err.code === code) {
       return `\n\nCustom Program Error Code: ${errCode} \n- ${err.name} \n- ${err.msg}`;
     }
-  } 
+  }
   return `No matching error code description or translation for ${errCode}`;
 };
 
 //get the custom program error code if there's any in the error message and return parsed error code hex to number string
 
-  /**
-   * Get the custom program error code if there's any in the error message and return parsed error code hex to number string
-   * @param errMessage string - error message that would contain the word "custom program error:" if it's a customer program error
-   * @returns [boolean, string] - probably not a custom program error if false otherwise the second element will be the code number in string
-   */
+/**
+ * Get the custom program error code if there's any in the error message and return parsed error code hex to number string
+ * @param errMessage string - error message that would contain the word "custom program error:" if it's a customer program error
+ * @returns [boolean, string] - probably not a custom program error if false otherwise the second element will be the code number in string
+ */
 export const getCustomProgramErrorCode = (errMessage: string): [boolean, string] => {
   const index = errMessage.indexOf('custom program error:');
-  if(index === -1) {
-    return [false, 'May not be a custom program error']
+  if (index === -1) {
+    return [false, 'May not be a custom program error'];
   } else {
-    return [true, `${parseInt(errMessage.substring(index + 22,  index + 28).replace(' ', ''), 16)}`];
+    return [true, `${parseInt(errMessage.substring(index + 22, index + 28).replace(' ', ''), 16)}`];
   }
 };

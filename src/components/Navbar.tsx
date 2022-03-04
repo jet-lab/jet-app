@@ -25,17 +25,13 @@ export function Navbar() {
     { title: dictionary.termsPrivacy.termsOfUse, url: 'https://www.jetprotocol.io/terms-of-use' },
     { title: dictionary.termsPrivacy.privacyPolicy, url: 'https://www.jetprotocol.io/privacy-policy' }
   ];
-  const accountLink = { title: dictionary.account.title, route: '/' }
+  const accountLink = { title: dictionary.account.title, route: '/' };
 
   return (
     <div className={`navbar-container flex-centered ${drawerOpened ? 'drawer-open' : ''}`}>
       {/* Desktop Nav */}
       <nav className="desktop flex align-center justify-between">
-        <a
-          className="logo flex-centered"
-          href="https://jetprotocol.io/"
-          target="_blank"
-          rel="noopener noreferrer">
+        <a className="logo flex-centered" href="https://jetprotocol.io/" target="_blank" rel="noopener noreferrer">
           <img src="img/jet/jet_full_white.png" width="100%" height="auto" alt="Jet Protocol" />
         </a>
         <div className="nav-links flex-centered">
@@ -96,25 +92,22 @@ export function Navbar() {
               }}>
               <WalletIcon width="20px" />
               {connected
-                ? `${shortenPubkey(publicKey ? publicKey.toString() : '')} ${dictionary.settings.connected.toUpperCase()}`
+                ? `${shortenPubkey(
+                    publicKey ? publicKey.toString() : ''
+                  )} ${dictionary.settings.connected.toUpperCase()}`
                 : dictionary.settings.connect.toUpperCase()}
             </Button>
           </div>
           <div className="drawer-bottom flex-centered column">
             {mobileFooterLinks.map(link => (
-              <a
-                key={link.title}
-                href={link.url}
-                className="footer-link"
-                rel="noopener noreferrer"
-                target="_blank">
+              <a key={link.title} href={link.url} className="footer-link" rel="noopener noreferrer" target="_blank">
                 {link.title}
               </a>
             ))}
-            <Switch 
-              className="secondary-switch" 
-              onClick={() => toggleDarkTheme()} 
-              checked={darkTheme} 
+            <Switch
+              className="secondary-switch"
+              onClick={() => toggleDarkTheme()}
+              checked={darkTheme}
               checkedChildren="Dark"
               unCheckedChildren="Light"
             />

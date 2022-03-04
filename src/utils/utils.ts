@@ -3,12 +3,12 @@ export function timeout(ms: number) {
   return new Promise(res => {
     setTimeout(() => res(true), ms);
   });
-};
+}
 
 // Shorten a pubkey with ellipses
 export function shortenPubkey(pubkey: string, halfLength: number = 4) {
   return `${pubkey.substring(0, halfLength)}...${pubkey.substring(pubkey.length - halfLength)}`;
-};
+}
 
 // Check if a string is a valid URL
 export function isValidHttpUrl(input: string) {
@@ -20,4 +20,4 @@ export function isValidHttpUrl(input: string) {
   }
 
   return url.protocol === 'http:' || url.protocol === 'https:';
-};
+}

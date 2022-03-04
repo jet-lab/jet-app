@@ -51,8 +51,7 @@ export function BlockExplorerProvider(props: { children: any }) {
 export const useBlockExplorer = () => {
   const { preferredExplorer, setPreferredExplorer } = useContext(BlockExplorerContext);
   const baseUrl = blockExplorers[preferredExplorer].url;
-  const clusterParam =
-    cluster === 'devnet' ? `${preferredExplorer === 'solscan' ? '&' : '?'}cluster=devnet` : '';
+  const clusterParam = cluster === 'devnet' ? `${preferredExplorer === 'solscan' ? '&' : '?'}cluster=devnet` : '';
   return {
     blockExplorers,
     preferredExplorer,

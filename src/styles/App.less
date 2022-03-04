@@ -1,4 +1,4 @@
-@import "../../lib/jet-antd/lib/jet-antd.less";
+@import '../../lib/jet-antd/lib/jet-antd.less';
 /***************************
   App Specific Styles
 ***************************/
@@ -10,7 +10,7 @@
 // Jet Icons
 @font-face {
   font-family: 'Jet-Icons';
-  src: url("./fonts/JetIcons-Regular.woff") format('woff');
+  src: url('./fonts/JetIcons-Regular.woff') format('woff');
 }
 .jet-icons {
   font-family: 'Jet-Icons';
@@ -23,7 +23,7 @@ svg path {
 }
 
 // Views
-.view-header { 
+.view-header {
   font-size: 90px;
   line-height: 90px;
   opacity: 1;
@@ -55,7 +55,7 @@ svg path {
   }
   &-subheader {
     font-size: 38px;
-  } 
+  }
 }
 
 // Info Icon
@@ -150,7 +150,8 @@ svg path {
         background: unset;
       }
 
-      &:active, &.loading {
+      &:active,
+      &.loading {
         background: @white;
 
         i {
@@ -168,7 +169,8 @@ svg path {
     .input-btn {
       cursor: not-allowed;
 
-      &:hover, &:active {
+      &:hover,
+      &:active {
         background: @gradient;
         opacity: 1;
       }
@@ -183,7 +185,7 @@ svg path {
           i {
             -webkit-text-fill-color: unset;
           }
-  
+
           background: unset;
         }
       }
@@ -206,7 +208,8 @@ svg path {
     opacity: 1;
   }
 
-  .crypto, .usd {
+  .crypto,
+  .usd {
     width: 50%;
     height: 100%;
     padding: 3px 3px 2px 3px;
@@ -284,8 +287,8 @@ svg path {
     height: 80%;
     border-radius: 100%;
     background: @white;
-    box-shadow: -2px -2px 6px 0px @light-shadow, 2px 2px 6px 0px @dark-shadow,
-      inset 0px 0px 0px 0px @light-shadow, inset 0px 0px 0px 0px @dark-shadow;
+    box-shadow: -2px -2px 6px 0px @light-shadow, 2px 2px 6px 0px @dark-shadow, inset 0px 0px 0px 0px @light-shadow,
+      inset 0px 0px 0px 0px @dark-shadow;
 
     img {
       width: 100%;
@@ -323,7 +326,9 @@ svg path {
   box-shadow: @neu-shadow;
   border-radius: 100px;
 
-  .chart-info, .inset-chart-shadow, svg {
+  .chart-info,
+  .inset-chart-shadow,
+  svg {
     width: 145px;
     position: absolute;
     top: 50%;
@@ -364,7 +369,9 @@ svg path {
   }
 
   &-modal {
-    h1, p, span {
+    h1,
+    p,
+    span {
       margin: unset;
     }
     img {
@@ -372,7 +379,7 @@ svg path {
       height: 40px;
       padding: 0 @spacing-sm;
     }
-  
+
     .asset-info-color {
       width: 10px;
       height: 12px;
@@ -382,7 +389,7 @@ svg path {
       position: relative;
       width: 100%;
       margin: @spacing-md 0;
-  
+
       .toggler {
         position: absolute;
         top: 50%;
@@ -392,7 +399,7 @@ svg path {
     }
     .totals {
       margin: @spacing-sm 0;
-  
+
       span {
         text-align: left;
       }
@@ -401,7 +408,7 @@ svg path {
       width: 10px;
       height: 10px;
       margin: 2px @spacing-sm 0 @spacing-sm;
-  
+
       &.borrowed {
         background: @failure;
         box-shadow: @neu-shadow-inset-failure;
@@ -413,7 +420,7 @@ svg path {
     }
     .reserve-subdetails {
       width: 100%;
-  
+
       .reserve-subdetail {
         width: 50%;
       }
@@ -444,17 +451,16 @@ svg path {
         margin: unset;
         border-collapse: collapse;
         background: @grey;
-  
+
         thead {
           th {
             padding: @spacing-xs @spacing-xl;
             font-size: @sm-font-size;
-    
+
             &:first-of-type {
               min-width: unset;
               text-align: left;
-              
-              
+
               img {
                 height: 25px;
                 margin: unset;
@@ -465,14 +471,14 @@ svg path {
               }
             }
           }
-  
+
           &:after {
             width: 150%;
             border: unset;
             left: -25%;
           }
         }
-    
+
         tbody {
           img {
             height: 23px;
@@ -480,7 +486,7 @@ svg path {
           td {
             font-size: @base-font-size;
             text-align: center;
-  
+
             &:first-of-type {
               text-align: left;
               padding: @spacing-sm 30px;
@@ -492,7 +498,7 @@ svg path {
               td {
                 padding-top: @spacing-xl;
                 font-weight: @subheader-weight;
-  
+
                 img {
                   height: 32px;
                   margin-left: -5px;
@@ -575,14 +581,14 @@ svg path {
       font-size: @xs-font-size;
       color: @dark-grey;
     }
-  
+
     &-indicator {
       position: absolute;
       top: -5px;
-  
+
       &-arrow {
-        width: 0; 
-        height: 0; 
+        width: 0;
+        height: 0;
         border-left: 5px solid transparent;
         border-right: 5px solid transparent;
         border-top: 8px solid @black;
@@ -611,7 +617,6 @@ svg path {
       &.active {
         opacity: 1;
       }
-
 
       p {
         margin: unset;
@@ -738,7 +743,8 @@ svg path {
             }
           }
 
-          &:hover, &.active {
+          &:hover,
+          &.active {
             opacity: 1;
 
             p::after {
@@ -748,7 +754,7 @@ svg path {
           &.active {
             background: unset;
             box-shadow: unset;
-      
+
             p {
               color: @white;
               -webkit-text-fill-color: unset;
@@ -813,7 +819,7 @@ svg path {
         }
         .info path {
           fill: @white;
-          margin-top: 1px; 
+          margin-top: 1px;
         }
 
         &-disabled-message {
@@ -836,7 +842,8 @@ svg path {
       svg path {
         fill: @black;
       }
-      p, span {
+      p,
+      span {
         margin: unset;
       }
 
@@ -880,7 +887,7 @@ svg path {
           &.active {
             box-shadow: @neu-shadow-inset-low;
             background: @grey;
-      
+
             &:active {
               box-shadow: @neu-shadow-inset;
             }
@@ -891,7 +898,8 @@ svg path {
               padding-bottom: calc(@spacing-md - 4px);
             }
             &.market-table-asset {
-              span, img {
+              span,
+              img {
                 opacity: 1;
                 position: absolute;
                 top: 50%;
@@ -941,7 +949,8 @@ svg path {
             }
           }
 
-          &:hover, &.active {
+          &:hover,
+          &.active {
             td {
               &:last-of-type {
                 opacity: inherit;
@@ -1019,7 +1028,7 @@ svg path {
             }
           }
         }
-  
+
         td:last-of-type {
           svg {
             margin-bottom: -4px;
@@ -1048,13 +1057,13 @@ svg path {
 
   .setting {
     &-title {
-      margin: @spacing-sm 0 0 0; 
+      margin: @spacing-sm 0 0 0;
     }
 
     input {
       width: 275px;
     }
-  
+
     .ping-indicator {
       width: 8px;
       height: 8px;
@@ -1065,10 +1074,10 @@ svg path {
     .reset-rpc {
       cursor: pointer;
     }
-  
+
     &.wallet {
       cursor: pointer;
-  
+
       div {
         margin: @spacing-sm 0;
       }
@@ -1085,7 +1094,7 @@ svg path {
         }
       }
     }
-  
+
     .theme-toggle-container {
       width: 100px;
     }
@@ -1115,7 +1124,8 @@ svg path {
     color: rgb(var(--lt-black));
     padding: @spacing-xs;
   }
-  b, a {
+  b,
+  a {
     text-decoration: underline;
     margin: unset;
   }
@@ -1152,7 +1162,7 @@ svg path {
         padding-left: 45px;
         padding-right: 40px;
         font-size: @sm-font-size;
-  
+
         img {
           width: 18px;
           left: @spacing-sm;
@@ -1172,12 +1182,12 @@ svg path {
     height: 110px;
     margin: @spacing-md 0;
 
-    .chart-info{
+    .chart-info {
       width: 110px;
     }
     .inset-chart-shadow {
       width: 102px;
-      height: 102px
+      height: 102px;
     }
     svg {
       width: 126px;
@@ -1194,7 +1204,7 @@ svg path {
       height: 30px;
     }
     button {
-      margin-bottom: @spacing-lg; 
+      margin-bottom: @spacing-lg;
 
       span {
         font-size: inherit;
@@ -1229,7 +1239,7 @@ svg path {
                 height: 18px;
               }
             }
-  
+
             tr {
               &:first-of-type {
                 td {
@@ -1258,7 +1268,8 @@ svg path {
 
     // Cockpit top data
     &-top {
-      .trade-market-tvl, .trade-position-snapshot {
+      .trade-market-tvl,
+      .trade-position-snapshot {
         min-width: unset;
         margin: @spacing-xs 0;
       }
@@ -1292,7 +1303,8 @@ svg path {
       .healthbar {
         margin: 5px 0;
       }
-      .min-c-note, .healthbar-indicator-label {
+      .min-c-note,
+      .healthbar-indicator-label {
         display: none;
       }
     }
@@ -1302,8 +1314,8 @@ svg path {
         padding: 45px 0 @spacing-md 0;
         flex-direction: column;
         justify-content: center;
-    
-        .trade-select-container  {
+
+        .trade-select-container {
           .trade-select {
             p {
               font-size: @xs-font-size;
@@ -1315,7 +1327,7 @@ svg path {
           width: 100%;
           height: unset;
           padding: @spacing-xs 0;
-    
+
           p {
             font-size: 25px;
           }
@@ -1345,7 +1357,7 @@ svg path {
               font-size: @sm-font-size;
               padding: @spacing-sm @spacing-md !important;
               min-width: 75px;
-        
+
               &.reserve-detail {
                 padding-bottom: 10px;
                 font-size: @xs-font-size !important;

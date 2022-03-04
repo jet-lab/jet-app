@@ -81,19 +81,13 @@ export function Settings() {
                 alt={`${wallet.name} Logo`}
               />
               <span>{shortenPubkey(publicKey.toString(), 4)}</span>
-              <Button 
-                ghost
-                className="small-btn" 
-                onClick={() => disconnect()}>
+              <Button ghost className="small-btn" onClick={() => disconnect()}>
                 {dictionary.settings.disconnect}
               </Button>
             </div>
           ) : (
             <div>
-              <Button
-                ghost
-                className="flex-centered small-btn"
-                onClick={() => setConnecting(true)}>
+              <Button ghost className="flex-centered small-btn" onClick={() => setConnecting(true)}>
                 <WalletIcon width="17px" />
                 {dictionary.settings.connect}
               </Button>
@@ -104,7 +98,12 @@ export function Settings() {
         <div className="setting flex align-start justify-center column">
           <span className="setting-title bold-text">{dictionary.settings.theme.toUpperCase()}</span>
           <div className="theme-toggle-container flex align-center justify-start">
-            <Switch onClick={() => toggleDarkTheme()} checkedChildren="Dark" unCheckedChildren="Light" checked={darkTheme} />
+            <Switch
+              onClick={() => toggleDarkTheme()}
+              checkedChildren="Dark"
+              unCheckedChildren="Light"
+              checked={darkTheme}
+            />
           </div>
         </div>
         <Divider />

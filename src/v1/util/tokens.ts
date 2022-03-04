@@ -1,5 +1,5 @@
-import { BN } from "@project-serum/anchor";
-import type { AccountInfo as TokenAccountInfo, MintInfo, u64 } from '@solana/spl-token'
+import { BN } from '@project-serum/anchor';
+import type { AccountInfo as TokenAccountInfo, MintInfo, u64 } from '@solana/spl-token';
 
 // Token Amounts
 export class TokenAmount {
@@ -14,7 +14,7 @@ export class TokenAmount {
 
   constructor(amount: BN, decimals: number) {
     if (!BN.isBN(amount)) {
-      console.warn("Amount is not a BN", amount);
+      console.warn('Amount is not a BN', amount);
       amount = new BN(0);
     }
     this.amount = amount;
@@ -41,21 +41,19 @@ export class TokenAmount {
 
   private static tokenAmount(lamports: BN, decimals: number) {
     const str = lamports.toString(10, decimals);
-    return parseFloat(str.slice(0,-decimals) + "." + str.slice(-decimals));
+    return parseFloat(str.slice(0, -decimals) + '.' + str.slice(-decimals));
   }
 
   public static tokenPrice(marketValue: number, price: number, decimals: number) {
-    const tokens = price !== 0
-      ? marketValue / price
-      : 0;
-    return TokenAmount.tokens(tokens.toFixed(decimals), decimals)
+    const tokens = price !== 0 ? marketValue / price : 0;
+    return TokenAmount.tokens(tokens.toFixed(decimals), decimals);
   }
 
   // Convert a uiAmount string into lamports BN
   private static tokensToLamports(uiAmount: string, decimals: number) {
     // Convert from exponential notation (7.46e-7) to regular
-    if(uiAmount.indexOf("e+") !== -1 || uiAmount.indexOf("e-") !== -1) {
-      uiAmount = Number(uiAmount).toLocaleString('fullwide', {useGrouping:false});
+    if (uiAmount.indexOf('e+') !== -1 || uiAmount.indexOf('e-') !== -1) {
+      uiAmount = Number(uiAmount).toLocaleString('fullwide', { useGrouping: false });
     }
 
     let lamports: string = uiAmount;
@@ -63,15 +61,15 @@ export class TokenAmount {
     // Remove commas
     while (lamports.indexOf(',') !== -1) {
       lamports = lamports.replace(',', '');
-    };
+    }
 
-    // Determine if there's a decimal, take number of 
+    // Determine if there's a decimal, take number of
     // characters after it as fractionalValue
     let fractionalValue = 0;
     let initialPlace = lamports.indexOf('.');
     if (initialPlace !== -1) {
       fractionalValue = lamports.length - (initialPlace + 1);
-      
+
       // If fractional value is lesser than a lamport, round to nearest lamport
       if (fractionalValue > decimals) {
         lamports = String(parseFloat(lamports).toFixed(decimals));
@@ -88,14 +86,14 @@ export class TokenAmount {
 
     // Return BN value in lamports
     return new BN(lamports);
-  };
+  }
 
   public add(b: TokenAmount) {
     return this.do(b, BN.prototype.add);
   }
-  
-  public addb(b: BN) { 
-    return new TokenAmount(this.amount.add(b), this.decimals); 
+
+  public addb(b: BN) {
+    return new TokenAmount(this.amount.add(b), this.decimals);
   }
 
   public addn(b: number) {
@@ -105,9 +103,9 @@ export class TokenAmount {
   public sub(b: TokenAmount) {
     return this.do(b, BN.prototype.sub);
   }
-  
-  public subb(b: BN) { 
-    return new TokenAmount(this.amount.sub(b), this.decimals); 
+
+  public subb(b: BN) {
+    return new TokenAmount(this.amount.sub(b), this.decimals);
   }
 
   public subn(b: number) {
@@ -117,9 +115,9 @@ export class TokenAmount {
   public mul(b: TokenAmount) {
     return this.do(b, BN.prototype.mul);
   }
-  
-  public mulb(b: BN) { 
-    return new TokenAmount(this.amount.mul(b), this.decimals); 
+
+  public mulb(b: BN) {
+    return new TokenAmount(this.amount.mul(b), this.decimals);
   }
 
   public muln(b: number) {
@@ -129,9 +127,9 @@ export class TokenAmount {
   public div(b: TokenAmount) {
     return this.do(b, BN.prototype.div);
   }
-  
-  public divb(b: BN) { 
-    return new TokenAmount(this.amount.div(b), this.decimals); 
+
+  public divb(b: BN) {
+    return new TokenAmount(this.amount.div(b), this.decimals);
   }
 
   public divn(b: number) {
@@ -156,15 +154,15 @@ export class TokenAmount {
 
   private do(b: TokenAmount, fn: (b: BN) => BN) {
     if (this.decimals !== b.decimals) {
-      console.warn("Decimal mismatch");
+      console.warn('Decimal mismatch');
       return TokenAmount.zero(this.decimals);
     }
     let amount = fn.call(this.amount, b.amount);
     return new TokenAmount(amount, this.decimals);
   }
-};
+}
 
-export type AmountUnits = { tokens?: {}, depositNotes?: {}, loanNotes?: {} };
+export type AmountUnits = { tokens?: {}; depositNotes?: {}; loanNotes?: {} };
 
 export class Amount {
   private constructor(public units: AmountUnits, public value: BN) {}
