@@ -152,7 +152,11 @@
       "accept": "Accept",
       "warning": "WARNING"
     },
-    "radar": "Radar"
+    "radar": {
+      "title": "Radar",
+      "interestRadar": "Interest Radar",
+      "protocol": "Protocol"
+    }
   },
   "transactions": {
     "title": "飞行日志",

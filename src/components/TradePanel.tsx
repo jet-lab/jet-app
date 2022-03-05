@@ -19,7 +19,7 @@ import { useJetV1 } from '../v1/hooks/useJetV1';
 import { Amount, TokenAmount } from '../v1/util/tokens';
 import { TxnResponse } from '../v1/models/JetTypes';
 
-export function TradePanel() {
+export function TradePanel(): JSX.Element {
   const { darkTheme } = useDarkTheme();
   const { dictionary } = useLanguage();
   const { setAlert } = useAlert();
@@ -287,8 +287,8 @@ export function TradePanel() {
       return;
     }
 
-    let tradeAction = currentAction;
-    let tradeAmount = TokenAmount.tokens(inputAmount.toString(), currentReserve.decimals);
+    const tradeAction = currentAction;
+    const tradeAmount = TokenAmount.tokens(inputAmount.toString(), currentReserve.decimals);
     let res: TxnResponse = TxnResponse.Cancelled;
     let txids: string[] = [];
     setLoading(true);

@@ -34,7 +34,7 @@ import { Settings } from './views/Settings';
 import { UserContextProvider } from './v1/contexts/user';
 import { MarketContextProvider } from './v1/contexts/market';
 
-export function App() {
+export function App(): JSX.Element {
   const wallets = useMemo(
     () => [
       getPhantomWallet(),

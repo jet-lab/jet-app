@@ -152,7 +152,11 @@
       "accept": "Kabul Et",
       "warning": "UYARI"
     },
-    "radar": "Radar"
+    "radar": {
+      "title": "Radar",
+      "interestRadar": "Interest Radar",
+      "protocol": "Protocol"
+    }
   },
   "transactions": {
     "title": "Uçuş Kayırları",

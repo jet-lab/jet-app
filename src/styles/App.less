@@ -431,10 +431,18 @@ svg path {
 // Radar Modal
 .radar-modal {
   &-header {
-    margin: @spacing-lg 0 @spacing-sm 0;
-    opacity: @subtle-opacity;
+    margin: @spacing-sm 0;
+    opacity: @half-opacity;
     svg {
       margin: 0 @spacing-xs;
+    }
+  }
+  &-asset {
+    margin: @spacing-md 0;
+    img {
+      width: 40px;
+      height: 40px;
+      padding: 0 @spacing-xs;
     }
   }
   .ant-modal-content {
@@ -443,6 +451,10 @@ svg path {
     overflow: hidden;
     padding: unset;
 
+    .ant-modal-body {
+      padding: 0 @spacing-md !important;
+    }
+
     .table-container {
       width: 100%;
       overflow-x: scroll;
@@ -450,64 +462,63 @@ svg path {
       table {
         margin: unset;
         border-collapse: collapse;
-        background: @grey;
+        background: @light-grey;
 
         thead {
           th {
-            padding: @spacing-xs @spacing-xl;
-            font-size: @sm-font-size;
+            padding: @spacing-xs 0;
+            font-size: @xs-font-size;
+            width: 140px;
 
             &:first-of-type {
-              min-width: unset;
-              text-align: left;
-
-              img {
-                height: 25px;
-                margin: unset;
-              }
-              h1 {
-                margin: 0 @spacing-xs;
-                font-size: 20px;
-              }
+              text-align: center;
             }
           }
 
           &:after {
             width: 150%;
             border: unset;
+            background: @dark-grey;
             left: -25%;
           }
         }
 
         tbody {
           img {
-            height: 23px;
+            height: 22px;
           }
           td {
             font-size: @base-font-size;
             text-align: center;
-
-            &:first-of-type {
-              text-align: left;
-              padding: @spacing-sm 30px;
-              border-right: 1px solid @dark-grey;
-            }
           }
           tr {
+            td {
+              padding: @spacing-md 0;
+            }
             &:first-of-type {
               td {
-                padding-top: @spacing-xl;
+                padding: @spacing-lg 0 @spacing-xs 0;
                 font-weight: @subheader-weight;
+                &.deposit-rate {
+                  color: @success;
+                }
+                &.borrow-rate {
+                  color: @failure;
+                }
 
                 img {
                   height: 32px;
-                  margin-left: -5px;
                 }
               }
             }
             &:last-of-type {
               td {
                 padding-bottom: @spacing-lg;
+              }
+            }
+            &.dark-bg {
+              td {
+                background: rgba(0, 0, 0, 0.25);
               }
             }
           }
@@ -1064,6 +1075,9 @@ svg path {
       width: 275px;
     }
 
+    .rpc-info {
+      flex-wrap: wrap;
+    }
     .ping-indicator {
       width: 8px;
       height: 8px;

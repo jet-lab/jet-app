@@ -66,7 +66,7 @@ export class TokenAmount {
     // Determine if there's a decimal, take number of
     // characters after it as fractionalValue
     let fractionalValue = 0;
-    let initialPlace = lamports.indexOf('.');
+    const initialPlace = lamports.indexOf('.');
     if (initialPlace !== -1) {
       fractionalValue = lamports.length - (initialPlace + 1);
 
@@ -157,12 +157,12 @@ export class TokenAmount {
       console.warn('Decimal mismatch');
       return TokenAmount.zero(this.decimals);
     }
-    let amount = fn.call(this.amount, b.amount);
+    const amount = fn.call(this.amount, b.amount);
     return new TokenAmount(amount, this.decimals);
   }
 }
 
-export type AmountUnits = { tokens?: {}; depositNotes?: {}; loanNotes?: {} };
+export type AmountUnits = { tokens?: Record<string, unknown>; depositNotes?: Record<string, unknown>; loanNotes?: Record<string, unknown> };
 
 export class Amount {
   private constructor(public units: AmountUnits, public value: BN) {}

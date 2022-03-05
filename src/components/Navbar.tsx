@@ -9,7 +9,7 @@ import { Button, Switch } from 'antd';
 import { ReactComponent as AccountIcon } from '../styles/icons/account_icon.svg';
 import { ReactComponent as WalletIcon } from '../styles/icons/wallet_icon.svg';
 
-export function Navbar() {
+export function Navbar(): JSX.Element {
   const { dictionary } = useLanguage();
   const { pathname } = useLocation();
   const { connected, disconnect, publicKey } = useWallet();

@@ -13,7 +13,7 @@ import { Info } from './Info';
 // Jet V1
 import { Reserve } from '../v1/models/JetTypes';
 
-export function ReserveDetail(props: { reserve: Reserve; close: Function }) {
+export function ReserveDetail(props: { reserve: Reserve; close: () => void }): JSX.Element {
   const { dictionary } = useLanguage();
   const { connecting, setConnecting } = useConnectWalletModal();
   const { connected } = useWallet();

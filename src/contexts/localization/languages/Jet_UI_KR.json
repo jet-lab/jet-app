@@ -152,7 +152,11 @@
       "accept": "수용하다",
       "warning": "경고"
     },
-    "radar": "Radar"
+    "radar": {
+      "title": "Radar",
+      "interestRadar": "Interest Radar",
+      "protocol": "Protocol"
+    }
   },
   "transactions": {
     "title": "비행 기록",

@@ -7,11 +7,11 @@ interface DarkTheme {
 }
 const DarkThemeContext = createContext<DarkTheme>({
   darkTheme: false,
-  setDarkTheme: () => {}
+  setDarkTheme: () => null
 });
 
 // Dark theme context provider
-export function DarkThemeProvider(props: { children: any }) {
+export function DarkThemeProvider(props: { children: JSX.Element }): JSX.Element {
   const preference = localStorage.getItem('jetDarkUI');
   const [darkTheme, setDarkTheme] = useState(preference ? preference === 'true' : true);
   useEffect(() => {

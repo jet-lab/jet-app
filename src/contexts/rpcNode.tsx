@@ -12,14 +12,14 @@ interface RpcNode {
 }
 const RpcNodeContext = createContext<RpcNode>({
   preferredNode: null,
-  setPreferredNode: () => {},
+  setPreferredNode: () => null,
   ping: 0,
-  setPing: () => {},
+  setPing: () => null,
   degradedNetworkPerformance: false
 });
 
 // RPC node context provider
-export function RpcNodeContextProvider(props: { children: any }) {
+export function RpcNodeContextProvider(props: { children: JSX.Element }): JSX.Element {
   const [preferredNode, setPreferredNode] = useState(localStorage.getItem('jetPreferredNode') ?? null);
   const [ping, setPing] = useState(0);
   const [degradedNetworkPerformance, setDegradedNetworkPerformance] = useState(false);

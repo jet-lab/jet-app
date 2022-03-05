@@ -30,12 +30,12 @@ const TransactionsContext = createContext<TransactionLogs>({
   loadingLogs: false,
   logs: [],
   noMoreSignatures: false,
-  addLog: async () => {},
-  searchMoreLogs: () => {}
+  addLog: async () => null as unknown as void,
+  searchMoreLogs: () => null
 });
 
 // Transaction logs context provider
-export function TransactionsProvider(props: { children: any }) {
+export function TransactionsProvider(props: { children: JSX.Element }): JSX.Element {
   const { dictionary } = useLanguage();
   const { connection } = useProvider();
   const { connected, publicKey } = useWallet();
@@ -60,10 +60,10 @@ export function TransactionsProvider(props: { children: any }) {
     };
 
     // Use log messages to only surface transactions that utilize Jet
-    for (let msg of log.meta.logMessages) {
+    for (const msg of log.meta.logMessages) {
       if (msg.indexOf(idl.metadata.address) !== -1) {
-        for (let progInst in instructionBytes) {
-          for (let inst of log.transaction.message.instructions) {
+        for (const progInst in instructionBytes) {
+          for (const inst of log.transaction.message.instructions) {
             // Get first 8 bytes from data
             const txInstBytes = [];
             for (let i = 0; i < 8; i++) {
@@ -73,10 +73,10 @@ export function TransactionsProvider(props: { children: any }) {
             if (JSON.stringify(instructionBytes[progInst]) === JSON.stringify(txInstBytes)) {
               log.tradeAction = dictionary.transactions[progInst];
               // Determine asset and trade amount
-              for (let pre of log.meta.preTokenBalances as any[]) {
-                for (let post of log.meta.postTokenBalances as any[]) {
+              for (const pre of log.meta.preTokenBalances as any[]) {
+                for (const post of log.meta.postTokenBalances as any[]) {
                   if (pre.mint === post.mint && pre.uiTokenAmount.amount !== post.uiTokenAmount.amount) {
-                    for (let reserve of idl.metadata.reserves) {
+                    for (const reserve of idl.metadata.reserves) {
                       if (reserve.accounts.tokenMint === pre.mint) {
                         // For withdraw and borrow SOL,
                         // Skip last account (pre-token balance is 0)
@@ -122,7 +122,7 @@ export function TransactionsProvider(props: { children: any }) {
 
     // Iterate through signatures to get detailed logs
     let index = logs.length ? logs.length + 1 : 0;
-    let newLogs: TransactionLog[] = [];
+    const newLogs: TransactionLog[] = [];
     while (newLogs.length < 10) {
       // Get current signature from index
       const currentSignature = sigs[index]?.signature;

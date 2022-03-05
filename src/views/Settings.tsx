@@ -10,7 +10,7 @@ import { Button, Select, Switch, Divider } from 'antd';
 import { JetInput } from '../components/JetInput';
 import { ReactComponent as WalletIcon } from '../styles/icons/wallet_icon.svg';
 
-export function Settings() {
+export function Settings(): JSX.Element {
   const { dictionary, language, changeLanguage } = useLanguage();
   const { darkTheme, toggleDarkTheme } = useDarkTheme();
   const { preferredNode, ping, updateRpcNode } = useRpcNode();
@@ -39,7 +39,7 @@ export function Settings() {
       <div className="settings">
         <div className="setting flex align-start justify-center column">
           <span className="setting-title bold-text">{dictionary.settings.rpcNode.toUpperCase()}</span>
-          <div className="flex align-center justify-start" style={{ padding: 'var(--spacing-xs) 0' }}>
+          <div className="rpc-info flex align-center justify-start" style={{ padding: 'var(--spacing-xs) 0' }}>
             <span>{preferredNode ?? dictionary.settings.defaultNode}</span>
             {ping > 0 && (
               <>
@@ -65,7 +65,7 @@ export function Settings() {
             error={rpcInputError}
             placeholder="ex: https://api.devnet.solana.com/"
             onClick={() => setRpcInputError('')}
-            onChange={(value: string) => setRpcNodeInput(value)}
+            onChange={(value: string) => setRpcNodeInput(value.toString())}
             submit={checkRPC}
           />
         </div>

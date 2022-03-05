@@ -152,7 +152,11 @@
       "accept": "Aceptar",
       "warning": "ALERTA"
     },
-    "radar": "Radar"
+    "radar": {
+      "title": "Radar",
+      "interestRadar": "Interest Radar",
+      "protocol": "Protocol"
+    }
   },
   "transactions": {
     "title": "Registro de Vuelo",

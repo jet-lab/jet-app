@@ -27,11 +27,11 @@ interface BlockExplorer {
 }
 const BlockExplorerContext = createContext<BlockExplorer>({
   preferredExplorer: '',
-  setPreferredExplorer: () => {}
+  setPreferredExplorer: () => null
 });
 
 // Block explorer context provider
-export function BlockExplorerProvider(props: { children: any }) {
+export function BlockExplorerProvider(props: { children: JSX.Element }): JSX.Element {
   const [preferredExplorer, setPreferredExplorer] = useState(
     localStorage.getItem('jetPreferredExplorer') ?? 'solanaExplorer'
   );

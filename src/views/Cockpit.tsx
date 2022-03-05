@@ -13,7 +13,7 @@ import { MarketTable } from '../components/MarketTable';
 import { useUser } from '../v1/contexts/user';
 import { useMarket } from '../v1/contexts/market';
 
-export function Cockpit() {
+export function Cockpit(): JSX.Element {
   const isGeobanned = useGeoban();
   const { dictionary } = useLanguage();
   const { initFailed } = useInitFailed();

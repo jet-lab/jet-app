@@ -36,21 +36,21 @@ export interface User {
 }
 const UserContext = createContext<User>({
   walletInit: false,
-  setWalletInit: () => {},
+  setWalletInit: () => null,
   assets: {} as unknown as AssetStore,
-  setAssets: () => {},
+  setAssets: () => null,
   position: {} as unknown as Obligation,
-  setPosition: () => {},
+  setPosition: () => null,
   walletBalances: {},
-  setWalletBalances: () => {},
+  setWalletBalances: () => null,
   collateralBalances: {},
-  setCollateralBalances: () => {},
+  setCollateralBalances: () => null,
   loanBalances: {},
-  setLoanBalances: () => {}
+  setLoanBalances: () => null
 });
 
 // User context provider
-export function UserContextProvider(props: { children: any }) {
+export function UserContextProvider(props: { children: JSX.Element }): JSX.Element {
   const { connected, publicKey } = useWallet();
   const { connection } = useProvider();
   const program = useProgram();
@@ -84,7 +84,7 @@ export function UserContextProvider(props: { children: any }) {
 
   async function subscribeToAssets(assets: AssetStore) {
     let promise: Promise<number>;
-    let promises: Promise<number>[] = [];
+    const promises: Promise<number>[] = [];
     if (!assets || !publicKey) {
       return;
     }
@@ -93,12 +93,12 @@ export function UserContextProvider(props: { children: any }) {
     if (assets.obligationPubkey) {
       promise = getAccountInfoAndSubscribe(connection, assets.obligationPubkey, (account: any) => {
         if (account != null) {
-          if (assets) {
-            assets.obligation = {
-              ...account,
-              data: parseObligationAccount(account.data, coder)
-            };
-            setAssets({ ...assets });
+          assets.obligation = {
+            ...account,
+            data: parseObligationAccount(account.data, coder)
+          };
+          if (walletInit) {
+            deriveValues(assets);
           }
         }
       });
@@ -108,21 +108,18 @@ export function UserContextProvider(props: { children: any }) {
     // Wallet native SOL balance
     promise = getAccountInfoAndSubscribe(connection, publicKey, (account: any) => {
       if (account != null) {
-        if (assets) {
-          const reserve = market.reserves['SOL'];
+        // Need to be careful constructing a BN from a number.
+        // If the user has more than 2^53 lamports it will throw for not having enough precision.
+        assets.tokens.SOL.walletTokenBalance = new TokenAmount(
+          new BN(account?.lamports.toString() ?? 0),
+          SOL_DECIMALS
+        );
+        assets.sol = assets.tokens.SOL.walletTokenBalance;
+        walletBalances.SOL = assets.sol.tokens;
 
-          // Need to be careful constructing a BN from a number.
-          // If the user has more than 2^53 lamports it will throw for not having enough precision.
-          assets.tokens.SOL.walletTokenBalance = new TokenAmount(
-            new BN(account?.lamports.toString() ?? 0),
-            SOL_DECIMALS
-          );
-          assets.sol = assets.tokens.SOL.walletTokenBalance;
-          walletBalances.SOL = assets.sol.tokens;
-
-          setWalletBalances(walletBalances);
-          deriveValues(market, reserve, assets.tokens.SOL);
-          setAssets({ ...assets });
+        setWalletBalances(walletBalances);
+        if (walletInit) {
+          deriveValues(assets);
         }
       }
     });
@@ -135,18 +132,16 @@ export function UserContextProvider(props: { children: any }) {
       // Wallet token account
       promise = getTokenAccountAndSubscribe(connection, asset.walletTokenPubkey, reserve.decimals, (amount: any) => {
         if (amount != null) {
-          if (assets) {
-            asset.walletTokenBalance = amount ?? new TokenAmount(new BN(0), reserve.decimals);
-            asset.walletTokenExists = !!amount;
+          asset.walletTokenBalance = amount ?? new TokenAmount(new BN(0), reserve.decimals);
+          asset.walletTokenExists = !!amount;
 
-            // Update wallet token balance
-            if (!asset.tokenMintPubkey.equals(NATIVE_MINT)) {
-              walletBalances[reserve.abbrev] = asset.walletTokenBalance.tokens;
-              setWalletBalances(walletBalances);
-            }
-
-            deriveValues(market, reserve, asset);
-            setAssets({ ...assets });
+          // Update wallet token balance
+          if (!asset.tokenMintPubkey.equals(NATIVE_MINT)) {
+            walletBalances[reserve.abbrev] = asset.walletTokenBalance.tokens;
+            setWalletBalances(walletBalances);
+          }
+          if (walletInit) {
+            deriveValues(assets);
           }
         }
       });
@@ -159,12 +154,10 @@ export function UserContextProvider(props: { children: any }) {
         reserve.decimals,
         (amount: any) => {
           if (amount != null) {
-            if (assets) {
-              asset.depositNoteDestBalance = amount ?? TokenAmount.zero(reserve.decimals);
-              asset.depositNoteDestExists = !!amount;
-
-              deriveValues(market, reserve, asset);
-              setAssets({ ...assets });
+            asset.depositNoteDestBalance = amount ?? TokenAmount.zero(reserve.decimals);
+            asset.depositNoteDestExists = !!amount;
+            if (walletInit) {
+              deriveValues(assets);
             }
           }
         }
@@ -174,12 +167,10 @@ export function UserContextProvider(props: { children: any }) {
       // Deposit notes account
       promise = getTokenAccountAndSubscribe(connection, asset.depositNotePubkey, reserve.decimals, (amount: any) => {
         if (amount != null) {
-          if (assets) {
-            asset.depositNoteBalance = amount ?? TokenAmount.zero(reserve.decimals);
-            asset.depositNoteExists = !!amount;
-
-            deriveValues(market, reserve, asset);
-            setAssets({ ...assets });
+          asset.depositNoteBalance = amount ?? TokenAmount.zero(reserve.decimals);
+          asset.depositNoteExists = !!amount;
+          if (walletInit) {
+            deriveValues(assets);
           }
         }
       });
@@ -188,12 +179,10 @@ export function UserContextProvider(props: { children: any }) {
       // Obligation loan notes
       promise = getTokenAccountAndSubscribe(connection, asset.loanNotePubkey, reserve.decimals, (amount: any) => {
         if (amount != null) {
-          if (assets) {
-            asset.loanNoteBalance = amount ?? TokenAmount.zero(reserve.decimals);
-            asset.loanNoteExists = !!amount;
-
-            deriveValues(market, reserve, asset);
-            setAssets({ ...assets });
+          asset.loanNoteBalance = amount ?? TokenAmount.zero(reserve.decimals);
+          asset.loanNoteExists = !!amount;
+          if (walletInit) {
+            deriveValues(assets);
           }
         }
       });
@@ -202,74 +191,89 @@ export function UserContextProvider(props: { children: any }) {
       // Obligation collateral notes
       promise = getTokenAccountAndSubscribe(connection, asset.collateralNotePubkey, reserve.decimals, (amount: any) => {
         if (amount != null) {
-          if (assets) {
-            asset.collateralNoteBalance = amount ?? TokenAmount.zero(reserve.decimals);
-            asset.collateralNoteExists = !!amount;
-
-            deriveValues(market, reserve, asset);
-            setAssets({ ...assets });
+          asset.collateralNoteBalance = amount ?? TokenAmount.zero(reserve.decimals);
+          asset.collateralNoteExists = !!amount;
+          if (walletInit) {
+            deriveValues(assets);
           }
         }
       });
       promises.push(promise);
     }
 
-    return Promise.all(promises).then(() => setWalletInit(true));
+    return Promise.all(promises).then(() => {
+      deriveValues(assets);
+      setWalletInit(true);
+    });
   }
 
-  // Derive user asset values, update global objects
-  function deriveValues(market: Market, reserve: Reserve, asset: Asset) {
-    asset.depositBalance = asset.depositNoteBalance
-      .mulb(reserve.depositNoteExchangeRate)
-      .divb(new BN(Math.pow(10, 15)));
-    asset.loanBalance = asset.loanNoteBalance.mulb(reserve.loanNoteExchangeRate).divb(new BN(Math.pow(10, 15)));
-    asset.collateralBalance = asset.collateralNoteBalance
-      .mulb(reserve.depositNoteExchangeRate)
-      .divb(new BN(Math.pow(10, 15)));
+  // Derive user position values on any asset change
+  function deriveValues(assets: AssetStore) {
+    // Collateral, deposit and loan balances first and foremost
+    for (const abbrev in assets.tokens) {
+      const asset = assets.tokens[abbrev];
+      const reserve = market.reserves[abbrev];
+      if (!(asset.depositNoteBalance && asset.loanNoteBalance && asset.collateralNoteBalance)) {
+        return;
+      }
 
-    // Update user obligation balances
-    collateralBalances[reserve.abbrev] = asset.collateralBalance.tokens;
-    loanBalances[reserve.abbrev] = asset.loanBalance.tokens;
+      asset.depositBalance = asset.depositNoteBalance
+        .mulb(reserve.depositNoteExchangeRate)
+        .divb(new BN(Math.pow(10, 15)));
+      asset.loanBalance = asset.loanNoteBalance.mulb(reserve.loanNoteExchangeRate).divb(new BN(Math.pow(10, 15)));
+      asset.collateralBalance = asset.collateralNoteBalance
+        .mulb(reserve.depositNoteExchangeRate)
+        .divb(new BN(Math.pow(10, 15)));
+        
+      collateralBalances[reserve.abbrev] = asset.collateralBalance.tokens;
+      loanBalances[reserve.abbrev] = asset.loanBalance.tokens;
+    }
     setCollateralBalances({...collateralBalances});
     setLoanBalances({...loanBalances});
 
-    //update user positions 
-    const updatedPosition: Obligation = {depositedValue: 0, borrowedValue: 0, colRatio: 0, utilizationRate: 0}
-    for (let t in assets.tokens) {
-      updatedPosition.depositedValue += collateralBalances[t] * market.reserves[t].price;
-      updatedPosition.borrowedValue += loanBalances[t] * market.reserves[t].price;
-      updatedPosition.colRatio = position.borrowedValue ? position.depositedValue / position.borrowedValue : 0;
-      updatedPosition.utilizationRate = position.depositedValue ? position.borrowedValue / position.depositedValue : 0;
+    // Calculate user's current position from ALL of those balances
+    const updatedPosition: Obligation = {depositedValue: 0, borrowedValue: 0, colRatio: 0, utilizationRate: 0};
+    for (const abbrev in assets.tokens) {
+      updatedPosition.depositedValue += collateralBalances[abbrev] * market.reserves[abbrev].price;
+      updatedPosition.borrowedValue += loanBalances[abbrev] * market.reserves[abbrev].price;
+      updatedPosition.colRatio = updatedPosition.borrowedValue ? updatedPosition.depositedValue / updatedPosition.borrowedValue : 0;
+      updatedPosition.utilizationRate = updatedPosition.depositedValue ? updatedPosition.borrowedValue / updatedPosition.depositedValue : 0;
     }
     setPosition(updatedPosition);
+    
+    // Calculate user's maximum trade values from their updated position
+    for (const abbrev in assets.tokens) {
+      const asset = assets.tokens[abbrev];
+      const reserve = market.reserves[abbrev];
 
-    // Max deposit
-    asset.maxDepositAmount = walletBalances[reserve.abbrev];
+      // Max deposit
+      asset.maxDepositAmount = walletBalances[reserve.abbrev];
 
-    // Max withdraw
-    asset.maxWithdrawAmount = position.borrowedValue
-      ? (position.depositedValue - market.minColRatio * position.borrowedValue) / reserve.price
-      : asset.collateralBalance.tokens;
-    if (asset.maxWithdrawAmount > asset.collateralBalance.tokens) {
-      asset.maxWithdrawAmount = asset.collateralBalance.tokens;
+      // Max withdraw
+      asset.maxWithdrawAmount = updatedPosition.borrowedValue
+        ? (updatedPosition.depositedValue - market.minColRatio * updatedPosition.borrowedValue) / reserve.price
+        : asset.collateralBalance.tokens;
+      if (asset.maxWithdrawAmount > asset.collateralBalance.tokens) {
+        asset.maxWithdrawAmount = asset.collateralBalance.tokens;
+      }
+
+      // Max borrow
+      asset.maxBorrowAmount = ((updatedPosition.depositedValue / market.minColRatio) - updatedPosition.borrowedValue) / reserve.price;
+      if (asset.maxBorrowAmount > reserve.availableLiquidity.tokens) {
+        asset.maxBorrowAmount = reserve.availableLiquidity.tokens;
+      }
+
+      // Max repay
+      if (walletBalances[reserve.abbrev] < asset.loanBalance.tokens) {
+        asset.maxRepayAmount = walletBalances[reserve.abbrev];
+      } else {
+        asset.maxRepayAmount = asset.loanBalance.tokens;
+      }
+
+      assets.tokens[reserve.abbrev] = asset;
     }
-
-    // Max borrow
-    asset.maxBorrowAmount = (position.depositedValue / market.minColRatio - position.borrowedValue) / reserve.price;
-    if (asset.maxBorrowAmount > reserve.availableLiquidity.tokens) {
-      asset.maxBorrowAmount = reserve.availableLiquidity.tokens;
-    }
-
-    // Max repay
-    if (walletBalances[reserve.abbrev] < asset.loanBalance.tokens) {
-      asset.maxRepayAmount = walletBalances[reserve.abbrev];
-    } else {
-      asset.maxRepayAmount = asset.loanBalance.tokens;
-    }
-
-    assets.tokens[reserve.abbrev] = asset;
     setAssets({...assets});
-  };
+  }
 
   // When wallet connects, subscribe to assets
   useEffect(() => {
@@ -280,41 +284,41 @@ export function UserContextProvider(props: { children: any }) {
           return {} as AssetStore;
         }
 
-        let [obligationPubkey, obligationBump] = await findObligationAddress(program, market.accountPubkey, publicKey);
-        let assetStore: AssetStore = {
+        const [obligationPubkey, obligationBump] = await findObligationAddress(program, market.accountPubkey, publicKey);
+        const assetStore: AssetStore = {
           sol: new TokenAmount(new BN(0), SOL_DECIMALS),
           obligationPubkey,
           obligationBump,
           tokens: {}
         } as AssetStore;
         for (const assetAbbrev in market.reserves) {
-          let reserve = market.reserves[assetAbbrev];
-          let tokenMintPubkey = reserve.tokenMintPubkey;
+          const reserve = market.reserves[assetAbbrev];
+          const tokenMintPubkey = reserve.tokenMintPubkey;
 
-          let [depositNoteDestPubkey, depositNoteDestBump] = await findDepositNoteDestAddress(
+          const [depositNoteDestPubkey, depositNoteDestBump] = await findDepositNoteDestAddress(
             program,
             reserve.accountPubkey,
             publicKey
           );
-          let [depositNotePubkey, depositNoteBump] = await findDepositNoteAddress(
+          const [depositNotePubkey, depositNoteBump] = await findDepositNoteAddress(
             program,
             reserve.accountPubkey,
             publicKey
           );
-          let [loanNotePubkey, loanNoteBump] = await findLoanNoteAddress(
+          const [loanNotePubkey, loanNoteBump] = await findLoanNoteAddress(
             program,
             reserve.accountPubkey,
             obligationPubkey,
             publicKey
           );
-          let [collateralPubkey, collateralBump] = await findCollateralAddress(
+          const [collateralPubkey, collateralBump] = await findCollateralAddress(
             program,
             reserve.accountPubkey,
             obligationPubkey,
             publicKey
           );
 
-          let asset: Asset = {
+          const asset: Asset = {
             tokenMintPubkey,
             walletTokenPubkey: await Token.getAssociatedTokenAddress(
               ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -358,7 +362,6 @@ export function UserContextProvider(props: { children: any }) {
       // Get all asset pubkeys owned by wallet pubkey
       getAssetPubkeys().then(assetStore => {
         subscribeToAssets(assetStore);
-        setAssets({ ...assetStore });
       });
     } else {
       setWalletInit(false);

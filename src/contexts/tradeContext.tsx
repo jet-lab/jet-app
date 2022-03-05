@@ -13,13 +13,13 @@ interface TradeInfo {
 }
 const TradeContext = createContext<TradeInfo>({
   currentReserve: null,
-  setCurrentReserve: () => {},
+  setCurrentReserve: () => null,
   currentAction: 'deposit',
-  setCurrentAction: () => {}
+  setCurrentAction: () => null
 });
 
 // Trade info context provider
-export function TradeContextProvider(props: { children: any }) {
+export function TradeContextProvider(props: { children: JSX.Element }): JSX.Element {
   const [currentReserve, setCurrentReserve] = useState<Reserve | null>(null);
   const [currentAction, setCurrentAction] = useState('deposit' as TradeAction);
 

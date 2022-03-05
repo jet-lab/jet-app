@@ -43,8 +43,8 @@ export const useJetV1 = () => {
       return [res, txid];
     }
 
-    let reserve = market.reserves[abbrev];
-    let asset = user.assets.tokens[abbrev];
+    const reserve = market.reserves[abbrev];
+    const asset = user.assets.tokens[abbrev];
     let depositSourcePubkey = asset.walletTokenPubkey;
 
     // Optional signers
@@ -162,7 +162,7 @@ export const useJetV1 = () => {
       collateralAccount: asset.collateralNoteBump,
       depositAccount: asset.depositNoteBump
     };
-    let depositCollateralIx = program.instruction.depositCollateral(depositCollateralBumpSeeds, amount, {
+    const depositCollateralIx = program.instruction.depositCollateral(depositCollateralBumpSeeds, amount, {
       accounts: {
         market: market.accountPubkey.toString(),
         marketAuthority: market.authorityPubkey.toString(),
@@ -294,6 +294,7 @@ export const useJetV1 = () => {
         depositAccount: asset.depositNotePubkey.toString(),
         withdrawAccount: withdrawAccount.toString(),
 
+        jetProgram: program.programId,
         tokenProgram: TOKEN_PROGRAM_ID.toString()
       }
     });
@@ -609,7 +610,7 @@ export const useJetV1 = () => {
     let txid: string[] = [];
 
     for (const abbrev in market.reserves) {
-      let reserve = market.reserves[abbrev];
+      const reserve = market.reserves[abbrev];
       let accruedUntil = reserve.accruedUntil;
 
       while (accruedUntil.add(MAX_ACCRUAL_SECONDS).lt(new BN(Math.floor(Date.now() / 1000)))) {
@@ -633,8 +634,7 @@ export const useJetV1 = () => {
     if (!program) {
       return;
     }
-
-    let reserve = market.reserves[abbrev];
+    const reserve = market.reserves[abbrev];
 
     const refreshInstruction = program.instruction.refreshReserve({
       accounts: {
@@ -659,7 +659,7 @@ export const useJetV1 = () => {
       return [TxnResponse.Failed, []];
     }
 
-    let reserve = market.reserves[abbrev];
+    const reserve = market.reserves[abbrev];
     const asset = Object.values(user.assets.tokens).find(asset =>
       asset.tokenMintPubkey.equals(reserve.tokenMintPubkey)
     );
@@ -668,8 +668,8 @@ export const useJetV1 = () => {
       return [TxnResponse.Failed, []];
     }
 
-    let ix: TransactionInstruction[] = [];
-    let signers: Signer[] = [];
+    const ix: TransactionInstruction[] = [];
+    const signers: Signer[] = [];
 
     //optionally create a token account for wallet
 

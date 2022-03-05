@@ -6,7 +6,7 @@ import { useAlert, useDefinition } from '../contexts/copilotModal';
 import { Modal, Button } from 'antd';
 import { HealthBar } from './HealthBar';
 
-export function CopilotModal() {
+export function CopilotModal(): JSX.Element {
   const { connected } = useWallet();
   const { language, dictionary } = useLanguage();
   const { alert, setAlert } = useAlert();
@@ -17,7 +17,7 @@ export function CopilotModal() {
   // would be better to add a 'key' property to each definition and just check that.
   useEffect(() => {
     setCollateralDetail(false);
-    for (let key of Object.keys(definitions[language])) {
+    for (const key of Object.keys(definitions[language])) {
       if (key === 'collateralizationRatio' && definitions[language][key].term === definition?.term) {
         setCollateralDetail(true);
       }

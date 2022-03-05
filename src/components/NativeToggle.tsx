@@ -1,6 +1,6 @@
 import { useNativeValues } from '../contexts/nativeValues';
 
-export function NativeToggle() {
+export function NativeToggle(): JSX.Element {
   const { nativeValues, toggleNativeValues } = useNativeValues();
 
   return (

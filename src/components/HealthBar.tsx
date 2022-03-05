@@ -5,7 +5,7 @@ import { useLanguage } from '../contexts/localization/localization';
 import { useUser } from '../v1/contexts/user';
 import { useMarket } from '../v1/contexts/market';
 
-export function HealthBar(props: { fullDetail?: boolean }) {
+export function HealthBar(props: { fullDetail?: boolean }): JSX.Element {
   const { dictionary } = useLanguage();
   const [healthGauge, setHealthGauge] = useState<Record<string, number | string>>({
     percentage: 0,

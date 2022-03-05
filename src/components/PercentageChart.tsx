@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTradeContext } from '../contexts/tradeContext';
 import { Info } from './Info';
 
-export function PercentageChart(props: { percentage: number; text: string; term?: string }) {
+export function PercentageChart(props: { percentage: number; text: string; term?: string }): JSX.Element {
   const { currentReserve } = useTradeContext();
   const [percent, setPercent] = useState(0);
 

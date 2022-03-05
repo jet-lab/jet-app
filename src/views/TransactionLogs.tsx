@@ -9,7 +9,7 @@ import { ReactComponent as ArrowIcon } from '../styles/icons/arrow_icon.svg';
 // Jet V1
 import { useUser } from '../v1/contexts/user';
 
-export function TransactionLogs() {
+export function TransactionLogs(): JSX.Element {
   const { dictionary } = useLanguage();
   const { getExplorerUrl } = useBlockExplorer();
   const { loadingLogs, logs, noMoreSignatures, searchMoreLogs } = useTransactionLogs();

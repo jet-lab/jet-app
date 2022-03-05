@@ -7,11 +7,11 @@ interface RadarModal {
 }
 const RadarModalContext = createContext<RadarModal>({
   radarOpen: false,
-  setRadarOpen: () => {}
+  setRadarOpen: () => null
 });
 
 // Radar modal context provider
-export function RadarModalProvider(props: { children: any }) {
+export function RadarModalProvider(props: { children: JSX.Element[] }): JSX.Element {
   const [radarOpen, setRadarOpen] = useState(false);
   return (
     <RadarModalContext.Provider

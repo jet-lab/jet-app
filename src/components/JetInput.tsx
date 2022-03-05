@@ -1,4 +1,3 @@
-import { useDarkTheme } from '../contexts/darkTheme';
 import { useTradeContext } from '../contexts/tradeContext';
 import { currencyFormatter } from '../utils/currency';
 import { Input } from 'antd';
@@ -14,11 +13,10 @@ export function JetInput(props: {
   error?: string | null;
   disabled?: boolean;
   loading?: boolean;
-  onClick?: Function;
-  onChange: Function;
-  submit: Function;
-}) {
-  const { darkTheme } = useDarkTheme();
+  onClick?: () => unknown;
+  onChange: (value: any) => unknown;
+  submit: () => unknown;
+}): JSX.Element {
   const { currentReserve } = useTradeContext();
 
   return (

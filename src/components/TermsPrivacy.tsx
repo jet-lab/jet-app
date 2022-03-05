@@ -1,6 +1,6 @@
 import { useLanguage } from '../contexts/localization/localization';
 
-export function TermsPrivacy() {
+export function TermsPrivacy(): JSX.Element {
   const { dictionary } = useLanguage();
 
   return (

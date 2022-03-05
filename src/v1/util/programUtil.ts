@@ -213,8 +213,8 @@ export const getMintInfoAndSubscribe = async function (
     publicKey,
     (account, context) => {
       if (account !== null) {
-        let mintInfo = MintLayout.decode(account.data) as MintInfo;
-        let amount = TokenAmount.mint(mintInfo);
+        const mintInfo = MintLayout.decode(account.data) as MintInfo;
+        const amount = TokenAmount.mint(mintInfo);
         callback(amount, context);
       } else {
         callback(undefined, context);
@@ -276,8 +276,8 @@ export const getAccountInfoAndSubscribe = async function (
   callback: (acc: AccountInfo<Buffer> | null, context: Context) => void,
   commitment?: Commitment | undefined
 ): Promise<number> {
-  let latestSlot: number = -1;
-  let subscriptionId = connection.onAccountChange(
+  let latestSlot = -1;
+  const subscriptionId = connection.onAccountChange(
     publicKey,
     (account: AccountInfo<Buffer>, context: Context) => {
       if (context.slot >= latestSlot) {
@@ -366,7 +366,7 @@ export const sendAllTransactions = async (
     if (tx.ix.length === 0) {
       continue;
     }
-    let transaction = new Transaction();
+    const transaction = new Transaction();
     transaction.instructions = tx.ix;
     transaction.recentBlockhash = recentBlockhash.blockhash;
     transaction.feePayer = provider.wallet.publicKey;
@@ -458,17 +458,17 @@ export const parseTokenAccount = (account: AccountInfo<Buffer>, accountPubkey: P
 };
 
 export const parseMarketAccount = (account: Buffer, coder: anchor.Coder) => {
-  let market = coder.accounts.decode<MarketAccount>('Market', account);
+  const market = coder.accounts.decode<MarketAccount>('Market', account);
 
-  let reserveInfoData = new Uint8Array(market.reserves as any as number[]);
-  let reserveInfoList = MarketReserveInfoList.decode(reserveInfoData) as JetMarketReserveInfo[];
+  const reserveInfoData = new Uint8Array(market.reserves as any as number[]);
+  const reserveInfoList = MarketReserveInfoList.decode(reserveInfoData) as JetMarketReserveInfo[];
 
   market.reserves = reserveInfoList;
   return market;
 };
 
 export const parseReserveAccount = (account: Buffer, coder: anchor.Coder) => {
-  let reserve = coder.accounts.decode<ReserveAccount>('Reserve', account);
+  const reserve = coder.accounts.decode<ReserveAccount>('Reserve', account);
 
   const reserveState = ReserveStateLayout.decode(Buffer.from(reserve.state as any as number[])) as ReserveStateStruct;
 
@@ -477,7 +477,7 @@ export const parseReserveAccount = (account: Buffer, coder: anchor.Coder) => {
 };
 
 export const parseObligationAccount = (account: Buffer, coder: anchor.Coder) => {
-  let obligation = coder.accounts.decode<ObligationAccount>('Obligation', account);
+  const obligation = coder.accounts.decode<ObligationAccount>('Obligation', account);
 
   const parsePosition = (position: any) => {
     const pos: ObligationPositionStruct = {
@@ -553,12 +553,12 @@ const interpolate = (x: number, x0: number, x1: number, y0: number, y1: number):
  */
 export const getCcRate = (reserveConfig: ReserveConfigStruct, utilRate: number): number => {
   const basisPointFactor = 10000;
-  let util1 = reserveConfig.utilizationRate1 / basisPointFactor;
-  let util2 = reserveConfig.utilizationRate2 / basisPointFactor;
-  let borrow0 = reserveConfig.borrowRate0 / basisPointFactor;
-  let borrow1 = reserveConfig.borrowRate1 / basisPointFactor;
-  let borrow2 = reserveConfig.borrowRate2 / basisPointFactor;
-  let borrow3 = reserveConfig.borrowRate3 / basisPointFactor;
+  const util1 = reserveConfig.utilizationRate1 / basisPointFactor;
+  const util2 = reserveConfig.utilizationRate2 / basisPointFactor;
+  const borrow0 = reserveConfig.borrowRate0 / basisPointFactor;
+  const borrow1 = reserveConfig.borrowRate1 / basisPointFactor;
+  const borrow2 = reserveConfig.borrowRate2 / basisPointFactor;
+  const borrow3 = reserveConfig.borrowRate3 / basisPointFactor;
 
   if (utilRate <= util1) {
     return interpolate(utilRate, 0, util1, borrow0, borrow1);

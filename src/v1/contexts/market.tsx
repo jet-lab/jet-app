@@ -41,23 +41,23 @@ const MarketContext = createContext<Market>({
   minColRatio: 1.3,
   programMinColRatio: 1.25,
   marketInit: false,
-  setMarketInit: (init: boolean) => {},
+  setMarketInit: (init: boolean) => null,
   accountPubkey: {} as PublicKey,
-  setAccountPubkey: () => {},
+  setAccountPubkey: () => null,
   account: {} as AccountInfo<MarketAccount>,
-  setAccount: (account: AccountInfo<MarketAccount>) => {},
+  setAccount: (account: AccountInfo<MarketAccount>) => null,
   authorityPubkey: {} as PublicKey,
-  setAuthorityPubkey: () => {},
+  setAuthorityPubkey: () => null,
   totalBorrowed: 0,
-  setTotalBorrowed: () => {},
+  setTotalBorrowed: () => null,
   totalSupply: 0,
-  setTotalSupply: () => {},
+  setTotalSupply: () => null,
   reserves: {},
-  setReserves: () => {}
+  setReserves: () => null
 });
 
 // Market context provider
-export function MarketContextProvider(props: { children: any }) {
+export function MarketContextProvider(props: { children: JSX.Element }): JSX.Element {
   const minColRatio = 1.3;
   const programMinColRatio = 1.25;
   const { connection } = useProvider();
@@ -195,10 +195,10 @@ export function MarketContextProvider(props: { children: any }) {
     reserve.depositRate = getDepositRate(ccRate, reserve.utilizationRate);
 
     // Update market total value locked and reserve array from new values
-    let borrowed: number = 0;
-    let supply: number = 0;
-    let reservesArray: Reserve[] = [];
-    for (let r in reserves) {
+    let borrowed = 0;
+    let supply = 0;
+    const reservesArray: Reserve[] = [];
+    for (const r in reserves) {
       borrowed += reserves[r].outstandingDebt.muln(reserves[r].price)?.tokens;
       supply += reserves[r].marketSize.sub(reserves[r].outstandingDebt).muln(reserves[r].price)?.tokens;
       reservesArray.push(reserves[r]);
@@ -212,7 +212,7 @@ export function MarketContextProvider(props: { children: any }) {
     // Setup reserve structures
     const reserves: Record<string, Reserve> = {};
     for (const reserveMeta of idlMetadata.reserves) {
-      let reserve: Reserve = {
+      const reserve: Reserve = {
         name: reserveMeta.name,
         abbrev: reserveMeta.abbrev,
         marketSize: TokenAmount.zero(reserveMeta.decimals),

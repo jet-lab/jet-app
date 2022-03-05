@@ -24,12 +24,12 @@ interface Localization {
 }
 const LocalizationContext = createContext<Localization>({
   preferredLanguage: '',
-  setPreferredLanguage: () => {},
+  setPreferredLanguage: () => null,
   isGeobanned: false
 });
 
 // Localization context provider
-export function LocalizationProvider(props: { children: any }) {
+export function LocalizationProvider(props: { children: JSX.Element }): JSX.Element {
   const preferredLang = localStorage.getItem('jetPreferredLanguage');
   const [preferredLanguage, setPreferredLanguage] = useState(preferredLang ?? 'en');
   const [isGeobanned, setIsGeobanned] = useState(false);

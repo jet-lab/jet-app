@@ -7,11 +7,11 @@ interface NativeValues {
 }
 const NativeValuesContext = createContext<NativeValues>({
   nativeValues: true,
-  setNativeValues: () => {}
+  setNativeValues: () => null
 });
 
 // Native vs USD context provider
-export function NativeValuesProvider(props: { children: any }) {
+export function NativeValuesProvider(props: { children: JSX.Element }): JSX.Element {
   const [nativeValues, setNativeValues] = useState(true);
 
   return (

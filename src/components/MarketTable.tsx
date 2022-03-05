@@ -22,7 +22,7 @@ import { Reserve, TxnResponse } from '../v1/models/JetTypes';
 import { useJetV1 } from '../v1/hooks/useJetV1';
 import { TokenAmount } from '../v1/util/tokens';
 
-export function MarketTable() {
+export function MarketTable(): JSX.Element {
   const { dictionary } = useLanguage();
   const { publicKey } = useWallet();
   const { setConnecting } = useConnectWalletModal();
@@ -64,7 +64,7 @@ export function MarketTable() {
   // Update reserves array on market changes
   useEffect(() => {
     const reserves = [];
-    for (let reserve of Object.values(market.reserves)) {
+    for (const reserve of Object.values(market.reserves)) {
       reserves.push(reserve);
     }
     setReservesArray(reserves);
@@ -84,12 +84,12 @@ export function MarketTable() {
             type="text"
             placeholder={dictionary.cockpit.search + '...'}
             onChange={e => {
-              let i = e.target.value.toLowerCase();
+              const i = e.target.value.toLowerCase();
               let filteredMarket = [];
               if (!i.length) {
                 filteredMarket = reservesArray;
               } else {
-                for (let reserve of reservesArray) {
+                for (const reserve of reservesArray) {
                   if (reserve.name.toLowerCase().includes(i) || reserve.abbrev.toLowerCase().includes(i)) {
                     filteredMarket.push(reserve);
                   }
@@ -118,7 +118,7 @@ export function MarketTable() {
                   {dictionary.cockpit.borrowRate}
                   <Info term="borrowRate" />
                 </th>
-                <th className="cell-border-right">{dictionary.copilot.radar}</th>
+                <th className="cell-border-right">{dictionary.copilot.radar.title}</th>
                 <th>{dictionary.cockpit.walletBalance}</th>
                 <th>{dictionary.cockpit.amountDeposited}</th>
                 <th>{dictionary.cockpit.amountBorrowed}</th>

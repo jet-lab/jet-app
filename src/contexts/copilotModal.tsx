@@ -22,12 +22,12 @@ interface CopilotModal {
   setDefinition: (definition: Definition | undefined) => void;
 }
 const CopilotModalContext = createContext<CopilotModal>({
-  setAlert: () => {},
-  setDefinition: () => {}
+  setAlert: () => null,
+  setDefinition: () => null
 });
 
 // Copilot modal context provider
-export function CopilotModalProvider(props: { children: any }) {
+export function CopilotModalProvider(props: { children: JSX.Element }): JSX.Element {
   const [alert, setAlert] = useState<Alert | undefined>();
   const [definition, setDefinition] = useState<Definition | undefined>();
 

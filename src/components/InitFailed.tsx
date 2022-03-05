@@ -1,6 +1,6 @@
 import { useGeoban, useLanguage } from '../contexts/localization/localization';
 
-export function InitFailed() {
+export function InitFailed(): JSX.Element {
   const { dictionary } = useLanguage();
   const isGeobanned = useGeoban();
 

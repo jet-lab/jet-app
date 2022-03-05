@@ -1,7 +1,7 @@
 import { useLanguage } from '../contexts/localization/localization';
 import { useRpcNode } from '../contexts/rpcNode';
 
-export function NetworkWarningBanner() {
+export function NetworkWarningBanner(): JSX.Element {
   const { dictionary } = useLanguage();
   const { degradedNetworkPerformance } = useRpcNode();
 

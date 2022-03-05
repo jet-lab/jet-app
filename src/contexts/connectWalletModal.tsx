@@ -7,11 +7,11 @@ interface ConnectWalletModal {
 }
 const ConnectWalletModalContext = createContext<ConnectWalletModal>({
   connecting: false,
-  setConnecting: () => {}
+  setConnecting: () => null
 });
 
 // Connect wallet modal context provider
-export function ConnectWalletModalProvider(props: { children: any }) {
+export function ConnectWalletModalProvider(props: { children: any }): JSX.Element {
   const [connecting, setConnecting] = useState(false);
   return (
     <ConnectWalletModalContext.Provider

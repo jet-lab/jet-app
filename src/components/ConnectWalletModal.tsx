@@ -5,7 +5,7 @@ import { useLanguage } from '../contexts/localization/localization';
 import { Modal, Divider } from 'antd';
 import { ReactComponent as ArrowIcon } from '../styles/icons/arrow_icon.svg';
 
-export function ConnectWalletModal() {
+export function ConnectWalletModal(): JSX.Element {
   const { dictionary } = useLanguage();
   const { wallets, select, connected, wallet } = useWallet();
   const { connecting, setConnecting } = useConnectWalletModal();

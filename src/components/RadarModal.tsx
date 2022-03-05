@@ -7,7 +7,7 @@ import { Modal } from 'antd';
 import { RateObserver, ProtocolRates } from '@jet-lab/defi-yield-ts';
 import { ReactComponent as RadarIcon } from '../styles/icons/radar_icon.svg';
 
-export function RadarModal() {
+export function RadarModal(): JSX.Element {
   const { darkTheme } = useDarkTheme();
   const { dictionary } = useLanguage();
   const { currentReserve } = useTradeContext();
@@ -40,10 +40,10 @@ export function RadarModal() {
     async function getRates() {
       const rateObserver = new RateObserver();
       const rates: ProtocolRates[] = await rateObserver.fetchAll();
-      for (let rate of rates) {
-        for (let protocol of protocols) {
+      for (const rate of rates) {
+        for (const protocol of protocols) {
           if (rate.protocol === protocol.name) {
-            for (let r of rate.rates) {
+            for (const r of rate.rates) {
               protocol.rates[r.asset] = {
                 deposit: r.deposit,
                 borrow: r.borrow
@@ -63,20 +63,19 @@ export function RadarModal() {
   return (
     <Modal footer={null} visible={radarOpen} className="radar-modal" onCancel={() => setRadarOpen(false)}>
       <div className="radar-modal-header flex-centered">
-        <RadarIcon width="25px" />
-        <h1>{dictionary.copilot.radar.toUpperCase()}</h1>
+        <RadarIcon width="20px" />
+        <p>{dictionary.copilot.radar.interestRadar.toUpperCase()}</p>
+      </div>
+      <div className="radar-modal-asset flex-centered">
+        <img src={`img/cryptos/${currentReserve?.abbrev}.png`} alt={`${currentReserve?.abbrev} Logo`} />
+        <h1>{currentReserve?.abbrev}</h1>
       </div>
       <div className="table-container">
         <table className="no-interaction">
           <thead>
             <tr>
               <th>
-                {currentReserve && (
-                  <div className="flex-centered">
-                    <img src={`img/cryptos/${currentReserve.abbrev}.png`} alt={`${currentReserve.abbrev} Logo`} />
-                    <h1>{currentReserve.abbrev}</h1>
-                  </div>
-                )}
+                {dictionary.copilot.radar.protocol}
               </th>
               <th>
                 {dictionary.cockpit.depositRate}
@@ -89,22 +88,22 @@ export function RadarModal() {
             </tr>
           </thead>
           <tbody>
-            {protocols.map(protocol => (
-              <tr key={protocol.name} className="no-interaction">
+            {protocols.map((protocol, i) => (
+              <tr key={protocol.name} className={`no-interaction ${(i + 1) % 2 === 0 ? 'dark-bg' : ''}`}>
                 <td>
                   <img
                     src={`img/protocols/${protocol.name.toLowerCase()}_${darkTheme ? 'white' : 'black'}.png`}
                     alt={`${protocol.name} Logo`}
                   />
                 </td>
-                <td>
+                <td className="deposit-rate">
                   {currentReserve?.abbrev && protocol.rates[currentReserve.abbrev]
-                    ? `${Math.ceil(protocol.rates[currentReserve.abbrev].deposit * 100 * 100) / 100}%`
+                    ? `${Math.ceil((protocol.rates[currentReserve.abbrev].deposit * 100) * 100) / 100}%`
                     : '--'}
                 </td>
-                <td>
+                <td className="borrow-rate">
                   {currentReserve?.abbrev && protocol.rates[currentReserve.abbrev]
-                    ? `-${Math.ceil(protocol.rates[currentReserve.abbrev].borrow * 100 * 100) / 100}%`
+                    ? `-${Math.ceil((protocol.rates[currentReserve.abbrev].borrow * 100) * 100) / 100}%`
                     : '--'}
                 </td>
               </tr>

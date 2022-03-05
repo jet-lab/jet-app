@@ -1,5 +1,5 @@
 // Format USD or crypto with default or desired decimals
-export function currencyFormatter(value: number, usd: boolean, digits?: number) {
+export function currencyFormatter(value: number, usd: boolean, digits?: number): string {
   let currencyFormat: Intl.NumberFormat;
   let uiCurrency: string;
   if (usd) {
@@ -31,7 +31,7 @@ export function currencyFormatter(value: number, usd: boolean, digits?: number) 
 }
 
 // Abbreviate large totals
-export function totalAbbrev(total: number, price?: number, native?: boolean, digits?: number) {
+export function totalAbbrev(total: number, price?: number, native?: boolean, digits?: number): string {
   let t = total;
   if (price && native === false) {
     t = total * price;

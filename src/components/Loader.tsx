@@ -1,4 +1,4 @@
-export function Loader(props: { button?: boolean; fullview?: boolean }) {
+export function Loader(props: { button?: boolean; fullview?: boolean }): JSX.Element {
   return (
     <div
       className={`loader flex-centered column

@@ -7,11 +7,11 @@ interface Init {
 }
 const InitContext = createContext<Init>({
   initFailed: false,
-  setInitFailed: () => {}
+  setInitFailed: () => null
 });
 
 // Initializing app context provider
-export function InitProvider(props: { children: any }) {
+export function InitProvider(props: { children: JSX.Element }): JSX.Element {
   const [initFailed, setInitFailed] = useState(false);
   return (
     <InitContext.Provider
