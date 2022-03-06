@@ -89,7 +89,7 @@ export function RadarModal(): JSX.Element {
           </thead>
           <tbody>
             {protocols.map((protocol, i) => (
-              <tr key={protocol.name} className={`no-interaction ${(i + 1) % 2 === 0 ? 'dark-bg' : ''}`}>
+              <tr key={protocol.name} className={`no-interaction ${(i + 1) % 2 === 0 ? 'row-bg' : ''} ${darkTheme ? '' : 'white'}`}>
                 <td>
                   <img
                     src={`img/protocols/${protocol.name.toLowerCase()}_${darkTheme ? 'white' : 'black'}.png`}
