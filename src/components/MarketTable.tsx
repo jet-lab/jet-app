@@ -68,7 +68,9 @@ export function MarketTable(): JSX.Element {
       reserves.push(reserve);
     }
     setReservesArray(reserves);
-    setFilteredMarketTable(reserves);
+    if (!filteredMarketTable.length) {
+      setFilteredMarketTable(reserves);
+    }
 
     // Initialize current reserve on first load
     if (!currentReserve) {
@@ -86,14 +88,14 @@ export function MarketTable(): JSX.Element {
             onChange={e => {
               const i = e.target.value.toLowerCase();
               let filteredMarket = [];
-              if (!i.length) {
-                filteredMarket = reservesArray;
-              } else {
+              if (i.length) {
                 for (const reserve of reservesArray) {
                   if (reserve.name.toLowerCase().includes(i) || reserve.abbrev.toLowerCase().includes(i)) {
                     filteredMarket.push(reserve);
                   }
                 }
+              } else {
+                filteredMarket = reservesArray;
               }
 
               setFilteredMarketTable(filteredMarket);

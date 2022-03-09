@@ -45,8 +45,8 @@ export function RadarModal(): JSX.Element {
           if (rate.protocol === protocol.name) {
             for (const r of rate.rates) {
               protocol.rates[r.asset] = {
-                deposit: r.deposit,
-                borrow: r.borrow
+                deposit: r.depositRate,
+                borrow: r.borrowRate
               };
             }
           }
