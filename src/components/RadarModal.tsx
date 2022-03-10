@@ -74,9 +74,7 @@ export function RadarModal(): JSX.Element {
         <table className="no-interaction">
           <thead>
             <tr>
-              <th>
-                {dictionary.copilot.radar.protocol}
-              </th>
+              <th>{dictionary.copilot.radar.protocol}</th>
               <th>
                 {dictionary.cockpit.depositRate}
                 <span>(%)</span>
@@ -89,7 +87,9 @@ export function RadarModal(): JSX.Element {
           </thead>
           <tbody>
             {protocols.map((protocol, i) => (
-              <tr key={protocol.name} className={`no-interaction ${(i + 1) % 2 === 0 ? 'row-bg' : ''} ${darkTheme ? '' : 'white'}`}>
+              <tr
+                key={protocol.name}
+                className={`no-interaction ${(i + 1) % 2 === 0 ? 'row-bg' : ''} ${darkTheme ? '' : 'white'}`}>
                 <td>
                   <img
                     src={`img/protocols/${protocol.name.toLowerCase()}_${darkTheme ? 'white' : 'black'}.png`}
@@ -98,12 +98,12 @@ export function RadarModal(): JSX.Element {
                 </td>
                 <td className="deposit-rate">
                   {currentReserve?.abbrev && protocol.rates[currentReserve.abbrev]
-                    ? `${Math.ceil((protocol.rates[currentReserve.abbrev].deposit * 100) * 100) / 100}%`
+                    ? `${Math.ceil(protocol.rates[currentReserve.abbrev].deposit * 100 * 100) / 100}%`
                     : '--'}
                 </td>
                 <td className="borrow-rate">
                   {currentReserve?.abbrev && protocol.rates[currentReserve.abbrev]
-                    ? `${Math.ceil((protocol.rates[currentReserve.abbrev].borrow * 100) * 100) / 100}%`
+                    ? `${Math.ceil(protocol.rates[currentReserve.abbrev].borrow * 100 * 100) / 100}%`
                     : '--'}
                 </td>
               </tr>

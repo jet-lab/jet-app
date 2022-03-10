@@ -110,10 +110,7 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
       if (account != null) {
         // Need to be careful constructing a BN from a number.
         // If the user has more than 2^53 lamports it will throw for not having enough precision.
-        assets.tokens.SOL.walletTokenBalance = new TokenAmount(
-          new BN(account?.lamports.toString() ?? 0),
-          SOL_DECIMALS
-        );
+        assets.tokens.SOL.walletTokenBalance = new TokenAmount(new BN(account?.lamports.toString() ?? 0), SOL_DECIMALS);
         assets.sol = assets.tokens.SOL.walletTokenBalance;
         walletBalances.SOL = assets.sol.tokens;
 
@@ -224,23 +221,27 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
       asset.collateralBalance = asset.collateralNoteBalance
         .mulb(reserve.depositNoteExchangeRate)
         .divb(new BN(Math.pow(10, 15)));
-        
+
       collateralBalances[reserve.abbrev] = asset.collateralBalance.tokens;
       loanBalances[reserve.abbrev] = asset.loanBalance.tokens;
     }
-    setCollateralBalances({...collateralBalances});
-    setLoanBalances({...loanBalances});
+    setCollateralBalances({ ...collateralBalances });
+    setLoanBalances({ ...loanBalances });
 
     // Calculate user's current position from ALL of those balances
-    const updatedPosition: Obligation = {depositedValue: 0, borrowedValue: 0, colRatio: 0, utilizationRate: 0};
+    const updatedPosition: Obligation = { depositedValue: 0, borrowedValue: 0, colRatio: 0, utilizationRate: 0 };
     for (const abbrev in assets.tokens) {
       updatedPosition.depositedValue += collateralBalances[abbrev] * market.reserves[abbrev].price;
       updatedPosition.borrowedValue += loanBalances[abbrev] * market.reserves[abbrev].price;
-      updatedPosition.colRatio = updatedPosition.borrowedValue ? updatedPosition.depositedValue / updatedPosition.borrowedValue : 0;
-      updatedPosition.utilizationRate = updatedPosition.depositedValue ? updatedPosition.borrowedValue / updatedPosition.depositedValue : 0;
+      updatedPosition.colRatio = updatedPosition.borrowedValue
+        ? updatedPosition.depositedValue / updatedPosition.borrowedValue
+        : 0;
+      updatedPosition.utilizationRate = updatedPosition.depositedValue
+        ? updatedPosition.borrowedValue / updatedPosition.depositedValue
+        : 0;
     }
     setPosition(updatedPosition);
-    
+
     // Calculate user's maximum trade values from their updated position
     for (const abbrev in assets.tokens) {
       const asset = assets.tokens[abbrev];
@@ -258,7 +259,8 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
       }
 
       // Max borrow
-      asset.maxBorrowAmount = ((updatedPosition.depositedValue / market.minColRatio) - updatedPosition.borrowedValue) / reserve.price;
+      asset.maxBorrowAmount =
+        (updatedPosition.depositedValue / market.minColRatio - updatedPosition.borrowedValue) / reserve.price;
       if (asset.maxBorrowAmount > reserve.availableLiquidity.tokens) {
         asset.maxBorrowAmount = reserve.availableLiquidity.tokens;
       }
@@ -272,7 +274,7 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
 
       assets.tokens[reserve.abbrev] = asset;
     }
-    setAssets({...assets});
+    setAssets({ ...assets });
   }
 
   // When wallet connects, subscribe to assets
@@ -284,7 +286,11 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
           return {} as AssetStore;
         }
 
-        const [obligationPubkey, obligationBump] = await findObligationAddress(program, market.accountPubkey, publicKey);
+        const [obligationPubkey, obligationBump] = await findObligationAddress(
+          program,
+          market.accountPubkey,
+          publicKey
+        );
         const assetStore: AssetStore = {
           sol: new TokenAmount(new BN(0), SOL_DECIMALS),
           obligationPubkey,

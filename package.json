@@ -1,11 +1,5 @@
 {
-  "name": "jet-protocol",
-  "version": "0.1.0",
   "private": true,
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jet-lab/jet-v1-react.git"
-  },
   "scripts": {
     "build": "craco build",
     "fmt": "prettier --check .",
