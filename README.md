@@ -22,15 +22,3 @@
 
 - **Jet Protocol is in active development so all APIs and behaviours are subject to change.**
 - **This is experimental unaudited software. Use at your own risk.**
-
-```
-npm install
-```
-
-`npm run start` to run live-reloading dev environment
-
-`npm run build` to compile app to the /build directory
-
-`npm run check` typescript type-checker
-
-`localhost:3000` in browser

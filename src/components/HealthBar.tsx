@@ -36,7 +36,7 @@ export function HealthBar(props: { fullDetail?: boolean }): JSX.Element {
         standing: colRatio >= market.minColRatio + 0.25 ? 'moderate' : 'low'
       });
     }
-  }, [colRatio]);
+  }, [colRatio, market.minColRatio]);
 
   return (
     <div className="healthbar flex-centered column">
@@ -58,7 +58,7 @@ export function HealthBar(props: { fullDetail?: boolean }): JSX.Element {
           {['critical', 'low', 'moderate', 'good'].map(standing => (
             <div
               key={standing}
-              className={`healthbar-full-detail-status flex-centered column 
+              className={`healthbar-full-detail-status flex-centered column
               ${healthGauge.standing === standing ? 'active' : ''}`}>
               <p>{dictionary.healthbar[standing]?.toUpperCase()}</p>
               <span className="center-text">{dictionary.healthbar[`${standing}Detail`]}</span>
