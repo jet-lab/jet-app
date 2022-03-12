@@ -40,10 +40,8 @@ export function LocalizationProvider(props: { children: JSX.Element }): JSX.Elem
 
     // Get user's IP to determine location/geobanning
     async function getIP() {
-      const ipKey =
-        process.env.REACT_APP_CLUSTER === 'mainnet-beta'
-          ? process.env.REACT_APP_IP_REGISTRY
-          : process.env.REACT_APP_IP_REGISTRY_LOCAL;
+      const ipKey = process.env.REACT_APP_IP_REGISTRY;
+
       try {
         const resp = await fetch(`https://api.ipregistry.co/?key=${ipKey}`, {
           method: 'GET',
