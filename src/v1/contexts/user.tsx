@@ -17,7 +17,7 @@ import {
 } from '../util/programUtil';
 import { coder, useProvider, useProgram } from '../../hooks/jet-client/useClient';
 import { TokenAmount } from '../util/tokens';
-import { Market, useMarket } from './market';
+import { useMarket } from './market';
 
 // User context
 export interface User {
@@ -97,9 +97,7 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
             ...account,
             data: parseObligationAccount(account.data, coder)
           };
-          if (walletInit) {
-            deriveValues(assets);
-          }
+          deriveValues(assets);
         }
       });
       promises.push(promise);
@@ -140,9 +138,7 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
             walletBalances[reserve.abbrev] = asset.walletTokenBalance.tokens;
             setWalletBalances(walletBalances);
           }
-          if (walletInit) {
-            deriveValues(assets);
-          }
+          deriveValues(assets);
         }
       });
       promises.push(promise);
@@ -169,9 +165,7 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
         if (amount != null) {
           asset.depositNoteBalance = amount ?? TokenAmount.zero(reserve.decimals);
           asset.depositNoteExists = !!amount;
-          if (walletInit) {
-            deriveValues(assets);
-          }
+          deriveValues(assets);
         }
       });
       promises.push(promise);
@@ -181,9 +175,7 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
         if (amount != null) {
           asset.loanNoteBalance = amount ?? TokenAmount.zero(reserve.decimals);
           asset.loanNoteExists = !!amount;
-          if (walletInit) {
-            deriveValues(assets);
-          }
+          deriveValues(assets);
         }
       });
       promises.push(promise);
@@ -193,9 +185,7 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
         if (amount != null) {
           asset.collateralNoteBalance = amount ?? TokenAmount.zero(reserve.decimals);
           asset.collateralNoteExists = !!amount;
-          if (walletInit) {
-            deriveValues(assets);
-          }
+          deriveValues(assets);
         }
       });
       promises.push(promise);

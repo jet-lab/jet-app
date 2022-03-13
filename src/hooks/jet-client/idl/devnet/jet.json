@@ -1142,13 +1142,19 @@
           {
             "name": "quoteCurrency",
             "type": {
-              "array": ["u8", 15]
+              "array": [
+                "u8",
+                15
+              ]
             }
           },
           {
             "name": "authorityBumpSeed",
             "type": {
-              "array": ["u8", 1]
+              "array": [
+                "u8",
+                1
+              ]
             }
           },
           {
@@ -1170,13 +1176,19 @@
           {
             "name": "reserved",
             "type": {
-              "array": ["u8", 360]
+              "array": [
+                "u8",
+                360
+              ]
             }
           },
           {
             "name": "reserves",
             "type": {
-              "array": ["u8", 12288]
+              "array": [
+                "u8",
+                12288
+              ]
             }
           }
         ]
@@ -1206,25 +1218,37 @@
           {
             "name": "reserved1",
             "type": {
-              "array": ["u8", 184]
+              "array": [
+                "u8",
+                184
+              ]
             }
           },
           {
             "name": "cached",
             "type": {
-              "array": ["u8", 256]
+              "array": [
+                "u8",
+                256
+              ]
             }
           },
           {
             "name": "collateral",
             "type": {
-              "array": ["u8", 2048]
+              "array": [
+                "u8",
+                2048
+              ]
             }
           },
           {
             "name": "loans",
             "type": {
-              "array": ["u8", 2048]
+              "array": [
+                "u8",
+                2048
+              ]
             }
           }
         ]
@@ -1294,7 +1318,10 @@
           {
             "name": "reserved0",
             "type": {
-              "array": ["u8", 408]
+              "array": [
+                "u8",
+                408
+              ]
             }
           },
           {
@@ -1306,13 +1333,19 @@
           {
             "name": "reserved1",
             "type": {
-              "array": ["u8", 704]
+              "array": [
+                "u8",
+                704
+              ]
             }
           },
           {
             "name": "state",
             "type": {
-              "array": ["u8", 512]
+              "array": [
+                "u8",
+                512
+              ]
             }
           }
         ]
@@ -1466,7 +1499,10 @@
           {
             "name": "reserved1",
             "type": {
-              "array": ["u8", 24]
+              "array": [
+                "u8",
+                24
+              ]
             }
           }
         ]

@@ -1177,10 +1177,11 @@ svg path {
   .jet-input {
     .currency-input {
       input {
-        width: 220px;
-        padding-left: 45px;
+        width: 100%;
+        max-width: 300px;
+        padding-left: 55px;
         padding-right: 40px;
-        font-size: @sm-font-size;
+        font-size: @base-font-size;
 
         img {
           width: 18px;
@@ -1336,8 +1337,8 @@ svg path {
 
         .trade-select-container {
           .trade-select {
+            padding: @spacing-sm @spacing-xs;
             p {
-              font-size: @xs-font-size;
               line-height: 12px;
             }
           }

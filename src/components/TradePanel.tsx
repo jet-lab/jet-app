@@ -134,7 +134,7 @@ export function TradePanel(): JSX.Element {
 
   // Adjust user input and calculate updated c-ratio if
   // they were to submit current trade
-  function adjustCollateralizationRatio() {
+  function adjustCollateralizationRatio(inputAmount = 0) {
     if (!currentReserve || !user.assets) {
       return;
     }
@@ -142,29 +142,29 @@ export function TradePanel(): JSX.Element {
     // Depositing
     if (currentAction === 'deposit') {
       setAdjustedRatio(
-        (user.position.depositedValue + (inputAmount ?? 0) * currentReserve.price) /
+        (user.position.depositedValue + inputAmount * currentReserve.price) /
           (user.position.borrowedValue > 0 ? user.position.borrowedValue : 1)
       );
       // Withdrawing
     } else if (currentAction === 'withdraw') {
       setAdjustedRatio(
-        (user.position.depositedValue - (inputAmount ?? 0) * currentReserve.price) /
+        (user.position.depositedValue - inputAmount * currentReserve.price) /
           (user.position.borrowedValue > 0 ? user.position.borrowedValue : 1)
       );
       // Borrowing
     } else if (currentAction === 'borrow') {
       setAdjustedRatio(
         user.position.depositedValue /
-          (user.position.borrowedValue + (inputAmount ?? 0) * currentReserve.price > 0
-            ? user.position.borrowedValue + (inputAmount ?? 0) * currentReserve.price
+          ((user.position.borrowedValue + inputAmount * currentReserve.price) > 0
+            ? user.position.borrowedValue + inputAmount * currentReserve.price
             : 1)
       );
       // Repaying
     } else if (currentAction === 'repay') {
       setAdjustedRatio(
         user.position.depositedValue /
-          (user.position.borrowedValue - (inputAmount ?? 0) * currentReserve.price > 0
-            ? user.position.borrowedValue - (inputAmount ?? 0) * currentReserve.price
+          ((user.position.borrowedValue - inputAmount * currentReserve.price) > 0
+            ? user.position.borrowedValue - inputAmount * currentReserve.price
             : 1)
       );
     }
@@ -205,7 +205,8 @@ export function TradePanel(): JSX.Element {
       // Depositing all SOL leaving no lamports for fees, inform and reject
       } else */ if (
         currentReserve.abbrev === 'SOL' &&
-        inputAmount >= user.walletBalances[currentReserve.abbrev] - 0.02
+        inputAmount <= user.walletBalances[currentReserve.abbrev] &&
+        inputAmount > user.walletBalances[currentReserve.abbrev] - 0.02
       ) {
         copilotAlert = {
           status: 'failure',
@@ -291,29 +292,30 @@ export function TradePanel(): JSX.Element {
     const tradeAmount = TokenAmount.tokens(inputAmount.toString(), currentReserve.decimals);
     let res: TxnResponse = TxnResponse.Cancelled;
     let txids: string[] = [];
+    let inputError = '';
     setLoading(true);
     // Depositing
     if (tradeAction === 'deposit') {
       // User is depositing more than they have in their wallet
       if (tradeAmount.tokens > user.walletBalances[currentReserve.abbrev]) {
-        setInputError(dictionary.cockpit.notEnoughAsset.replaceAll('{{ASSET}}', currentReserve.abbrev));
-        // Otherwise, send deposit
+        inputError = dictionary.cockpit.notEnoughAsset.replaceAll('{{ASSET}}', currentReserve.abbrev);
+      // Otherwise, send deposit
       } else {
         const depositAmount = tradeAmount.amount;
         [res, txids] = await deposit(currentReserve.abbrev, depositAmount);
       }
-      // Withdrawing
+    // Withdrawing
     } else if (tradeAction === 'withdraw') {
       // User is withdrawing more than liquidity in market
       if (tradeAmount.gt(currentReserve.availableLiquidity)) {
-        setInputError(dictionary.cockpit.noLiquidity);
-        // User is withdrawing more than they've deposited
+        inputError = dictionary.cockpit.noLiquidity;
+      // User is withdrawing more than they've deposited
       } else if (tradeAmount.tokens > user.collateralBalances[currentReserve.abbrev]) {
-        setInputError(dictionary.cockpit.lessFunds);
-        // User is below PROGRRAM minimum c-ratio
+        inputError = dictionary.cockpit.lessFunds;
+      // User is below PROGRRAM minimum c-ratio
       } else if (user.position.borrowedValue && user.position.colRatio <= 1.25) {
-        setInputError(dictionary.cockpit.belowMinCRatio);
-        // Otherwise, send withdraw
+        inputError = dictionary.cockpit.belowMinCRatio;
+      // Otherwise, send withdraw
       } else {
         // If user is withdrawing all, use collateral notes
         const withdrawAmount =
@@ -326,11 +328,11 @@ export function TradePanel(): JSX.Element {
     } else if (tradeAction === 'borrow') {
       // User is borrowing more than liquidity in market
       if (tradeAmount.gt(currentReserve.availableLiquidity)) {
-        setInputError(dictionary.cockpit.noLiquidity);
-        // User is below the minimum c-ratio
+        inputError = dictionary.cockpit.noLiquidity;
+      // User is below the minimum c-ratio
       } else if (user.position.borrowedValue && user.position.colRatio <= market.minColRatio) {
-        setInputError(dictionary.cockpit.belowMinCRatio);
-        // Otherwise, send borrow
+        inputError = dictionary.cockpit.belowMinCRatio;
+      // Otherwise, send borrow
       } else {
         const borrowAmount = Amount.tokens(tradeAmount.amount);
         [res, txids] = await borrow(currentReserve.abbrev, borrowAmount);
@@ -339,11 +341,11 @@ export function TradePanel(): JSX.Element {
     } else if (tradeAction === 'repay') {
       // User is repaying more than they owe
       if (tradeAmount.tokens > user.loanBalances[currentReserve.abbrev]) {
-        setInputError(dictionary.cockpit.oweLess);
-        // User input amount is larger than wallet balance
+        inputError = dictionary.cockpit.oweLess;
+      // User input amount is larger than wallet balance
       } else if (tradeAmount.tokens > user.walletBalances[currentReserve.abbrev]) {
-        setInputError(dictionary.cockpit.notEnoughAsset.replaceAll('{{ASSET}}', currentReserve.abbrev));
-        // Otherwise, send repay
+        inputError = dictionary.cockpit.notEnoughAsset.replaceAll('{{ASSET}}', currentReserve.abbrev);
+      // Otherwise, send repay
       } else {
         // If user is repaying all, use loan notes
         const repayAmount =
@@ -356,6 +358,7 @@ export function TradePanel(): JSX.Element {
 
     // If input error, remove trade amount and return
     if (inputError) {
+      setInputError(inputError);
       setInputAmount(null);
       setLoading(false);
       return;
@@ -483,13 +486,14 @@ export function TradePanel(): JSX.Element {
           error={inputError}
           onClick={() => setInputError('')}
           onChange={(value: number) => {
-            if (value < 0) {
+            const inputAmount = value;
+            if (inputAmount < 0) {
               setInputAmount(0);
             } else {
-              setInputAmount(value);
+              setInputAmount(inputAmount);
             }
 
-            adjustCollateralizationRatio();
+            adjustCollateralizationRatio(inputAmount);
           }}
           submit={() => checkCopilotTradeWarning()}
         />
@@ -501,8 +505,9 @@ export function TradePanel(): JSX.Element {
           step={1}
           disabled={disabledInput}
           onChange={percent => {
-            setInputAmount(maxInput * (percent / 100));
-            adjustCollateralizationRatio();
+            const inputAmount = maxInput * (percent / 100);
+            setInputAmount(inputAmount);
+            adjustCollateralizationRatio(inputAmount);
           }}
           tipFormatter={value => value + '%'}
           tooltipPlacement="bottom"

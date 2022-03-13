@@ -19,6 +19,10 @@ export function HealthBar(props: { fullDetail?: boolean }): JSX.Element {
 
   // Range of health meter is liquidation (125%) to 200%
   useEffect(() => {
+    if (!colRatio) {
+      return;
+    }
+
     if (colRatio <= market.minColRatio + 0.1) {
       setHealthGauge({
         percentage: 0,
@@ -41,7 +45,7 @@ export function HealthBar(props: { fullDetail?: boolean }): JSX.Element {
   return (
     <div className="healthbar flex-centered column">
       <div className="healthbar-bar">
-        {user.position.borrowedValue && (
+        {user.position.borrowedValue ? (
           <div className="healthbar-bar-indicator flex-centered column" style={{ left: `${healthGauge.percentage}%` }}>
             <div className="healthbar-bar-indicator-arrow"></div>
             <span
@@ -50,7 +54,7 @@ export function HealthBar(props: { fullDetail?: boolean }): JSX.Element {
               {dictionary.healthbar[healthGauge.standing]?.toUpperCase()}
             </span>
           </div>
-        )}
+        ) : <></>}
         <span className="healthbar-bar-range-value">≥{market.minColRatio * 100}%</span>
       </div>
       {props.fullDetail && (
