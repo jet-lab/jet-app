@@ -162,7 +162,11 @@ export class TokenAmount {
   }
 }
 
-export type AmountUnits = { tokens?: Record<string, unknown>; depositNotes?: Record<string, unknown>; loanNotes?: Record<string, unknown> };
+export type AmountUnits = {
+  tokens?: Record<string, unknown>;
+  depositNotes?: Record<string, unknown>;
+  loanNotes?: Record<string, unknown>;
+};
 
 export class Amount {
   private constructor(public units: AmountUnits, public value: BN) {}

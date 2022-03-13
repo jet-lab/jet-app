@@ -22,7 +22,7 @@ export function CopilotModal(): JSX.Element {
         setCollateralDetail(true);
       }
     }
-  }, [definition]);
+  }, [definition, language]);
 
   return (
     <>
