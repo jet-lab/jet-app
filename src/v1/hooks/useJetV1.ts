@@ -294,7 +294,7 @@ export const useJetV1 = () => {
         depositAccount: asset.depositNotePubkey.toString(),
         withdrawAccount: withdrawAccount.toString(),
 
-        jetProgram: program.programId,
+        jetProgram: program.programId.toString(),
         tokenProgram: TOKEN_PROGRAM_ID.toString()
       }
     });
