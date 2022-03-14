@@ -89,7 +89,7 @@
 @neu-shadow-inset-gradient: inset -1.5px -1.5px 4px #45b2dd, inset 1.5px 1.5px 4px #20755d;
 
 // Drop shadow
-@drop-shadow: 0 3px 6px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.2);
+@drop-shadow: 0 3px 6px rgba(0, 0, 0, 0.3), 0 3px 6px rgba(0, 0, 0, 0.3);
 
 // Border radius
 @border-radius: 4px;
@@ -115,7 +115,7 @@
 @bold-weight: 550;
 
 // Opacities
-@subtle-opacity: 0.95;
+@subtle-opacity: 0.97;
 @disabled-opacity: 0.725;
 @half-opacity: 0.65;
 
@@ -949,7 +949,8 @@ table {
   padding: @spacing-md;
   border-radius: @border-radius;
   box-shadow: @drop-shadow;
-  opacity: @subtle-opacity;
+  backdrop-filter: blur(2px);
+  background: rgba(var(--white), @disabled-opacity);
   z-index: 10;
 
   &-arrow {
@@ -1670,7 +1671,6 @@ table {
 .ant-notification,
 .ant-message {
   position: fixed;
-  opacity: @subtle-opacity;
   z-index: 10000;
 
   &-notice {
@@ -1680,13 +1680,14 @@ table {
     margin: @spacing-md;
     border-radius: @border-radius;
     box-shadow: @drop-shadow;
-    background: @white;
+    backdrop-filter: blur(2px);
+    background: rgba(var(--white), @disabled-opacity);
 
     &-message {
       font-weight: @subheader-weight;
-      font-size: @base-font-size;
+      font-size: @lg-font-size;
       margin-top: -5px;
-      border-bottom: 1px solid rgba(var(--light-grey), 0.25);
+      border-bottom: 1px solid rgba(var(--dark-grey), 0.25);
     }
     &-success &-message {
       color: @success;
@@ -1743,10 +1744,6 @@ table {
   }
 }
 .ant-message {
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-
   &-notice {
     width: unset;
     background: @gradient;
@@ -2021,8 +2018,8 @@ table {
   // Antd Notification / Message
   .ant-notification,
   .ant-message {
-    left: 50%;
-    right: unset;
+    left: 50% !important;
+    right: unset !important;
     transform: translateX(-50%);
   }
 

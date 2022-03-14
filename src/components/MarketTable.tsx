@@ -51,12 +51,14 @@ export function MarketTable(): JSX.Element {
         message: dictionary.copilot.alert.success,
         description: dictionary.copilot.alert.airdropSuccess
           .replaceAll('{{UI AMOUNT}}', amount.uiAmount)
-          .replaceAll('{{RESERVE ABBREV}}', reserve.abbrev)
+          .replaceAll('{{RESERVE ABBREV}}', reserve.abbrev),
+        placement: 'bottomLeft'
       });
     } else if (res === TxnResponse.Failed) {
       notification.error({
         message: dictionary.copilot.alert.failed,
-        description: dictionary.cockpit.txFailed
+        description: dictionary.cockpit.txFailed,
+        placement: 'bottomLeft'
       });
     }
   };

@@ -382,7 +382,8 @@ export function TradePanel(): JSX.Element {
             {shortenPubkey(lastTxn, 8)}
             <i className="fas fa-external-link-alt"></i>
           </a>
-        )
+        ),
+        placement: 'bottomLeft'
       });
 
       // Add Tx Log
@@ -390,12 +391,14 @@ export function TradePanel(): JSX.Element {
     } else if (res === TxnResponse.Failed) {
       notification.error({
         message: dictionary.copilot.alert.failed,
-        description: dictionary.cockpit.txFailed
+        description: dictionary.cockpit.txFailed,
+        placement: 'bottomLeft'
       });
     } else if (res === TxnResponse.Cancelled) {
       notification.error({
         message: dictionary.copilot.alert.failed,
-        description: dictionary.cockpit.txCancelled
+        description: dictionary.cockpit.txCancelled,
+        placement: 'bottomLeft'
       });
     }
 
@@ -410,6 +413,11 @@ export function TradePanel(): JSX.Element {
   useEffect(() => {
     adjustInterface();
   }, [user.assets, currentReserve, currentAction]);
+
+  // If user disconnects wallet, reset inputs
+  useEffect(() => {
+    setInputAmount(null);
+  }, [user.walletInit])
 
   return (
     <div className="trade-panel flex align-center justify-start">
@@ -481,7 +489,7 @@ export function TradePanel(): JSX.Element {
           currency
           value={inputAmount}
           maxInput={maxInput}
-          disabled={disabledInput}
+          disabled={!user.walletInit || disabledInput}
           loading={loading}
           error={inputError}
           onClick={() => setInputError('')}
@@ -503,7 +511,7 @@ export function TradePanel(): JSX.Element {
           min={0}
           max={100}
           step={1}
-          disabled={disabledInput}
+          disabled={!user.walletInit || disabledInput}
           onChange={percent => {
             const inputAmount = maxInput * (percent / 100);
             setInputAmount(inputAmount);
