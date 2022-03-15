@@ -29,10 +29,10 @@ export function CopilotModal(): JSX.Element {
       {/* Alert Modal */}
       <Modal
         footer={null}
-        closable={false}
+        closable={alert?.closeable}
         visible={alert !== undefined}
         className="copilot-modal"
-        onCancel={() => setAlert(undefined)}>
+        onCancel={() => alert?.closeable ? setAlert(undefined) : null}>
         <div className="modal-content flex-centered column">
           <img
             src={`img/copilot/${alert?.status === 'neutral' ? 'copilot' : 'copilot_white'}.png`}

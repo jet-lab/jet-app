@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useInitFailed } from '../contexts/init';
 import { useGeoban, useLanguage } from '../contexts/localization/localization';
 import { useAlert } from '../contexts/copilotModal';
+import { cluster } from '../hooks/jet-client/useClient';
 import { currencyFormatter, totalAbbrev } from '../utils/currency';
 import { InitFailed } from '../components/InitFailed';
 import { Info } from '../components/Info';
@@ -26,11 +27,12 @@ export function Cockpit(): JSX.Element {
   // If user has not accepted disclaimer, alert them to accept
   const acceptedDisclaimer = localStorage.getItem('jetDisclaimerAccepted') === 'true';
   useEffect(() => {
-    if (process.env.REACT_APP_CLUSTER === 'mainnet-beta' && !acceptedDisclaimer) {
+    if (cluster === 'mainnet-beta' && !acceptedDisclaimer) {
       setAlert({
         status: 'failure',
         overview: dictionary.copilot.alert.warning,
         detail: dictionary.copilot.alert.disclaimer,
+        closeable: false,
         action: {
           text: dictionary.copilot.alert.accept,
           onClick: () => localStorage.setItem('jetDisclaimerAccepted', 'true')

@@ -1,17 +1,18 @@
 import { createContext, useContext, useState } from 'react';
 
 // Copilot modal context
-interface Alert {
+export interface Alert {
   status: 'neutral' | 'success' | 'failure';
   overview?: string;
   detail: string;
   solution?: string;
+  closeable: boolean;
   action?: {
     text: string;
     onClick: () => void;
   };
 }
-interface Definition {
+export interface Definition {
   term: string;
   definition: string;
 }

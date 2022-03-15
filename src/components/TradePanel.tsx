@@ -4,7 +4,7 @@ import { useTradeContext } from '../contexts/tradeContext';
 import { useDarkTheme } from '../contexts/darkTheme';
 import { useLanguage } from '../contexts/localization/localization';
 import { useBlockExplorer } from '../contexts/blockExplorer';
-import { useAlert } from '../contexts/copilotModal';
+import { Alert, useAlert } from '../contexts/copilotModal';
 import { useTransactionLogs } from '../contexts/transactionLogs';
 import { currencyFormatter } from '../utils/currency';
 import { notification, Slider } from 'antd';
@@ -173,7 +173,7 @@ export function TradePanel(): JSX.Element {
   // Check user's trade and offer Copilot warning
   // if necessary, otherwise begin trade submit
   function checkCopilotTradeWarning() {
-    let copilotAlert: any;
+    let copilotAlert: Alert | undefined = undefined;
     if (!currentReserve) {
       return;
     }
@@ -210,19 +210,21 @@ export function TradePanel(): JSX.Element {
       ) {
         copilotAlert = {
           status: 'failure',
-          detail: dictionary.cockpit.insufficientLamports
+          detail: dictionary.cockpit.insufficientLamports,
+          closeable: true
         };
       }
       // Withdrawing
     } else if (currentAction === 'withdraw') {
       // User is withdrawing between 125% and 130%, allow trade but warn them
-      if (adjustedRatio > 0 && adjustedRatio <= market.minColRatio + 0.05) {
+      if (user.position.borrowedValue && adjustedRatio > 0 && adjustedRatio <= market.minColRatio + 0.05) {
         copilotAlert = {
           status: 'failure',
           detail: dictionary.cockpit.subjectToLiquidation
             .replaceAll('{{NEW-C-RATIO}}', currencyFormatter(adjustedRatio * 100, false, 1))
             .replaceAll('{{MIN-C-RATIO}}', currencyFormatter(market.minColRatio * 100, false, 1))
             .replaceAll('{{TRADE ACTION}}', dictionary.cockpit.withdraw.toLowerCase()),
+          closeable: true,
           action: {
             text: dictionary.cockpit.confirm,
             onClick: () => submitTrade()
@@ -249,25 +251,27 @@ export function TradePanel(): JSX.Element {
       // In danger of liquidation
       } else */ if (adjustedRatio <= market.minColRatio + 0.2) {
         // but not below min-ratio, warn and allow trade
-        if (adjustedRatio >= market.minColRatio) {
+        if (adjustedRatio >= market.minColRatio || !user.position.borrowedValue) {
           copilotAlert = {
             status: 'failure',
             detail: dictionary.cockpit.subjectToLiquidation
               .replaceAll('{{NEW-C-RATIO}}', currencyFormatter(adjustedRatio * 100, false, 1))
               .replaceAll('{{MIN-C-RATIO}}', currencyFormatter(market.minColRatio * 100, false, 1))
               .replaceAll('{{TRADE ACTION}}', dictionary.cockpit.borrow.toLowerCase()),
+          closeable: true,
             action: {
               text: dictionary.cockpit.confirm,
               onClick: () => submitTrade()
             }
           };
-          // and below minimum ratio, inform and reject
+         // and below minimum ratio, inform and reject
         } else if (adjustedRatio < market.minColRatio && adjustedRatio < user.position.colRatio) {
           copilotAlert = {
             status: 'failure',
             detail: dictionary.cockpit.rejectTrade
               .replaceAll('{{NEW-C-RATIO}}', currencyFormatter(adjustedRatio * 100, false, 1))
-              .replaceAll('{{JET MIN C-RATIO}}', market.minColRatio * 100)
+              .replaceAll('{{JET MIN C-RATIO}}', market.minColRatio * 100),
+            closeable: true
           };
         }
       }
