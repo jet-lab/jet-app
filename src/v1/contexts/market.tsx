@@ -29,7 +29,6 @@ export interface Market {
   authorityPubkey: PublicKey;
   setAuthorityPubkey: (key: PublicKey) => void;
   minColRatio: number;
-  programMinColRatio: number;
   totalBorrowed: number;
   setTotalBorrowed: (tvl: number) => void;
   totalSupply: number;
@@ -38,8 +37,7 @@ export interface Market {
   setReserves: (reserves: Record<string, Reserve>) => void;
 }
 const MarketContext = createContext<Market>({
-  minColRatio: 1.3,
-  programMinColRatio: 1.25,
+  minColRatio: 1.25,
   marketInit: false,
   setMarketInit: (init: boolean) => null,
   accountPubkey: {} as PublicKey,
@@ -58,8 +56,7 @@ const MarketContext = createContext<Market>({
 
 // Market context provider
 export function MarketContextProvider(props: { children: JSX.Element }): JSX.Element {
-  const minColRatio = 1.3;
-  const programMinColRatio = 1.25;
+  const minColRatio = 1.25;
   const { connection } = useProvider();
   const [marketInit, setMarketInit] = useState<boolean>(false);
   const [accountPubkey, setAccountPubkey] = useState<PublicKey>({} as PublicKey);
@@ -274,7 +271,6 @@ export function MarketContextProvider(props: { children: JSX.Element }): JSX.Ele
     <MarketContext.Provider
       value={{
         minColRatio,
-        programMinColRatio,
         marketInit,
         setMarketInit,
         accountPubkey,
