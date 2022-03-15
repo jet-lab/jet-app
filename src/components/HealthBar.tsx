@@ -54,7 +54,9 @@ export function HealthBar(props: { fullDetail?: boolean }): JSX.Element {
               {dictionary.healthbar[healthGauge.standing]?.toUpperCase()}
             </span>
           </div>
-        ) : <></>}
+        ) : (
+          <></>
+        )}
         <span className="healthbar-bar-range-value">≥{market.minColRatio * 100}%</span>
       </div>
       {props.fullDetail && (
