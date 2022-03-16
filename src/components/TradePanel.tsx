@@ -7,7 +7,7 @@ import { useBlockExplorer } from '../contexts/blockExplorer';
 import { Alert, useAlert } from '../contexts/copilotModal';
 import { useTransactionLogs } from '../contexts/transactionLogs';
 import { currencyFormatter } from '../utils/currency';
-import { notification, Slider } from 'antd';
+import { notification, Select, Slider } from 'antd';
 import { Info } from './Info';
 import { JetInput } from './JetInput';
 import { shortenPubkey } from '../utils/utils';
@@ -26,6 +26,8 @@ export function TradePanel(): JSX.Element {
   const { getExplorerUrl } = useBlockExplorer();
   const { addLog } = useTransactionLogs();
   const { currentReserve, currentAction, setCurrentAction } = useTradeContext();
+  const { Option } = Select;
+  const tradeActions = ['deposit', 'withdraw', 'borrow', 'repay'];
 
   // Jet V1 Trade Actions
   const user = useUser();
@@ -426,7 +428,7 @@ export function TradePanel(): JSX.Element {
   return (
     <div className="trade-panel flex align-center justify-start">
       <div className="trade-select-container flex align-center justify-between">
-        {['deposit', 'withdraw', 'borrow', 'repay'].map(action => (
+        {tradeActions.map((action) => (
           <div
             key={action}
             onClick={() => {
@@ -441,6 +443,20 @@ export function TradePanel(): JSX.Element {
             <p className="text-gradient semi-bold-text">{dictionary.cockpit[action].toUpperCase()}</p>
           </div>
         ))}
+        <div className="mobile-trade-select flex-centered">
+          <Select value={currentAction} onChange={(action) => {
+            if (!loading) {
+              setCurrentAction(action as TradeAction);
+              adjustInterface();
+            }
+          }}>
+            {tradeActions.map((action) => (
+              <Option key={action} value={action}>
+                {action.toUpperCase()}
+              </Option>
+            ))}
+          </Select>
+        </div>
       </div>
       {disabledMessage ? (
         <div className="trade-section trade-section-disabled-message flex-centered column">

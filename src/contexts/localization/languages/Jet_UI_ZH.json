@@ -6,7 +6,8 @@
     "initializing": "启动JET发动机中",
     "fetchingReserves": "获取储备数据中",
     "fetchingAccount": "获取账户数据中",
-    "loading": "Loading"
+    "loading": "Loading",
+    "loadMore": "Load More"
   },
   "nav": {
     "cockpit": "驾驶舱",

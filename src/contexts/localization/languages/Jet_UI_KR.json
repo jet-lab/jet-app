@@ -6,7 +6,8 @@
     "initializing": "Jet 엔진시작",
     "fetchingReserves": "예약 데이터 가져오기\n",
     "fetchingAccount": "계정 데이터 가져오기\n",
-    "loading": "Loading"
+    "loading": "Loading",
+    "loadMore": "Load More"
   },
   "nav": {
     "cockpit": "조종실",

@@ -6,7 +6,8 @@
     "initializing": "Завести Jet двигатели",
     "fetchingReserves": "Получение резервных данных ",
     "fetchingAccount": "Получение учётных данных ",
-    "loading": "Loading"
+    "loading": "Loading",
+    "loadMore": "Load More"
   },
   "nav": {
     "cockpit": "Кабина",

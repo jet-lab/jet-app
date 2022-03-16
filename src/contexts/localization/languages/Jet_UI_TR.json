@@ -6,7 +6,8 @@
     "initializing": "Jet Motorları Çalıştırılıyor",
     "fetchingReserves": "Yedek Veriler Sağlanıyor",
     "fetchingAccount": "Hesap Bilgisi Sağlanıyor",
-    "loading": "Loading"
+    "loading": "Loading",
+    "loadMore": "Load More"
   },
   "nav": {
     "cockpit": "Kokpit",

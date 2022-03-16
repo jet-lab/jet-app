@@ -47,23 +47,25 @@ export function TransactionLogs(): JSX.Element {
               </tr>
             ))}
             <tr className="no-interaction">
-              <td>
-                <span
+              <td></td>
+              <td></td>
+              <td style={{padding: '10px 0 0 0'}}>
+                {loadingLogs ? (
+                  <Loader button />
+                ) : (
+                  <span
                   className={`text-btn ${!user.walletInit || loadingLogs || noMoreSignatures ? 'disabled' : ''}`}
-                  onClick={() => {
-                    if (user.walletInit && !(loadingLogs || noMoreSignatures)) {
-                      searchMoreLogs();
-                    }
-                  }}>
-                  {dictionary.transactions[noMoreSignatures ? 'noMoreLogs' : 'searchMoreLogs']}
-                </span>
+                    onClick={() => {
+                      if (user.walletInit && !(loadingLogs || noMoreSignatures)) {
+                        searchMoreLogs();
+                      }
+                    }}>
+                    {dictionary.loading.loadMore}
+                  </span>
+                )}
               </td>
               <td></td>
               <td></td>
-              <td></td>
-              <td style={{ opacity: loadingLogs ? '1' : '0' }}>
-                <Loader button />
-              </td>
             </tr>
           </tbody>
         </table>

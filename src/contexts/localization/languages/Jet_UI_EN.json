@@ -6,7 +6,8 @@
     "initializing": "Starting Jet Engines",
     "fetchingReserves": "Fetching Reserve Data",
     "fetchingAccount": "Fetching Account Data",
-    "loading": "Loading"
+    "loading": "Loading",
+    "loadMore": "Load More"
   },
   "nav": {
     "cockpit": "Cockpit",

@@ -6,7 +6,8 @@
     "initializing": "Starte Düsentriebwerk",
     "fetchingReserves": "Lade Reserve-Daten",
     "fetchingAccount": "Lade Account-Daten",
-    "loading": "Loading"
+    "loading": "Loading",
+    "loadMore": "Load More"
   },
   "nav": {
     "cockpit": "Cockpit",
