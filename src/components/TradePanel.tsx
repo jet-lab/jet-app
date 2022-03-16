@@ -384,7 +384,7 @@ export function TradePanel(): JSX.Element {
             target="_blank"
             rel="noopener noreferrer"
             className="text-gradient flex align-center justify-between"
-            style={{ width: '100%', margin: 'unset' }}>
+            style={{ width: '100%' }}>
             {shortenPubkey(lastTxn, 8)}
             <i className="fas fa-external-link-alt"></i>
           </a>
