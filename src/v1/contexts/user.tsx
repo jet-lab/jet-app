@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import type { Asset, AssetStore, Obligation, Reserve } from '../models/JetTypes';
+import type { Asset, AssetStore, Obligation } from '../models/JetTypes';
 import { PublicKey } from '@solana/web3.js';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { BN } from '@project-serum/anchor';
@@ -246,6 +246,9 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
         : asset.collateralBalance.tokens;
       if (asset.maxWithdrawAmount > asset.collateralBalance.tokens) {
         asset.maxWithdrawAmount = asset.collateralBalance.tokens;
+      }
+      if (asset.maxWithdrawAmount > reserve.availableLiquidity.tokens) {
+        asset.maxWithdrawAmount = reserve.availableLiquidity.tokens;
       }
 
       // Max borrow
