@@ -216,7 +216,6 @@ th,
 td,
 span {
   position: relative;
-  margin: @spacing-xs;
   text-decoration: none;
   color: @black;
   font-size: @base-font-size;
@@ -241,7 +240,6 @@ h4 {
 a,
 i {
   text-decoration: none;
-  margin: @spacing-xs;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-touch-callout: none;
   -moz-user-select: none;
@@ -364,7 +362,6 @@ button,
     font-size: inherit;
     font-weight: inherit;
     color: inherit;
-    margin: unset;
   }
 
   &:hover,
@@ -551,7 +548,6 @@ input {
       box-shadow: @neu-shadow-inset;
       background: @grey;
       cursor: pointer;
-      margin: unset;
 
       &:hover {
         box-shadow: @neu-shadow-inset-low;
@@ -703,12 +699,10 @@ table {
     display: flex;
     align-items: center;
     padding: unset;
-    margin: unset;
     font-size: @sm-font-size;
 
     button {
       background: unset;
-      margin: unset;
       color: @black;
     }
   }
@@ -779,12 +773,16 @@ table {
       }
     }
 
+    h1,
+    p {
+      margin: 0;
+    }
+
     .ant-modal-close {
       position: absolute;
       top: 0;
       right: @spacing-md;
       padding: unset;
-      margin: unset;
       background: unset;
       opacity: @subtle-opacity;
       z-index: 1000;
@@ -1047,7 +1045,6 @@ table {
     top: 50%;
     transform: translateY(-50%);
     right: @spacing-sm;
-    margin: unset;
   }
 
   &-dropdown {
@@ -1126,7 +1123,6 @@ table {
   &-menu {
     list-style: none;
     padding: unset;
-    margin: unset;
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -1449,7 +1445,6 @@ table {
     .ant-skeleton-title {
       width: 30%;
       height: 10px;
-      margin: unset;
       background: @grey;
       border-radius: @btn-radius;
     }
@@ -1502,12 +1497,7 @@ table {
       max-width: 100%;
 
       &-title {
-        margin: unset;
         opacity: @subtle-opacity;
-
-        a {
-          margin: unset;
-        }
       }
       &-description {
         opacity: @disabled-opacity;
@@ -1533,7 +1523,6 @@ table {
 // Antd Badge
 .ant-badge {
   opacity: 1;
-  margin: unset;
   sup {
     position: absolute;
     bottom: 1px;
@@ -1550,7 +1539,6 @@ table {
     animation-iteration-count: infinite;
   }
   span {
-    margin: unset;
     font-weight: @bold-weight;
     font-size: @xs-font-size;
     background-image: @gradient;
@@ -1708,7 +1696,6 @@ table {
       position: absolute;
       top: -3px;
       right: @spacing-md;
-      margin: unset;
       z-index: 1000;
       cursor: pointer;
       span {
@@ -1794,7 +1781,6 @@ table {
     .logo {
       width: 185px;
       cursor: pointer;
-      margin: unset;
     }
 
     .nav-link {
@@ -1834,7 +1820,6 @@ table {
           width: 100%;
           height: 2px;
           background: rgb(var(--lt-white));
-          margin: unset;
         }
 
         &.close {

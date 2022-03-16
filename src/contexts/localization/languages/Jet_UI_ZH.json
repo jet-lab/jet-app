@@ -55,7 +55,7 @@
     "oweLess": "借贷金额减少",
     "geobanned": "您住的地方不尊许您用 Jet Protocol。",
     "noMarket": "我们没办法开启Jet的交易市场",
-    "txSuccess": "成功了! 我们收到您的 {{AMOUNT AND ASSET}} {{TRADE ACTION}}。您可以在這查看您的交易 <a href='{{EXPLORER LINK}}' class='text-gradient' target='_blank' style='margin: unset; font-weight: bold;'>explorer</a>。",
+    "txSuccess": "成功了! 我们收到您的 {{AMOUNT AND ASSET}} {{TRADE ACTION}}。您可以在這查看您的交易 <a href='{{EXPLORER LINK}}' class='text-gradient' target='_blank' style='font-weight: bold;'>explorer</a>。",
     "txFailed": "交易失败。失败原因不太清楚， 请您再试一次或是跟我们联系。",
     "max": "全部",
     "assetIsCurrentBorrow": "你已经借了{{ASSET}} 所以无法存入此资产。",

@@ -27,7 +27,7 @@ svg path {
   font-size: 90px;
   line-height: 90px;
   opacity: 1;
-  margin: unset;
+  margin: 0;
 
   span {
     font-size: 45px;
@@ -41,7 +41,7 @@ svg path {
   font-weight: @bold-weight;
   text-transform: uppercase;
   font-size: @xs-font-size;
-  margin: unset;
+  margin: 0;
 }
 
 // Modals
@@ -216,7 +216,6 @@ svg path {
 
     i {
       color: @black;
-      margin: unset;
       font-size: 20px;
       opacity: @disabled-opacity;
     }
@@ -263,7 +262,6 @@ svg path {
     .outer-circle {
       width: 35px;
       height: 35px;
-      margin: unset;
     }
     .inner-circle {
       box-shadow: unset;
@@ -357,7 +355,6 @@ svg path {
 
   span {
     font-size: @xs-font-size;
-    margin-top: -10px;
   }
 }
 
@@ -368,11 +365,6 @@ svg path {
   }
 
   &-modal {
-    h1,
-    p,
-    span {
-      margin: unset;
-    }
     img {
       width: 40px;
       height: 40px;
@@ -459,7 +451,6 @@ svg path {
       overflow-x: scroll;
 
       table {
-        margin: unset;
         border-collapse: collapse;
         background: @light-grey;
 
@@ -593,6 +584,7 @@ svg path {
     &-range-value {
       position: absolute;
       bottom: -22px;
+      margin: @spacing-xs;
       font-size: @sm-font-size;
       color: @dark-grey;
     }
@@ -611,7 +603,6 @@ svg path {
       &-label {
         position: absolute;
         top: -15px;
-        margin: unset;
         font-weight: @subheader-weight;
         font-size: @xs-font-size;
       }
@@ -634,12 +625,10 @@ svg path {
       }
 
       p {
-        margin: unset;
         font-size: @xs-font-size;
         font-weight: @subheader-weight;
       }
       span {
-        margin: unset;
         font-size: 8px;
         line-height: 12px;
         opacity: @disabled-opacity;
@@ -689,7 +678,6 @@ svg path {
         span {
           font-size: @xs-font-size;
           color: @dark-grey;
-          margin: unset;
         }
         i {
           font-size: @base-font-size;
@@ -731,6 +719,7 @@ svg path {
           opacity: @subtle-opacity;
           cursor: pointer;
           p {
+            margin: @spacing-xs;
             font-size: calc(@base-font-size - 1px);
             font-weight: @subheader-weight;
             letter-spacing: 0.5px;
@@ -835,12 +824,11 @@ svg path {
         }
         p {
           color: @white;
-          margin: unset;
+          margin: 0;
           font-size: 21px;
         }
         span {
           color: @white;
-          margin: unset;
           font-size: @xs-font-size;
           opacity: @subtle-opacity;
           letter-spacing: 0.5px;
@@ -895,10 +883,6 @@ svg path {
       svg path {
         fill: @black;
       }
-      p,
-      span {
-        margin: unset;
-      }
 
       .table-search {
         width: 100%;
@@ -911,6 +895,7 @@ svg path {
         }
 
         i {
+          padding: @spacing-xs;
           position: absolute;
           top: 12px;
           left: 9px;
@@ -1074,7 +1059,6 @@ svg path {
             }
 
             span {
-              margin: unset;
               font-size: @base-font-size;
               color: @jet-green;
             }
@@ -1118,6 +1102,9 @@ svg path {
 
     .rpc-info {
       flex-wrap: wrap;
+      span {
+        margin: @spacing-xs;
+      }
     }
     .ping-indicator {
       width: 8px;
@@ -1139,8 +1126,8 @@ svg path {
       img {
         margin: 0 @spacing-xs;
       }
-      p {
-        margin: 0 @spacing-md 0 @spacing-xs;
+      .wallet-address {
+        margin: @spacing-xs;
       }
       button {
         svg {
@@ -1156,9 +1143,8 @@ svg path {
   }
 
   .socials {
-    margin: @spacing-sm;
-
     a {
+      margin: @spacing-sm;
       opacity: @subtle-opacity;
       cursor: pointer;
 
@@ -1179,10 +1165,8 @@ svg path {
     color: rgb(var(--lt-black));
     padding: @spacing-xs;
   }
-  b,
-  a {
+  b {
     text-decoration: underline;
-    margin: unset;
   }
 }
 
@@ -1438,7 +1422,6 @@ svg path {
   .settings {
     width: 100%;
     padding: unset;
-    margin: unset;
     box-shadow: unset;
 
     .setting {
