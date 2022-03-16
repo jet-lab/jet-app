@@ -246,6 +246,9 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
         : asset.collateralBalance.tokens;
       if (asset.maxWithdrawAmount > asset.collateralBalance.tokens) {
         asset.maxWithdrawAmount = asset.collateralBalance.tokens;
+      } 
+      if (asset.maxWithdrawAmount > reserve.availableLiquidity.tokens) {
+        asset.maxWithdrawAmount = reserve.availableLiquidity.tokens;
       }
 
       // Max borrow
