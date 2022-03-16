@@ -428,7 +428,7 @@ export function TradePanel(): JSX.Element {
   return (
     <div className="trade-panel flex align-center justify-start">
       <div className="trade-select-container flex align-center justify-between">
-        {tradeActions.map((action) => (
+        {tradeActions.map(action => (
           <div
             key={action}
             onClick={() => {
@@ -444,13 +444,15 @@ export function TradePanel(): JSX.Element {
           </div>
         ))}
         <div className="mobile-trade-select flex-centered">
-          <Select value={currentAction} onChange={(action) => {
-            if (!loading) {
-              setCurrentAction(action as TradeAction);
-              adjustInterface();
-            }
-          }}>
-            {tradeActions.map((action) => (
+          <Select
+            value={currentAction}
+            onChange={action => {
+              if (!loading) {
+                setCurrentAction(action as TradeAction);
+                adjustInterface();
+              }
+            }}>
+            {tradeActions.map(action => (
               <Option key={action} value={action}>
                 {action.toUpperCase()}
               </Option>

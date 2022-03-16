@@ -49,12 +49,12 @@ export function TransactionLogs(): JSX.Element {
             <tr className="no-interaction">
               <td></td>
               <td></td>
-              <td style={{padding: '10px 0 0 0'}}>
+              <td style={{ padding: '10px 0 0 0' }}>
                 {loadingLogs ? (
                   <Loader button />
                 ) : (
                   <span
-                  className={`text-btn ${!user.walletInit || loadingLogs || noMoreSignatures ? 'disabled' : ''}`}
+                    className={`text-btn ${!user.walletInit || loadingLogs || noMoreSignatures ? 'disabled' : ''}`}
                     onClick={() => {
                       if (user.walletInit && !(loadingLogs || noMoreSignatures)) {
                         searchMoreLogs();
