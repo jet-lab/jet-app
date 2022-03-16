@@ -6,7 +6,8 @@
     "initializing": "Encendiendo los motores de Jet",
     "fetchingReserves": "Obteniendo datos de la reserva",
     "fetchingAccount": "Obteniendo datos de la cuenta",
-    "loading": "Cargando"
+    "loading": "Cargando",
+    "loadMore": "Load More"
   },
   "nav": {
     "cockpit": "Cabina",

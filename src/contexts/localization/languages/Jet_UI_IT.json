@@ -6,7 +6,8 @@
     "initializing": "Avvio Jet Engines",
     "fetchingReserves": "Recupero dei Reserve Data",
     "fetchingAccount": "Recupero Account Data",
-    "loading": "Caricamento"
+    "loading": "Caricamento",
+    "loadMore": "Load More"
   },
   "nav": {
     "cockpit": "Cabina",

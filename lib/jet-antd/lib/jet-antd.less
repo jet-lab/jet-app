@@ -109,6 +109,7 @@
 @base-font-size: 14px;
 @lg-font-size: 18px;
 @header-font-size: 30px;
+@xl-font-size: 40px;
 
 @header-weight: 300;
 @subheader-weight: 500;
@@ -228,6 +229,7 @@ h1 {
   line-height: 35px;
 }
 h2 {
+  opacity: @half-opacity;
   font-weight: @subheader-weight;
   line-height: 21px;
   text-transform: uppercase;
@@ -610,13 +612,13 @@ table {
       background: inherit;
       padding: inherit;
       color: inherit;
-      opacity: @half-opacity;
       min-width: 60px;
       font-weight: @bold-weight;
       font-size: @xs-font-size;
       letter-spacing: 0.5px;
       text-transform: uppercase;
       text-align: center;
+      color: rgba(var(--black), @half-opacity);
 
       &:first-of-type {
         padding-left: @spacing-md;
