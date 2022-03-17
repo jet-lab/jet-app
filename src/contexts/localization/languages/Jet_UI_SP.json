@@ -176,7 +176,8 @@
   },
   "termsPrivacy": {
     "privacyPolicy": "Politica de Privacidad",
-    "termsOfService": "Terms of Service"
+    "termsOfService": "Terms of Service",
+    "glossary": "Glossary"
   },
   "healthbar": {
     "critical": "Crítico",
