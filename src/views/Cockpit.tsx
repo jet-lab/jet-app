@@ -27,7 +27,7 @@ export function Cockpit(): JSX.Element {
   // If user has not accepted disclaimer, alert them to accept
   const acceptedDisclaimer = localStorage.getItem('jetDisclaimerAccepted') === 'true';
   useEffect(() => {
-    if (cluster === 'devnet') {
+    if (cluster === 'mainnet-beta' && !acceptedDisclaimer) {
       setAlert({
         status: 'failure',
         overview: dictionary.copilot.alert.warning,
