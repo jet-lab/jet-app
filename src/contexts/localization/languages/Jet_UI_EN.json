@@ -149,7 +149,7 @@
       "refresh": "Refresh",
       "originationFee": "There is a fee of {{ORIGINATION FEE}}% attached to this loan.",
       "headsup": "Heads up!",
-      "disclaimer": "You are about to enter the Jet Protocol Mainnet. Do not proceed if you do not understand and accept the Terms of Use, and potential for financial loss.",
+      "disclaimer": "You are about to enter the Jet Protocol Mainnet. Do not proceed if you do not understand and accept the Terms of Service, and potential for financial loss.",
       "accept": "Accept",
       "warning": "WARNING"
     },
@@ -175,8 +175,8 @@
     "noMoreLogs": "No more logs to search"
   },
   "termsPrivacy": {
-    "termsOfUse": "Terms of Use",
-    "privacyPolicy": "Privacy Policy"
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service"
   },
   "healthbar": {
     "critical": "Critical",

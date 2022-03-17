@@ -149,7 +149,7 @@
       "refresh": "更新网页",
       "originationFee": "这笔贷款会收取 {{ORIGINATION FEE}}% 发起费用.",
       "headsup": "小心!",
-      "disclaimer": "You are about to enter the Jet Protocol Mainnet. Do not proceed if you do not understand and accept the Terms of Use, and potential for financial loss.",
+      "disclaimer": "You are about to enter the Jet Protocol Mainnet. Do not proceed if you do not understand and accept the Terms of Service, and potential for financial loss.",
       "accept": "Accept",
       "warning": "WARNING"
     },
@@ -175,8 +175,8 @@
     "noMoreLogs": "No more logs to search"
   },
   "termsPrivacy": {
-    "termsOfUse": "Terms of Use",
-    "privacyPolicy": "Privacy Policy"
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service"
   },
   "healthbar": {
     "critical": "Critical",

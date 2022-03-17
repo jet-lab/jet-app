@@ -174,8 +174,8 @@
     "noMoreLogs": "No more logs to search"
   },
   "termsPrivacy": {
-    "termsOfUse": "Terms of Use",
-    "privacyPolicy": "Privacy Policy"
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service"
   },
   "healthbar": {
     "critical": "Critical",

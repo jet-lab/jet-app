@@ -175,8 +175,8 @@
     "noMoreLogs": "No se encuentran más registros"
   },
   "termsPrivacy": {
-    "termsOfUse": "Terminos de Uso",
-    "privacyPolicy": "Politica de Privacidad"
+    "privacyPolicy": "Politica de Privacidad",
+    "termsOfService": "Terms of Service"
   },
   "healthbar": {
     "critical": "Crítico",
