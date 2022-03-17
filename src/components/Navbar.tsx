@@ -22,8 +22,8 @@ export function Navbar(): JSX.Element {
     { title: dictionary.settings.title, route: '/settings' }
   ];
   const mobileFooterLinks = [
-    { title: dictionary.termsPrivacy.termsOfUse, url: 'https://www.jetprotocol.io/terms-of-use' },
-    { title: dictionary.termsPrivacy.privacyPolicy, url: 'https://www.jetprotocol.io/privacy-policy' }
+    { title: dictionary.termsPrivacy.termsOfService, url: 'https://www.jetprotocol.io/legal/terms-of-service' },
+    { title: dictionary.termsPrivacy.privacyPolicy, url: 'https://www.jetprotocol.io/legal/privacy-policy' }
   ];
   const accountLink = { title: dictionary.account.title, route: '/' };
 

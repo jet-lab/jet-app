@@ -36,11 +36,11 @@ export function Cockpit(): JSX.Element {
             {dictionary.copilot.alert.disclaimer}
             <br />
             <br />
-            <a href="https://www.jetprotocol.io/terms-of-use" target="_blank" rel="noopener noreferrer">
-              <span className="text-gradient text-gradient-btn">{dictionary.termsPrivacy.termsOfUse}</span>
+            <a href="https://www.jetprotocol.io/legal/terms-of-service" target="_blank" rel="noopener noreferrer">
+              <span className="text-gradient text-gradient-btn">{dictionary.termsPrivacy.termsOfService}</span>
             </a>
             &nbsp;&nbsp;
-            <a href="https://www.jetprotocol.io/privacy-policy" target="_blank" rel="noopener noreferrer">
+            <a href="https://www.jetprotocol.io/legal/privacy-policy" target="_blank" rel="noopener noreferrer">
               <span className="text-gradient text-gradient-btn">{dictionary.termsPrivacy.privacyPolicy}</span>
             </a>
           </span>

@@ -5,10 +5,10 @@ export function TermsPrivacy(): JSX.Element {
 
   return (
     <div className="terms-privacy flex-centered">
-      <a href="https://www.jetprotocol.io/terms-of-use" target="_blank" rel="noopener noreferrer">
-        <span className="text-btn">{dictionary.termsPrivacy.termsOfUse}</span>
+      <a href="https://www.jetprotocol.io/legal/terms-of-service" target="_blank" rel="noopener noreferrer">
+        <span className="text-btn">{dictionary.termsPrivacy.termsOfService}</span>
       </a>
-      <a href="https://www.jetprotocol.io/privacy-policy" target="_blank" rel="noopener noreferrer">
+      <a href="https://www.jetprotocol.io/legal/privacy-policy" target="_blank" rel="noopener noreferrer">
         <span className="text-btn">{dictionary.termsPrivacy.privacyPolicy}</span>
       </a>
     </div>
