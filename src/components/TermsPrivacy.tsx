@@ -11,6 +11,12 @@ export function TermsPrivacy(): JSX.Element {
       <a href="https://www.jetprotocol.io/legal/privacy-policy" target="_blank" rel="noopener noreferrer">
         <span className="text-btn">{dictionary.termsPrivacy.privacyPolicy}</span>
       </a>
+      <a
+        href="https://docs.jetprotocol.io/jet-protocol/terms-and-definitions"
+        target="_blank"
+        rel="noopener noreferrer">
+        <span className="text-btn">{dictionary.termsPrivacy.glossary}</span>
+      </a>
     </div>
   );
 }
