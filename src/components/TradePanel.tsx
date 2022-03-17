@@ -194,7 +194,7 @@ export function TradePanel(): JSX.Element {
         copilotAlert = {
           status: 'neutral',
           overview: dictionary.cockpit.welcomeAboard,
-          detail: dictionary.cockpit.rentFeeDescription,
+          detail: <span>dictionary.cockpit.rentFeeDescription</span>,
           solution: dictionary.cockpit.rentFeeDetail
             .replace('{{RENT_FEE}}', 0) //TODO: Rent fee here
             .replace('{{TRADE ACTION}}', dictionary.transactions.withdraw),
@@ -212,7 +212,7 @@ export function TradePanel(): JSX.Element {
       ) {
         copilotAlert = {
           status: 'failure',
-          detail: dictionary.cockpit.insufficientLamports,
+          detail: <span>{dictionary.cockpit.insufficientLamports}</span>,
           closeable: true
         };
       }
@@ -222,10 +222,14 @@ export function TradePanel(): JSX.Element {
       if (user.position.borrowedValue && adjustedRatio > 0 && adjustedRatio <= market.minColRatio + 0.05) {
         copilotAlert = {
           status: 'failure',
-          detail: dictionary.cockpit.subjectToLiquidation
-            .replaceAll('{{NEW-C-RATIO}}', currencyFormatter(adjustedRatio * 100, false, 1))
-            .replaceAll('{{MIN-C-RATIO}}', currencyFormatter(market.minColRatio * 100, false, 1))
-            .replaceAll('{{TRADE ACTION}}', dictionary.cockpit.withdraw.toLowerCase()),
+          detail: (
+            <span>
+              {dictionary.cockpit.subjectToLiquidation
+                .replaceAll('{{NEW-C-RATIO}}', currencyFormatter(adjustedRatio * 100, false, 1))
+                .replaceAll('{{MIN-C-RATIO}}', currencyFormatter(market.minColRatio * 100, false, 1))
+                .replaceAll('{{TRADE ACTION}}', dictionary.cockpit.withdraw.toLowerCase())}
+            </span>
+          ),
           closeable: true,
           action: {
             text: dictionary.cockpit.confirm,
@@ -241,7 +245,7 @@ export function TradePanel(): JSX.Element {
         copilotAlert = {
           status: 'neutral',
           overview: dictionary.cockpit.welcomeAboard,
-          detail: dictionary.cockpit.rentFeeDescription,
+          detail: <span>dictionary.cockpit.rentFeeDescription</span>,
           solution: dictionary.cockpit.rentFeeDetail
             .replace('{{RENT_FEE}}', 0) //TODO: Rent fee here
             .replace('{{TRADE ACTION}}', dictionary.transactions.repay.toLowerCase()),
@@ -256,10 +260,14 @@ export function TradePanel(): JSX.Element {
         if (adjustedRatio >= market.minColRatio || !user.position.borrowedValue) {
           copilotAlert = {
             status: 'failure',
-            detail: dictionary.cockpit.subjectToLiquidation
-              .replaceAll('{{NEW-C-RATIO}}', currencyFormatter(adjustedRatio * 100, false, 1))
-              .replaceAll('{{MIN-C-RATIO}}', currencyFormatter(market.minColRatio * 100, false, 1))
-              .replaceAll('{{TRADE ACTION}}', dictionary.cockpit.borrow.toLowerCase()),
+            detail: (
+              <span>
+                {dictionary.cockpit.subjectToLiquidation
+                  .replaceAll('{{NEW-C-RATIO}}', currencyFormatter(adjustedRatio * 100, false, 1))
+                  .replaceAll('{{MIN-C-RATIO}}', currencyFormatter(market.minColRatio * 100, false, 1))
+                  .replaceAll('{{TRADE ACTION}}', dictionary.cockpit.borrow.toLowerCase())}
+              </span>
+            ),
             closeable: true,
             action: {
               text: dictionary.cockpit.confirm,
@@ -270,9 +278,13 @@ export function TradePanel(): JSX.Element {
         } else if (adjustedRatio < market.minColRatio && adjustedRatio < user.position.colRatio) {
           copilotAlert = {
             status: 'failure',
-            detail: dictionary.cockpit.rejectTrade
-              .replaceAll('{{NEW-C-RATIO}}', currencyFormatter(adjustedRatio * 100, false, 1))
-              .replaceAll('{{JET MIN C-RATIO}}', market.minColRatio * 100),
+            detail: (
+              <span>
+                {dictionary.cockpit.rejectTrade
+                  .replaceAll('{{NEW-C-RATIO}}', currencyFormatter(adjustedRatio * 100, false, 1))
+                  .replaceAll('{{JET MIN C-RATIO}}', market.minColRatio * 100)}
+              </span>
+            ),
             closeable: true
           };
         }

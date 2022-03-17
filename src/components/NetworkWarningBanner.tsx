@@ -8,11 +8,12 @@ export function NetworkWarningBanner(): JSX.Element {
   if (degradedNetworkPerformance) {
     return (
       <div className="network-warning-banner flex-centered">
-        <span
-          className="semi-bold-text"
-          dangerouslySetInnerHTML={{
-            __html: dictionary.settings.degradedNetworkPerformance
-          }}></span>
+        <span className="semi-bold-text">
+          {dictionary.settings.degradedNetworkPerformance}&nbsp;
+          <a className="text-btn" href="https://status.solana.com/" target="_blank" rel="noopener noreferrer">
+            https://status.solana.com/
+          </a>
+        </span>
       </div>
     );
   } else {

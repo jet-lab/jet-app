@@ -55,7 +55,7 @@
     "oweLess": "Вы должны меньше.",
     "geobanned": "Jet протокол не доступен в вашем регионе.",
     "noMarket": "площадка Jet не смогла запуститься.",
-    "txSuccess": "Успех! Ваш(а) {{TRADE ACTION}} на {{AMOUNT AND ASSET}} получен(а). Проверить транзакцию в <a href='{{EXPLORER LINK}}' class='text-gradient' target='_blank' style='font-weight: bold;'>обозревателе</a>.",
+    "txSuccess": "Успех! Ваш(а) {{TRADE ACTION}} на {{AMOUNT AND ASSET}} получен(а).",
     "txFailed": "Транзакция не прошла. Мы не уверены, что пошло не так. Попробуйте еще раз позже или свяжитесь с нами.",
     "max": "Максимум",
     "assetIsCurrentBorrow": "Вы одолжили {{ASSET}}, поэтому не можете его внести на депозит",
@@ -93,7 +93,7 @@
     "disconnect": "Отключить кошелёк",
     "connected": "Соединено",
     "explorer": "",
-    "degradedNetworkPerformance": "<b>NOTICE:</b> The Solana blockchain is currently experiencing difficulties due to network congestion: <a href='https://status.solana.com/' target='_blank' rel='noopener noreferrer'>https://status.solana.com/</a>"
+    "degradedNetworkPerformance": "NOTICE: The Solana blockchain is currently experiencing difficulties due to network congestion:"
   },
   "reserveDetail": {
     "reserveSize": "Размер резерва",
@@ -134,7 +134,7 @@
       },
       "deposit": {
         "overview": "{{BEST DEPOSIT RATE NAME}} в данный момент выглядит неплохо.",
-        "detail": "<b class='bold'>{{BEST DEPOSIT RATE ABBREV}}</b> сейчас предлагает лучшую <b class='bold'>ГПД (годовую процентную доходность)</b> депозита на рынке в <b class='bold'>{{DEPOSIT RATE}}%</b>, и ваш счёт находится в хорошем состоянии, так что мы рекомендуем пополнить ваш залог, используя часть вашего <b class='bold'>{{USER BALANCE}} {{BEST DEPOSIT RATE ABBREV}}</b>.",
+        "detail": "{{BEST DEPOSIT RATE ABBREV}} сейчас предлагает лучшую ГПД (годовую процентную доходность) депозита на рынке в {{DEPOSIT RATE}}%, и ваш счёт находится в хорошем состоянии, так что мы рекомендуем пополнить ваш залог, используя часть вашего {{USER BALANCE}} {{BEST DEPOSIT RATE ABBREV}}.",
         "actionText": "Полетели"
       },
       "healthy": {
@@ -149,7 +149,7 @@
       "refresh": "Обновить",
       "originationFee": "Этот займ выдается с комиссией {{ORIGINATION FEE}}%",
       "headsup": "Внимание!",
-      "disclaimer": "Вы подключились к Jet Protocol mainnet. Не продолжайте, если Вы не ознакомились или не приняли условия пользования, или не готовы к потенциальным финансовым убыткам.  <br/><br/><a href=\"https://www.jetprotocol.io/terms-of-use\" target=\"_blank\" class=\"bicyclette-bold text-gradient\">TERMS OF USE</a> <a href=\"https://www.jetprotocol.io/privacy-policy\" target=\"_blank\" class=\"bicyclette-bold text-gradient\">PRIVACY POLICY</a>",
+      "disclaimer": "Вы подключились к Jet Protocol mainnet. Не продолжайте, если Вы не ознакомились или не приняли условия пользования, или не готовы к потенциальным финансовым убыткам.",
       "accept": "Принять",
       "warning": "Внимание"
     },

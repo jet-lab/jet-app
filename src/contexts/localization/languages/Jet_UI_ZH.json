@@ -55,7 +55,7 @@
     "oweLess": "借贷金额减少",
     "geobanned": "您住的地方不尊许您用 Jet Protocol。",
     "noMarket": "我们没办法开启Jet的交易市场",
-    "txSuccess": "成功了! 我们收到您的 {{AMOUNT AND ASSET}} {{TRADE ACTION}}。您可以在這查看您的交易 <a href='{{EXPLORER LINK}}' class='text-gradient' target='_blank' style='font-weight: bold;'>explorer</a>。",
+    "txSuccess": "成功了! 我们收到您的 {{AMOUNT AND ASSET}} {{TRADE ACTION}}。您可以在這查看您的交易。",
     "txFailed": "交易失败。失败原因不太清楚， 请您再试一次或是跟我们联系。",
     "max": "全部",
     "assetIsCurrentBorrow": "你已经借了{{ASSET}} 所以无法存入此资产。",
@@ -93,7 +93,7 @@
     "disconnect": "Disconnect Wallet",
     "connected": "Connected",
     "explorer": "",
-    "degradedNetworkPerformance": "<b>NOTICE:</b> The Solana blockchain is currently experiencing difficulties due to network congestion: <a href='https://status.solana.com/' target='_blank' rel='noopener noreferrer'>https://status.solana.com/</a>"
+    "degradedNetworkPerformance": "NOTICE: The Solana blockchain is currently experiencing difficulties due to network congestion:"
   },
   "reserveDetail": {
     "reserveSize": "储备规模",
@@ -134,7 +134,7 @@
       },
       "deposit": {
         "overview": "{{BEST DEPOSIT RATE NAME}} 看起来不错",
-        "detail": "<b class='bold'>{{BEST DEPOSIT RATE ABBREV}}</b> 现在有市场上最高的 <b class='bold'>借贷率</b>。您的帐号健康度不错 我建议您多存一点您的 <b class='bold'>{{USER BALANCE}} {{BEST DEPOSIT RATE ABBREV}}</b>。",
+        "detail": "{{BEST DEPOSIT RATE ABBREV}} 现在有市场上最高的 借贷率。您的帐号健康度不错 我建议您多存一点您的 {{USER BALANCE}} {{BEST DEPOSIT RATE ABBREV}}。",
         "actionText": "再存抵押物"
       },
       "healthy": {
@@ -149,7 +149,7 @@
       "refresh": "更新网页",
       "originationFee": "这笔贷款会收取 {{ORIGINATION FEE}}% 发起费用.",
       "headsup": "小心!",
-      "disclaimer": "You are about to enter the Jet Protocol Mainnet. Do not proceed if you do not understand and accept the Terms of Use, and potential for financial loss. <br/><br/><a href='https://www.jetprotocol.io/terms-of-use' target='_blank' rel='noopener noreferrer' class='text-gradient'>TERMS OF USE</a> <a href='https://www.jetprotocol.io/privacy-policy' target='_blank' rel='noopener noreferrer' class='text-gradient'>PRIVACY POLICY</a>",
+      "disclaimer": "You are about to enter the Jet Protocol Mainnet. Do not proceed if you do not understand and accept the Terms of Use, and potential for financial loss.",
       "accept": "Accept",
       "warning": "WARNING"
     },

@@ -93,7 +93,7 @@
     "disconnect": "Wallet trennen",
     "connected": "verbunden",
     "explorer": "",
-    "degradedNetworkPerformance": "<b>NOTICE:</b> The Solana blockchain is currently experiencing difficulties due to network congestion: <a href='https://status.solana.com/' target='_blank' rel='noopener noreferrer'>https://status.solana.com/</a>"
+    "degradedNetworkPerformance": "NOTICE: The Solana blockchain is currently experiencing difficulties due to network congestion:"
   },
   "reserveDetail": {
     "reserveSize": "Grösse der Reserve",
@@ -134,7 +134,7 @@
       },
       "deposit": {
         "overview": "{{BEST DEPOSIT RATE NAME}} sieht momentan gut aus.",
-        "detail": "<b class='bold'>{{BEST DEPOSIT RATE ABBREV}}</b> hat momentan den besten <b class='bold'>Habenzins</b> auf dem Marktplatz mit <b class='bold'>{{DEPOSIT RATE}}%</b>, und Ihr Account ist in gutem Zustand - somit empfehlen wir das Hinzufügen von Sicherheiten durch die Einzahlung eines Teils Ihrer <b class='bold'>{{USER BALANCE}} {{BEST DEPOSIT RATE ABBREV}}</b>.",
+        "detail": "{{BEST DEPOSIT RATE ABBREV}} hat momentan den besten Habenzins auf dem Marktplatz mit {{DEPOSIT RATE}}%, und Ihr Account ist in gutem Zustand - somit empfehlen wir das Hinzufügen von Sicherheiten durch die Einzahlung eines Teils Ihrer {{USER BALANCE}} {{BEST DEPOSIT RATE ABBREV}}.",
         "actionText": "Machen wir es"
       },
       "healthy": {
@@ -149,7 +149,7 @@
       "refresh": "Aktualisieren",
       "originationFee": "Eine Gebühr von {{ORIGINATION FEE}}% ist mit diesem Kredit verknüpft.",
       "headsup": "Achtung!",
-      "disclaimer": "Sie sind im Begriff, das Jet Protocol Mainnet zu betreten. Fahren Sie nicht fort, wenn Sie die Nutzungsbedindungen sowie das Potential für finanzielle Verluste nicht verstehen und akzeptieren.<br/><br/><a href=\"https://www.jetprotocol.io/terms-of-use\" target=\"_blank\" class=\"bicyclette-bold text-gradient\">NUTZUNGSBEDINGUNGEN</a> <a href=\"https://www.jetprotocol.io/privacy-policy\" target=\"_blank\" class=\"bicyclette-bold text-gradient\">DATENSCHUTZBESTIMMUNGEN</a>",
+      "disclaimer": "Sie sind im Begriff, das Jet Protocol Mainnet zu betreten. Fahren Sie nicht fort, wenn Sie die Nutzungsbedindungen sowie das Potential für finanzielle Verluste nicht verstehen und akzeptieren.",
       "accept": "Akzeptieren",
       "warning": "WARNUNG"
     },

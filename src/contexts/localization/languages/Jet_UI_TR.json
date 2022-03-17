@@ -55,8 +55,7 @@
     "oweLess": "Daha az borçlusun.",
     "geobanned": "Jet Protocol bölgenizde kullanılamıyor.",
     "noMarket": "Jet pazaryerini başlatamadık.",
-    "txSuccess": "Başarılı! {{AMOUNT AND ASSET}} tutarındaki  {{TRADE ACTION}} alındı. <a href='{{EXPLORER LINK}}' class='text-gradient' target='_blank' style='font-weight: bold;'>explorer</a>'da işleme göz atın.",
-    "txFailed": "İşlem başarısız. Neyin yanlış gittiğinden emin değilim, lütfen daha sonra tekrar deneyin veya bizimle iletişime geçin.",
+    "txSuccess": "Başarılı! {{AMOUNT AND ASSET}} tutarındaki  {{TRADE ACTION}} alındı.",
     "max": "Maksimum",
     "assetIsCurrentBorrow": "{{ASSET}} ödünç aldınız ve bu nedenle yatıramazsınız.",
     "belowMinCRatio": "Teminatınız yetersiz. Likidasyondan kaçınmak için para yatırın veya borcunuzu geri ödeyin.",
@@ -93,7 +92,7 @@
     "disconnect": "Cüzdan Bağlantısını Sonlandır",
     "connected": "Bağlandı",
     "explorer": "",
-    "degradedNetworkPerformance": "<b>NOTICE:</b> The Solana blockchain is currently experiencing difficulties due to network congestion: <a href='https://status.solana.com/' target='_blank' rel='noopener noreferrer'>https://status.solana.com/</a>"
+    "degradedNetworkPerformance": "NOTICE: The Solana blockchain is currently experiencing difficulties due to network congestion:"
   },
   "reserveDetail": {
     "reserveSize": "Rezerv Büyüklüğü",
@@ -134,7 +133,7 @@
       },
       "deposit": {
         "overview": "{{BEST DEPOSIT APY NAME}} şu anda iyi görünüyor.",
-        "detail": "<b class='bold'>{{BEST DEPOSIT APY ABBREV}}</b> şu anda piyasadaki en iyi mevduata sahip <b class='bold'>APY (Yıllık Yüzde Getiri)</b> <b class='bold'>%{{DEPOSIT APY}}</b> ve hesabınız iyi durumda olduğundan, <b class='bold'>{{USER BALANCE}}</b> hesabınızdaki varlıkların bir kısmını yatırarak bir miktar teminat eklemenizi öneririz <b class='bold'>{{BEST DEPOSIT APY ABBREV}}</b>.",
+        "detail": "{{BEST DEPOSIT APY ABBREV}} şu anda piyasadaki en iyi mevduata sahip APY (Yıllık Yüzde Getiri) %{{DEPOSIT APY}} ve hesabınız iyi durumda olduğundan, {{USER BALANCE}} hesabınızdaki varlıkların bir kısmını yatırarak bir miktar teminat eklemenizi öneririz {{BEST DEPOSIT APY ABBREV}}.",
         "actionText": "Haydi uçalım"
       },
       "healthy": {
@@ -149,7 +148,7 @@
       "refresh": "Yenile",
       "originationFee": "Bu borca ilişkin {{ORIGINATION FEE}}% kadar oluşturulma komisyonu bulunmaktadır. ",
       "headsup": "Dikkat buraya!",
-      "disclaimer": "JetProtocol mainnet'e erişiyorsunuz. Yeterince bilgiye sahip değilseniz ilerlemeyin, şartları veya olası kayıpları kabul etmeyin.  <br/><br/><a href=\"https://www.jetprotocol.io/terms-of-use\" target=\"_blank\" class=\"bicyclette-bold text-gradient\">TERMS OF USE</a> <a href=\"https://www.jetprotocol.io/privacy-policy\" target=\"_blank\" class=\"bicyclette-bold text-gradient\">PRIVACY POLICY</a>",
+      "disclaimer": "JetProtocol mainnet'e erişiyorsunuz. Yeterince bilgiye sahip değilseniz ilerlemeyin, şartları veya olası kayıpları kabul etmeyin.",
       "accept": "Kabul Et",
       "warning": "UYARI"
     },

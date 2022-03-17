@@ -31,7 +31,20 @@ export function Cockpit(): JSX.Element {
       setAlert({
         status: 'failure',
         overview: dictionary.copilot.alert.warning,
-        detail: dictionary.copilot.alert.disclaimer,
+        detail: (
+          <span>
+            {dictionary.copilot.alert.disclaimer}
+            <br />
+            <br />
+            <a href="https://www.jetprotocol.io/terms-of-use" target="_blank" rel="noopener noreferrer">
+              <span className="text-btn">{dictionary.termsPrivacy.termsOfUse}</span>
+            </a>
+            &nbsp;&nbsp;
+            <a href="https://www.jetprotocol.io/privacy-policy" target="_blank" rel="noopener noreferrer">
+              <span className="text-btn">{dictionary.termsPrivacy.privacyPolicy}</span>
+            </a>
+          </span>
+        ),
         closeable: false,
         action: {
           text: dictionary.copilot.alert.accept,
