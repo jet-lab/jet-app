@@ -27,7 +27,7 @@ export function Cockpit(): JSX.Element {
   // If user has not accepted disclaimer, alert them to accept
   const acceptedDisclaimer = localStorage.getItem('jetDisclaimerAccepted') === 'true';
   useEffect(() => {
-    if (cluster === 'mainnet-beta' && !acceptedDisclaimer) {
+    if (cluster === 'devnet') {
       setAlert({
         status: 'failure',
         overview: dictionary.copilot.alert.warning,
@@ -37,11 +37,11 @@ export function Cockpit(): JSX.Element {
             <br />
             <br />
             <a href="https://www.jetprotocol.io/terms-of-use" target="_blank" rel="noopener noreferrer">
-              <span className="text-btn">{dictionary.termsPrivacy.termsOfUse}</span>
+              <span className="text-gradient text-gradient-btn">{dictionary.termsPrivacy.termsOfUse}</span>
             </a>
             &nbsp;&nbsp;
             <a href="https://www.jetprotocol.io/privacy-policy" target="_blank" rel="noopener noreferrer">
-              <span className="text-btn">{dictionary.termsPrivacy.privacyPolicy}</span>
+              <span className="text-gradient text-gradient-btn">{dictionary.termsPrivacy.privacyPolicy}</span>
             </a>
           </span>
         ),
