@@ -93,7 +93,7 @@
     "disconnect": "Disconetti il Wallet",
     "connected": "Connesso",
     "explorer": "Explorer",
-    "degradedNetworkPerformance": "<b>NOTICE:</b> The Solana blockchain is currently experiencing difficulties due to network congestion: <a href='https://status.solana.com/' target='_blank' rel='noopener noreferrer'>https://status.solana.com/</a>"
+    "degradedNetworkPerformance": "NOTICE: The Solana blockchain is currently experiencing difficulties due to network congestion:"
   },
   "reserveDetail": {
     "reserveSize": "Dimensione della riserva",
@@ -134,7 +134,7 @@
       },
       "deposit": {
         "overview": "{{BEST DEPOSIT RATE NAME}} sta andando bene in questo momento.",
-        "detail": "<b class='bold'>{{BEST DEPOSIT RATE ABBREV}}</b> ha il miglior deposito <b class='bold'>rate</b> nel mercato in questo momento a <b class='bold'>{{DEPOSIT RATE}}%</b>, e il tuo account è in regola, quindi ti consigliamo di aggiungere alcune garanzie depositando una parte del tuo <b class='bold'>{{USER BALANCE}} {{BEST DEPOSIT RATE ABBREV}}</b>.",
+        "detail": "{{BEST DEPOSIT RATE ABBREV}} ha il miglior deposito rate nel mercato in questo momento a {{DEPOSIT RATE}}%, e il tuo account è in regola, quindi ti consigliamo di aggiungere alcune garanzie depositando una parte del tuo {{USER BALANCE}} {{BEST DEPOSIT RATE ABBREV}}.",
         "actionText": "Facciamolo"
       },
       "healthy": {
@@ -149,7 +149,7 @@
       "refresh": "Ricarica",
       "originationFee": "C'è una commissione di {{ORIGINATION FEE}}% allegato a questo prestito.",
       "headsup": "Dritta!",
-      "disclaimer": "Stai per entrare nella mainnet del protocollo Jet. Non procedere se non si comprendono e si accettano i Termini di utilizzo e il potenziale rischio di perdite finanziarie. <br/><br/><a href=\"https://www.jetprotocol.io/terms-of-use\" target=\"_blank\" class=\"bicyclette-bold text-gradient\">CONDIZIONI DI UTILIZZO</a> <a href=\"https://www.jetprotocol.io/privacy-policy\" target=\"_blank\" class=\"bicyclette-bold text-gradient\">PRIVACY POLICY</a>",
+      "disclaimer": "Stai per entrare nella mainnet del protocollo Jet. Non procedere se non si comprendono e si accettano i Termini di utilizzo e il potenziale rischio di perdite finanziarie.",
       "accept": "Accetta",
       "warning": "AVVERTIMENTO"
     },

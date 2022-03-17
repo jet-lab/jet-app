@@ -55,7 +55,7 @@
     "oweLess": "덜 빚지고 있습니다.",
     "geobanned": "귀하의 지역에서는 Jet Protocol을 사용할 수 없습니다.",
     "noMarket": "Jet marketplace를 초기화하지 못했습니다.",
-    "txSuccess": "성공적입니다! {{AMOUNT AND ASSET}} 중 {{TRADE ACTION}}이 접수되었습니다. 거래를 확인해보세요 <a href='{{EXPLORER LINK}}' class='text-gradient' target='_blank' style='font-weight: bold;'>explorer</a>.",
+    "txSuccess": "성공적입니다! {{AMOUNT AND ASSET}} 중 {{TRADE ACTION}}이 접수되었습니다. 거래를 확인해보세요.",
     "txFailed": "거래를 실패하였습니다. 무엇이 잘못되었는지 확인이 불가하므로, 나중에 다시 시도하거나 저희에게 문의하세요.",
     "max": "최대",
     "assetIsCurrentBorrow": "{{ASSET}}을 대출했으므로 예치할 수 없습니다.",
@@ -93,7 +93,7 @@
     "disconnect": "지갑 연결 해제\n",
     "connected": "연결됨",
     "explorer": "",
-    "degradedNetworkPerformance": "<b>NOTICE:</b> The Solana blockchain is currently experiencing difficulties due to network congestion: <a href='https://status.solana.com/' target='_blank' rel='noopener noreferrer'>https://status.solana.com/</a>"
+    "degradedNetworkPerformance": "NOTICE: The Solana blockchain is currently experiencing difficulties due to network congestion:"
   },
   "reserveDetail": {
     "reserveSize": "비축 규모",
@@ -134,7 +134,7 @@
       },
       "deposit": {
         "overview": "현재 {{BEST DEPOSIT RATE NAME}}이 좋아 보입니다.",
-        "detail": "<b class='bold'>{{BEST DEPOSIT RATE ABBREV}}</b> has the best deposit <b class='bold'>rate</b> in the market right now at <b class='bold'>{{DEPOSIT RATE}}%</b>, and your account is in good standing so we recommend adding some collateral by depositing a portion of your <b class='bold'>{{USER BALANCE}} {{BEST DEPOSIT RATE ABBREV}}</b>.",
+        "detail": "{{BEST DEPOSIT RATE ABBREV}} has the best deposit rate in the market right now at {{DEPOSIT RATE}}%, and your account is in good standing so we recommend adding some collateral by depositing a portion of your {{USER BALANCE}} {{BEST DEPOSIT RATE ABBREV}}.",
         "actionText": "Let's Do It"
       },
       "healthy": {
@@ -149,7 +149,7 @@
       "refresh": "새로고침",
       "originationFee": "이 대출에는 {{ORIGINATION FEE}}%의 수수료가 부과됩니다.",
       "headsup": "예의주시하세요!",
-      "disclaimer": "제트 프로토콜 메인넷에 진입하려고 합니다. 이용약관 및 금전적 손실 가능성을 이해하고 동의하지 않는 경우 진행하지 마십시오. <br/><br/><a href=\"https://www.jetprotocol.io/terms-of-use\" target=\"_blank\" class=\"bicyclette-bold text-gradient\">TERMS OF USE</a> <a href=\"https://www.jetprotocol.io/privacy-policy\" target=\"_blank\" class=\"bicyclette-bold text-gradient\">PRIVACY POLICY</a>\n",
+      "disclaimer": "제트 프로토콜 메인넷에 진입하려고 합니다. 이용약관 및 금전적 손실 가능성을 이해하고 동의하지 않는 경우 진행하지 마십시오.",
       "accept": "수용하다",
       "warning": "경고"
     },

@@ -4,7 +4,7 @@ import { createContext, useContext, useState } from 'react';
 export interface Alert {
   status: 'neutral' | 'success' | 'failure';
   overview?: string;
-  detail: string;
+  detail: JSX.Element;
   solution?: string;
   closeable: boolean;
   action?: {

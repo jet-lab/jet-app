@@ -93,7 +93,7 @@
     "disconnect": "Desconectar Billetera",
     "connected": "Conectado",
     "explorer": "Explorador",
-    "degradedNetworkPerformance": "<b>NOTICE:</b> The Solana blockchain is currently experiencing difficulties due to network congestion: <a href='https://status.solana.com/' target='_blank' rel='noopener noreferrer'>https://status.solana.com/</a>"
+    "degradedNetworkPerformance": "NOTICE: The Solana blockchain is currently experiencing difficulties due to network congestion:"
   },
   "reserveDetail": {
     "reserveSize": "Tamaño de la Reserva",
@@ -134,7 +134,7 @@
       },
       "deposit": {
         "overview": "{{BEST DEPOSIT RATE NAME}} se ve bien ahora.",
-        "detail": " <b class='bold'>{{BEST DEPOSIT RATE ABBREV}}</b> tiene el mejor deposito <b class='bold'>tasa</b>  en el mercado ahora mismo en <b class=' bold'>{{DEPOSIT RATE}}%</b>, y su cuenta está en buen estado, por lo que le recomendamos agregar algo de colateral depositando una parte de su <b class='bold'>{{USER BALANCE}} {{BEST DEPOSIT RATE ABBREV}}</b>\n",
+        "detail": " {{BEST DEPOSIT RATE ABBREV}} tiene el mejor deposito tasa  en el mercado ahora mismo en {{DEPOSIT RATE}}%, y su cuenta está en buen estado, por lo que le recomendamos agregar algo de colateral depositando una parte de su {{USER BALANCE}} {{BEST DEPOSIT RATE ABBREV}}\n",
         "actionText": "¡A por ello !"
       },
       "healthy": {
@@ -149,7 +149,7 @@
       "refresh": "Actualizar",
       "originationFee": "Este préstamo está adjunto a una tarifa de {{ORIGINATION FEE}}%",
       "headsup": "¡Atención!",
-      "disclaimer": "Se encuentra a punto de entrar en Jet Protocol Mainnet. No proceda si usted no comprende y acepta los Términos de Uso y potenciales perdidas financieras.\n<br/><br/><a href=\"https://www.jetprotocol.io/terms-of-use\" target=\"_blank\" class=\"text-gradient\">TERMS OF USE</a> <a href=\"https://www.jetprotocol.io/privacy-policy\" target=\"_blank\" class=\"text-gradient\">PRIVACY POLICY</a>",
+      "disclaimer": "Se encuentra a punto de entrar en Jet Protocol Mainnet. No proceda si usted no comprende y acepta los Términos de Uso y potenciales perdidas financieras.",
       "accept": "Aceptar",
       "warning": "ALERTA"
     },

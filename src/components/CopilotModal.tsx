@@ -43,7 +43,7 @@ export function CopilotModal(): JSX.Element {
             <h2 className={alert?.status === 'neutral' ? 'text-gradient' : alert?.status + '-text'}>
               {alert?.overview ?? dictionary.copilot.header}
             </h2>
-            <span dangerouslySetInnerHTML={{ __html: alert?.detail ?? '' }}></span>
+            {alert?.detail}
             {alert?.solution && (
               <span className="semi-bold-text" dangerouslySetInnerHTML={{ __html: alert?.solution }}></span>
             )}
@@ -71,7 +71,7 @@ export function CopilotModal(): JSX.Element {
           <div className="body flex align-start justify-center column">
             {collateralDetail && connected && <HealthBar fullDetail />}
             <h2 className="text-gradient">{definition?.term}</h2>
-            <span dangerouslySetInnerHTML={{ __html: definition?.definition ?? '' }}></span>
+            <span>{definition?.definition}</span>
             <Button className="small-btn" onClick={() => setDefinition(undefined)}>
               {dictionary.copilot.okay}
             </Button>
