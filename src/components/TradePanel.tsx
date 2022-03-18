@@ -82,8 +82,7 @@ export function TradePanel(): JSX.Element {
       if (!user.collateralBalances[currentReserve.abbrev]) {
         setDisabledMessage(dictionary.cockpit.noDepositsForWithdraw.replaceAll('{{ASSET}}', currentReserve.abbrev));
         // User is below PROGRRAM minimum c-ratio
-        // TODO: Need this from idl or something?
-      } else if (user.position.borrowedValue && user.position.colRatio <= 1.25) {
+      } else if (user.position.borrowedValue && user.position.colRatio <= market.minColRatio) {
         setDisabledMessage(dictionary.cockpit.belowMinCRatio);
       } else {
         setDisabledInput(false);
@@ -195,9 +194,9 @@ export function TradePanel(): JSX.Element {
           status: 'neutral',
           overview: dictionary.cockpit.welcomeAboard,
           detail: <span>dictionary.cockpit.rentFeeDescription</span>,
-          solution: dictionary.cockpit.rentFeeDetail
+          solution: <span>dictionary.cockpit.rentFeeDetail
             .replace('{{RENT_FEE}}', 0) //TODO: Rent fee here
-            .replace('{{TRADE ACTION}}', dictionary.transactions.withdraw),
+            .replace('{{TRADE ACTION}}', dictionary.transactions.withdraw)</span>,
           action: {
             text: dictionary.cockpit.confirm,
             onClick: () => submitTrade()
@@ -246,9 +245,9 @@ export function TradePanel(): JSX.Element {
           status: 'neutral',
           overview: dictionary.cockpit.welcomeAboard,
           detail: <span>dictionary.cockpit.rentFeeDescription</span>,
-          solution: dictionary.cockpit.rentFeeDetail
+          solution: <span>dictionary.cockpit.rentFeeDetail
             .replace('{{RENT_FEE}}', 0) //TODO: Rent fee here
-            .replace('{{TRADE ACTION}}', dictionary.transactions.repay.toLowerCase()),
+            .replace('{{TRADE ACTION}}', dictionary.transactions.repay.toLowerCase())</span>,
           action: {
             text: dictionary.cockpit.confirm,
             onClick: () => submitTrade()

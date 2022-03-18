@@ -51,10 +51,11 @@
   --dark-shadow: var(--lt-dark-shadow);
 
   // Other root colors
-  --jet-green: @jet-green;
-  --jet-blue: @jet-blue;
-  --success: @success;
-  --failure: @failure;
+  --jet-green: #3d9e83;
+  --jet-blue: #278db6;
+  --success: #53bd9f;
+  --warning: #e3cb79;
+  --failure: #ec6a69;
 }
 
 // Base colors
@@ -63,11 +64,11 @@
 @grey: rgb(var(--grey));
 @light-grey: rgb(var(--light-grey));
 @white: rgb(var(--white));
-@jet-green: #3d9e83;
-@jet-blue: #278db6;
-@success: #53bd9f;
-@warning: #e3cb79;
-@failure: #ec6a69;
+@jet-green: var(--jet-green);
+@jet-blue: var(--jet-blue);
+@success: var(--success);
+@warning: var(--warning);
+@failure: var(--failure);
 @gradient: linear-gradient(135deg, @jet-green 25%, @jet-blue 85%);
 
 // Base shadow elements
@@ -1732,6 +1733,9 @@ table {
   }
 }
 .ant-message {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
   &-notice {
     width: unset;
     background: @gradient;

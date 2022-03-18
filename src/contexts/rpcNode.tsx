@@ -71,7 +71,6 @@ export const useRpcNode = () => {
   return {
     ...context,
     updateRpcNode: (rpcNodeInput?: string) => {
-      // TODO: Will this update useProvider without being a dependency?
       if (rpcNodeInput) {
         localStorage.setItem('jetPreferredNode', rpcNodeInput);
         context.setPreferredNode(rpcNodeInput);
