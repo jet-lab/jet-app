@@ -5,7 +5,7 @@ export interface Alert {
   status: 'neutral' | 'success' | 'failure';
   overview?: string;
   detail: JSX.Element;
-  solution?: string;
+  solution?: JSX.Element;
   closeable: boolean;
   action?: {
     text: string;

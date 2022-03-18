@@ -450,7 +450,7 @@ export const parseTokenAccount = (account: AccountInfo<Buffer>, accountPubkey: P
       isInitialized: (data as any).state !== 0,
       isFrozen: (data as any).state === 2,
       isNative: !!(data as any).isNativeOption,
-      rentExemptReserve: new BN(0, undefined, 'le'), //  Todo: calculate. I believe this is lamports minus rent for wrapped sol
+      rentExemptReserve: new BN(0, undefined, 'le'),
       closeAuthority: (data as any).closeAuthorityOption ? new PublicKey(data.closeAuthority!) : null
     }
   };

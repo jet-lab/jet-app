@@ -1,5 +1,4 @@
 import { useWallet } from '@solana/wallet-adapter-react';
-//TODO: import type { JetReserve } from "@jet-lab/jet-engine";
 import { useConnectWalletModal } from '../contexts/connectWalletModal';
 import { useDefinition } from '../contexts/copilotModal';
 import { useLanguage } from '../contexts/localization/localization';
@@ -20,8 +19,6 @@ export function ReserveDetail(props: { reserve: Reserve; close: () => void }): J
   const { definition } = useDefinition();
   const { nativeValues } = useNativeValues();
 
-  //TODO: Check all market/user properties,
-  //especially for BN's like the marketSize.mul used here
   return (
     <Modal
       footer={null}

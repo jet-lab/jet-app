@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useLanguage, definitions } from '../contexts/localization/localization';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useAlert, useDefinition } from '../contexts/copilotModal';
-//TODO: import { market } from "../hooks/jet-client/useClient";
 import { Modal, Button } from 'antd';
 import { HealthBar } from './HealthBar';
 
@@ -44,9 +43,7 @@ export function CopilotModal(): JSX.Element {
               {alert?.overview ?? dictionary.copilot.header}
             </h2>
             {alert?.detail}
-            {alert?.solution && (
-              <span className="semi-bold-text" dangerouslySetInnerHTML={{ __html: alert?.solution }}></span>
-            )}
+            {alert?.solution}
             <Button
               className={`small-btn ${alert?.status === 'failure' ? 'error-btn' : ''}`}
               onClick={() => {
