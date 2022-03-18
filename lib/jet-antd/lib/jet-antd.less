@@ -90,7 +90,7 @@
 @neu-shadow-inset-gradient: inset -1.5px -1.5px 4px #45b2dd, inset 1.5px 1.5px 4px #20755d;
 
 // Drop shadow
-@drop-shadow: 0 3px 6px rgba(0, 0, 0, 0.3), 0 3px 6px rgba(0, 0, 0, 0.3);
+@drop-shadow: 0 3px 6px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.1);
 
 // Border radius
 @border-radius: 4px;
@@ -118,7 +118,7 @@
 
 // Opacities
 @subtle-opacity: 0.97;
-@disabled-opacity: 0.725;
+@disabled-opacity: 0.75;
 @half-opacity: 0.65;
 
 // Standardized spacing
@@ -132,7 +132,7 @@
 @view-clamp: clamp(250px, calc(100% - @spacing-sm * 2), 1150px);
 
 // Transition Duration
-@transition-duration: 0.1s;
+@transition-duration: 0.15s;
 
 /***************************
   General Jet UI Styles / Boilerplate
@@ -380,18 +380,19 @@ button,
     border: 1px solid @dark-grey;
     padding: @secondary-btn-padding;
     color: @dark-grey;
+    opacity: @disabled-opacity;
     span {
+      opacity: 1;
       color: inherit;
     }
 
     &:hover,
     &:active {
-      background: rgba(var(--grey), 0.1);
-      opacity: @disabled-opacity;
+      opacity: 1;
     }
     &:active {
       box-shadow: unset;
-      background: rgba(var(--grey), 0.25);
+      background: rgba(var(--grey), 0.15);
     }
   }
 
@@ -453,7 +454,7 @@ button,
   // Smaller button
   &.small-btn,
   &.small-btn span {
-    font-size: @xs-font-size;
+    font-size: @xs-font-size !important;
   }
 
   // Error button
@@ -846,6 +847,7 @@ table {
     width: 17px;
     height: 17px;
     border-radius: @round-radius;
+    transition: all @transition-duration ease-in-out;
 
     &::before {
       content: '';
@@ -859,6 +861,18 @@ table {
   span {
     color: @dark-grey;
     margin: 0 0 0 20px;
+    transition: margin @transition-duration ease-in-out;
+  }
+
+  &:active {
+    .ant-switch-handle {
+      width: 24px;
+    }
+    &.ant-switch-checked {
+      .ant-switch-handle {
+        left: calc(80% - 14px);
+      }
+    }
   }
 
   &:hover {
@@ -870,8 +884,7 @@ table {
 
     .ant-switch-handle {
       top: 7px;
-      left: unset;
-      right: 7px;
+      left: calc(80% - 7px);
 
       &::before {
         background: @white;
@@ -1661,6 +1674,7 @@ table {
 .ant-notification,
 .ant-message {
   position: fixed;
+  bottom: 0px !important;
   z-index: 10000;
 
   &-notice {
@@ -1673,22 +1687,37 @@ table {
     backdrop-filter: blur(2px);
     background: rgba(var(--white), @disabled-opacity);
 
+    &-icon,
+    .anticon {
+      position: absolute;
+      top: @spacing-md;
+      left: @spacing-md;
+      font-size: @lg-font-size;
+    }
+    &-success {
+      svg path {
+        fill: @success;
+      }
+    }
+    &-error {
+      svg path {
+        fill: @failure;
+      }
+    }
     &-message {
       font-weight: @subheader-weight;
-      font-size: @lg-font-size;
-      margin-top: -5px;
+      font-size: @sm-font-size;
+      margin-top: -2px;
+      margin-left: 30px;
       border-bottom: 1px solid rgba(var(--dark-grey), 0.25);
-    }
-    &-success &-message {
-      color: @success;
-    }
-    &-error &-message {
-      color: @failure;
+      line-height: 21px;
+      text-transform: uppercase;
     }
     &-description {
       opacity: @subtle-opacity;
       font-size: @base-font-size;
       padding-top: @spacing-xs;
+      margin-left: 30px;
     }
 
     &-close {
@@ -1720,16 +1749,11 @@ table {
         }
       }
     }
-
-    &-icon,
-    .anticon {
-      display: none;
-    }
   }
 
   // When notification goes away
   &-fade-leave {
-    display: none;
+    //display: none;
   }
 }
 .ant-message {

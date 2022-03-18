@@ -48,9 +48,7 @@ export function Settings(): JSX.Element {
                   style={{
                     background: ping < 1000 ? 'var(--success)' : 'var(--failure)'
                   }}></div>
-                <span className={ping < 1000 ? 'success-text' : 'failure-text'} style={{ width: '55px' }}>
-                  ({ping}ms)
-                </span>
+                <span className={ping < 1000 ? 'success-text' : 'failure-text'}>({ping}ms)</span>
               </>
             )}
             {preferredNode && (
