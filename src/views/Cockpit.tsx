@@ -13,6 +13,7 @@ import { MarketTable } from '../components/MarketTable';
 // Jet V1
 import { useUser } from '../v1/contexts/user';
 import { useMarket } from '../v1/contexts/market';
+import { Button } from 'antd';
 
 export function Cockpit(): JSX.Element {
   const isGeobanned = useGeoban();
@@ -59,6 +60,9 @@ export function Cockpit(): JSX.Element {
   } else {
     return (
       <div className="cockpit view-container flex justify-center column">
+        <Button type="dashed" className="full-width" onClick={() => null}>
+          Withdraw all
+        </Button>
         <div className="cockpit-top flex align-center justify-between">
           <div className="trade-market-tvl flex align-start justify-center column">
             <h2 className="view-subheader">{dictionary.cockpit.totalSupply}</h2>

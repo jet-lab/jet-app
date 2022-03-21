@@ -69,7 +69,7 @@ export function CopilotModal(): JSX.Element {
             {collateralDetail && connected && <HealthBar fullDetail />}
             <h2 className="text-gradient">{definition?.term}</h2>
             <span>{definition?.definition}</span>
-            <Button className="small-btn" onClick={() => setDefinition(undefined)}>
+            <Button size="small" onClick={() => setDefinition(undefined)}>
               {dictionary.copilot.okay}
             </Button>
           </div>

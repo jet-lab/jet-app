@@ -79,7 +79,7 @@ export function Settings(): JSX.Element {
                 alt={`${wallet.name} Logo`}
               />
               <span className="wallet-address">{shortenPubkey(publicKey.toString(), 4)}</span>
-              <Button ghost className="small-btn" onClick={() => disconnect()}>
+              <Button ghost size="small" onClick={() => disconnect()}>
                 {dictionary.settings.disconnect}
               </Button>
             </div>
