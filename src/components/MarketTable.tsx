@@ -216,7 +216,7 @@ export function MarketTable(): JSX.Element {
                       }}>
                       <i
                         className="clickable-icon text-gradient fas fa-parachute-box"
-                        title="Airdrop {reserve.abbrev}"></i>
+                        title={`Airdrop ${reserve.abbrev}`}></i>
                     </td>
                   ) : (
                     <td>

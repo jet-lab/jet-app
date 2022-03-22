@@ -25,7 +25,7 @@ export function TransactionLogs(): JSX.Element {
             <tr>
               <th>{dictionary.transactions.date}</th>
               <th>{dictionary.transactions.signature}</th>
-              <th className="center-text">{dictionary.transactions.tradeAction}</th>
+              <th>{dictionary.transactions.tradeAction}</th>
               <th>{dictionary.transactions.tradeAmount}</th>
               <th>{/* Empty column for loader */}</th>
             </tr>
@@ -35,7 +35,7 @@ export function TransactionLogs(): JSX.Element {
               <tr key={i} onClick={() => window.open(getExplorerUrl(log.signature), '_blank')}>
                 <td>{log.blockDate}</td>
                 <td style={{ color: 'var(--success)' }}>{shortenPubkey(log.signature, 4)}</td>
-                <td className="reserve-detail center-text">{log.tradeAction}</td>
+                <td className="reserve-detail">{log.tradeAction}</td>
                 <td className="asset">
                   {totalAbbrev(Math.abs(log.tradeAmount.tokens), log.tokenPrice, true, log.tokenDecimals)}
                   &nbsp;
@@ -60,7 +60,7 @@ export function TransactionLogs(): JSX.Element {
                         searchMoreLogs();
                       }
                     }}>
-                    {dictionary.loading.loadMore}
+                    {dictionary.loading.loadMore.toUpperCase()}
                   </span>
                 )}
               </td>

@@ -17,11 +17,6 @@
   font-size: 25px;
 }
 
-// Svg's
-svg path {
-  fill: @black;
-}
-
 // Views
 .view-header {
   font-size: 90px;
@@ -66,6 +61,7 @@ svg path {
   font-size: 9px;
   line-height: 9px;
   cursor: pointer;
+  transition: opacity @transition-duration ease-in-out;
 
   &:hover {
     opacity: 1;
@@ -154,11 +150,12 @@ svg path {
       &.loading {
         background: @white;
 
-        i {
+        svg {
           opacity: 1;
-          background-image: @gradient;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
+          path {
+            opacity: inherit;
+            fill: @jet-green;
+          }
         }
       }
     }
@@ -204,8 +201,13 @@ svg path {
   cursor: pointer;
   overflow: hidden;
   opacity: @subtle-opacity;
+  transition: box-shadow @transition-duration ease-in-out;
   &:hover {
+    box-shadow: @neu-shadow-inset-low;
     opacity: 1;
+  }
+  &:active {
+    box-shadow: @neu-shadow-inset;
   }
 
   .crypto,
@@ -655,6 +657,7 @@ svg path {
       box-shadow: @neu-shadow-inset;
       padding: @spacing-sm @spacing-lg;
       background: @light-grey;
+      transition: box-shadow @transition-duration ease-in-out;
       &:hover {
         box-shadow: @neu-shadow-inset-low;
       }
@@ -718,6 +721,7 @@ svg path {
           background: @grey;
           opacity: @subtle-opacity;
           cursor: pointer;
+          transition: opacity @transition-duration ease-in-out;
           p {
             margin: @spacing-xs;
             font-size: @base-font-size;
@@ -880,9 +884,6 @@ svg path {
       border-bottom-left-radius: @border-radius;
       border-bottom-right-radius: @border-radius;
       padding: @spacing-lg @spacing-md 0 @spacing-md;
-      svg path {
-        fill: @black;
-      }
 
       .table-search {
         width: 100%;
@@ -912,8 +913,13 @@ svg path {
           cursor: unset;
         }
 
+        th,
+        td {
+          text-align: center;
+        }
         th {
           &:first-of-type {
+            text-align: left;
             min-width: 100px;
           }
           &.native-toggle-container {
@@ -965,6 +971,9 @@ svg path {
               text-transform: uppercase;
               color: @jet-green;
             }
+            &:first-of-type {
+              text-align: left;
+            }
             &:last-of-type {
               opacity: 0;
 
@@ -1011,6 +1020,7 @@ svg path {
         // Clickable icons
         .clickable-icon {
           opacity: @disabled-opacity !important;
+          transition: opacity @transition-duration ease-in-out;
 
           &:hover {
             opacity: 1 !important;
@@ -1038,7 +1048,6 @@ svg path {
         cursor: unset;
 
         th {
-          min-width: 75px;
           padding-bottom: @spacing-xs;
         }
       }
@@ -1072,7 +1081,10 @@ svg path {
               fill: @jet-green;
             }
           }
+          padding: unset;
+          text-align: center;
           opacity: 0;
+          transition: opacity @transition-duration ease-in-out;
         }
         &:hover {
           td:last-of-type {
@@ -1172,13 +1184,6 @@ svg path {
   }
   b {
     text-decoration: underline;
-  }
-}
-
-// Terms of Service and Privacy Policy
-.terms-privacy {
-  a {
-    margin: @spacing-xs @spacing-sm;
   }
 }
 

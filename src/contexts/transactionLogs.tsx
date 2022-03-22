@@ -188,8 +188,10 @@ export function TransactionsProvider(props: { children: JSX.Element }): JSX.Elem
         setSignatures(signatures);
         getDetailedLogs(signatures);
       });
+    } else {
+      setLoadingLogs(false);
     }
-  }, [connected, preferredNode]);
+  }, [connected, publicKey, preferredNode]);
 
   return (
     <TransactionsContext.Provider
