@@ -365,6 +365,10 @@
   .ant-modal-content {
     max-width: 325px !important;
   }
+  h1,
+  p {
+    margin: unset !important;
+  }
 
   &-modal {
     img {
@@ -426,6 +430,9 @@
   &-header {
     margin: @spacing-sm 0;
     opacity: @half-opacity;
+    h1 {
+      margin: unset !important;
+    }
     svg {
       margin: 0 @spacing-xs;
     }
@@ -573,6 +580,9 @@
 .healthbar {
   position: relative;
   width: 150px;
+  p {
+    margin: unset !important;
+  }
 
   &-bar {
     position: relative;
@@ -629,7 +639,6 @@
       p {
         font-size: @xs-font-size;
         font-weight: @subheader-weight;
-        margin: unset !important;
       }
       span {
         font-size: 8px;
