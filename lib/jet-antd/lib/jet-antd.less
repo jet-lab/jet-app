@@ -822,7 +822,7 @@ table {
       z-index: 1000;
       cursor: pointer;
       span {
-        display: none;
+        display: none !important;
       }
 
       &::after {
@@ -1510,6 +1510,9 @@ table {
         border-radius: @btn-radius;
       }
     }
+  }
+  &-active {
+    //animation: ant-skeleton-loading 1.4s ease infinite;
   }
 }
 
