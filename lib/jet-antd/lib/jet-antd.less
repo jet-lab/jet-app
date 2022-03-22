@@ -1028,6 +1028,7 @@ table {
   box-shadow: @neu-shadow-low;
   padding: @spacing-sm @spacing-sm;
   cursor: pointer;
+  z-index: 1;
 
   &-selector {
     width: 100%;
@@ -1043,8 +1044,9 @@ table {
   &-arrow {
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translate(-160%, -50%);
     right: @spacing-sm;
+    z-index: -1;
   }
 
   &-dropdown {
