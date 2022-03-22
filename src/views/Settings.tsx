@@ -48,9 +48,7 @@ export function Settings(): JSX.Element {
                   style={{
                     background: ping < 1000 ? 'var(--success)' : 'var(--failure)'
                   }}></div>
-                <span className={ping < 1000 ? 'success-text' : 'failure-text'} style={{ width: '55px' }}>
-                  ({ping}ms)
-                </span>
+                <span className={ping < 1000 ? 'success-text' : 'failure-text'}>({ping}ms)</span>
               </>
             )}
             {preferredNode && (
@@ -81,7 +79,7 @@ export function Settings(): JSX.Element {
                 alt={`${wallet.name} Logo`}
               />
               <span className="wallet-address">{shortenPubkey(publicKey.toString(), 4)}</span>
-              <Button ghost className="small-btn" onClick={() => disconnect()}>
+              <Button ghost size="small" onClick={() => disconnect()}>
                 {dictionary.settings.disconnect}
               </Button>
             </div>
@@ -136,7 +134,7 @@ export function Settings(): JSX.Element {
           <a href="https://discord.gg/RW2hsqwfej" target="_blank" rel="noopener noreferrer">
             <i className="text-gradient fab fa-discord"></i>
           </a>
-          <a href="https://github.com/jet-lab/jet-v1" target="_blank" rel="noopener noreferrer">
+          <a href="https://github.com/jet-lab" target="_blank" rel="noopener noreferrer">
             <i className="text-gradient fab fa-github"></i>
           </a>
         </div>

@@ -53,6 +53,8 @@
   // Other root colors
   --jet-green: #3d9e83;
   --jet-blue: #278db6;
+  --light-green-1: #8ebbb1;
+  --light-green-2: #72ab9b;
   --success: #53bd9f;
   --warning: #e3cb79;
   --failure: #ec6a69;
@@ -66,6 +68,8 @@
 @white: rgb(var(--white));
 @jet-green: var(--jet-green);
 @jet-blue: var(--jet-blue);
+@light-green-1: var(--light-green-1);
+@light-green-2: var(--light-green-2);
 @success: var(--success);
 @warning: var(--warning);
 @failure: var(--failure);
@@ -90,7 +94,7 @@
 @neu-shadow-inset-gradient: inset -1.5px -1.5px 4px #45b2dd, inset 1.5px 1.5px 4px #20755d;
 
 // Drop shadow
-@drop-shadow: 0 3px 6px rgba(0, 0, 0, 0.3), 0 3px 6px rgba(0, 0, 0, 0.3);
+@drop-shadow: 0 3px 6px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.1);
 
 // Border radius
 @border-radius: 4px;
@@ -117,8 +121,8 @@
 @bold-weight: 550;
 
 // Opacities
-@subtle-opacity: 0.97;
-@disabled-opacity: 0.725;
+@subtle-opacity: 0.95;
+@disabled-opacity: 0.75;
 @half-opacity: 0.65;
 
 // Standardized spacing
@@ -132,7 +136,7 @@
 @view-clamp: clamp(250px, calc(100% - @spacing-sm * 2), 1150px);
 
 // Transition Duration
-@transition-duration: 0.1s;
+@transition-duration: 0.125s;
 
 /***************************
   General Jet UI Styles / Boilerplate
@@ -162,6 +166,14 @@ body {
   &.ant-scrolling-effect {
     overflow: unset !important;
   }
+}
+code {
+  font-family: monospace;
+}
+
+// Svg's
+svg path {
+  fill: @black;
 }
 
 // Flexbox
@@ -266,6 +278,13 @@ span {
 }
 .text-gradient-btn {
   position: relative;
+  opacity: 1;
+  background-image: @gradient;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 1px;
+  cursor: pointer;
+
   &::after {
     content: '';
     position: absolute;
@@ -292,6 +311,8 @@ span {
 }
 .text-btn {
   text-decoration: none;
+  letter-spacing: 1px;
+  cursor: pointer;
 
   &:hover {
     text-decoration: underline;
@@ -357,6 +378,7 @@ button,
   font-size: @sm-font-size;
   font-weight: @subheader-weight;
   color: @white;
+  transition: opacity @transition-duration ease-in-out;
   span {
     text-transform: inherit;
     letter-spacing: inherit;
@@ -380,18 +402,19 @@ button,
     border: 1px solid @dark-grey;
     padding: @secondary-btn-padding;
     color: @dark-grey;
+    opacity: @disabled-opacity;
     span {
+      opacity: 1;
       color: inherit;
     }
 
     &:hover,
     &:active {
-      background: rgba(var(--grey), 0.1);
-      opacity: @disabled-opacity;
+      opacity: 1;
     }
     &:active {
       box-shadow: unset;
-      background: rgba(var(--grey), 0.25);
+      background: rgba(var(--grey), 0.15);
     }
   }
 
@@ -438,22 +461,33 @@ button,
       }
     }
     &:active {
+      box-shadow: unset;
       &::after {
-        background: @gradient;
-      }
-
-      span {
-        background-image: unset;
-        -webkit-background-clip: unset;
-        -webkit-text-fill-color: unset;
+        background: @grey;
       }
     }
   }
 
+  // Full width button
+  &.full-width {
+    width: 100%;
+    margin: @spacing-xs 0;
+  }
+
   // Smaller button
   &.small-btn,
-  &.small-btn span {
-    font-size: @xs-font-size;
+  &.small-btn span,
+  &.ant-btn-sm,
+  &.ant-btn-sm span {
+    font-size: @xs-font-size !important;
+  }
+
+  // Larger button
+  &.large-btn,
+  &.large-btn span,
+  &.ant-btn-lg,
+  &.ant-btn-lg span {
+    font-size: @lg-font-size !important;
   }
 
   // Error button
@@ -614,12 +648,11 @@ table {
       font-size: @xs-font-size;
       letter-spacing: 0.5px;
       text-transform: uppercase;
-      text-align: center;
+      text-align: left;
       color: rgba(var(--black), @half-opacity);
 
       &:first-of-type {
         padding-left: @spacing-md;
-        text-align: left;
       }
       &:last-of-type {
         min-width: unset;
@@ -640,7 +673,7 @@ table {
   tr {
     border-radius: @border-radius;
     cursor: pointer;
-    transition: unset;
+    transition: background-color @transition-duration ease-in-out;
 
     &:hover {
       background: @grey;
@@ -672,9 +705,9 @@ table {
     position: relative;
     font-size: @base-font-size;
     border-radius: unset;
-    padding: @spacing-md;
+    padding: @spacing-md @spacing-xs;
     background: transparent;
-    text-align: center;
+    text-align: left;
     cursor: pointer;
     opacity: @subtle-opacity;
 
@@ -682,7 +715,6 @@ table {
       padding-left: @spacing-md;
       border-top-left-radius: @border-radius;
       border-bottom-left-radius: @border-radius;
-      text-align: left;
     }
     &:last-of-type {
       padding-left: @spacing-lg;
@@ -744,7 +776,7 @@ table {
     .ant-modal-title {
       font-size: @header-font-size;
       font-weight: @header-weight;
-      line-height: @header-font-size;
+      line-height: calc(@header-font-size + 5px);
       padding: @spacing-lg 0 @spacing-sm 0;
     }
 
@@ -763,6 +795,8 @@ table {
         background: unset;
         border: unset;
         color: @black;
+        opacity: @half-opacity;
+        margin: unset !important;
 
         &:hover {
           text-decoration: underline;
@@ -781,8 +815,8 @@ table {
 
     .ant-modal-close {
       position: absolute;
-      top: 0;
-      right: @spacing-md;
+      top: -7px;
+      right: @spacing-xs;
       padding: unset;
       background: unset;
       opacity: @subtle-opacity;
@@ -846,6 +880,7 @@ table {
     width: 17px;
     height: 17px;
     border-radius: @round-radius;
+    transition: all @transition-duration ease-in-out;
 
     &::before {
       content: '';
@@ -859,6 +894,18 @@ table {
   span {
     color: @dark-grey;
     margin: 0 0 0 20px;
+    transition: margin @transition-duration ease-in-out;
+  }
+
+  &:active {
+    .ant-switch-handle {
+      width: 24px;
+    }
+    &.ant-switch-checked {
+      .ant-switch-handle {
+        left: calc(80% - 14px);
+      }
+    }
   }
 
   &:hover {
@@ -870,8 +917,7 @@ table {
 
     .ant-switch-handle {
       top: 7px;
-      left: unset;
-      right: 7px;
+      left: calc(80% - 7px);
 
       &::before {
         background: @white;
@@ -973,6 +1019,9 @@ table {
   }
 
   // Other placements
+  .ant-tooltip-arrow {
+    display: none;
+  }
   &-placement-left .ant-tooltip-arrow {
     top: calc(50% - 6px);
     left: calc(100% + 3px);
@@ -1661,6 +1710,7 @@ table {
 .ant-notification,
 .ant-message {
   position: fixed;
+  bottom: 0px !important;
   z-index: 10000;
 
   &-notice {
@@ -1673,22 +1723,37 @@ table {
     backdrop-filter: blur(2px);
     background: rgba(var(--white), @disabled-opacity);
 
+    &-icon,
+    .anticon {
+      position: absolute;
+      top: @spacing-md;
+      left: @spacing-md;
+      font-size: @lg-font-size;
+    }
+    &-success {
+      svg path {
+        fill: @success;
+      }
+    }
+    &-error {
+      svg path {
+        fill: @failure;
+      }
+    }
     &-message {
       font-weight: @subheader-weight;
-      font-size: @lg-font-size;
-      margin-top: -5px;
+      font-size: @sm-font-size;
+      margin-top: -2px;
+      margin-left: 30px;
       border-bottom: 1px solid rgba(var(--dark-grey), 0.25);
-    }
-    &-success &-message {
-      color: @success;
-    }
-    &-error &-message {
-      color: @failure;
+      line-height: 21px;
+      text-transform: uppercase;
     }
     &-description {
       opacity: @subtle-opacity;
       font-size: @base-font-size;
       padding-top: @spacing-xs;
+      margin-left: 30px;
     }
 
     &-close {
@@ -1719,11 +1784,6 @@ table {
           opacity: 1;
         }
       }
-    }
-
-    &-icon,
-    .anticon {
-      display: none;
     }
   }
 
@@ -1795,11 +1855,25 @@ table {
       font-weight: @bold-weight;
       text-transform: uppercase;
       color: rgb(var(--lt-white));
+      transition: opacity @transition-duration ease-in-out;
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: rgb(var(--lt-white));
+        opacity: 0;
+        transition: opacity @transition-duration ease-in-out;
+      }
 
       &.active,
       &:hover {
         opacity: 1;
-        text-decoration: underline;
+        &::after {
+          opacity: 1;
+        }
       }
     }
 
@@ -1952,8 +2026,12 @@ table {
   transform: translateX(-50%);
   width: 100%;
 
+  a {
+    margin: @spacing-xs @spacing-sm;
+  }
   span {
     opacity: @disabled-opacity;
+    margin: @spacing-xs;
     cursor: pointer;
 
     &:hover {
