@@ -445,6 +445,11 @@
       padding: 0 @spacing-xs;
     }
   }
+  span {
+    opacity: @disabled-opacity;
+    margin-left: @spacing-xs;
+    font-size: @xs-font-size;
+  }
   .ant-modal-content {
     width: auto;
     max-width: unset;
@@ -468,10 +473,7 @@
             padding: @spacing-xs 0;
             font-size: @xs-font-size;
             width: 140px;
-
-            &:first-of-type {
-              text-align: center;
-            }
+            text-align: center;
           }
 
           &:after {
