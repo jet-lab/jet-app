@@ -41,7 +41,7 @@ export function TransactionLogs(): JSX.Element {
                   &nbsp;
                   {log.tokenAbbrev}
                 </td>
-                <td style={{ textAlign: 'right' }}>
+                <td>
                   <ArrowIcon width="25px" />
                 </td>
               </tr>

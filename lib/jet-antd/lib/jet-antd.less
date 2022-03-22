@@ -136,7 +136,7 @@
 @view-clamp: clamp(250px, calc(100% - @spacing-sm * 2), 1150px);
 
 // Transition Duration
-@transition-duration: 0.15s;
+@transition-duration: 0.125s;
 
 /***************************
   General Jet UI Styles / Boilerplate
@@ -278,6 +278,10 @@ span {
 }
 .text-gradient-btn {
   position: relative;
+  opacity: 1;
+  background-image: @gradient;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   letter-spacing: 1px;
   cursor: pointer;
 
@@ -374,6 +378,7 @@ button,
   font-size: @sm-font-size;
   font-weight: @subheader-weight;
   color: @white;
+  transition: opacity @transition-duration ease-in-out;
   span {
     text-transform: inherit;
     letter-spacing: inherit;
@@ -700,7 +705,7 @@ table {
     position: relative;
     font-size: @base-font-size;
     border-radius: unset;
-    padding: @spacing-md;
+    padding: @spacing-md @spacing-xs;
     background: transparent;
     text-align: left;
     cursor: pointer;
@@ -790,6 +795,8 @@ table {
         background: unset;
         border: unset;
         color: @black;
+        opacity: @half-opacity;
+        margin: unset !important;
 
         &:hover {
           text-decoration: underline;

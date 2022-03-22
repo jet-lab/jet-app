@@ -134,7 +134,7 @@ export function Settings(): JSX.Element {
           <a href="https://discord.gg/RW2hsqwfej" target="_blank" rel="noopener noreferrer">
             <i className="text-gradient fab fa-discord"></i>
           </a>
-          <a href="https://github.com/jet-lab/jet-v1" target="_blank" rel="noopener noreferrer">
+          <a href="https://github.com/jet-lab" target="_blank" rel="noopener noreferrer">
             <i className="text-gradient fab fa-github"></i>
           </a>
         </div>
