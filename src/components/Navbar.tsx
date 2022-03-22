@@ -32,9 +32,9 @@ export function Navbar(): JSX.Element {
     <div className={`navbar-container flex-centered ${drawerOpened ? 'drawer-open' : ''}`}>
       {/* Desktop Nav */}
       <nav className="desktop flex align-center justify-between">
-        <a className="logo flex-centered" href="https://jetprotocol.io/" target="_blank" rel="noopener noreferrer">
+        <Link className="logo flex-centered" to="/">
           <img src="img/jet/jet_full_white.png" width="100%" height="auto" alt="Jet Protocol" />
-        </a>
+        </Link>
         <div className="nav-links flex-centered">
           {navLinks.map(link => (
             <Link key={link.title} to={link.route} className={`nav-link ${pathname === link.route ? 'active' : ''}`}>
@@ -59,7 +59,9 @@ export function Navbar(): JSX.Element {
         <Link className="account" to={accountLink.route}>
           <AccountIcon width="25px" />
         </Link>
-        <img className="logo" src="img/jet/jet_full_white.png" width="100%" height="auto" alt="Jet Protocol" />
+        <Link className="logo flex-centered" to="/">
+          <img className="logo" src="img/jet/jet_full_white.png" width="100%" height="auto" alt="Jet Protocol" />
+        </Link>
         <div
           className={`hamburger flex align-center justify-between column ${drawerOpened ? 'close' : ''}`}
           onClick={() => setDrawerOpened(!drawerOpened)}>
