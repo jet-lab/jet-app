@@ -59,7 +59,7 @@ export function Navbar(): JSX.Element {
         <Link className="account" to={accountLink.route}>
           <AccountIcon width="25px" />
         </Link>
-        <Link className="logo flex-centered" to="/">
+        <Link className="flex-centered" to="/">
           <img className="logo" src="img/jet/jet_full_white.png" width="100%" height="auto" alt="Jet Protocol" />
         </Link>
         <div
