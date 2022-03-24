@@ -1031,8 +1031,11 @@
         }
         // Clickable icons
         .clickable-icon {
-          opacity: @disabled-opacity !important;
+          opacity: @subtle-opacity !important;
           transition: opacity @transition-duration ease-in-out;
+          svg path {
+            fill: @jet-green;
+          }
 
           &:hover {
             opacity: 1 !important;
@@ -1087,16 +1090,13 @@
         }
 
         td:last-of-type {
-          svg {
-            margin-bottom: -4px;
-            path {
-              fill: @jet-green;
-            }
-          }
           padding: unset;
           text-align: center;
           opacity: 0;
           transition: opacity @transition-duration ease-in-out;
+          i {
+            color: @jet-green;
+          }
         }
         &:hover {
           td:last-of-type {

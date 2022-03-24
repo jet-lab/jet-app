@@ -4,7 +4,6 @@ import { useBlockExplorer } from '../contexts/blockExplorer';
 import { totalAbbrev } from '../utils/currency';
 import { shortenPubkey } from '../utils/utils';
 import { Loader } from '../components/Loader';
-import { ReactComponent as ArrowIcon } from '../styles/icons/arrow_icon.svg';
 
 // Jet V1
 import { useUser } from '../v1/contexts/user';
@@ -42,7 +41,7 @@ export function TransactionLogs(): JSX.Element {
                   {log.tokenAbbrev}
                 </td>
                 <td>
-                  <ArrowIcon width="25px" />
+                  <i className="fas fa-external-link-alt"></i>
                 </td>
               </tr>
             ))}
