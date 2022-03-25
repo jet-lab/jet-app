@@ -12,5 +12,18 @@ module.exports = {
         }
       }
     }
-  ]
+  ],
+  webpack: {
+    configure: {
+      module: {
+        rules: [
+          {
+            test: /\.mjsx?$/,
+            include: /node_modules/,
+            type: 'javascript/auto'
+          }
+        ]
+      }
+    }
+  }
 };
