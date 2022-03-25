@@ -333,7 +333,8 @@
   .italic-text {
     font-style: italic;
   }
-  b, .bold-text {
+  b,
+  .bold-text {
     font-weight: @bold-weight;
   }
 
@@ -2062,7 +2063,7 @@
     width: 100%;
     min-height: calc((1vh * 100) - (@nav-height + 30px));
     margin: @nav-height 0 0 0;
-    
+
     input {
       font-size: @sm-font-size;
     }
@@ -2078,12 +2079,12 @@
         }
       }
     }
-  
+
     // Views
     .view-container {
       margin: 0;
     }
-  
+
     // Antd Modal
     .ant-modal-wrap {
       top: @nav-height;
@@ -2091,14 +2092,14 @@
       width: 100%;
       height: calc(100% - @nav-height);
       opacity: 1;
-  
+
       .ant-modal-content {
         position: fixed;
         left: 50%;
         top: calc(50% + (@nav-height / 2));
       }
     }
-  
+
     // Antd Notification / Message
     .ant-notification,
     .ant-message {
@@ -2106,7 +2107,7 @@
       right: unset;
       transform: translateX(-50%);
     }
-  
+
     // Jet Navbar
     .navbar-container {
       nav {
@@ -2118,7 +2119,7 @@
         &.mobile {
           display: flex;
         }
-  
+
         .left-container {
           &-logo {
             width: 140px;
@@ -2127,7 +2128,7 @@
             display: flex;
           }
         }
-  
+
         .right-container {
           .nav-link,
           button {
@@ -2140,19 +2141,19 @@
       }
       &-drawer.open {
         display: flex;
-  
+
         .nav-link {
           margin: @spacing-sm 0;
         }
       }
     }
-  
+
     // Jet Connect Wallet Modal
     .connect-wallet-modal {
       span {
         font-size: @xs-font-size;
       }
-  
+
       .ant-modal-content {
         width: 100%;
         box-shadow: unset;
