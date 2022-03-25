@@ -17,7 +17,7 @@ export function TransactionLogs(): JSX.Element {
   const user = useUser();
 
   return (
-    <div className="transaction-logs view-container">
+    <div className="transaction-logs view">
       <div className="table-container">
         <table>
           <thead>

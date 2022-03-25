@@ -35,7 +35,7 @@ export function Settings(): JSX.Element {
   }
 
   return (
-    <div className="view-container flex justify-center column">
+    <div className="view flex justify-center column">
       <div className="settings">
         <div className="setting flex align-start justify-center column">
           <span className="setting-title bold-text">{dictionary.settings.rpcNode.toUpperCase()}</span>

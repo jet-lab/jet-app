@@ -25,7 +25,7 @@ export function TradePanel(): JSX.Element {
   const { setAlert } = useAlert();
   const { getExplorerUrl } = useBlockExplorer();
   const { addLog } = useTransactionLogs();
-  const { currentReserve, currentAction, setCurrentAction } = useTradeContext();
+  const { currentReserve, currentAction, setCurrentAction, currentAmount, setCurrentAmount } = useTradeContext();
   const { Option } = Select;
   const tradeActions = ['deposit', 'withdraw', 'borrow', 'repay'];
 
@@ -35,7 +35,6 @@ export function TradePanel(): JSX.Element {
   const { deposit, withdraw, borrow, repay } = useJetV1();
 
   // Input values
-  const [inputAmount, setInputAmount] = useState<number | null>(null);
   const [maxInput, setMaxInput] = useState<number>(0);
 
   // Disabled components / errors
@@ -52,7 +51,6 @@ export function TradePanel(): JSX.Element {
   // Adjust interface
   function adjustInterface() {
     setInputError('');
-    setInputAmount(null);
     getMaxInput();
     adjustCollateralizationRatio();
     checkDisabledInput();
@@ -135,7 +133,7 @@ export function TradePanel(): JSX.Element {
 
   // Adjust user input and calculate updated c-ratio if
   // they were to submit current trade
-  function adjustCollateralizationRatio(inputAmount = 0) {
+  function adjustCollateralizationRatio(currentAmount = 0) {
     if (!currentReserve || !user.assets) {
       return;
     }
@@ -143,29 +141,29 @@ export function TradePanel(): JSX.Element {
     // Depositing
     if (currentAction === 'deposit') {
       setAdjustedRatio(
-        (user.position.depositedValue + inputAmount * currentReserve.price) /
+        (user.position.depositedValue + currentAmount * currentReserve.price) /
           (user.position.borrowedValue > 0 ? user.position.borrowedValue : 1)
       );
       // Withdrawing
     } else if (currentAction === 'withdraw') {
       setAdjustedRatio(
-        (user.position.depositedValue - inputAmount * currentReserve.price) /
+        (user.position.depositedValue - currentAmount * currentReserve.price) /
           (user.position.borrowedValue > 0 ? user.position.borrowedValue : 1)
       );
       // Borrowing
     } else if (currentAction === 'borrow') {
       setAdjustedRatio(
         user.position.depositedValue /
-          (user.position.borrowedValue + inputAmount * currentReserve.price > 0
-            ? user.position.borrowedValue + inputAmount * currentReserve.price
+          (user.position.borrowedValue + currentAmount * currentReserve.price > 0
+            ? user.position.borrowedValue + currentAmount * currentReserve.price
             : 1)
       );
       // Repaying
     } else if (currentAction === 'repay') {
       setAdjustedRatio(
         user.position.depositedValue /
-          (user.position.borrowedValue - inputAmount * currentReserve.price > 0
-            ? user.position.borrowedValue - inputAmount * currentReserve.price
+          (user.position.borrowedValue - currentAmount * currentReserve.price > 0
+            ? user.position.borrowedValue - currentAmount * currentReserve.price
             : 1)
       );
     }
@@ -179,9 +177,9 @@ export function TradePanel(): JSX.Element {
       return;
     }
 
-    if (!inputAmount) {
-      setInputError(dictionary.cockpit.noInputAmount);
-      setInputAmount(null);
+    if (!currentAmount) {
+      setInputError(dictionary.cockpit.nocurrentAmount);
+      setCurrentAmount(null);
       return;
     }
 
@@ -206,8 +204,8 @@ export function TradePanel(): JSX.Element {
       // Depositing all SOL leaving no lamports for fees, inform and reject
       } else */ if (
         currentReserve.abbrev === 'SOL' &&
-        inputAmount <= user.walletBalances[currentReserve.abbrev] &&
-        inputAmount > user.walletBalances[currentReserve.abbrev] - 0.02
+        currentAmount <= user.walletBalances[currentReserve.abbrev] &&
+        currentAmount > user.walletBalances[currentReserve.abbrev] - 0.02
       ) {
         copilotAlert = {
           status: 'failure',
@@ -301,12 +299,12 @@ export function TradePanel(): JSX.Element {
   // Check user input and for Copilot warning
   // Then submit trade RPC call
   async function submitTrade() {
-    if (!currentReserve || !user.assets || !inputAmount) {
+    if (!currentReserve || !user.assets || !currentAmount) {
       return;
     }
 
     const tradeAction = currentAction;
-    const tradeAmount = TokenAmount.tokens(inputAmount.toString(), currentReserve.decimals);
+    const tradeAmount = TokenAmount.tokens(currentAmount.toString(), currentReserve.decimals);
     let res: TxnResponse = TxnResponse.Cancelled;
     let txids: string[] = [];
     let inputError = '';
@@ -376,7 +374,7 @@ export function TradePanel(): JSX.Element {
     // If input error, remove trade amount and return
     if (inputError) {
       setInputError(inputError);
-      setInputAmount(null);
+      setCurrentAmount(null);
       setLoading(false);
       return;
     }
@@ -433,7 +431,7 @@ export function TradePanel(): JSX.Element {
 
   // If user disconnects wallet, reset inputs
   useEffect(() => {
-    setInputAmount(null);
+    setCurrentAmount(null);
   }, [user.walletInit]);
 
   return (
@@ -506,9 +504,9 @@ export function TradePanel(): JSX.Element {
             </div>
             <p>
               {user.walletInit
-                ? (user.position.borrowedValue || (currentAction === 'borrow' && inputAmount)) && adjustedRatio > 10
+                ? (user.position.borrowedValue || (currentAction === 'borrow' && currentAmount)) && adjustedRatio > 10
                   ? '>1000%'
-                  : (user.position.borrowedValue || (currentAction === 'borrow' && inputAmount)) && adjustedRatio < 10
+                  : (user.position.borrowedValue || (currentAction === 'borrow' && currentAmount)) && adjustedRatio < 10
                   ? currencyFormatter(adjustedRatio * 100, false, 1) + '%'
                   : '∞'
                 : '--'}
@@ -520,35 +518,35 @@ export function TradePanel(): JSX.Element {
         <JetInput
           type="number"
           currency
-          value={inputAmount}
+          value={currentAmount}
           maxInput={maxInput}
           disabled={!user.walletInit || disabledInput}
           loading={loading}
           error={inputError}
           onClick={() => setInputError('')}
           onChange={(value: number) => {
-            const inputAmount = value;
-            if (inputAmount < 0) {
-              setInputAmount(0);
+            const currentAmount = value;
+            if (currentAmount < 0) {
+              setCurrentAmount(0);
             } else {
-              setInputAmount(inputAmount);
+              setCurrentAmount(currentAmount);
             }
 
-            adjustCollateralizationRatio(inputAmount);
+            adjustCollateralizationRatio(currentAmount);
           }}
           submit={() => checkCopilotTradeWarning()}
         />
         <Slider
           dots
-          value={((inputAmount ?? 0) / maxInput) * 100}
+          value={((currentAmount ?? 0) / maxInput) * 100}
           min={0}
           max={100}
           step={1}
           disabled={!user.walletInit || disabledInput}
           onChange={percent => {
-            const inputAmount = maxInput * (percent / 100);
-            setInputAmount(inputAmount);
-            adjustCollateralizationRatio(inputAmount);
+            const currentAmount = maxInput * (percent / 100);
+            setCurrentAmount(currentAmount);
+            adjustCollateralizationRatio(currentAmount);
           }}
           tipFormatter={value => value + '%'}
           tooltipPlacement="bottom"
