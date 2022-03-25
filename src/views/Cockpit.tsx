@@ -58,7 +58,7 @@ export function Cockpit(): JSX.Element {
     return <InitFailed />;
   } else {
     return (
-      <div className="cockpit view-container flex justify-center column">
+      <div className="cockpit view flex justify-center column">
         <div className="cockpit-top flex align-center justify-between">
           <div className="trade-market-tvl flex align-start justify-center column">
             <h2 className="view-subheader">{dictionary.cockpit.totalSupply}</h2>

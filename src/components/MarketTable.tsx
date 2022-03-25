@@ -26,7 +26,7 @@ export function MarketTable(): JSX.Element {
   const { dictionary } = useLanguage();
   const { publicKey } = useWallet();
   const { setConnecting } = useConnectWalletModal();
-  const { currentReserve, setCurrentReserve, currentAction, setCurrentAction } = useTradeContext();
+  const { currentReserve, setCurrentReserve, setCurrentAction, setCurrentAmount } = useTradeContext();
   const { setRadarOpen } = useRadarModal();
   const { nativeValues } = useNativeValues();
   const [reservesArray, setReservesArray] = useState<Reserve[]>([]);
@@ -165,9 +165,12 @@ export function MarketTable(): JSX.Element {
                         ? 'user-wallet-value text-btn semi-bold-text'
                         : ''
                     }
-                    onClick={() =>
-                      user.walletInit && user.walletBalances[reserve.abbrev] ? setCurrentAction('deposit') : null
-                    }>
+                    onClick={() => {
+                      if (user.walletInit && user.walletBalances[reserve.abbrev]) {
+                        setCurrentAction('deposit');
+                        setCurrentAmount(user.walletBalances[reserve.abbrev]);
+                      }
+                    }}>
                     {user.walletInit
                       ? user.walletBalances[reserve.abbrev] > 0 && user.walletBalances[reserve.abbrev] < 0.0005
                         ? '~0'
@@ -180,9 +183,12 @@ export function MarketTable(): JSX.Element {
                         ? 'user-collateral-value text-btn semi-bold-text'
                         : ''
                     }
-                    onClick={() =>
-                      user.walletInit && user.collateralBalances[reserve.abbrev] ? setCurrentAction('withdraw') : null
-                    }>
+                    onClick={() => {
+                      if (user.walletInit && user.collateralBalances[reserve.abbrev]) {
+                        setCurrentAction('withdraw');
+                        setCurrentAmount(user.collateralBalances[reserve.abbrev]);
+                      }
+                    }}>
                     {user.walletInit
                       ? user.collateralBalances[reserve.abbrev] > 0 && user.collateralBalances[reserve.abbrev] < 0.0005
                         ? '~0'
@@ -195,9 +201,12 @@ export function MarketTable(): JSX.Element {
                         ? 'user-loan-value text-btn semi-bold-text'
                         : ''
                     }
-                    onClick={() =>
-                      user.walletInit && user.loanBalances[reserve.abbrev] ? setCurrentAction('repay') : null
-                    }>
+                    onClick={() => {
+                      if (user.walletInit && user.loanBalances[reserve.abbrev]) {
+                        setCurrentAction('repay');
+                        setCurrentAmount(user.loanBalances[reserve.abbrev]);
+                      }
+                    }}>
                     {user.walletInit
                       ? user.loanBalances[reserve.abbrev] > 0 && user.loanBalances[reserve.abbrev] < 0.0005
                         ? '~0'
