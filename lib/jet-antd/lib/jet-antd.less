@@ -141,6 +141,9 @@
 /***************************
   General Jet UI Styles / Boilerplate
 ***************************/
+::-webkit-scrollbar {
+  display: none;
+}
 .jet-app {
   position: relative;
   margin: 0;
@@ -371,7 +374,8 @@
 
   // Buttons
   button,
-  .ant-btn {
+  .ant-btn,
+  .ant-radio-button-wrapper {
     position: relative;
     background: @gradient;
     border: none;
@@ -626,6 +630,35 @@
         }
       }
     }
+    // Antd Radio
+    &[type=radio] {
+      position: relative;
+      width: 20px;
+      height: 20px;
+      padding: 0;
+      margin: 0 @spacing-sm -5px @spacing-sm;
+      border-radius: @round-radius;
+      background: @grey;
+      box-shadow: @neu-shadow-inset;
+      transition: all @transition-duration ease-in-out;
+      cursor: pointer;
+
+      &:hover {
+        box-shadow: @neu-shadow-inset-low;
+      }
+      &::after {
+        content: '';
+        width: 50%;
+        height: 50%;
+        position: absolute;
+        top: 25%;
+        left: 25%;
+        background: @gradient;
+        border-radius: @round-radius;
+        opacity: 0;
+        transition: opacity @transition-duration ease-in-out;
+      }
+    }
   }
 
   // General table
@@ -747,6 +780,89 @@
       button {
         background: unset;
         color: @black;
+      }
+    }
+  }
+
+  // Antd Radios
+  .ant-radio-wrapper {
+    box-sizing: border-box;
+    margin: 0 @spacing-sm 0 0;
+    padding: 0;
+    color: @black;
+    font-size: @base-font-size;
+    list-style: none;
+    position: relative;
+    cursor: pointer;
+
+    .ant-radio {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      color: @black;
+      font-size: @base-font-size;
+      list-style: none;
+      font-feature-settings: "tnum";
+      position: relative;
+      outline: none;
+      cursor: pointer;
+
+      &-checked {
+        input[type=radio]::after {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  // Antd Radio Button
+  .ant-radio-button-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: unset;
+    border: 1px solid @dark-grey;
+    color: @black;
+    margin: 0;
+    transition: all @transition-duration ease-in-out;
+    &:hover {
+      background: @grey;
+      box-shadow: unset;
+    }
+    &:active, &-checked {
+      background: @jet-green;
+      opacity: @disabled-opacity;
+      box-shadow: unset;
+    }
+    &-checked {
+      opacity: 1;
+
+      &:hover {
+        background: @jet-green;
+      }
+    }
+    input[type=radio] {
+      display: none;
+    }
+  }
+
+  // Antd Radio Group
+  .ant-radio-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .ant-radio-button-wrapper {
+      border-radius: unset;
+
+      &:first-of-type {
+        border-top-left-radius: @btn-radius;
+        border-bottom-left-radius: @btn-radius;
+      }
+      &:last-of-type {
+        border-top-right-radius: @btn-radius;
+        border-bottom-right-radius: @btn-radius;
       }
     }
   }

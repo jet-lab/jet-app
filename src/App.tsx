@@ -30,6 +30,8 @@ import { Cockpit } from './views/Cockpit';
 import { TransactionLogs } from './views/TransactionLogs';
 import { Settings } from './views/Settings';
 
+import { Antd } from './views/Antd';
+
 // Jet V1
 import { UserContextProvider } from './v1/contexts/user';
 import { MarketContextProvider } from './v1/contexts/market';
@@ -65,7 +67,7 @@ export function App(): JSX.Element {
                                 <Navbar />
                                 <NetworkWarningBanner />
                                 <Routes>
-                                  <Route path="/" element={<Cockpit />} />
+                                  <Route path="/" element={<Antd />} />
                                   <Route path="/transactions" element={<TransactionLogs />} />
                                   <Route path="/settings" element={<Settings />} />
                                 </Routes>
