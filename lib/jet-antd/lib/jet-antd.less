@@ -111,7 +111,7 @@
 @xs-font-size: 10px;
 @sm-font-size: 12px;
 @base-font-size: 14px;
-@lg-font-size: 18px;
+@lg-font-size: 16px;
 @header-font-size: 30px;
 @xl-font-size: 40px;
 
@@ -151,6 +151,7 @@
   background: @white;
   color: @black;
   overflow-x: hidden;
+  font-size: @base-font-size;
   font-family: 'Poppins', Helvetica Neue, Helvetica, Arial, sans-serif;
   letter-spacing: 0.25px;
   width: 100vw;
@@ -222,10 +223,9 @@
   span {
     position: relative;
     text-decoration: none;
-    color: @black;
-    font-size: @base-font-size;
     font-style: normal;
     font-weight: normal;
+    color: @black;
   }
   h1 {
     font-size: @header-font-size;
@@ -240,7 +240,7 @@
   }
   h3,
   h4 {
-    font-weight: 500;
+    font-weight: @semi-bold-weight;
   }
   a,
   i {
@@ -265,16 +265,55 @@
   code {
     font-family: monospace;
   }
-  b {
+  b, strong {
     font-weight: @bold-weight;
   }
-  .text-gradient {
+  mark {
+    background-color: @light-green-1;
+  }
+  .gradient-text {
     opacity: 1;
     background-image: @gradient;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
-  .text-gradient-btn {
+  .secondary-text, .ant-typography-secondary {
+    opacity: @disabled-opacity;
+  }
+  .success-text, .ant-typography-success {
+    color: @success;
+  }
+  .warning-text, .ant-typography-warning {
+    color: @warning;
+  }
+  .danger-text, .ant-typography-danger {
+    color: @failure;
+  }
+  .italic-text, .ant-typography i {
+    font-style: italic;
+  }
+  .bold-text {
+    font-weight: @bold-weight;
+  }
+  .center-text {
+    text-align: center;
+  }
+  .text-btn, .ant-btn-text span {
+    opacity: 1;
+    text-decoration: none;
+    letter-spacing: 1px;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+    &.disabled {
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+  .link-btn, a.ant-typography, .ant-btn-link span {
     position: relative;
     opacity: 1;
     background-image: @gradient;
@@ -307,38 +346,6 @@
       }
     }
   }
-  .text-btn {
-    text-decoration: none;
-    letter-spacing: 1px;
-    cursor: pointer;
-
-    &:hover {
-      text-decoration: underline;
-    }
-    &.disabled {
-      &:hover {
-        text-decoration: none;
-      }
-    }
-  }
-  .success-text {
-    color: @success;
-  }
-  .warning-text {
-    color: @warning;
-  }
-  .failure-text {
-    color: @failure;
-  }
-  .center-text {
-    text-align: center;
-  }
-  .italic-text {
-    font-style: italic;
-  }
-  b, .bold-text {
-    font-weight: @bold-weight;
-  }
 
   // Views
   .view {
@@ -367,9 +374,15 @@
 
   // Disabled elements
   *[disabled],
-  .disabled {
-    cursor: not-allowed;
-    opacity: @disabled-opacity;
+  .disabled,
+  .ant-typography-disabled {
+    cursor: not-allowed !important;
+    opacity: @disabled-opacity !important;
+  }
+
+  // Hidden elements
+  .hidden {
+    display: none;
   }
 
   // Buttons
@@ -399,6 +412,14 @@
       font-weight: inherit;
       color: inherit;
     }
+    // Antd button loader icon
+    &-loading-icon {
+      margin-right: @spacing-sm;
+      svg path {
+        margin-right: @spacing-sm;
+        fill: @white;
+      }
+    }
 
     &:hover,
     &:active {
@@ -408,9 +429,10 @@
       box-shadow: @neu-shadow-inset-gradient;
     }
 
-    // Secondary / Connect button
+    // Secondary / Connect button / Dropdown buttons
     &.secondary-btn,
-    &-background-ghost {
+    &-background-ghost,
+    &-ghost {
       background: unset;
       border: 1px solid @dark-grey;
       padding: @secondary-btn-padding;
@@ -427,7 +449,7 @@
       }
       &:active {
         box-shadow: unset;
-        background: rgba(var(--grey), 0.15);
+        background: rgba(var(--grey), 0.5);
       }
     }
 
@@ -439,6 +461,9 @@
         background-image: @gradient;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+      }
+      svg path {
+        fill: @jet-green;
       }
 
       &::before {
@@ -481,8 +506,21 @@
       }
     }
 
+    // Text / Link button
+    &-text, &-link {
+      background: unset;
+      color: @black;
+      padding: unset;
+      margin: unset;
+
+      &:active {
+        box-shadow: unset;
+      }
+    }
+
     // Full width button
-    &.full-width {
+    &.full-width,
+    &-block {
       width: 100%;
       margin: @spacing-xs 0;
     }
@@ -534,9 +572,44 @@
       border-radius: @round-radius;
     }
 
-    // Antd button loader icon
-    &-loading-icon {
-      display: none;
+    // Antd round button
+    &.ant-btn-round {
+      border-radius: @round-radius;
+    }
+
+    //Antd icon only button
+    &-icon-only {
+      padding-left: @spacing-sm;
+      padding-right: @spacing-sm;
+
+      .ant-btn-loading-icon {
+        margin: unset;
+      }
+    }
+
+    // Group of Antd buttons
+    &-group {
+      button {
+        margin: unset;
+
+        &:first-of-type {
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+
+          &::before {
+            border-radius: inherit;
+          }
+        }
+        &:last-of-type {
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+          border-left: unset;
+
+          &::before {
+            border-radius: inherit;
+          }
+        }
+      }
     }
   }
 
@@ -636,7 +709,7 @@
       width: 20px;
       height: 20px;
       padding: 0;
-      margin: 0 @spacing-sm -5px @spacing-sm;
+      margin: 0 @spacing-sm -5px 0;
       border-radius: @round-radius;
       background: @grey;
       box-shadow: @neu-shadow-inset;
@@ -849,9 +922,6 @@
   // Antd Radio Group
   .ant-radio-group {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
 
     .ant-radio-button-wrapper {
       border-radius: unset;
@@ -870,11 +940,43 @@
   // Antd Divider
   .ant-divider {
     width: 100%;
+    min-width: 50px;
     height: 3px;
     margin: @spacing-sm 0;
     border-radius: @border-radius;
     box-shadow: @neu-shadow-inset-low;
     background: @grey;
+
+    &-vertical {
+      width: 3px;
+      min-width: unset;
+      height: 100%;
+      min-height: 50px;
+    }
+  }
+
+  // Antd Breadcrumb
+  .ant-breadcrumb {
+    span {
+      a {
+        opacity: @disabled-opacity;
+        &:hover {
+          opacity: 1;
+        }
+      }
+      &:last-of-type {
+        opacity: 1;
+        span {
+          opacity: inherit;
+        }
+        .ant-breadcrumb-separator {
+          display: none;
+        }
+      }
+    }
+    &-separator {
+      margin: 0 @spacing-sm;
+    }
   }
 
   // Antd modal
@@ -1193,22 +1295,32 @@
 
   // Antd select
   .ant-select {
-    min-width: 175px;
+    min-width: 50px;
     margin: @spacing-sm 0;
-    padding: 0;
     font-size: @base-font-size;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-radius: @round-radius;
-    box-shadow: @neu-shadow-low;
-    padding: @spacing-sm @spacing-sm;
+    box-shadow: @neu-shadow;
+    padding: @spacing-sm @spacing-md;
     cursor: pointer;
+    transition: box-shadow @transition-duration ease-in-out;
+    &:hover {
+      box-shadow: @neu-shadow-low;
+    }
+    &:active, &-open {
+      box-shadow: @neu-shadow-inset;
+      &:hover {
+        box-shadow: @neu-shadow-inset;;
+      }
+    }
 
     &-selector {
       width: 100%;
     }
+    //TODO: Enable search feature here
     &-selection-search {
       display: none;
     }
@@ -1221,18 +1333,20 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      right: @spacing-sm;
+      right: @spacing-md;
     }
 
     &-dropdown {
       position: absolute;
       overflow: hidden;
       font-size: inherit;
-      background-color: @grey;
+      background: @light-grey;
+      color: @black;
       border-radius: @border-radius;
       box-shadow: @drop-shadow;
+      backdrop-filter: blur(2px);
       outline: none;
-      pointer-events: unset;
+      pointer-events: unset !important;
 
       &::before {
         position: absolute;
@@ -1250,22 +1364,24 @@
       }
     }
     &-item {
-      padding: @spacing-sm @spacing-md;
-      font-size: @base-font-size;
-      opacity: @subtle-opacity;
+      position: relative;
+      width: 100%;
+      padding: @spacing-xs @spacing-lg;
+      border-bottom: 1px solid @grey;
       cursor: pointer;
-      img {
-        width: 20px;
-        height: auto;
-        margin-right: @spacing-sm;
+      &:last-of-type {
+        border-color: transparent;
       }
 
       &-option-state {
         display: none;
       }
       &-option-active {
-        background: @gradient;
-        color: @white;
+        background: rgba(0, 0, 0, 0.125);
+        border-color: @jet-green;
+        &:last-of-type {
+          border-color: @jet-green;
+        }
       }
       &-option-content {
         display: flex;
@@ -1283,10 +1399,12 @@
     background: @light-grey;
     color: @black;
     border-radius: @border-radius;
-    box-shadow: @neu-shadow-low;
+    box-shadow: @drop-shadow;
+    backdrop-filter: blur(2px);
+    background: rgba(var(--white), @disabled-opacity);
     overflow: hidden;
-    pointer-events: unset;
-
+    pointer-events: unset !important;
+    z-index: 1000;
     &::before {
       position: absolute;
       top: 0;
@@ -1297,6 +1415,16 @@
       content: '';
     }
 
+    &-trigger {
+      cursor: pointer;
+
+      // Antd down icon
+      .anticon-down {
+        font-size: @xs-font-size;
+        margin-left: @spacing-xs;
+      }
+    }
+
     &-menu {
       list-style: none;
       padding: 0;
@@ -1304,25 +1432,26 @@
       align-items: flex-start;
       justify-content: center;
       flex-direction: column;
+      margin: unset;
       cursor: pointer;
 
       &-item {
         position: relative;
         width: 100%;
         padding: @spacing-xs @spacing-lg;
-        border-bottom: 1px solid @white;
+        border-bottom: 1px solid @grey;
 
         &:hover,
         &-active,
         &.active {
-          background: @gradient;
-
-          .ant-dropdown-menu-title-content {
-            color: @white;
+          background: rgba(0, 0, 0, 0.125);
+          border-color: @jet-green;
+          &:last-of-type {
+            border-color: @jet-green;
           }
         }
         &:last-of-type {
-          border-bottom: none;
+          border-color: transparent;
         }
 
         .ant-dropdown-menu-title-content {

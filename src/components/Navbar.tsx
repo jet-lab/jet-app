@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useConnectWalletModal } from '../contexts/connectWalletModal';
-import { useLanguage } from '../contexts/localization/localization';
 import { useDarkTheme } from '../contexts/darkTheme';
 import { shortenPubkey } from '../utils/utils';
 import { Button, Switch } from 'antd';
@@ -10,23 +9,17 @@ import { ReactComponent as AccountIcon } from '../styles/icons/account_icon.svg'
 import { ReactComponent as WalletIcon } from '../styles/icons/wallet_icon.svg';
 
 export function Navbar(): JSX.Element {
-  const { dictionary } = useLanguage();
   const { pathname } = useLocation();
   const { connected, disconnect, publicKey } = useWallet();
   const { setConnecting } = useConnectWalletModal();
   const { darkTheme, toggleDarkTheme } = useDarkTheme();
   const [drawerOpened, setDrawerOpened] = useState(false);
-  const navLinks = [
-    { title: dictionary.cockpit.title, route: '/' },
-    { title: dictionary.transactions.title, route: '/transactions' },
-    { title: dictionary.settings.title, route: '/settings' }
-  ];
+  const navLinks = [{ title: 'Components', route: '/' }];
   const mobileFooterLinks = [
-    { title: dictionary.termsPrivacy.termsOfService, url: 'https://www.jetprotocol.io/legal/terms-of-service' },
-    { title: dictionary.termsPrivacy.privacyPolicy, url: 'https://www.jetprotocol.io/legal/privacy-policy' },
-    { title: dictionary.termsPrivacy.glossary, url: 'https://docs.jetprotocol.io/jet-protocol/terms-and-definitions' }
+    { title: 'Website', url: 'https://www.jetprotocol.io/' },
+    { title: 'Antd', url: 'https://ant.design/' }
   ];
-  const accountLink = { title: dictionary.account.title, route: '/' };
+  const accountLink = { title: 'Components', route: '/' };
 
   return (
     <div className={`navbar-container flex-centered ${drawerOpened ? 'drawer-open' : ''}`}>
@@ -45,12 +38,10 @@ export function Navbar(): JSX.Element {
             ghost
             className="flex-centered"
             style={{ textTransform: 'unset' }}
-            title={connected ? dictionary.settings.disconnect : dictionary.settings.connect}
+            title={connected ? 'Disconnect Wallet' : 'Connect Wallet'}
             onClick={() => (connected ? disconnect() : setConnecting(true))}>
             <WalletIcon width="20px" />
-            {connected
-              ? `${shortenPubkey(publicKey ? publicKey.toString() : '')} ${dictionary.settings.connected.toUpperCase()}`
-              : dictionary.settings.connect.toUpperCase()}
+            {connected ? `${shortenPubkey(publicKey ? publicKey.toString() : '')} CONNECTED` : 'CONNECT'}
           </Button>
         </div>
       </nav>
@@ -84,7 +75,7 @@ export function Navbar(): JSX.Element {
               ghost
               className="flex-centered small-btn"
               style={{ textTransform: 'unset' }}
-              title={connected ? dictionary.settings.disconnect : dictionary.settings.connect}
+              title={connected ? 'Disconnect Wallet' : 'Connect Wallet'}
               onClick={() => {
                 if (connected) {
                   disconnect();
@@ -94,11 +85,7 @@ export function Navbar(): JSX.Element {
                 }
               }}>
               <WalletIcon width="20px" />
-              {connected
-                ? `${shortenPubkey(
-                    publicKey ? publicKey.toString() : ''
-                  )} ${dictionary.settings.connected.toUpperCase()}`
-                : dictionary.settings.connect.toUpperCase()}
+              {connected ? `${shortenPubkey(publicKey ? publicKey.toString() : '')} CONNECTED` : 'CONNECT'}
             </Button>
           </div>
           <div className="drawer-bottom flex-centered column">
