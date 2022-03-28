@@ -1,12 +1,30 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CopyBlock, dracula } from 'react-code-blocks';
-import { Typography, Button, Radio, Divider, Breadcrumb, Menu, Dropdown, Select } from 'antd';
-import { DownOutlined, PoweroffOutlined } from '@ant-design/icons';
+import {
+  Typography,
+  Button,
+  Radio,
+  Divider,
+  Breadcrumb,
+  Menu,
+  Dropdown,
+  Select,
+  PageHeader,
+  Pagination,
+  Checkbox,
+  Input,
+  InputNumber,
+  Slider,
+  Switch
+} from 'antd';
+import { CheckOutlined, CloseOutlined, DownOutlined, PoweroffOutlined } from '@ant-design/icons';
+import { useDarkTheme } from '../contexts/darkTheme';
 
-export function Antd(): JSX.Element {
+export function Components(): JSX.Element {
   const { Title, Text, Paragraph } = Typography;
   const { Option } = Select;
+  const { darkTheme, toggleDarkTheme } = useDarkTheme();
   const [value, setValue] = useState('A');
 
   const menu = (
@@ -433,29 +451,242 @@ return (
 
       <div className="component">
         <div className="flex justify-between align-start">
-          <div className="flex column"></div>
-          <div className="code-block"></div>
+          <div className="flex column">
+            <Title underline>PageHeader</Title>
+            <br />
+            <PageHeader className="site-page-header" onBack={() => null} title="Title" subTitle="This is a subtitle" />
+          </div>
+          <div className="code-block">
+            <CopyBlock
+              theme={dracula}
+              language="jsx"
+              text={`
+import { PageHeader } from 'antd';
+        
+return (
+  <PageHeader 
+    className="site-page-header" 
+    onBack={() => null} 
+    title="Title" 
+    subTitle="This is a subtitle" 
+  />
+);
+              `}
+            />
+          </div>
         </div>
       </div>
 
       <div className="component">
         <div className="flex justify-between align-start">
-          <div className="flex column"></div>
-          <div className="code-block"></div>
+          <div className="flex column">
+            <Title underline>Pagination</Title>
+            <br />
+            <Pagination defaultCurrent={1} total={50} />
+          </div>
+          <div className="code-block">
+            <CopyBlock
+              theme={dracula}
+              language="jsx"
+              text={`
+import { Pagination } from 'antd';
+
+return (
+  <Pagination defaultCurrent={1} total={50} />
+);
+              `}
+            />
+          </div>
         </div>
       </div>
 
       <div className="component">
         <div className="flex justify-between align-start">
-          <div className="flex column"></div>
-          <div className="code-block"></div>
+          <div className="flex column">
+            <Title underline>Checkbox</Title>
+            <br />
+            <Checkbox onChange={() => null}>Basic Checkbox</Checkbox>
+            <Checkbox disabled onChange={() => null}>
+              Disabled Checkbox
+            </Checkbox>
+          </div>
+          <div className="code-block">
+            <CopyBlock
+              theme={dracula}
+              language="jsx"
+              text={`
+import { Checkbox } from 'antd';
+
+return (
+  <Checkbox onChange={() => null}>Basic Checkbox</Checkbox>
+  <Checkbox disabled onChange={() => null}>
+    Disabled Checkbox
+  </Checkbox>
+);
+              `}
+            />
+          </div>
         </div>
       </div>
 
       <div className="component">
         <div className="flex justify-between align-start">
-          <div className="flex column"></div>
-          <div className="code-block"></div>
+          <div className="flex column">
+            <Title underline>Inputs</Title>
+            <br />
+            <Input placeholder="Basic Input" />
+            <br />
+            <InputNumber placeholder="Number Input" />
+          </div>
+          <div className="code-block">
+            <CopyBlock
+              theme={dracula}
+              language="jsx"
+              text={`
+import { Input, NumberInput } from 'antd';
+
+return (
+  <Input placeholder="Basic Input" />
+  <InputNumber placeholder="Number Input" />
+);
+              `}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="component">
+        <div className="flex justify-between align-start">
+          <div className="flex column" style={{ width: 200 }}>
+            <Title underline>Slider</Title>
+            <br />
+            <Slider range defaultValue={[20, 50]} />
+            <br />
+            <Slider
+              marks={{
+                0: '0%',
+                25: '25%',
+                50: '50%',
+                75: '75%',
+                100: 'Max'
+              }}
+              tipFormatter={value => value + '%'}
+            />
+          </div>
+          <div className="code-block">
+            <CopyBlock
+              theme={dracula}
+              language="jsx"
+              text={`
+import { Slider } from 'antd';
+
+return (
+  <Slider range defaultValue={[20, 50]} />
+
+  <Slider
+    marks={{
+      0: '0%',
+      25: '25%',
+      50: '50%',
+      75: '75%',
+      100: 'Max'
+    }}
+    tipFormatter={value => value + '%'}
+  />
+);
+              `}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="component">
+        <div className="flex justify-between align-start">
+          <div className="flex column align-start">
+            <Title underline>Switch</Title>
+            <br />
+            <Switch checked={darkTheme} onChange={toggleDarkTheme} />
+            <br />
+            <Switch checked={darkTheme} onChange={toggleDarkTheme} checkedChildren="Dark" unCheckedChildren="Light" />
+            <br />
+            <Switch
+              checked={darkTheme}
+              onChange={toggleDarkTheme}
+              checkedChildren={<CheckOutlined />}
+              unCheckedChildren={<CloseOutlined />}
+            />
+          </div>
+          <div className="code-block">
+            <CopyBlock
+              theme={dracula}
+              language="jsx"
+              text={`
+import { Switch } from 'antd';
+import { CheckOutlined, CloseOutlined, DownOutlined, PoweroffOutlined } from '@ant-design/icons';
+
+return (
+  <Switch checked={darkTheme} onChange={toggleDarkTheme} />
+
+  <Switch checked={darkTheme} onChange={toggleDarkTheme} checkedChildren="Dark" unCheckedChildren="Light" />
+  
+  <Switch
+    checked={darkTheme}
+    onChange={toggleDarkTheme}
+    checkedChildren={<CheckOutlined />}
+    unCheckedChildren={<CloseOutlined />}
+  />
+);
+              `}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="component">
+        <div className="flex justify-between align-start">
+          <div className="flex column">
+            <Title underline></Title>
+          </div>
+          <div className="code-block">
+            <CopyBlock
+              theme={dracula}
+              language="jsx"
+              text={`
+              `}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="component">
+        <div className="flex justify-between align-start">
+          <div className="flex column">
+            <Title underline></Title>
+          </div>
+          <div className="code-block">
+            <CopyBlock
+              theme={dracula}
+              language="jsx"
+              text={`
+              `}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="component">
+        <div className="flex justify-between align-start">
+          <div className="flex column">
+            <Title underline></Title>
+          </div>
+          <div className="code-block">
+            <CopyBlock
+              theme={dracula}
+              language="jsx"
+              text={`
+              `}
+            />
+          </div>
         </div>
       </div>
     </div>

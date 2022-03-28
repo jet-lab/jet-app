@@ -9,8 +9,13 @@
   margin: 0 auto;
 }
 .component {
-  width: 100%;
+  width: calc(100% - (@spacing-sm * 2));
   margin: 40px 0;
+  flex-wrap: wrap;
+  padding: @spacing-sm;
+  div {
+    flex-wrap: wrap;
+  }
   h1, h2 {
     margin: unset;
   }
@@ -20,7 +25,8 @@
   }
 }
 .code-block {
-  width: 525px;
+  width: 100%;
+  max-width: 525px;
   padding-left: 20px;
   background: black;
   * {
@@ -33,6 +39,9 @@
     span {
       opacity: 1 !important;
       background: inherit !important;
+    }
+    .token {
+      color: white;
     }
     .punctuation {
       color: rgb(216, 132, 157);

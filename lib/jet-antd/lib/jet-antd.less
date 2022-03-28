@@ -298,14 +298,22 @@
   .center-text {
     text-align: center;
   }
-  .text-btn, .ant-btn-text span {
+  .text-btn, 
+  .ant-btn-text span, 
+  .link-btn, 
+  a.ant-typography, 
+  .ant-btn-link span {
     opacity: 1;
     text-decoration: none;
     letter-spacing: 1px;
     cursor: pointer;
+    transition: opacity @transition-duration ease-in-out;
 
     &:hover {
       text-decoration: underline;
+    }
+    &:active {
+      opacity: @disabled-opacity;
     }
     &.disabled {
       &:hover {
@@ -314,37 +322,7 @@
     }
   }
   .link-btn, a.ant-typography, .ant-btn-link span {
-    position: relative;
-    opacity: 1;
-    background-image: @gradient;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: 1px;
-    cursor: pointer;
-
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 1px;
-      background: @gradient;
-      opacity: 0;
-    }
-
-    &:hover {
-      &::after {
-        opacity: 1;
-      }
-    }
-    &.disabled {
-      &:hover {
-        &::after {
-          opacity: 0;
-        }
-      }
-    }
+    color: @jet-green;
   }
 
   // Views
@@ -388,7 +366,8 @@
   // Buttons
   button,
   .ant-btn,
-  .ant-radio-button-wrapper {
+  .ant-radio-button-wrapper, 
+  .ant-pagination-item {
     position: relative;
     background: @gradient;
     border: none;
@@ -426,6 +405,7 @@
       opacity: @subtle-opacity;
     }
     &:active {
+      opacity: @disabled-opacity;
       box-shadow: @neu-shadow-inset-gradient;
     }
 
@@ -443,13 +423,12 @@
         color: inherit;
       }
 
-      &:hover,
-      &:active {
+      &:hover {
         opacity: 1;
       }
       &:active {
         box-shadow: unset;
-        background: rgba(var(--grey), 0.5);
+        background: rgba(var(--grey), 0.75);
       }
     }
 
@@ -516,6 +495,9 @@
       &:active {
         box-shadow: unset;
       }
+    }
+    &-link {
+      color: @jet-green;
     }
 
     // Full width button
@@ -616,8 +598,7 @@
   // General Input
   input {
     width: 100%;
-    height: 55px;
-    padding: 0 @spacing-lg;
+    padding: @spacing-md @spacing-lg;
     margin: @spacing-xs 0;
     box-shadow: @neu-shadow-inset;
     background: @white;
@@ -659,6 +640,8 @@
       width: 18px;
       height: 18px;
       opacity: 0;
+      padding: 0 25px 0 0;
+      box-shadow: unset;
       + span {
         position: absolute;
         width: 18px;
@@ -679,7 +662,7 @@
       &:checked {
         + span {
           box-shadow: @neu-shadow-inset-gradient;
-          background: @gradient;
+          background: @jet-green;
           &::before,
           &::after {
             content: '';
@@ -699,6 +682,16 @@
 
           &:hover {
             box-shadow: @neu-shadow-inset-gradient-low;
+          }
+        }
+      }
+      &[disabled] {
+        + span {
+          cursor: not-allowed;
+          opacity: @half-opacity;
+
+          &:hover {
+            box-shadow: @neu-shadow-inset;
           }
         }
       }
@@ -730,6 +723,39 @@
         border-radius: @round-radius;
         opacity: 0;
         transition: opacity @transition-duration ease-in-out;
+      }
+    }
+  }
+  // Antd Checkbox
+  .ant-checkbox-wrapper {
+    span:last-of-type {
+      font-size: @base-font-size;
+      margin-top: 1px;
+    }
+    &-disabled {
+      span:last-of-type {
+        opacity: @half-opacity;
+      }
+    }
+  }
+  // Antd Number Input
+  .ant-input-number {
+    position: relative;
+
+    &-handler-wrap {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: @spacing-sm;
+
+      span {
+        opacity: @disabled-opacity;
+        margin: 0 1px;
+        cursor: pointer;
+
+        &:hover {
+          opacity: 1;
+        }
       }
     }
   }
@@ -979,7 +1005,87 @@
     }
   }
 
-  // Antd modal
+  // Antd Page Header
+  .ant-page-header {
+    position: relative;
+    padding: @spacing-md @spacing-lg;
+    border: 1px solid @grey;
+    
+    &-back {
+      margin-right: @spacing-md;
+      opacity: @disabled-opacity;
+      transition: opacity @transition-duration ease-in-out;
+      cursor: pointer;
+      &:hover {
+        opacity: 1;
+      }
+      &:active {
+        opacity: @disabled-opacity;
+      }
+
+      .anticon {
+        font-size: @lg-font-size;
+      }
+    }
+
+    &-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      &-left, &-right {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+      &-title {
+        margin-right: @spacing-md;
+        font-size: @header-font-size;
+        line-height: @header-font-size;
+        font-weight: @header-weight;
+      }
+      &-sub-title {
+        font-size: @base-font-size;
+        opacity: @disabled-opacity;
+      }
+    }
+  }
+
+  // Antd Pagination
+  .ant-pagination {
+    display: flex;
+    padding: unset;
+    list-style: none;
+
+    &-item, &-prev, &-next {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: @spacing-sm;
+    }
+    &-item {
+      background: unset;
+      border: 1px solid @dark-grey;
+      padding: @spacing-xs @spacing-md;
+      color: @dark-grey;
+      opacity: @disabled-opacity;
+      span {
+        opacity: 1;
+        color: inherit;
+      }
+
+      &:hover {
+        opacity: 1;
+      }
+      &:active, &-active {
+        opacity: 1;
+        box-shadow: unset;
+        background: @jet-green;
+        color: @white;
+      }
+    }
+  }
+
+  // Antd Modal
   .ant-modal-wrap {
     width: 100%;
     height: calc(100% - @nav-height);
@@ -1096,12 +1202,18 @@
     position: relative;
     margin: @spacing-sm 0;
     height: 30px;
-    min-width: 30px;
+    min-width: 50px;
     background: @grey;
     border-radius: @round-radius;
     box-shadow: @neu-shadow-inset;
     padding: 0 @spacing-md;
     cursor: pointer;
+    span {
+      color: @dark-grey;
+    }
+    svg path {
+      fill: @dark-grey;
+    }
 
     &-handle {
       position: absolute;
@@ -1121,8 +1233,7 @@
         border-radius: @round-radius;
       }
     }
-    span {
-      color: @dark-grey;
+    &-inner {
       margin: 0 0 0 20px;
       transition: margin @transition-duration ease-in-out;
     }
@@ -1133,29 +1244,35 @@
       }
       &.ant-switch-checked {
         .ant-switch-handle {
-          left: calc(80% - 14px);
+          left: calc(100% - 31px);
         }
       }
     }
-
     &:hover {
       box-shadow: @neu-shadow-inset-low;
     }
+
+    // Checked state
     &-checked {
       background: @gradient;
       box-shadow: @neu-shadow-inset-gradient;
+      span {
+        color: @white;
+      }
+      svg path {
+        fill: @white;
+      }
 
       .ant-switch-handle {
         top: 7px;
-        left: calc(80% - 7px);
+        left: calc(100% - 24px);
 
         &::before {
           background: @white;
           box-shadow: @neu-shadow-inset-low;
         }
       }
-      span {
-        color: @white;
+      .ant-switch-inner {
         margin: 0 20px 0 0;
       }
 
@@ -1217,9 +1334,6 @@
     pointer-events: none;
     position: absolute;
     max-width: 200px;
-    left: 50%;
-    top: calc(50% - 50px);
-    transform: translate(-50%, -50%);
     background: @light-grey;
     color: @black;
     padding: @spacing-md;
@@ -1228,6 +1342,7 @@
     backdrop-filter: blur(2px);
     background: rgba(var(--white), @disabled-opacity);
     z-index: 10;
+    transition: all @transition-duration ease-in-out;
 
     &-arrow {
       pointer-events: none;
@@ -1367,7 +1482,7 @@
       position: relative;
       width: 100%;
       padding: @spacing-xs @spacing-lg;
-      border-bottom: 1px solid @grey;
+      border-bottom: 1px solid @dark-grey;
       cursor: pointer;
       &:last-of-type {
         border-color: transparent;

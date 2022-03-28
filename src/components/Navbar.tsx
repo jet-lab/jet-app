@@ -14,11 +14,11 @@ export function Navbar(): JSX.Element {
   const { setConnecting } = useConnectWalletModal();
   const { darkTheme, toggleDarkTheme } = useDarkTheme();
   const [drawerOpened, setDrawerOpened] = useState(false);
-  const navLinks = [{ title: 'Components', route: '/' }];
-  const mobileFooterLinks = [
-    { title: 'Website', url: 'https://www.jetprotocol.io/' },
-    { title: 'Antd', url: 'https://ant.design/' }
+  const navLinks = [
+    { title: 'Components', route: '/' },
+    { title: 'Variables', route: '/variables' }
   ];
+  const mobileFooterLinks = [{ title: 'Website', url: 'https://www.jetprotocol.io/' }];
   const accountLink = { title: 'Components', route: '/' };
 
   return (
