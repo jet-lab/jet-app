@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useInitFailed } from '../contexts/init';
 import { useGeoban, useLanguage } from '../contexts/localization/localization';
 import { useAlert } from '../contexts/copilotModal';
@@ -9,6 +9,7 @@ import { Info } from '../components/Info';
 import { HealthBar } from '../components/HealthBar';
 import { TradePanel } from '../components/TradePanel';
 import { MarketTable } from '../components/MarketTable';
+import { Checkbox } from 'antd';
 
 // Jet V1
 import { useUser } from '../v1/contexts/user';
@@ -26,6 +27,7 @@ export function Cockpit(): JSX.Element {
 
   // If user has not accepted disclaimer, alert them to accept
   const acceptedDisclaimer = localStorage.getItem('jetDisclaimerAccepted') === 'true';
+  const [dislaimerChecked, setDisclaimerChecked] = useState(false);
   useEffect(() => {
     if (cluster === 'mainnet-beta' && !acceptedDisclaimer) {
       setAlert({
@@ -43,16 +45,22 @@ export function Cockpit(): JSX.Element {
             <a href="https://www.jetprotocol.io/legal/privacy-policy" target="_blank" rel="noopener noreferrer">
               <span className="text-gradient text-gradient-btn">{dictionary.termsPrivacy.privacyPolicy}</span>
             </a>
+            <br />
+            <br />
+            <Checkbox onChange={e => setDisclaimerChecked(e.target.checked)}>
+              {dictionary.copilot.alert.acceptDisclaimer}
+            </Checkbox>
           </span>
         ),
         closeable: false,
         action: {
           text: dictionary.copilot.alert.accept,
-          onClick: () => localStorage.setItem('jetDisclaimerAccepted', 'true')
+          onClick: () => localStorage.setItem('jetDisclaimerAccepted', 'true'),
+          disabled: !dislaimerChecked
         }
       });
     }
-  }, [acceptedDisclaimer, setAlert, dictionary]);
+  }, [acceptedDisclaimer, setAlert, dictionary, dislaimerChecked]);
 
   if (initFailed || isGeobanned) {
     return <InitFailed />;

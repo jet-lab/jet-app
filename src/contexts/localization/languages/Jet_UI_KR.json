@@ -151,7 +151,8 @@
       "headsup": "예의주시하세요!",
       "disclaimer": "제트 프로토콜 메인넷에 진입하려고 합니다. 이용약관 및 금전적 손실 가능성을 이해하고 동의하지 않는 경우 진행하지 마십시오.",
       "accept": "수용하다",
-      "warning": "경고"
+      "warning": "경고",
+      "acceptDisclaimer": "I understand the Terms of Service, Privacy Policy, Cookie Policy and accept the risks."
     },
     "radar": {
       "title": "Radar",

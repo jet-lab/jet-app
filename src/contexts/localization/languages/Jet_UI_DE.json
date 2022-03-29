@@ -151,7 +151,8 @@
       "headsup": "Achtung!",
       "disclaimer": "Sie sind im Begriff, das Jet Protocol Mainnet zu betreten. Fahren Sie nicht fort, wenn Sie die Nutzungsbedindungen sowie das Potential für finanzielle Verluste nicht verstehen und akzeptieren.",
       "accept": "Akzeptieren",
-      "warning": "WARNUNG"
+      "warning": "WARNUNG",
+      "acceptDisclaimer": "I understand the Terms of Service, Privacy Policy, Cookie Policy and accept the risks."
     },
     "radar": {
       "title": "Radar",
