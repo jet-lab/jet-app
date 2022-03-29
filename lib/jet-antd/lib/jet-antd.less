@@ -768,7 +768,6 @@
     border-spacing: 0 @spacing-xs;
     background: @white;
     color: @black;
-    margin: @spacing-sm 0;
 
     thead {
       position: relative;
@@ -807,7 +806,7 @@
         bottom: 0;
         width: 100%;
         height: 1px;
-        background: @gradient;
+        background: @jet-green;
         border-bottom: 2px solid @white;
       }
     }
@@ -821,21 +820,6 @@
       }
       &:active {
         box-shadow: @neu-shadow-inset;
-      }
-
-      // If you don't want row interactions
-      &.no-interaction {
-        cursor: unset;
-        td {
-          cursor: unset;
-        }
-
-        &:hover {
-          background: inherit;
-        }
-        &:active {
-          box-shadow: unset;
-        }
       }
     }
     td {
@@ -858,21 +842,72 @@
         border-bottom-left-radius: @border-radius;
       }
       &:last-of-type {
-        padding-left: @spacing-lg;
+        padding-right: @spacing-md;
         border-top-right-radius: @border-radius;
         border-bottom-right-radius: @border-radius;
       }
     }
+
+    // If you don't want row interactions
+    &.no-interaction {
+      tr {
+        cursor: unset;
+        td {
+          cursor: unset;
+        }
+
+        &:hover {
+          background: inherit;
+        }
+        &:active {
+          box-shadow: unset;
+        }
+      }
+    }
   }
-  // Antd pagination of table
+  // Antd table
   .ant-table-wrapper {
     position: relative;
+
+    .ant-table {
+      &-bordered {
+        tr {
+          td {
+            border-bottom: 1px solid @dark-grey;
+            border-radius: unset;
+          }
+          &:last-of-type {
+            td {
+              border: unset;
+            }
+          }
+        }
+      }
+    }
+
+    // If you don't want row interactions
+    &.no-interaction {
+      tr {
+        cursor: unset;
+        td {
+          cursor: unset;
+        }
+
+        &:hover {
+          background: inherit;
+        }
+        &:active {
+          box-shadow: unset;
+        }
+      }
+    }
 
     .ant-pagination {
       list-style: none;
       display: flex;
       align-items: center;
       padding: 0;
+      margin: 0;
       font-size: @sm-font-size;
 
       button {
@@ -1122,6 +1157,7 @@
       padding: @spacing-xs @spacing-md;
       color: @dark-grey;
       opacity: @disabled-opacity;
+      font-size: @xs-font-size;
       span {
         opacity: 1;
         color: inherit;
@@ -1136,6 +1172,11 @@
         background: @jet-green;
         color: @white;
       }
+    }
+
+    // Antd table pagination
+    &.ant-table-pagination-right {
+      justify-content: flex-end;
     }
   }
 
@@ -1383,8 +1424,8 @@
     }
   }
 
-  // Antd Tooltip
-  .ant-tooltip {
+  // Antd Tooltip / Popover
+  .ant-tooltip, .ant-popover {
     pointer-events: none;
     position: absolute;
     max-width: 200px;
@@ -1395,9 +1436,14 @@
     box-shadow: @drop-shadow;
     backdrop-filter: blur(2px);
     background: rgba(var(--white), @disabled-opacity);
-    z-index: 10;
+    pointer-events: all !important;
     transition: all @transition-duration ease-in-out;
+    z-index: 10;
 
+    &-title {
+      font-size: @lg-font-size;
+      border-bottom: 1px solid @jet-green;
+    }
     &-arrow {
       pointer-events: none;
       position: absolute;
@@ -1413,15 +1459,15 @@
       z-index: 9;
     }
     &-inner {
-      pointer-events: none;
       font-size: @sm-font-size;
     }
 
     // Other placements
-    .ant-tooltip-arrow {
+    .ant-tooltip-arrow, .ant-popover-arrow {
       display: none;
     }
-    &-placement-left .ant-tooltip-arrow {
+    &-placement-left .ant-tooltip-arrow,
+    &-placement-left .ant-popover-arrow {
       top: calc(50% - 6px);
       left: calc(100% + 3px);
       border-top: 7px solid transparent;
@@ -1429,7 +1475,8 @@
       border-right: unset;
       border-bottom: 5px solid transparent;
     }
-    &-placement-right .ant-tooltip-arrow {
+    &-placement-right .ant-tooltip-arrow,
+    &-placement-right .ant-popover-arrow {
       top: calc(50% - 6px);
       left: calc(0% - 3px);
       border-top: 5px solid transparent;
@@ -1437,7 +1484,8 @@
       border-right: 9px solid @light-grey;
       border-bottom: 7px solid transparent;
     }
-    &-placement-bottom .ant-tooltip-arrow {
+    &-placement-bottom .ant-tooltip-arrow,
+    &-placement-bottom .ant-popover-arrow {
       top: calc(0% - 7px);
       border-top: unset;
       border-left: 5px solid transparent;
@@ -1457,7 +1505,9 @@
     &.ant-zoom-down {
     }
     &.ant-zoom-down-leave,
-    &.ant-zoom-down-leave-active {
+    &.ant-zoom-down-leave-active,
+    &.ant-zoom-big-leave,
+    &.ant-zoom-big-leave-active {
       display: none;
     }
   }
@@ -1642,7 +1692,7 @@
     width: 100%;
     max-width: 400px;
     border-radius: @border-radius;
-    box-shadow: @neu-shadow-low;
+    border: 2px solid @grey;
     overflow: hidden;
     margin: @spacing-sm 0;
 
@@ -1748,45 +1798,21 @@
         }
       }
     }
-    // Optional card tabs
-    .ant-tabs-nav-operations {
-      display: none;
-    }
-    .ant-tabs-nav-list {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-
-      .ant-tabs-tab {
-        position: relative;
-        margin-right: @spacing-md;
-        opacity: @disabled-opacity;
-        font-size: @sm-font-size;
-        cursor: pointer;
-        transition: all @transition-duration ease-in-out;
-
+    // With tabs
+    .ant-tabs {
+      &-content {
+        padding: unset;
+      }
+      &-nav {
         &::before {
-          content: '';
-          position: absolute;
-          left: 0;
-          bottom: 0.5px;
-          width: 100%;
-          height: 1px;
-          border-radius: @round-radius;
-          background: @jet-green;
-          opacity: 0;
-        }
-        &:hover,
-        &.ant-tabs-tab-active {
-          opacity: 1;
-          color: @jet-green
-        }
-        &.ant-tabs-tab-active::before {
-          opacity: 1;
+          display: none;
         }
       }
+      &-tab {
+        font-size: @sm-font-size !important;
+      }
     }
+
     // Body content of card
     &-body {
       padding: @spacing-sm @spacing-xl @spacing-md @spacing-xl;
@@ -1803,6 +1829,66 @@
       &-body {
         padding: @spacing-md;
         padding-top: @spacing-sm;
+      }
+    }
+  }
+
+  // Antd Tabs
+  .ant-tabs {
+    &-content {
+      padding: @spacing-md 0;
+    }
+    &-nav {
+      position: relative;
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 1px;
+        border-radius: @round-radius;
+        background: @grey;
+        box-shadow: @neu-shadow-inset-low;
+      }
+
+      .ant-tabs-nav-operations {
+        display: none;
+      }
+      .ant-tabs-nav-list {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+  
+        .ant-tabs-tab {
+          position: relative;
+          margin-right: @spacing-md;
+          opacity: @disabled-opacity;
+          font-size: @lg-font-size;
+          transition: all @transition-duration ease-in-out;
+          cursor: pointer;
+  
+          &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0px;
+            width: 100%;
+            height: 1px;
+            border-radius: @round-radius;
+            background: @jet-green;
+            opacity: 0;
+          }
+          &:hover,
+          &.ant-tabs-tab-active {
+            opacity: 1;
+            color: @jet-green
+          }
+          &.ant-tabs-tab-active::before {
+            opacity: 1;
+          }
+        }
       }
     }
   }

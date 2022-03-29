@@ -15,7 +15,7 @@ import { ConnectWalletModalProvider } from './contexts/connectWalletModal';
 import { ConnectWalletModal } from './components/ConnectWalletModal';
 import { Navbar } from './components/Navbar';
 import { Components } from './views/Components';
-import { Variables } from './views/Variables';
+import { Utilities } from './views/Utilities';
 
 export function App(): JSX.Element {
   const wallets = useMemo(
@@ -38,7 +38,7 @@ export function App(): JSX.Element {
             <Navbar />
             <Routes>
               <Route path="/" element={<Components />} />
-              <Route path="/variables" element={<Variables />} />
+              <Route path="/variables" element={<Utilities />} />
             </Routes>
             <ConnectWalletModal />
           </DarkThemeProvider>

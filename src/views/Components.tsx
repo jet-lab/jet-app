@@ -19,7 +19,10 @@ import {
   Switch,
   Card,
   Collapse,
-  List
+  List,
+  Popover,
+  Table,
+  Tabs
 } from 'antd';
 import { CheckOutlined, CloseOutlined, DownOutlined, PoweroffOutlined } from '@ant-design/icons';
 import { useDarkTheme } from '../contexts/darkTheme';
@@ -28,8 +31,49 @@ export function Components(): JSX.Element {
   const { Title, Text, Paragraph } = Typography;
   const { Option } = Select;
   const { Panel } = Collapse;
+  const { TabPane } = Tabs;
   const { darkTheme, toggleDarkTheme } = useDarkTheme();
   const [value, setValue] = useState('A');
+  const [popoverVisible, setPopoverVisible] = useState(false);
+
+  // Table
+  const tableDataSource = [
+    {
+      key: '1',
+      name: 'Mike',
+      age: 32,
+      address: '10 Downing Street'
+    },
+    {
+      key: '2',
+      name: 'John',
+      age: 42,
+      address: '10 Downing Street'
+    },
+    {
+      key: '3',
+      name: 'Jimmy',
+      age: 60,
+      address: '155 Loft Street'
+    }
+  ];
+  const tableColumns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name'
+    },
+    {
+      title: 'Age',
+      dataIndex: 'age',
+      key: 'age'
+    },
+    {
+      title: 'Address',
+      dataIndex: 'address',
+      key: 'address'
+    }
+  ];
 
   // Card
   const [activeTabKey, setActiveTabKey] = useState('tab1');
@@ -916,6 +960,243 @@ return (
     renderItem={item => <List.Item>{item}</List.Item>}
   />
 );
+              `}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="component">
+        <div className="flex justify-between align-start">
+          <div className="flex column">
+            <Title underline>Popover</Title>
+            <br />
+            <Popover
+              content={
+                <div className="flex column">
+                  <p>Popover Content</p>
+                  <span className="link-btn" onClick={() => setPopoverVisible(false)}>
+                    Close
+                  </span>
+                </div>
+              }
+              title="Title"
+              visible={popoverVisible}
+              trigger="click">
+              <Button ghost onClick={() => setPopoverVisible(true)}>
+                Click Me
+              </Button>
+            </Popover>
+            <br />
+            <Popover content={<p>Popover Content</p>} title="Title" trigger="hover">
+              <p className="text-btn">Hover Me</p>
+            </Popover>
+          </div>
+          <div className="code-block">
+            <CopyBlock
+              theme={dracula}
+              language="jsx"
+              text={`
+import { useState } from 'react';
+import { Popover, Button } from 'antd';
+
+const [popoverVisible, setPopoverVisible] = useState(false);
+
+return (
+  <Popover
+    content={
+      <div className="flex column">
+        <p>Popover Content</p>
+        <span 
+          className="link-btn" 
+          onClick={() => setPopoverVisible(false)}>
+          Close
+        </span>
+      </div>
+    }
+    title="Title"
+    visible={popoverVisible}
+    trigger="click">
+    <Button ghost onClick={() => setPopoverVisible(true)}>
+      Click Me
+    </Button>
+  </Popover>
+  
+  <Popover 
+    content={<p>Popover Content</p>} 
+    title="Title" 
+    trigger="hover">
+    <p className="text-btn">Hover Me</p>
+  </Popover>
+);
+              `}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="component">
+        <div className="flex justify-between align-start">
+          <div className="flex column">
+            <Title underline>Table</Title>
+            <br />
+            <Table dataSource={tableDataSource} columns={tableColumns} pagination={false} />
+            <br />
+            <br />
+            <Table className="no-interaction" bordered dataSource={tableDataSource} columns={tableColumns} />
+          </div>
+          <div className="code-block">
+            <CopyBlock
+              theme={dracula}
+              language="jsx"
+              text={`
+import { Table } from 'antd';
+
+const tableDataSource = [
+  {
+    key: '1',
+    name: 'Mike',
+    age: 32,
+    address: '10 Downing Street'
+  },
+  {
+    key: '2',
+    name: 'John',
+    age: 42,
+    address: '10 Downing Street'
+  },
+  {
+    key: '3',
+    name: 'Jimmy',
+    age: 60,
+    address: '155 Loft Street'
+  }
+];
+const tableColumns = [
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    key: 'name'
+  },
+  {
+    title: 'Age',
+    dataIndex: 'age',
+    key: 'age'
+  },
+  {
+    title: 'Address',
+    dataIndex: 'address',
+    key: 'address'
+  }
+];
+
+return (
+  <Table 
+    dataSource={tableDataSource} 
+    columns={tableColumns} 
+    pagination={false} 
+  />
+  <Table 
+    className="no-interaction" 
+    bordered 
+    dataSource={tableDataSource} 
+    columns={tableColumns} 
+  />
+);
+              `}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="component">
+        <div className="flex justify-between align-start">
+          <div className="flex column">
+            <Title underline>Tabs</Title>
+            <br />
+            <Tabs defaultActiveKey="1" onChange={() => null}>
+              <TabPane tab="Tab 1" key="1">
+                Content of Tab Pane 1
+              </TabPane>
+              <TabPane tab="Tab 2" key="2">
+                Content of Tab Pane 2
+              </TabPane>
+              <TabPane tab="Tab 3" key="3">
+                Content of Tab Pane 3
+              </TabPane>
+            </Tabs>
+          </div>
+          <div className="code-block">
+            <CopyBlock
+              theme={dracula}
+              language="jsx"
+              text={`
+import { Tabs } from 'antd';
+
+const { TabPane } = Tabs;
+
+<Tabs defaultActiveKey="1" onChange={() => null}>
+  <TabPane tab="Tab 1" key="1">
+    Content of Tab Pane 1
+  </TabPane>
+  <TabPane tab="Tab 2" key="2">
+    Content of Tab Pane 2
+  </TabPane>
+  <TabPane tab="Tab 3" key="3">
+    Content of Tab Pane 3
+  </TabPane>
+</Tabs>
+              `}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="component">
+        <div className="flex justify-between align-start">
+          <div className="flex column">
+            <Title underline></Title>
+            <br />
+          </div>
+          <div className="code-block">
+            <CopyBlock
+              theme={dracula}
+              language="jsx"
+              text={`
+              `}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="component">
+        <div className="flex justify-between align-start">
+          <div className="flex column">
+            <Title underline></Title>
+            <br />
+          </div>
+          <div className="code-block">
+            <CopyBlock
+              theme={dracula}
+              language="jsx"
+              text={`
+              `}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="component">
+        <div className="flex justify-between align-start">
+          <div className="flex column">
+            <Title underline></Title>
+            <br />
+          </div>
+          <div className="code-block">
+            <CopyBlock
+              theme={dracula}
+              language="jsx"
+              text={`
               `}
             />
           </div>
