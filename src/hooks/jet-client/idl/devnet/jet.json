@@ -2134,7 +2134,7 @@
   "metadata": {
     "address": "JPv1rCqrhagNNmJVM5J1he7msQ5ybtvE1nNuHpDHMNU",
     "serumProgramId": "DESVgJVGajEgKGXhb6XmqDHGz3VjdgP7rEVESBgxmroY",
-    "cluster": "https://psytrbhymqlkfrhudd.dev.genesysgo.net:8899/",
+    "cluster": "https://api.devnet.solana.com/",
     "market": {
       "market": "2mt2XQS6kKgkE2MPR9fFoWDv5ZYYNXkVGxgg9c9jMPRU",
       "marketAuthority": "iJQtCQKcUusrscfCamXBMgM1fEqqnKfcW5ajkCxVVQF"
