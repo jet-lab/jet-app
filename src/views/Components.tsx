@@ -16,7 +16,9 @@ import {
   Input,
   InputNumber,
   Slider,
-  Switch
+  Switch,
+  Card,
+  Collapse
 } from 'antd';
 import { CheckOutlined, CloseOutlined, DownOutlined, PoweroffOutlined } from '@ant-design/icons';
 import { useDarkTheme } from '../contexts/darkTheme';
@@ -24,8 +26,27 @@ import { useDarkTheme } from '../contexts/darkTheme';
 export function Components(): JSX.Element {
   const { Title, Text, Paragraph } = Typography;
   const { Option } = Select;
+  const { Panel } = Collapse;
   const { darkTheme, toggleDarkTheme } = useDarkTheme();
   const [value, setValue] = useState('A');
+
+  const [activeTabKey, setActiveTabKey] = useState('tab1');
+  const tabList = [
+    {
+      key: 'tab1',
+      tab: 'Tab 1'
+    },
+    {
+      key: 'tab2',
+      tab: 'Tab 2'
+    }
+  ];
+  const contentList: Record<string, JSX.Element> = {
+    tab1: <p>Content 1</p>,
+    tab2: <p>Content 2</p>
+  };
+
+  const panelText = 'Jet is the coolest place to work, period. Cooler than anywhere else in the tri-state area.';
 
   const menu = (
     <Menu>
@@ -645,13 +666,111 @@ return (
       <div className="component">
         <div className="flex justify-between align-start">
           <div className="flex column">
-            <Title underline></Title>
+            <Title underline>Card</Title>
+            <br />
+            <Card>
+              <div className="flex align-start column">
+                <h1>Custom JSX</h1>
+                <Divider />
+                <p>Fully custom card.</p>
+                <Button block>More</Button>
+              </div>
+            </Card>
+            <br />
+            <Card
+              hoverable
+              title="Default, clickable card"
+              extra={
+                <Link className="link-btn" to="/">
+                  More
+                </Link>
+              }>
+              <p>Card content</p>
+              <p>Card content</p>
+              <p>Card content</p>
+            </Card>
+            <br />
+            <Card
+              title="Card with tabs"
+              tabList={tabList}
+              activeTabKey={activeTabKey}
+              onTabChange={key => {
+                setActiveTabKey(key);
+              }}>
+              {contentList[activeTabKey]}
+            </Card>
+            <br />
+            <Card
+              size="small"
+              cover={<img src="https://miro.medium.com/max/1400/1*c7aAfs112I9quVF73Acj3A.jpeg" alt="Jet" />}>
+              <p>Smaller card with a cover</p>
+              <p>Card content</p>
+            </Card>
           </div>
           <div className="code-block">
             <CopyBlock
               theme={dracula}
               language="jsx"
               text={`
+import { useState } from 'react';
+import { Card, Button, Divider } from 'antd';
+
+const [activeTabKey, setActiveTabKey] = useState('tab1');
+const tabList = [
+  {
+    key: 'tab1',
+    tab: 'Tab 1'
+  },
+  {
+    key: 'tab2',
+    tab: 'Tab 2'
+  }
+];
+const contentList: Record<string, JSX.Element> = {
+  tab1: <p>Content 1</p>,
+  tab2: <p>Content 2</p>
+};
+
+return (
+  <Card>
+    <div className="flex align-start column">
+      <h1>Custom JSX</h1>
+      <Divider />
+      <p>Fully custom card.</p>
+      <Button block>More</Button>
+    </div>
+  </Card>
+
+  <Card
+    hoverable
+    title="Default, clickable card"
+    extra={
+      <a className="link-btn" href="/">
+        More
+      </a>
+    }>
+    <p>Card content</p>
+    <p>Card content</p>
+    <p>Card content</p>
+  </Card>
+
+  <Card
+    title="Card with tabs"
+    tabList={tabList}
+    activeTabKey={activeTabKey}
+    onTabChange={key => {
+      setActiveTabKey(key);
+    }}>
+    {contentList[activeTabKey]}
+  </Card>
+
+  <Card
+    size="small"
+    cover={<img src="" alt="" />}>
+    <p>Smaller card with a cover</p>
+    <p>Card content</p>
+  </Card>
+);
               `}
             />
           </div>
@@ -661,13 +780,46 @@ return (
       <div className="component">
         <div className="flex justify-between align-start">
           <div className="flex column">
-            <Title underline></Title>
+            <Title underline>Collapse</Title>
+            <br />
+            <Collapse style={{ width: 300 }} defaultActiveKey={['1']} onChange={() => null}>
+              <Panel header="This is panel header 1" key="1">
+                <p>{panelText}</p>
+              </Panel>
+              <Panel header="This is panel header 2" key="2">
+                <p>{panelText}</p>
+              </Panel>
+              <Panel header="This is panel header 3" key="3">
+                <p>{panelText}</p>
+              </Panel>
+            </Collapse>
           </div>
           <div className="code-block">
             <CopyBlock
               theme={dracula}
               language="jsx"
               text={`
+import { Collapse } from 'antd';
+
+const { Panel } = Collapse;
+const panelText = 'Jet is the coolest place to work, period. Cooler than anywhere else in the tri-state area.';
+
+return (
+  <Collapse 
+    style={{ width: 300 }} 
+    defaultActiveKey={['1']} 
+    onChange={() => null}>
+    <Panel header="This is panel header 1" key="1">
+      <p>{panelText}</p>
+    </Panel>
+    <Panel header="This is panel header 2" key="2">
+      <p>{panelText}</p>
+    </Panel>
+    <Panel header="This is panel header 3" key="3">
+      <p>{panelText}</p>
+    </Panel>
+  </Collapse>
+);
               `}
             />
           </div>
