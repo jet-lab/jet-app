@@ -10,6 +10,7 @@ export interface Alert {
   action?: {
     text: string;
     onClick: () => void;
+    disabled?: boolean;
   };
 }
 export interface Definition {

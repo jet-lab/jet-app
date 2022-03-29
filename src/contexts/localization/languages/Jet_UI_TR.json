@@ -150,7 +150,8 @@
       "headsup": "Dikkat buraya!",
       "disclaimer": "JetProtocol mainnet'e erişiyorsunuz. Yeterince bilgiye sahip değilseniz ilerlemeyin, şartları veya olası kayıpları kabul etmeyin.",
       "accept": "Kabul Et",
-      "warning": "UYARI"
+      "warning": "UYARI",
+      "acceptDisclaimer": "I understand the Terms of Service, Privacy Policy, Cookie Policy and accept the risks."
     },
     "radar": {
       "title": "Radar",

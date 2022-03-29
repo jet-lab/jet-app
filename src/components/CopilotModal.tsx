@@ -45,6 +45,7 @@ export function CopilotModal(): JSX.Element {
             {alert?.detail}
             {alert?.solution}
             <Button
+              disabled={alert?.action?.disabled}
               className={`small-btn ${alert?.status === 'failure' ? 'error-btn' : ''}`}
               onClick={() => {
                 if (alert?.action) {

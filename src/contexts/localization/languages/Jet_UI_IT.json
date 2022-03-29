@@ -151,7 +151,8 @@
       "headsup": "Dritta!",
       "disclaimer": "Stai per entrare nella mainnet del protocollo Jet. Non procedere se non si comprendono e si accettano i Termini di utilizzo e il potenziale rischio di perdite finanziarie.",
       "accept": "Accetta",
-      "warning": "AVVERTIMENTO"
+      "warning": "AVVERTIMENTO",
+      "acceptDisclaimer": "I understand the Terms of Service, Privacy Policy, Cookie Policy and accept the risks."
     },
     "radar": {
       "title": "Radar",

@@ -366,8 +366,8 @@
   // Disabled elements
   *[disabled],
   .disabled {
-    cursor: not-allowed;
-    opacity: @disabled-opacity;
+    cursor: not-allowed !important;
+    opacity: @disabled-opacity !important;
   }
 
   // Buttons
@@ -583,6 +583,8 @@
       width: 18px;
       height: 18px;
       opacity: 0;
+      padding: 0 25px 0 0;
+      box-shadow: unset;
       + span {
         position: absolute;
         width: 18px;
@@ -603,7 +605,7 @@
       &:checked {
         + span {
           box-shadow: @neu-shadow-inset-gradient;
-          background: @gradient;
+          background: @jet-green;
           &::before,
           &::after {
             content: '';
@@ -624,6 +626,28 @@
           &:hover {
             box-shadow: @neu-shadow-inset-gradient-low;
           }
+        }
+      }
+      &[disabled] {
+        + span {
+          cursor: not-allowed;
+          opacity: @half-opacity;
+
+          &:hover {
+            box-shadow: @neu-shadow-inset;
+          }
+        }
+      }
+    }
+    // Antd Checkbox
+    .ant-checkbox-wrapper {
+      span:last-of-type {
+        font-size: @base-font-size;
+        margin-top: 1px;
+      }
+      &-disabled {
+        span:last-of-type {
+          opacity: @half-opacity;
         }
       }
     }
