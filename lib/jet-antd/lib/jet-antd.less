@@ -964,6 +964,7 @@
 
   // Antd Divider
   .ant-divider {
+    position: relative;
     width: 100%;
     min-width: 50px;
     height: 3px;
@@ -977,6 +978,60 @@
       min-width: unset;
       height: 100%;
       min-height: 50px;
+    }
+
+    &-with-text {
+      height: auto;
+      box-shadow: unset;
+      background: unset;
+      &::before, &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width:30%;
+        height: 3px;
+        border-radius: @border-radius;
+        box-shadow: @neu-shadow-inset-low;
+        background: @grey;
+        z-index: 1;
+      }
+      &::after {
+        left: unset;
+        right: 0;
+      }
+      span {
+        opacity: @half-opacity;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+      }
+
+      &-left {
+        &::before {
+          width: 10%;
+        }
+        &::after {
+          width: 45%;
+        }
+        span {
+          left: 40%;
+        }
+      }
+      &-right {
+        &::before {
+          width: 45%;
+        }
+        &::after {
+          width: 10%;
+        }
+        span {
+          left: 75%;
+        }
+      }
     }
   }
 
@@ -1908,29 +1963,31 @@
     }
   }
 
-  // Antd list
+  // Antd List
   .ant-list {
     position: relative;
+    width: 100%;
     margin: @spacing-sm 0;
-    padding: @spacing-xs @spacing-sm;
     border-radius: @border-radius;
-    box-shadow: @neu-shadow-low;
     color: @black;
     font-size: @base-font-size;
     list-style: none;
 
     &-items {
       padding: 0;
+      margin: 0;
     }
-    &-item {
+    &-header, &-footer  {
+      opacity: @disabled-opacity;
+    }
+    &-header, &-item, &-footer {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: space-between;
-      padding: @spacing-sm;
-      color: @black;
-      border-bottom: 2px solid @grey;
+      padding: @spacing-md @spacing-lg;
+      border-bottom: 1px solid @dark-grey;
       &:last-of-type {
-        border: unset;
+        border-bottom: unset;
       }
 
       &-meta {
@@ -1958,8 +2015,32 @@
         -webkit-text-fill-color: transparent;
       }
     }
-    &-something-after-last-item {
-      padding-bottom: @spacing-lg;
+    &-footer {
+      border-top: 1px solid @dark-grey;
+    }
+
+    // Empty
+    .ant-empty {
+      padding: @spacing-md;
+      opacity: @disabled-opacity;
+      background: @white;
+      &-image {
+        display: none;
+      }
+      &-description {
+        text-transform: uppercase;
+      }
+    }
+    
+    // Bordered
+    &-bordered {
+      border: 1px solid @dark-grey;
+      background: @grey;
+    }
+
+    // Small
+    &-sm {
+      font-size: @sm-font-size;
     }
   }
 
@@ -1972,7 +2053,8 @@
       margin-left: 2px;
       border-radius: @round-radius;
       padding: 1px 5px 0 5px;
-      // shimmer
+
+      // Shimmer Effect for Notifications
       background: #e5ebf4 -webkit-gradient(linear, 100% 0, 0 0, from(#e5ebf4), color-stop(0.5, #a9aaab), to(#e5ebf4));
       background-position: 50px top;
       background-size: 50px 100%;

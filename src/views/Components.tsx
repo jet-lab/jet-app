@@ -18,7 +18,8 @@ import {
   Slider,
   Switch,
   Card,
-  Collapse
+  Collapse,
+  List
 } from 'antd';
 import { CheckOutlined, CloseOutlined, DownOutlined, PoweroffOutlined } from '@ant-design/icons';
 import { useDarkTheme } from '../contexts/darkTheme';
@@ -30,6 +31,7 @@ export function Components(): JSX.Element {
   const { darkTheme, toggleDarkTheme } = useDarkTheme();
   const [value, setValue] = useState('A');
 
+  // Card
   const [activeTabKey, setActiveTabKey] = useState('tab1');
   const tabList = [
     {
@@ -46,7 +48,17 @@ export function Components(): JSX.Element {
     tab2: <p>Content 2</p>
   };
 
+  // Collapse
   const panelText = 'Jet is the coolest place to work, period. Cooler than anywhere else in the tri-state area.';
+
+  // List
+  const listData = [
+    'Data in a list 1.',
+    'Data in a list 2.',
+    'Data in a list 3.',
+    'Data in a list 4.',
+    'Data in a list 5.'
+  ];
 
   const menu = (
     <Menu>
@@ -326,8 +338,8 @@ return (
         <div className="flex justify-between align-start">
           <div className="flex column align-start" style={{ width: '200px' }}>
             <Title underline>Divider</Title>
-            <br />
             <Divider />
+            <Divider orientation="left">Divider Text</Divider>
             <Divider type="vertical" />
           </div>
           <div className="code-block">
@@ -337,6 +349,7 @@ return (
 import { Divider } from 'antd';
 
 <Divider />
+<Divider orientation="left">Divider Text</Divider>
 <Divider type="vertical" />
               `}
               language="jsx"
@@ -829,13 +842,80 @@ return (
       <div className="component">
         <div className="flex justify-between align-start">
           <div className="flex column">
-            <Title underline></Title>
+            <Title underline>List</Title>
+            <br />
+            <List
+              style={{ width: 300 }}
+              header={<div>Header</div>}
+              footer={<div>Footer</div>}
+              bordered
+              dataSource={listData}
+              renderItem={item => (
+                <List.Item>
+                  <Typography.Text mark>[ITEM]</Typography.Text> {item}
+                </List.Item>
+              )}
+            />
+            <br />
+            <List
+              style={{ width: 150 }}
+              size="small"
+              header={<div>Header</div>}
+              footer={<div>Footer</div>}
+              dataSource={listData}
+              renderItem={item => <List.Item>{item}</List.Item>}
+            />
+            <br />
+            <List
+              header={<div>No Data Example</div>}
+              dataSource={[]}
+              renderItem={item => <List.Item>{item}</List.Item>}
+            />
           </div>
           <div className="code-block">
             <CopyBlock
               theme={dracula}
               language="jsx"
               text={`
+import { List, Typography } from 'antd';
+
+const listData = [
+  'Data in a list 1.',
+  'Data in a list 2.',
+  'Data in a list 3.',
+  'Data in a list 4.',
+  'Data in a list 5.'
+];
+
+return (
+  <List
+    style={{ width: 300 }}
+    header={<div>Header</div>}
+    footer={<div>Footer</div>}
+    bordered
+    dataSource={listData}
+    renderItem={item => (
+      <List.Item>
+        <Typography.Text mark>[ITEM]</Typography.Text> {item}
+      </List.Item>
+    )}
+  />
+  
+  <List
+    style={{ width: 150 }}
+    size="small"
+    header={<div>Header</div>}
+    footer={<div>Footer</div>}
+    dataSource={listData}
+    renderItem={item => <List.Item>{item}</List.Item>}
+  />
+  
+  <List
+    header={<div>No Data Example</div>}
+    dataSource={[]}
+    renderItem={item => <List.Item>{item}</List.Item>}
+  />
+);
               `}
             />
           </div>
