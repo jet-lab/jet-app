@@ -1946,6 +1946,28 @@
         }
       }
     }
+    &-pending {
+      .ant-timeline-item {
+        &-last {
+          .ant-timeline-item-tail {
+            display: unset;
+          }
+        }
+        &-pending {
+          .ant-timeline-item-head {
+            background: @grey;
+          }
+          .ant-timeline-item-tail {
+            display: none;
+          }
+          .anticon {
+            position: absolute;
+            top: -1px;
+            left: -1px;
+          }
+        }
+      }
+    }
   }
 
   // Antd Slider
@@ -2173,18 +2195,28 @@
   // Antd Tag
   .ant-tag {
     padding: @spacing-xs @spacing-sm;
+    margin: @spacing-xs;
     border-radius: @btn-radius;
-    box-shadow: @neu-shadow-low;
+    border: 1px solid @dark-grey;
     background: @grey;
+    opacity: @disabled-opacity;
+    transition: opacity @transition-duration ease-in-out;
     span {
       margin: 0 0 0 @spacing-sm;
     }
 
     &-has-color {
       color: @white;
+      svg path {
+        fill: @white;
+      }
     }
     &-hidden {
       display: none;
+    }
+
+    &:hover {
+      opacity: 1;
     }
   }
 

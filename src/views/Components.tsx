@@ -22,7 +22,10 @@ import {
   List,
   Popover,
   Table,
-  Tabs
+  Tabs,
+  Tag,
+  Timeline,
+  Tooltip
 } from 'antd';
 import { CheckOutlined, CloseOutlined, DownOutlined, PoweroffOutlined } from '@ant-design/icons';
 import { useDarkTheme } from '../contexts/darkTheme';
@@ -35,6 +38,7 @@ export function Components(): JSX.Element {
   const { darkTheme, toggleDarkTheme } = useDarkTheme();
   const [value, setValue] = useState('A');
   const [popoverVisible, setPopoverVisible] = useState(false);
+  const [tooltipVisible, setTooltipVisible] = useState(false);
 
   // Table
   const tableDataSource = [
@@ -730,7 +734,9 @@ return (
                 <h1>Custom JSX</h1>
                 <Divider />
                 <p>Fully custom card.</p>
-                <Button block>More</Button>
+                <Button type="dashed" block>
+                  More
+                </Button>
               </div>
             </Card>
             <br />
@@ -794,7 +800,7 @@ return (
       <h1>Custom JSX</h1>
       <Divider />
       <p>Fully custom card.</p>
-      <Button block>More</Button>
+      <Button type="dashed" block>More</Button>
     </div>
   </Card>
 
@@ -1146,6 +1152,150 @@ const { TabPane } = Tabs;
     Content of Tab Pane 3
   </TabPane>
 </Tabs>
+              `}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="component">
+        <div className="flex justify-between align-start">
+          <div className="flex column">
+            <Title underline>Tag</Title>
+            <br />
+            <div className="flex justify-start align-center">
+              <Tag>Tag 1</Tag>
+              <Tag closable onClose={() => null}>
+                Tag 2
+              </Tag>
+            </div>
+            <br />
+            <div className="flex justify-start align-center">
+              <Tag color="var(--success)">Success</Tag>
+              <Tag color="var(--failure)" closable onClose={() => null}>
+                Failure
+              </Tag>
+              <Tag color="#a13090">Custom Color</Tag>
+            </div>
+          </div>
+          <div className="code-block">
+            <CopyBlock
+              theme={dracula}
+              language="jsx"
+              text={`
+import { Tag } from 'antd';
+
+return (
+  <div className="flex justify-start align-center">
+    <Tag>Tag 1</Tag>
+    <Tag closable onClose={() => null}>
+      Tag 2
+    </Tag>
+  </div>
+
+  <div className="flex justify-start align-center">
+    <Tag color="var(--success)">Success</Tag>
+    <Tag color="var(--failure)" closable onClose={() => null}>
+      Failure
+    </Tag>
+    <Tag color="#a13090">Custom Color</Tag>
+  </div>
+);
+              `}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="component">
+        <div className="flex justify-between align-start">
+          <div className="flex column">
+            <Title underline>Timeline</Title>
+            <br />
+            <Timeline pending={<>Pending item at end</>}>
+              <Timeline.Item>First item</Timeline.Item>
+              <Timeline.Item color="#e3cb79">The third, with a custom color</Timeline.Item>
+              <Timeline.Item>Last item</Timeline.Item>
+            </Timeline>
+          </div>
+          <div className="code-block">
+            <CopyBlock
+              theme={dracula}
+              language="jsx"
+              text={`
+import { Timeline } from 'antd';
+
+return (
+  <Timeline pending={<>Pending item at end</>}>
+    <Timeline.Item>First item</Timeline.Item>
+    <Timeline.Item 
+      color="#e3cb79">
+      The third, with a custom color
+    </Timeline.Item>
+    <Timeline.Item>Last item</Timeline.Item>
+  </Timeline>
+);
+              `}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="component">
+        <div className="flex justify-between align-start">
+          <div className="flex column">
+            <Title underline>Tooltip</Title>
+            <br />
+            <Tooltip title="prompt text">
+              <span>Hover me.</span>
+            </Tooltip>
+            <br />
+            <Tooltip title="This is another tooltip, that you had to click." visible={tooltipVisible} trigger="click">
+              <Button ghost onClick={() => setTooltipVisible(!tooltipVisible)}>
+                {tooltipVisible ? 'Close' : 'Open'}
+              </Button>
+            </Tooltip>
+          </div>
+          <div className="code-block">
+            <CopyBlock
+              theme={dracula}
+              language="jsx"
+              text={`
+import { Tooltip, Button } from 'antd';
+
+const [tooltipVisible, setTooltipVisible] = useState(false);
+
+return (
+  <Tooltip title="Prompt text">
+    <span>Hover me.</span>
+  </Tooltip>
+
+  <Tooltip
+    title="This is another tooltip, that you had to click."
+    visible={tooltipVisible}
+    trigger="click">
+    <Button ghost onClick={() => setTooltipVisible(!tooltipVisible)}>
+      {tooltipVisible ? 'Close' : 'Open'}
+    </Button>
+  </Tooltip>
+);
+              `}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="component">
+        <div className="flex justify-between align-start">
+          <div className="flex column">
+            <Title underline></Title>
+            <br />
+          </div>
+          <div className="code-block">
+            <CopyBlock
+              theme={dracula}
+              language="jsx"
+              text={`
               `}
             />
           </div>
