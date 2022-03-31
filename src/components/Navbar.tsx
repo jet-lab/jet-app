@@ -16,7 +16,7 @@ export function Navbar(): JSX.Element {
   const [drawerOpened, setDrawerOpened] = useState(false);
   const navLinks = [
     { title: 'Components', route: '/' },
-    { title: 'Variables', route: '/variables' }
+    { title: 'Resources', route: '/resources' }
   ];
   const mobileFooterLinks = [{ title: 'Website', url: 'https://www.jetprotocol.io/' }];
   const accountLink = { title: 'Components', route: '/' };
