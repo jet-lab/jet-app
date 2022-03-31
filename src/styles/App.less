@@ -25,6 +25,9 @@
   max-width: 525px;
   padding-left: 20px;
   background: black;
+  &.full-width {
+    max-width: 100%;
+  }
   * {
     font-size: 12px !important;
   }
@@ -45,5 +48,27 @@
   }
   button {
     display: none;
+  }
+}
+
+.components-nav {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: @spacing-sm;
+  border-radius: @border-radius;
+  box-shadow: @drop-shadow;
+  border: 2px solid white;
+  background: black;
+  z-index: 10000;
+  div {
+    flex-wrap: wrap;
+  }
+
+  span {
+    margin: @spacing-xs;
+    font-size: @xs-font-size;
+    color: white;
   }
 }

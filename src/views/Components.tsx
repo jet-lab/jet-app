@@ -25,7 +25,13 @@ import {
   Tabs,
   Tag,
   Timeline,
-  Tooltip
+  Tooltip,
+  Alert,
+  message,
+  notification,
+  Modal,
+  Progress,
+  Skeleton
 } from 'antd';
 import { CheckOutlined, CloseOutlined, DownOutlined, PoweroffOutlined } from '@ant-design/icons';
 import { useDarkTheme } from '../contexts/darkTheme';
@@ -39,6 +45,7 @@ export function Components(): JSX.Element {
   const [value, setValue] = useState('A');
   const [popoverVisible, setPopoverVisible] = useState(false);
   const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   // Table
   const tableDataSource = [
@@ -122,9 +129,65 @@ export function Components(): JSX.Element {
     </Menu>
   );
 
+  // All components + scrolling
+  const components = [
+    'Typography',
+    'Button',
+    'Radio',
+    'Breadcrumb',
+    'Dropdown',
+    'Select',
+    'Pageheader',
+    'Pagination',
+    'Checkbox',
+    'Input',
+    'Slider',
+    'Switch',
+    'Card',
+    'Collapse',
+    'Divider',
+    'List',
+    'Popover',
+    'Table',
+    'Tabs',
+    'Tag',
+    'Timeline',
+    'Tooltip',
+    'Alert',
+    'Message',
+    'Notification',
+    'Modal',
+    'Progress',
+    'Skeleton'
+  ];
+  components.sort();
+  const jumpToComponent = (component: string) => {
+    const comp = document.getElementById(component.toLowerCase().replaceAll(' ', '-'));
+    if (comp) {
+      window.scrollTo(comp.offsetLeft, comp.offsetTop - 50);
+    }
+  };
+
   return (
     <div className="container flex column align-start">
-      <div className="component">
+      <div className="components-nav flex-centered column">
+        <div className="flex-centered">
+          <span className="text-btn" onClick={() => jumpToComponent('navbar')}>
+            Navbar
+          </span>
+          <span className="text-btn" onClick={() => jumpToComponent('connect-wallet')}>
+            Connect Wallet
+          </span>
+        </div>
+        <div className="flex-centered">
+          {components.map(comp => (
+            <span className="text-btn" onClick={() => jumpToComponent(comp)}>
+              {comp.charAt(0).toUpperCase() + comp.slice(1)}
+            </span>
+          ))}
+        </div>
+      </div>
+      <div className="component" id="typography">
         <div className="flex justify-between align-start">
           <div className="flex align-start column">
             <Title className="component-title" underline>
@@ -186,71 +249,10 @@ return (
         </div>
       </div>
 
-      <div className="component">
-        <div className="flex justify-between align-start">
-          <div className="flex column">
-            <Title className="component-title" underline>
-              Radios
-            </Title>
-            <br />
-            <Radio>Basic Radio</Radio>
-            <br />
-            <br />
-            <Radio.Group value={value} onChange={e => setValue(e.target.value)}>
-              <Radio value="A">A</Radio>
-              <Radio value="B">B</Radio>
-              <Radio value="C">C</Radio>
-            </Radio.Group>
-            <br />
-            <br />
-            <Radio.Group value={value} onChange={e => setValue(e.target.value)}>
-              <Radio.Button value="A">A</Radio.Button>
-              <Radio.Button value="B">B</Radio.Button>
-              <Radio.Button value="C">C</Radio.Button>
-            </Radio.Group>
-          </div>
-          <div className="code-block">
-            <CopyBlock
-              theme={dracula}
-              text={`
-import { useState } from 'react';
-import { Radio } from 'antd';
-
-const [value, setValue] = useState('A');
-
-return (
-  <Radio>Basic Radio</Radio>
-
-  <Radio.Group 
-    value={value} 
-    onChange={e => setValue(e.target.value)}
-  >
-    <Radio value="A">A</Radio>
-    <Radio value="B">B</Radio>
-    <Radio value="C">C</Radio>
-    <Radio value="D">D</Radio>
-  </Radio.Group>
-
-  <Radio.Group 
-    value={value} 
-    onChange={e => setValue(e.target.value)}
-  >
-    <Radio.Button value="A">A</Radio.Button>
-    <Radio.Button value="B">B</Radio.Button>
-    <Radio.Button value="C">C</Radio.Button>
-  </Radio.Group>
-);
-              `}
-              language="jsx"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="component">
+      <div className="component" id="button">
         <div className="flex justify-between align-start">
           <div className="flex align-start column">
-            <Title underline>Buttons</Title>
+            <Title underline>Button</Title>
             <br />
             <div className="flex align-end">
               <Button size="small">Default</Button>
@@ -382,23 +384,60 @@ return (
         </div>
       </div>
 
-      <div className="component">
+      <div className="component" id="radio">
         <div className="flex justify-between align-start">
-          <div className="flex column align-start" style={{ width: '200px' }}>
-            <Title underline>Divider</Title>
-            <Divider />
-            <Divider orientation="left">Divider Text</Divider>
-            <Divider type="vertical" />
+          <div className="flex column">
+            <Title className="component-title" underline>
+              Radio
+            </Title>
+            <br />
+            <Radio>Basic Radio</Radio>
+            <br />
+            <br />
+            <Radio.Group value={value} onChange={e => setValue(e.target.value)}>
+              <Radio value="A">A</Radio>
+              <Radio value="B">B</Radio>
+              <Radio value="C">C</Radio>
+            </Radio.Group>
+            <br />
+            <br />
+            <Radio.Group value={value} onChange={e => setValue(e.target.value)}>
+              <Radio.Button value="A">A</Radio.Button>
+              <Radio.Button value="B">B</Radio.Button>
+              <Radio.Button value="C">C</Radio.Button>
+            </Radio.Group>
           </div>
           <div className="code-block">
             <CopyBlock
               theme={dracula}
               text={`
-import { Divider } from 'antd';
+import { useState } from 'react';
+import { Radio } from 'antd';
 
-<Divider />
-<Divider orientation="left">Divider Text</Divider>
-<Divider type="vertical" />
+const [value, setValue] = useState('A');
+
+return (
+  <Radio>Basic Radio</Radio>
+
+  <Radio.Group 
+    value={value} 
+    onChange={e => setValue(e.target.value)}
+  >
+    <Radio value="A">A</Radio>
+    <Radio value="B">B</Radio>
+    <Radio value="C">C</Radio>
+    <Radio value="D">D</Radio>
+  </Radio.Group>
+
+  <Radio.Group 
+    value={value} 
+    onChange={e => setValue(e.target.value)}
+  >
+    <Radio.Button value="A">A</Radio.Button>
+    <Radio.Button value="B">B</Radio.Button>
+    <Radio.Button value="C">C</Radio.Button>
+  </Radio.Group>
+);
               `}
               language="jsx"
             />
@@ -406,7 +445,7 @@ import { Divider } from 'antd';
         </div>
       </div>
 
-      <div className="component">
+      <div className="component" id="breadcrumb">
         <div className="flex justify-between align-start">
           <div className="flex column align-start">
             <Title underline>Breadcrumb</Title>
@@ -428,7 +467,9 @@ import { Divider } from 'antd';
             <br />
             <br />
             <br />
-            <Title underline>Dropdown</Title>
+            <Title id="dropdown" underline>
+              Dropdown
+            </Title>
             <br />
             <Dropdown overlay={menu}>
               <Paragraph>
@@ -449,7 +490,9 @@ import { Divider } from 'antd';
             <br />
             <br />
             <br />
-            <Title underline>Select</Title>
+            <Title id="select" underline>
+              Select
+            </Title>
             <br />
             <Select value={value} onChange={value => setValue(value)}>
               <Option key="A" value="A">
@@ -531,7 +574,7 @@ return (
         </div>
       </div>
 
-      <div className="component">
+      <div className="component" id="pageheader">
         <div className="flex justify-between align-start">
           <div className="flex column">
             <Title underline>PageHeader</Title>
@@ -559,7 +602,7 @@ return (
         </div>
       </div>
 
-      <div className="component">
+      <div className="component" id="pagination">
         <div className="flex justify-between align-start">
           <div className="flex column">
             <Title underline>Pagination</Title>
@@ -582,7 +625,7 @@ return (
         </div>
       </div>
 
-      <div className="component">
+      <div className="component" id="checkbox">
         <div className="flex justify-between align-start">
           <div className="flex column">
             <Title underline>Checkbox</Title>
@@ -611,10 +654,10 @@ return (
         </div>
       </div>
 
-      <div className="component">
+      <div className="component" id="input">
         <div className="flex justify-between align-start">
           <div className="flex column">
-            <Title underline>Inputs</Title>
+            <Title underline>Input</Title>
             <br />
             <Input placeholder="Basic Input" />
             <br />
@@ -637,7 +680,7 @@ return (
         </div>
       </div>
 
-      <div className="component">
+      <div className="component" id="slider">
         <div className="flex justify-between align-start">
           <div className="flex column" style={{ width: 200 }}>
             <Title underline>Slider</Title>
@@ -682,7 +725,7 @@ return (
         </div>
       </div>
 
-      <div className="component">
+      <div className="component" id="switch">
         <div className="flex justify-between align-start">
           <div className="flex column align-start">
             <Title underline>Switch</Title>
@@ -724,7 +767,7 @@ return (
         </div>
       </div>
 
-      <div className="component">
+      <div className="component" id="card">
         <div className="flex justify-between align-start">
           <div className="flex column">
             <Title underline>Card</Title>
@@ -840,7 +883,7 @@ return (
         </div>
       </div>
 
-      <div className="component">
+      <div className="component" id="collapse">
         <div className="flex justify-between align-start">
           <div className="flex column">
             <Title underline>Collapse</Title>
@@ -889,7 +932,31 @@ return (
         </div>
       </div>
 
-      <div className="component">
+      <div className="component" id="divider">
+        <div className="flex justify-between align-start">
+          <div className="flex column align-start" style={{ width: '200px' }}>
+            <Title underline>Divider</Title>
+            <Divider />
+            <Divider orientation="left">Divider Text</Divider>
+            <Divider type="vertical" />
+          </div>
+          <div className="code-block">
+            <CopyBlock
+              theme={dracula}
+              text={`
+import { Divider } from 'antd';
+
+<Divider />
+<Divider orientation="left">Divider Text</Divider>
+<Divider type="vertical" />
+              `}
+              language="jsx"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="component" id="list">
         <div className="flex justify-between align-start">
           <div className="flex column">
             <Title underline>List</Title>
@@ -972,7 +1039,7 @@ return (
         </div>
       </div>
 
-      <div className="component">
+      <div className="component" id="popover">
         <div className="flex justify-between align-start">
           <div className="flex column">
             <Title underline>Popover</Title>
@@ -1041,7 +1108,7 @@ return (
         </div>
       </div>
 
-      <div className="component">
+      <div className="component" id="table">
         <div className="flex justify-between align-start">
           <div className="flex column">
             <Title underline>Table</Title>
@@ -1115,7 +1182,7 @@ return (
         </div>
       </div>
 
-      <div className="component">
+      <div className="component" id="tabs">
         <div className="flex justify-between align-start">
           <div className="flex column">
             <Title underline>Tabs</Title>
@@ -1158,7 +1225,7 @@ const { TabPane } = Tabs;
         </div>
       </div>
 
-      <div className="component">
+      <div className="component" id="tag">
         <div className="flex justify-between align-start">
           <div className="flex column">
             <Title underline>Tag</Title>
@@ -1207,7 +1274,7 @@ return (
         </div>
       </div>
 
-      <div className="component">
+      <div className="component" id="timeline">
         <div className="flex justify-between align-start">
           <div className="flex column">
             <Title underline>Timeline</Title>
@@ -1241,7 +1308,7 @@ return (
         </div>
       </div>
 
-      <div className="component">
+      <div className="component" id="tooltip">
         <div className="flex justify-between align-start">
           <div className="flex column">
             <Title underline>Tooltip</Title>
@@ -1285,70 +1352,503 @@ return (
         </div>
       </div>
 
-      <div className="component">
+      <div className="component" id="alert">
         <div className="flex justify-between align-start">
-          <div className="flex column">
-            <Title underline></Title>
-            <br />
+          <div className="flex column" style={{ width: 300 }}>
+            <Title underline>Alert</Title>
+            <Alert message="Basic Info Text" type="info" />
+            <Alert message="Success Text" type="success" />
+            <Alert
+              message="Warning Text"
+              type="warning"
+              description="Warning Description Warning Warning Description"
+              showIcon
+              closable
+            />
+            <Alert message="Error Text" type="error" showIcon closable />
           </div>
           <div className="code-block">
             <CopyBlock
               theme={dracula}
               language="jsx"
               text={`
+import { Alert } from 'antd';
+
+return (
+  <Alert message="Basic Info Text" type="info" />
+  <Alert message="Success Text" type="success" />
+  <Alert
+    message="Warning Text"
+    type="warning"
+    description="Warning Description Warning Warning Description"
+    showIcon
+    closable
+  />
+  <Alert message="Error Text" type="error" showIcon closable />
+);
               `}
             />
           </div>
         </div>
       </div>
 
-      <div className="component">
+      <div className="component" id="message">
         <div className="flex justify-between align-start">
-          <div className="flex column">
-            <Title underline></Title>
+          <div className="flex column align-start">
+            <Title underline>Message</Title>
             <br />
+            Click These:
+            <Button type="dashed" onClick={() => message.info('This is a normal message')}>
+              Normal
+            </Button>
+            <Button type="dashed" onClick={() => message.success('This is a success message')}>
+              Success
+            </Button>
+            <Button type="dashed" onClick={() => message.warning('This is a warning message')}>
+              Warning
+            </Button>
+            <Button type="dashed" onClick={() => message.error('This is an error message')}>
+              Error
+            </Button>
           </div>
           <div className="code-block">
             <CopyBlock
               theme={dracula}
               language="jsx"
               text={`
+import { message, Button } from 'antd';
+
+return (
+  <Button type="dashed" 
+    onClick={() => message.info('This is a normal message')}>
+    Normal
+  </Button>
+  <Button type="dashed" 
+    onClick={() => message.success('This is a success message')}>
+    Success
+  </Button>
+  <Button type="dashed" 
+    onClick={() => message.warning('This is a warning message')}>
+    Warning
+  </Button>
+  <Button type="dashed" 
+    onClick={() => message.error('This is an error message')}>
+    Error
+  </Button>
+);
               `}
             />
           </div>
         </div>
       </div>
 
-      <div className="component">
+      <div className="component" id="notification">
         <div className="flex justify-between align-start">
-          <div className="flex column">
-            <Title underline></Title>
+          <div className="flex column align-start">
+            <Title underline>Notification</Title>
             <br />
+            Click These:
+            <Button
+              ghost
+              onClick={() =>
+                notification.open({
+                  message: 'This is a normal notification',
+                  description: 'This is a normal notification description',
+                  onClick: () => null
+                })
+              }>
+              Normal
+            </Button>
+            <Button
+              ghost
+              onClick={() =>
+                notification.success({
+                  message: 'This is a success notification',
+                  description: 'This is a success notification description',
+                  onClick: () => null
+                })
+              }>
+              Success
+            </Button>
+            <Button
+              ghost
+              onClick={() =>
+                notification.warning({
+                  message: 'This is a warning notification',
+                  description: 'This is a warning notification description',
+                  onClick: () => null
+                })
+              }>
+              Warning
+            </Button>
+            <Button
+              ghost
+              onClick={() =>
+                notification.error({
+                  message: 'This is a error notification',
+                  description: 'This is a error notification description',
+                  onClick: () => null
+                })
+              }>
+              Error
+            </Button>
           </div>
           <div className="code-block">
             <CopyBlock
               theme={dracula}
               language="jsx"
               text={`
+import { notification, Button } from 'antd';
+
+return (
+  <Button
+    ghost
+    onClick={() =>
+      notification.open({
+        message: 'This is a normal notification',
+        description: 'This is a normal notification description',
+        onClick: () => null
+      })
+    }>
+    Normal
+  </Button>
+  <Button
+    ghost
+    onClick={() =>
+      notification.success({
+        message: 'This is a success notification',
+        description: 'This is a success notification description',
+        onClick: () => null
+      })
+    }>
+    Success
+  </Button>
+  <Button
+    ghost
+    onClick={() =>
+      notification.warning({
+        message: 'This is a warning notification',
+        description: 'This is a warning notification description',
+        onClick: () => null
+      })
+    }>
+    Warning
+  </Button>
+  <Button
+    ghost
+    onClick={() =>
+      notification.error({
+        message: 'This is a error notification',
+        description: 'This is a error notification description',
+        onClick: () => null
+      })
+    }>
+    Error
+  </Button>
+);
               `}
             />
           </div>
         </div>
       </div>
 
-      <div className="component">
+      <div className="component" id="modal">
         <div className="flex justify-between align-start">
           <div className="flex column">
-            <Title underline></Title>
+            <Title underline>Modal</Title>
             <br />
+            <Button type="primary" onClick={() => setModalVisible(true)}>
+              Open Modal
+            </Button>
+            <Modal
+              title="Modal"
+              visible={modalVisible}
+              onOk={() => setModalVisible(false)}
+              onCancel={() => setModalVisible(false)}>
+              <p>Some contents...</p>
+              <p>Some more contents and stuff...</p>
+            </Modal>
           </div>
           <div className="code-block">
             <CopyBlock
               theme={dracula}
               language="jsx"
               text={`
+import { Modal, Button } from 'antd';
+
+const [modalVisible, setModalVisible] = useState(false);
+
+return (
+  <Button type="primary" onClick={() => setModalVisible(true)}>
+    Open Modal
+  </Button>
+  
+  <Modal
+    title="Modal"
+    visible={modalVisible}
+    onOk={() => setModalVisible(false)}
+    onCancel={() => setModalVisible(false)}>
+    <p>Some contents...</p>
+    <p>Some more contents and stuff...</p>
+  </Modal>
+);
               `}
             />
+          </div>
+        </div>
+      </div>
+
+      <div className="component" id="progress">
+        <div className="flex justify-between align-start">
+          <div className="flex column">
+            <Title underline>Progress</Title>
+            <br />
+            <Progress percent={30} showInfo={false} />
+            <Progress percent={50} status="active" />
+            <Progress percent={70} status="exception" />
+            <Progress percent={100} />
+            <br />
+            <Progress type="circle" percent={75} width={80} />
+            <Progress type="circle" percent={100} />
+            <Progress type="circle" percent={70} status="exception" width={90} />
+          </div>
+          <div className="code-block">
+            <CopyBlock
+              theme={dracula}
+              language="jsx"
+              text={`
+import { Progress } from 'antd';
+
+return (
+  <Progress percent={30} showInfo={false} />
+  <Progress percent={50} status="active" />
+  <Progress percent={70} status="exception" />
+  <Progress percent={100} />
+  
+  <Progress type="circle" percent={75} width={80} />
+  <Progress type="circle" percent={100} />
+  <Progress type="circle" percent={70} status="exception" width={90} />
+);
+              `}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="component" id="skeleton">
+        <div className="flex justify-between align-start">
+          <div className="flex column">
+            <Title underline>Skeleton</Title>
+            <Skeleton paragraph={{ rows: 2 }} />
+            <Skeleton paragraph={{ rows: 6 }} active />
+          </div>
+          <div className="code-block">
+            <CopyBlock
+              theme={dracula}
+              language="jsx"
+              text={`
+import { Skeleton } from 'antd';
+
+return (
+  <Skeleton paragraph={{ rows: 2 }} />
+  <Skeleton paragraph={{ rows: 6 }} active />
+);
+              `}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="component" id="navbar">
+        <div className="flex justify-between align-start">
+          <div>
+            <Title underline>Navbar</Title>
+            <br />
+            <div className="code-block full-width">
+              <CopyBlock
+                theme={dracula}
+                language="jsx"
+                text={`
+import { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { useConnectWalletModal } from '../contexts/connectWalletModal';
+import { useDarkTheme } from '../contexts/darkTheme';
+import { shortenPubkey } from '../utils/utils';
+import { Button, Switch } from 'antd';
+import { ReactComponent as AccountIcon } from '../styles/icons/account_icon.svg';
+import { ReactComponent as WalletIcon } from '../styles/icons/wallet_icon.svg';
+
+export function Navbar(): JSX.Element {
+  const { pathname } = useLocation();
+  const { connected, disconnect, publicKey } = useWallet();
+  const { setConnecting } = useConnectWalletModal();
+  const { darkTheme, toggleDarkTheme } = useDarkTheme();
+  const [drawerOpened, setDrawerOpened] = useState(false);
+  const navLinks = [
+    { title: 'Components', route: '/' },
+    { title: 'Variables', route: '/variables' }
+  ];
+  const mobileFooterLinks = [{ title: 'Website', url: 'https://www.jetprotocol.io/' }];
+  const accountLink = { title: 'Components', route: '/' };
+
+  return (
+    <div className={${'`'}navbar-container flex-centered ${'${'}drawerOpened ? 'drawer-open' : ''}${'`'}}>
+      {/* Desktop Nav */}
+      <nav className="desktop flex align-center justify-between">
+        <Link className="logo flex-centered" to="/">
+          <img src="img/jet/jet_full_white.png" width="100%" height="auto" alt="Jet Protocol" />
+        </Link>
+        <div className="nav-links flex-centered">
+          {navLinks.map(link => (
+            <Link key={link.title} to={link.route} className={${'`'}nav-link ${'${'}pathname === link.route ? 'active' : ''}${'`'}}>
+              {link.title}
+            </Link>
+          ))}
+          <Button
+            ghost
+            className="flex-centered"
+            style={{ textTransform: 'unset' }}
+            title={connected ? 'Disconnect Wallet' : 'Connect Wallet'}
+            onClick={() => (connected ? disconnect() : setConnecting(true))}>
+            <WalletIcon width="20px" />
+            {connected ? ${'`'}${'${'}shortenPubkey(publicKey ? publicKey.toString() : '')} CONNECTED${'`'} : 'CONNECT'}
+          </Button>
+        </div>
+      </nav>
+      {/* Mobile Nav */}
+      <nav className="mobile flex align-center justify-between">
+        <Link className="account" to={accountLink.route}>
+          <AccountIcon width="25px" />
+        </Link>
+        <Link className="logo flex-centered" to="/">
+          <img className="logo" src="img/jet/jet_full_white.png" width="100%" height="auto" alt="Jet Protocol" />
+        </Link>
+        <div
+          className={${'`'}hamburger flex align-center justify-between column ${'${'}drawerOpened ? 'close' : ''}${'`'}}
+          onClick={() => setDrawerOpened(!drawerOpened)}>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div className="drawer flex align-center justify-between column">
+          <div className="drawer-top flex-centered column">
+            {navLinks.map(link => (
+              <Link
+                key={link.title}
+                to={link.route}
+                className={${'`'}nav-link ${'${'}pathname === link.route ? 'active' : ''}${'`'}}
+                onClick={() => setDrawerOpened(false)}>
+                {link.title}
+              </Link>
+            ))}
+            <Button
+              ghost
+              className="flex-centered small-btn"
+              style={{ textTransform: 'unset' }}
+              title={connected ? 'Disconnect Wallet' : 'Connect Wallet'}
+              onClick={() => {
+                if (connected) {
+                  disconnect();
+                } else {
+                  setConnecting(true);
+                  setDrawerOpened(false);
+                }
+              }}>
+              <WalletIcon width="20px" />
+              {connected ? ${'`'}${'${'}shortenPubkey(publicKey ? publicKey.toString() : '')} CONNECTED${'`'} : 'CONNECT'}
+            </Button>
+          </div>
+          <div className="drawer-bottom flex-centered column">
+            {mobileFooterLinks.map(link => (
+              <a key={link.title} href={link.url} className="footer-link" rel="noopener noreferrer" target="_blank">
+                {link.title}
+              </a>
+            ))}
+            <Switch
+              className="secondary-switch"
+              onClick={() => toggleDarkTheme()}
+              checked={darkTheme}
+              checkedChildren="Dark"
+              unCheckedChildren="Light"
+            />
+          </div>
+        </div>
+      </nav>
+    </div>
+  );
+}
+              `}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="component" id="connect-wallet">
+        <div className="flex justify-between align-start">
+          <div>
+            <Title underline>Connect Wallet</Title>
+            <br />
+            <div className="code-block full-width">
+              <CopyBlock
+                theme={dracula}
+                language="jsx"
+                text={`
+import { useEffect } from 'react';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { useConnectWalletModal } from '../contexts/connectWalletModal';
+import { Modal, Divider } from 'antd';
+import { ReactComponent as ArrowIcon } from '../styles/icons/arrow_icon.svg';
+
+export function ConnectWalletModal(): JSX.Element {
+  const { wallets, select, connected, wallet } = useWallet();
+  const { connecting, setConnecting } = useConnectWalletModal();
+  useEffect(() => {
+    if (connected) {
+      setConnecting(false);
+    }
+  }, [connected, setConnecting]);
+
+  return (
+    <Modal
+      footer={null}
+      visible={connecting && !connected}
+      className="connect-wallet-modal"
+      onCancel={() => setConnecting(false)}>
+      <div className="flex-centered column">
+        <img src="img/jet/jet_logo_gradient.png" width="120px" height="auto" alt="Jet Protocol" />
+        <span>Connect your wallet to the world of DeFi.</span>
+        <Divider />
+        <div className="wallets flex-centered column">
+          {wallets.map(w => (
+            <div
+              key={w.name}
+              className={${'`'}wallet flex align-center justify-between 
+              ${'${'}wallet?.name === w.name ? 'active' : ''}${'`'}}
+              onClick={() => {
+                select(w.name);
+              }}>
+              <div className="flex-centered">
+                <img
+                  src={${'`'}img/wallets/${'${'}w.name.toLowerCase()}.png${'`'}}
+                  width="30px"
+                  height="auto"
+                  alt={${'`'}${'${'}w.name} Logo${'`'}}
+                />
+                <p className="center-text">{w.name}</p>
+              </div>
+              <ArrowIcon width="25px" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </Modal>
+  );
+}                
+              `}
+              />
+            </div>
           </div>
         </div>
       </div>

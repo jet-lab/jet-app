@@ -161,7 +161,7 @@
     outline: unset;
   }
   &.ant-scrolling-effect {
-    overflow: unset;
+    overflow: unset !important;
   }
 
   // Svg's
@@ -2048,7 +2048,7 @@
       .ant-skeleton-title {
         width: 30%;
         height: 10px;
-        background: @grey;
+        background: @dark-grey;
         border-radius: @btn-radius;
       }
       .ant-skeleton-paragraph {
@@ -2061,13 +2061,28 @@
           height: 10px;
           margin-top: @spacing-xs;
           list-style: none;
-          background: @grey;
+          background: @dark-grey;
           border-radius: @btn-radius;
         }
       }
     }
     &-active {
-      //animation: ant-skeleton-loading 1.4s ease infinite;
+      * {
+        opacity: 1;
+        animation: skeleton-opacity 1.25s ease infinite;
+      }
+    }
+  }
+  // Shimmer animation
+  @keyframes skeleton-opacity {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.75;
+    }
+    100% {
+      opacity: 1;
     }
   }
 
@@ -2230,38 +2245,15 @@
     align-items: center;
     justify-content: center;
 
-    &-show-info {
-      .ant-progress-outer {
-        width: calc(90% - 20px);
-      }
-
-      .ant-progress-text {
-        width: 30px;
-        margin-left: @spacing-sm;
-        color: @black;
-        font-size: @sm-font-size;
-        white-space: nowrap;
-        word-break: normal;
-      }
-    }
-    &-status-exception {
-      .anticon {
-        color: @failure;
-      }
-    }
-    &-status-success {
-      .anticon {
-        color: @success;
-      }
-    }
     &-line {
-      position: relative;
       width: 100%;
+      position: relative;
       font-size: inherit;
+      display: flex;
+      justify-content: space-between;
 
       .ant-progress-outer {
         width: inherit;
-
         .ant-progress-inner {
           position: relative;
           width: inherit;
@@ -2282,8 +2274,14 @@
           }
         }
       }
+      .ant-progress-text {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: -5px;
+        width: 25px;
+      }
     }
-    // TODO: finish circle styling and options
     &-circle {
       position: relative;
       &-path {
@@ -2295,8 +2293,137 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+        margin: unset;
+        font-size: 130%;
+        text-align: center;
         width: 100%;
+        span {
+          font-size: inherit;
+        }
       }
+    }
+    &-show-info {
+      .ant-progress-outer {
+        margin-right: 25px;
+        &-outer {
+          width: calc(90% - 20px);
+        }
+  
+        &-text {
+          color: @black;
+          font-size: @sm-font-size;
+          white-space: nowrap;
+          word-break: normal;
+        }
+      }
+    }
+
+    &-status-success {
+      span {
+        color: @success;
+      }
+      svg path {
+        fill: @success;
+      }
+      &.ant-progress-line .ant-progress-outer .ant-progress-inner .ant-progress-bg {
+        background: @success;
+      }
+      .ant-progress-circle-path {
+        stroke: @success;
+      }
+    }
+    &-status-exception {
+      span {
+        color: @failure;
+      }
+      svg path {
+        fill: @failure;
+      }
+      &.ant-progress-line .ant-progress-outer .ant-progress-inner .ant-progress-bg {
+        background: @failure;
+      }
+      .ant-progress-circle-path {
+        stroke: @failure;
+      }
+    }
+  }
+
+  // Antd Alert
+  .ant-alert {
+    position: relative;
+    padding: @spacing-md;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background: @gradient;
+    border-radius: @btn-radius;
+    border: 1px solid @grey;
+    color: @white;
+    margin: @spacing-sm 0;
+    width: 100%;
+    &-success {
+      background: @success;
+    }
+    &-warning {
+      background: @warning;
+    }
+    &-error {
+      background: @failure;
+    }
+
+    button {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      margin: unset;
+      margin-top: 1px;
+      padding: unset;
+      background: unset;
+      &:active {
+        box-shadow: unset;
+      }
+    }
+    .anticon {
+      margin-right: @spacing-sm;
+      font-size: @lg-font-size;
+
+      path {
+        fill: @white;
+      }
+    }
+
+    &-with-description {
+      .anticon {
+        position: absolute;
+        top: @spacing-md;
+        left: @spacing-md;
+      }
+      .ant-alert-content {
+        margin-top: -2px;
+        padding-left: 25px;
+      }
+      .ant-alert-message {
+        border-bottom: 1px solid @grey;
+      }
+      .ant-alert-description {
+        margin-top: @spacing-xs;
+        font-size: @sm-font-size;
+        opacity: @subtle-opacity;
+      }
+      button {
+        top: -5px;
+        right: 37px;
+        transform: unset;
+        z-index: 1000;
+      }
+    }
+
+    // Closed
+    &.ant-alert-motion-leave, 
+    &.ant-alert-motion-leave-active, 
+    &.ant-alert-motion {
+      display: none;
     }
   }
 
@@ -2324,12 +2451,34 @@
         left: @spacing-md;
         font-size: @lg-font-size;
       }
+      svg path {
+        fill: @black;
+      }
+      &-success, &-warning, &-error {
+        .ant-notification-notice-message, .ant-notification-notice-description {
+          margin-left: 25px;
+        }
+      }
       &-success {
+        .ant-notification-notice-message {
+          color: @success;
+        }
         svg path {
           fill: @success;
         }
       }
+      &-warning {
+        .ant-notification-notice-message {
+          color: @warning;
+        }
+        svg path {
+          fill: @warning;
+        }
+      }
       &-error {
+        .ant-notification-notice-message {
+          color: @failure;
+        }
         svg path {
           fill: @failure;
         }
@@ -2338,7 +2487,6 @@
         font-weight: @subheader-weight;
         font-size: @sm-font-size;
         margin-top: -2px;
-        margin-left: 30px;
         border-bottom: 1px solid rgba(var(--dark-grey), 0.25);
         line-height: 21px;
         text-transform: uppercase;
@@ -2347,7 +2495,6 @@
         opacity: @subtle-opacity;
         font-size: @base-font-size;
         padding-top: @spacing-xs;
-        margin-left: 30px;
       }
 
       &-close {
@@ -2392,12 +2539,52 @@
     transform: translateX(-50%);
     &-notice {
       width: unset;
-      background: @gradient;
+      background: @grey;
+      border: 1px solid @white;
 
+      &-icon,
+      .anticon {
+        position: relative;
+        top: unset;
+        left: unset;
+        font-size: @lg-font-size;
+        margin-right: @spacing-sm;
+      }
       span {
         opacity: 1;
-        color: @white;
+        color: @black;
         font-size: @base-font-size;
+      }
+    }
+
+    &-success {
+      .anticon {
+        path {
+          fill: @success;
+        }
+      }
+      span {
+        color: @success;
+      }
+    }
+    &-warning {
+      .anticon {
+        path {
+          fill: @warning;
+        }
+      }
+      span {
+        color: @warning;
+      }
+    }
+    &-error {
+      .anticon {
+        path {
+          fill: @failure;
+        }
+      }
+      span {
+        color: @failure;
       }
     }
 
