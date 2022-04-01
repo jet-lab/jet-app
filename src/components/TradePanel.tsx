@@ -25,7 +25,15 @@ export function TradePanel(): JSX.Element {
   const { setAlert } = useAlert();
   const { getExplorerUrl } = useBlockExplorer();
   const { addLog } = useTransactionLogs();
-  const { currentReserve, currentAction, setCurrentAction, currentAmount, setCurrentAmount } = useTradeContext();
+  const {
+    currentReserve,
+    currentAction,
+    setCurrentAction,
+    currentAmount,
+    setCurrentAmount,
+    sendingTrade,
+    setSendingTrade
+  } = useTradeContext();
   const { Option } = Select;
   const tradeActions = ['deposit', 'withdraw', 'borrow', 'repay'];
 
@@ -44,9 +52,6 @@ export function TradePanel(): JSX.Element {
 
   // Adjusted c-ratio if trade were to be submitted
   const [adjustedRatio, setAdjustedRatio] = useState<number>(0);
-
-  // Loading when we send trade
-  const [loading, setLoading] = useState<boolean>(false);
 
   // Adjust interface
   function adjustInterface() {
@@ -308,7 +313,7 @@ export function TradePanel(): JSX.Element {
     let res: TxnResponse = TxnResponse.Cancelled;
     let txids: string[] = [];
     let inputError = '';
-    setLoading(true);
+    setSendingTrade(true);
     // Depositing
     if (tradeAction === 'deposit') {
       // User is depositing more than they have in their wallet
@@ -375,7 +380,7 @@ export function TradePanel(): JSX.Element {
     if (inputError) {
       setInputError(inputError);
       setCurrentAmount(null);
-      setLoading(false);
+      setSendingTrade(false);
       return;
     }
 
@@ -403,6 +408,7 @@ export function TradePanel(): JSX.Element {
 
       // Add Tx Log
       addLog(lastTxn);
+      setCurrentAmount(null);
     } else if (res === TxnResponse.Failed) {
       notification.error({
         message: dictionary.copilot.alert.failed,
@@ -420,7 +426,7 @@ export function TradePanel(): JSX.Element {
     // Readjust interface
     adjustInterface();
     // End trade submit
-    setLoading(false);
+    setSendingTrade(false);
   }
 
   // Readjust interface onmount
@@ -441,7 +447,7 @@ export function TradePanel(): JSX.Element {
           <div
             key={action}
             onClick={() => {
-              if (!loading) {
+              if (!sendingTrade) {
                 setCurrentAction(action as TradeAction);
                 adjustInterface();
               }
@@ -456,7 +462,7 @@ export function TradePanel(): JSX.Element {
           <Select
             value={currentAction}
             onChange={action => {
-              if (!loading) {
+              if (!sendingTrade) {
                 setCurrentAction(action as TradeAction);
                 adjustInterface();
               }
@@ -521,7 +527,7 @@ export function TradePanel(): JSX.Element {
           value={currentAmount}
           maxInput={maxInput}
           disabled={!user.walletInit || disabledInput}
-          loading={loading}
+          loading={sendingTrade}
           error={inputError}
           onClick={() => setInputError('')}
           onChange={(value: number) => {
