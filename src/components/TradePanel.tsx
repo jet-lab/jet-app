@@ -397,7 +397,7 @@ export function TradePanel(): JSX.Element {
             href={getExplorerUrl(lastTxn)}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gradient flex align-center justify-between"
+            className="gradient-text flex align-center justify-between"
             style={{ width: '100%' }}>
             {shortenPubkey(lastTxn, 8)}
             <i className="fas fa-external-link-alt"></i>
@@ -455,7 +455,7 @@ export function TradePanel(): JSX.Element {
             className={`trade-select flex justify-center align-center ${currentAction === action ? 'active' : ''} ${
               darkTheme ? 'dark' : ''
             }`}>
-            <p className="text-gradient semi-bold-text">{dictionary.cockpit[action].toUpperCase()}</p>
+            <p className="gradient-text semi-bold-text">{dictionary.cockpit[action].toUpperCase()}</p>
           </div>
         ))}
         <div className="mobile-trade-select flex-centered">

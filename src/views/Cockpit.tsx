@@ -39,11 +39,11 @@ export function Cockpit(): JSX.Element {
             <br />
             <br />
             <a href="https://www.jetprotocol.io/legal/terms-of-service" target="_blank" rel="noopener noreferrer">
-              <span className="text-gradient text-gradient-btn">{dictionary.termsPrivacy.termsOfService}</span>
+              <span className="gradient-text link-btn">{dictionary.termsPrivacy.termsOfService}</span>
             </a>
             &nbsp;&nbsp;
             <a href="https://www.jetprotocol.io/legal/privacy-policy" target="_blank" rel="noopener noreferrer">
-              <span className="text-gradient text-gradient-btn">{dictionary.termsPrivacy.privacyPolicy}</span>
+              <span className="gradient-text link-btn">{dictionary.termsPrivacy.privacyPolicy}</span>
             </a>
             <br />
             <br />
@@ -70,13 +70,13 @@ export function Cockpit(): JSX.Element {
         <div className="cockpit-top flex align-center justify-between">
           <div className="trade-market-tvl flex align-start justify-center column">
             <h2 className="view-subheader">{dictionary.cockpit.totalSupply}</h2>
-            <h1 className={`view-header ${market.marketInit ? 'text-gradient' : ''}`}>
+            <h1 className={`view-header ${market.marketInit ? 'gradient-text' : ''}`}>
               {market.marketInit ? totalAbbrev(market.totalSupply) : '--'}
             </h1>
           </div>
           <div className="trade-market-tvl flex align-start justify-center column">
             <h2 className="view-subheader">{dictionary.reserveDetail.totalBorrowed}</h2>
-            <h1 className={`view-header ${market.marketInit ? 'text-gradient' : ''}`}>
+            <h1 className={`view-header ${market.marketInit ? 'gradient-text' : ''}`}>
               {market.marketInit ? totalAbbrev(market.totalBorrowed) : '--'}
             </h1>
           </div>
@@ -94,7 +94,7 @@ export function Cockpit(): JSX.Element {
                       !user.position.borrowedValue || user.position.colRatio >= market.minColRatio + 0.25
                         ? 'success-text'
                         : user.position.colRatio <= market.minColRatio + 0.1
-                        ? 'failure-text'
+                        ? 'danger-text'
                         : 'warning-text'
                     }`}
                     style={{ pointerEvents: 'none', fontSize: !user.position.borrowedValue ? '125px' : '' }}>
@@ -115,7 +115,7 @@ export function Cockpit(): JSX.Element {
               <div className="trade-position-value flex-centered column">
                 <h2 className="view-subheader">{dictionary.cockpit.totalDepositedValue}</h2>
                 {user.walletInit ? (
-                  <p className="text-gradient">{currencyFormatter(user.position.depositedValue ?? 0, true)}</p>
+                  <p className="gradient-text">{currencyFormatter(user.position.depositedValue ?? 0, true)}</p>
                 ) : (
                   <p>--</p>
                 )}
@@ -123,7 +123,7 @@ export function Cockpit(): JSX.Element {
               <div className="trade-position-value flex-centered column">
                 <h2 className="view-subheader">{dictionary.cockpit.totalBorrowedValue}</h2>
                 {user.walletInit ? (
-                  <p className="text-gradient">{currencyFormatter(user.position.borrowedValue ?? 0, true)}</p>
+                  <p className="gradient-text">{currencyFormatter(user.position.borrowedValue ?? 0, true)}</p>
                 ) : (
                   <p>--</p>
                 )}

@@ -103,7 +103,7 @@ export function MarketTable(): JSX.Element {
               setFilteredMarketTable(filteredMarket);
             }}
           />
-          <i className="text-gradient fas fa-search"></i>
+          <i className="gradient-text fas fa-search"></i>
         </div>
         <div className="table-container">
           <table>
@@ -224,7 +224,7 @@ export function MarketTable(): JSX.Element {
                         }
                       }}>
                       <i
-                        className="clickable-icon text-gradient fas fa-parachute-box"
+                        className="clickable-icon gradient-text fas fa-parachute-box"
                         title={`Airdrop ${reserve.abbrev}`}></i>
                     </td>
                   ) : (

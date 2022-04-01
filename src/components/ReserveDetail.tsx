@@ -43,7 +43,7 @@ export function ReserveDetail(props: { reserve: Reserve; close: () => void }): J
         </div>
         <div className="flex-centered column">
           <span className="flex-centered">{dictionary.reserveDetail.reserveSize.toUpperCase()}</span>
-          <h1 className="text-gradient">
+          <h1 className="gradient-text">
             {currencyFormatter(
               nativeValues
                 ? props.reserve?.marketSize.tokens
