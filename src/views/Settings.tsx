@@ -48,11 +48,11 @@ export function Settings(): JSX.Element {
                   style={{
                     background: ping < 1000 ? 'var(--success)' : 'var(--failure)'
                   }}></div>
-                <span className={ping < 1000 ? 'success-text' : 'failure-text'}>({ping}ms)</span>
+                <span className={ping < 1000 ? 'success-text' : 'danger-text'}>({ping}ms)</span>
               </>
             )}
             {preferredNode && (
-              <span className="reset-rpc text-gradient semi-bold-text" onClick={() => updateRpcNode()}>
+              <span className="reset-rpc gradient-text semi-bold-text" onClick={() => updateRpcNode()}>
                 {dictionary.settings.reset.toUpperCase()}
               </span>
             )}
@@ -129,13 +129,13 @@ export function Settings(): JSX.Element {
         <Divider />
         <div className="socials flex align-center justify-start">
           <a href="https://twitter.com/jetprotocol" target="_blank" rel="noopener noreferrer">
-            <i className="text-gradient fab fa-twitter"></i>
+            <i className="gradient-text fab fa-twitter"></i>
           </a>
           <a href="https://discord.gg/RW2hsqwfej" target="_blank" rel="noopener noreferrer">
-            <i className="text-gradient fab fa-discord"></i>
+            <i className="gradient-text fab fa-discord"></i>
           </a>
           <a href="https://github.com/jet-lab" target="_blank" rel="noopener noreferrer">
-            <i className="text-gradient fab fa-github"></i>
+            <i className="gradient-text fab fa-github"></i>
           </a>
         </div>
       </div>

@@ -39,7 +39,7 @@ export function CopilotModal(): JSX.Element {
             alt="Copilot Icon"
           />
           <div className="body flex align-start justify-center column">
-            <h2 className={alert?.status === 'neutral' ? 'text-gradient' : alert?.status + '-text'}>
+            <h2 className={alert?.status === 'neutral' ? 'gradient-text' : alert?.status + '-text'}>
               {alert?.overview ?? dictionary.copilot.header}
             </h2>
             {alert?.detail}
@@ -68,7 +68,7 @@ export function CopilotModal(): JSX.Element {
           <img src={`img/copilot/copilot.png`} alt="Copilot Icon" />
           <div className="body flex align-start justify-center column">
             {collateralDetail && connected && <HealthBar fullDetail />}
-            <h2 className="text-gradient">{definition?.term}</h2>
+            <h2 className="gradient-text">{definition?.term}</h2>
             <span>{definition?.definition}</span>
             <Button size="small" onClick={() => setDefinition(undefined)}>
               {dictionary.copilot.okay}

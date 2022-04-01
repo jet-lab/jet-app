@@ -111,7 +111,7 @@
 @xs-font-size: 10px;
 @sm-font-size: 12px;
 @base-font-size: 14px;
-@lg-font-size: 18px;
+@lg-font-size: 16px;
 @header-font-size: 30px;
 @xl-font-size: 40px;
 
@@ -151,6 +151,7 @@
   background: @white;
   color: @black;
   overflow-x: hidden;
+  font-size: @base-font-size;
   font-family: 'Poppins', Helvetica Neue, Helvetica, Arial, sans-serif;
   letter-spacing: 0.25px;
   width: 100vw;
@@ -160,7 +161,7 @@
     outline: unset;
   }
   &.ant-scrolling-effect {
-    overflow: unset;
+    overflow: unset !important;
   }
 
   // Svg's
@@ -222,25 +223,26 @@
   span {
     position: relative;
     text-decoration: none;
-    color: @black;
-    font-size: @base-font-size;
     font-style: normal;
     font-weight: normal;
+    color: @black;
   }
   h1 {
     font-size: @header-font-size;
     font-weight: @header-weight;
     line-height: 35px;
+    margin: @spacing-md 0;
   }
   h2 {
     opacity: @half-opacity;
     font-weight: @subheader-weight;
     line-height: 21px;
     text-transform: uppercase;
+    margin: @spacing-sm 0;
   }
   h3,
   h4 {
-    font-weight: 500;
+    font-weight: @semi-bold-weight;
   }
   a,
   i {
@@ -253,10 +255,7 @@
     -ms-user-select: none;
     user-select: none;
     font-style: normal;
-
-    &:-webkit-any-link {
-      color: inherit;
-    }
+    color: inherit;
   }
   span {
     opacity: @subtle-opacity;
@@ -265,55 +264,61 @@
   code {
     font-family: monospace;
   }
-  b {
+  b,
+  strong {
     font-weight: @bold-weight;
   }
-  .text-gradient {
+  mark {
+    background-color: @light-green-1;
+  }
+  .gradient-text {
     opacity: 1;
     background-image: @gradient;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
-  .text-gradient-btn {
-    position: relative;
-    opacity: 1;
-    background-image: @gradient;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: 1px;
-    cursor: pointer;
-
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 1px;
-      background: @gradient;
-      opacity: 0;
-    }
-
-    &:hover {
-      &::after {
-        opacity: 1;
-      }
-    }
-    &.disabled {
-      &:hover {
-        &::after {
-          opacity: 0;
-        }
-      }
-    }
+  .secondary-text,
+  .ant-typography-secondary {
+    opacity: @disabled-opacity;
   }
-  .text-btn {
+  .success-text,
+  .ant-typography-success {
+    color: @success;
+  }
+  .warning-text,
+  .ant-typography-warning {
+    color: @warning;
+  }
+  .danger-text,
+  .ant-typography-danger {
+    color: @failure;
+  }
+  .italic-text,
+  .ant-typography i {
+    font-style: italic;
+  }
+  .bold-text {
+    font-weight: @bold-weight;
+  }
+  .center-text {
+    text-align: center;
+  }
+  .text-btn,
+  .ant-btn-text span,
+  .link-btn,
+  a.ant-typography,
+  .ant-btn-link span {
+    opacity: 1;
     text-decoration: none;
     letter-spacing: 1px;
     cursor: pointer;
+    transition: opacity @transition-duration ease-in-out;
 
     &:hover {
       text-decoration: underline;
+    }
+    &:active {
+      opacity: @disabled-opacity;
     }
     &.disabled {
       &:hover {
@@ -321,24 +326,10 @@
       }
     }
   }
-  .success-text {
-    color: @success;
-  }
-  .warning-text {
-    color: @warning;
-  }
-  .failure-text {
-    color: @failure;
-  }
-  .center-text {
-    text-align: center;
-  }
-  .italic-text {
-    font-style: italic;
-  }
-  b,
-  .bold-text {
-    font-weight: @bold-weight;
+  .link-btn,
+  a.ant-typography,
+  .ant-btn-link span {
+    color: @jet-green;
   }
 
   // Views
@@ -368,14 +359,22 @@
 
   // Disabled elements
   *[disabled],
-  .disabled {
+  .disabled,
+  .ant-typography-disabled {
     cursor: not-allowed !important;
     opacity: @disabled-opacity !important;
   }
 
+  // Hidden elements
+  .hidden {
+    display: none;
+  }
+
   // Buttons
   button,
-  .ant-btn {
+  .ant-btn,
+  .ant-radio-button-wrapper,
+  .ant-pagination-item {
     position: relative;
     background: @gradient;
     border: none;
@@ -399,18 +398,28 @@
       font-weight: inherit;
       color: inherit;
     }
+    // Antd button loader icon
+    &-loading-icon {
+      margin-right: @spacing-sm;
+      svg path {
+        margin-right: @spacing-sm;
+        fill: @white;
+      }
+    }
 
     &:hover,
     &:active {
       opacity: @subtle-opacity;
     }
     &:active {
+      opacity: @disabled-opacity;
       box-shadow: @neu-shadow-inset-gradient;
     }
 
-    // Secondary / Connect button
+    // Secondary / Connect button / Dropdown buttons
     &.secondary-btn,
-    &-background-ghost {
+    &-background-ghost,
+    &-ghost {
       background: unset;
       border: 1px solid @dark-grey;
       padding: @secondary-btn-padding;
@@ -421,13 +430,12 @@
         color: inherit;
       }
 
-      &:hover,
-      &:active {
+      &:hover {
         opacity: 1;
       }
       &:active {
         box-shadow: unset;
-        background: rgba(var(--grey), 0.15);
+        background: rgba(var(--grey), 0.75);
       }
     }
 
@@ -439,6 +447,9 @@
         background-image: @gradient;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+      }
+      svg path {
+        fill: @jet-green;
       }
 
       &::before {
@@ -481,8 +492,25 @@
       }
     }
 
+    // Text / Link button
+    &-text,
+    &-link {
+      background: unset;
+      color: @black;
+      padding: unset;
+      margin: unset;
+
+      &:active {
+        box-shadow: unset;
+      }
+    }
+    &-link {
+      color: @jet-green;
+    }
+
     // Full width button
-    &.full-width {
+    &.full-width,
+    &-block {
       width: 100%;
       margin: @spacing-xs 0;
     }
@@ -534,17 +562,51 @@
       border-radius: @round-radius;
     }
 
-    // Antd button loader icon
-    &-loading-icon {
-      display: none;
+    // Antd round button
+    &.ant-btn-round {
+      border-radius: @round-radius;
+    }
+
+    //Antd icon only button
+    &-icon-only {
+      padding-left: @spacing-sm;
+      padding-right: @spacing-sm;
+
+      .ant-btn-loading-icon {
+        margin: unset;
+      }
+    }
+
+    // Group of Antd buttons
+    &-group {
+      button {
+        margin: unset;
+
+        &:first-of-type {
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+
+          &::before {
+            border-radius: inherit;
+          }
+        }
+        &:last-of-type {
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+          border-left: unset;
+
+          &::before {
+            border-radius: inherit;
+          }
+        }
+      }
     }
   }
 
   // General Input
   input {
     width: 100%;
-    height: 55px;
-    padding: 0 @spacing-lg;
+    padding: @spacing-md @spacing-lg;
     margin: @spacing-xs 0;
     box-shadow: @neu-shadow-inset;
     background: @white;
@@ -642,15 +704,65 @@
         }
       }
     }
-    // Antd Checkbox
-    .ant-checkbox-wrapper {
-      span:last-of-type {
-        font-size: @base-font-size;
-        margin-top: 1px;
+    // Antd Radio
+    &[type='radio'] {
+      position: relative;
+      width: 20px;
+      height: 20px;
+      padding: 0;
+      margin: 0 @spacing-sm -5px 0;
+      border-radius: @round-radius;
+      background: @grey;
+      box-shadow: @neu-shadow-inset;
+      transition: all @transition-duration ease-in-out;
+      cursor: pointer;
+
+      &:hover {
+        box-shadow: @neu-shadow-inset-low;
       }
-      &-disabled {
-        span:last-of-type {
-          opacity: @half-opacity;
+      &::after {
+        content: '';
+        width: 50%;
+        height: 50%;
+        position: absolute;
+        top: 25%;
+        left: 25%;
+        background: @gradient;
+        border-radius: @round-radius;
+        opacity: 0;
+        transition: opacity @transition-duration ease-in-out;
+      }
+    }
+  }
+  // Antd Checkbox
+  .ant-checkbox-wrapper {
+    span:last-of-type {
+      font-size: @base-font-size;
+      margin-top: 1px;
+    }
+    &-disabled {
+      span:last-of-type {
+        opacity: @half-opacity;
+      }
+    }
+  }
+  // Antd Number Input
+  .ant-input-number {
+    position: relative;
+
+    &-handler-wrap {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: @spacing-sm;
+
+      span {
+        opacity: @disabled-opacity;
+        margin: 0 1px;
+        cursor: pointer;
+
+        &:hover {
+          opacity: 1;
         }
       }
     }
@@ -665,7 +777,6 @@
     border-spacing: 0 @spacing-xs;
     background: @white;
     color: @black;
-    margin: @spacing-sm 0;
 
     thead {
       position: relative;
@@ -704,7 +815,7 @@
         bottom: 0;
         width: 100%;
         height: 1px;
-        background: @gradient;
+        background: @jet-green;
         border-bottom: 2px solid @white;
       }
     }
@@ -755,21 +866,55 @@
         border-bottom-left-radius: @border-radius;
       }
       &:last-of-type {
-        padding-left: @spacing-lg;
+        padding-right: @spacing-md;
         border-top-right-radius: @border-radius;
         border-bottom-right-radius: @border-radius;
       }
     }
   }
-  // Antd pagination of table
+  // Antd table
   .ant-table-wrapper {
     position: relative;
+
+    .ant-table {
+      &-bordered {
+        tr {
+          td {
+            border-bottom: 1px solid @dark-grey;
+            border-radius: unset;
+          }
+          &:last-of-type {
+            td {
+              border: unset;
+            }
+          }
+        }
+      }
+    }
+
+    // If you don't want row interactions
+    &.no-interaction {
+      tr {
+        cursor: unset;
+        td {
+          cursor: unset;
+        }
+
+        &:hover {
+          background: inherit;
+        }
+        &:active {
+          box-shadow: unset;
+        }
+      }
+    }
 
     .ant-pagination {
       list-style: none;
       display: flex;
       align-items: center;
       padding: 0;
+      margin: 0;
       font-size: @sm-font-size;
 
       button {
@@ -779,17 +924,276 @@
     }
   }
 
+  // Antd Radios
+  .ant-radio-wrapper {
+    box-sizing: border-box;
+    margin: 0 @spacing-sm 0 0;
+    padding: 0;
+    color: @black;
+    font-size: @base-font-size;
+    list-style: none;
+    position: relative;
+    cursor: pointer;
+
+    .ant-radio {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      color: @black;
+      font-size: @base-font-size;
+      list-style: none;
+      font-feature-settings: 'tnum';
+      position: relative;
+      outline: none;
+      cursor: pointer;
+
+      &-checked {
+        input[type='radio']::after {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  // Antd Radio Button
+  .ant-radio-button-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: unset;
+    border: 1px solid @dark-grey;
+    color: @black;
+    margin: 0;
+    transition: all @transition-duration ease-in-out;
+    &:hover {
+      background: @grey;
+      box-shadow: unset;
+    }
+    &:active,
+    &-checked {
+      background: @jet-green;
+      opacity: @disabled-opacity;
+      box-shadow: unset;
+    }
+    &-checked {
+      opacity: 1;
+
+      &:hover {
+        background: @jet-green;
+      }
+    }
+    input[type='radio'] {
+      display: none;
+    }
+  }
+
+  // Antd Radio Group
+  .ant-radio-group {
+    display: flex;
+
+    .ant-radio-button-wrapper {
+      border-radius: unset;
+
+      &:first-of-type {
+        border-top-left-radius: @btn-radius;
+        border-bottom-left-radius: @btn-radius;
+      }
+      &:last-of-type {
+        border-top-right-radius: @btn-radius;
+        border-bottom-right-radius: @btn-radius;
+      }
+    }
+  }
+
   // Antd Divider
   .ant-divider {
+    position: relative;
     width: 100%;
+    min-width: 50px;
     height: 3px;
     margin: @spacing-sm 0;
     border-radius: @border-radius;
     box-shadow: @neu-shadow-inset-low;
     background: @grey;
+
+    &-vertical {
+      width: 3px;
+      min-width: unset;
+      height: 100%;
+      min-height: 50px;
+    }
+
+    &-with-text {
+      height: auto;
+      box-shadow: unset;
+      background: unset;
+      &::before,
+      &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 30%;
+        height: 3px;
+        border-radius: @border-radius;
+        box-shadow: @neu-shadow-inset-low;
+        background: @grey;
+        z-index: 1;
+      }
+      &::after {
+        left: unset;
+        right: 0;
+      }
+      span {
+        opacity: @half-opacity;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+      }
+
+      &-left {
+        &::before {
+          width: 10%;
+        }
+        &::after {
+          width: 45%;
+        }
+        span {
+          left: 40%;
+        }
+      }
+      &-right {
+        &::before {
+          width: 45%;
+        }
+        &::after {
+          width: 10%;
+        }
+        span {
+          left: 75%;
+        }
+      }
+    }
   }
 
-  // Antd modal
+  // Antd Breadcrumb
+  .ant-breadcrumb {
+    span {
+      a {
+        opacity: @disabled-opacity;
+        &:hover {
+          opacity: 1;
+        }
+      }
+      &:last-of-type {
+        opacity: 1;
+        span {
+          opacity: inherit;
+        }
+        .ant-breadcrumb-separator {
+          display: none;
+        }
+      }
+    }
+    &-separator {
+      margin: 0 @spacing-sm;
+    }
+  }
+
+  // Antd Page Header
+  .ant-page-header {
+    position: relative;
+    padding: @spacing-md @spacing-lg;
+    border: 1px solid @grey;
+
+    &-back {
+      margin-right: @spacing-md;
+      opacity: @disabled-opacity;
+      transition: opacity @transition-duration ease-in-out;
+      cursor: pointer;
+      &:hover {
+        opacity: 1;
+      }
+      &:active {
+        opacity: @disabled-opacity;
+      }
+
+      .anticon {
+        font-size: @lg-font-size;
+      }
+    }
+
+    &-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      &-left,
+      &-right {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+      &-title {
+        margin-right: @spacing-md;
+        font-size: @header-font-size;
+        line-height: @header-font-size;
+        font-weight: @header-weight;
+      }
+      &-sub-title {
+        font-size: @base-font-size;
+        opacity: @disabled-opacity;
+      }
+    }
+  }
+
+  // Antd Pagination
+  .ant-pagination {
+    display: flex;
+    padding: unset;
+    list-style: none;
+
+    &-item,
+    &-prev,
+    &-next {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: @spacing-sm;
+    }
+    &-item {
+      background: unset;
+      border: 1px solid @dark-grey;
+      padding: @spacing-xs @spacing-md;
+      color: @dark-grey;
+      opacity: @disabled-opacity;
+      font-size: @xs-font-size;
+      span {
+        opacity: 1;
+        color: inherit;
+      }
+
+      &:hover {
+        opacity: 1;
+      }
+      &:active,
+      &-active {
+        opacity: 1;
+        box-shadow: unset;
+        background: @jet-green;
+        color: @white;
+      }
+    }
+
+    // Antd table pagination
+    &.ant-table-pagination-right {
+      justify-content: flex-end;
+    }
+  }
+
+  // Antd Modal
   .ant-modal-wrap {
     width: 100%;
     height: calc(100% - @nav-height);
@@ -906,12 +1310,18 @@
     position: relative;
     margin: @spacing-sm 0;
     height: 30px;
-    min-width: 30px;
+    min-width: 50px;
     background: @grey;
     border-radius: @round-radius;
     box-shadow: @neu-shadow-inset;
     padding: 0 @spacing-md;
     cursor: pointer;
+    span {
+      color: @dark-grey;
+    }
+    svg path {
+      fill: @dark-grey;
+    }
 
     &-handle {
       position: absolute;
@@ -931,8 +1341,7 @@
         border-radius: @round-radius;
       }
     }
-    span {
-      color: @dark-grey;
+    &-inner {
       margin: 0 0 0 20px;
       transition: margin @transition-duration ease-in-out;
     }
@@ -943,29 +1352,35 @@
       }
       &.ant-switch-checked {
         .ant-switch-handle {
-          left: calc(80% - 14px);
+          left: calc(100% - 31px);
         }
       }
     }
-
     &:hover {
       box-shadow: @neu-shadow-inset-low;
     }
+
+    // Checked state
     &-checked {
       background: @gradient;
       box-shadow: @neu-shadow-inset-gradient;
+      span {
+        color: @white;
+      }
+      svg path {
+        fill: @white;
+      }
 
       .ant-switch-handle {
         top: 7px;
-        left: calc(80% - 7px);
+        left: calc(100% - 24px);
 
         &::before {
           background: @white;
           box-shadow: @neu-shadow-inset-low;
         }
       }
-      span {
-        color: @white;
+      .ant-switch-inner {
         margin: 0 20px 0 0;
       }
 
@@ -1022,14 +1437,12 @@
     }
   }
 
-  // Antd Tooltip
-  .ant-tooltip {
+  // Antd Tooltip / Popover
+  .ant-tooltip,
+  .ant-popover {
     pointer-events: none;
     position: absolute;
     max-width: 200px;
-    left: 50%;
-    top: calc(50% - 50px);
-    transform: translate(-50%, -50%);
     background: @light-grey;
     color: @black;
     padding: @spacing-md;
@@ -1037,8 +1450,14 @@
     box-shadow: @drop-shadow;
     backdrop-filter: blur(2px);
     background: rgba(var(--white), @disabled-opacity);
+    pointer-events: all !important;
+    transition: all @transition-duration ease-in-out;
     z-index: 10;
 
+    &-title {
+      font-size: @lg-font-size;
+      border-bottom: 1px solid @jet-green;
+    }
     &-arrow {
       pointer-events: none;
       position: absolute;
@@ -1054,15 +1473,16 @@
       z-index: 9;
     }
     &-inner {
-      pointer-events: none;
       font-size: @sm-font-size;
     }
 
     // Other placements
-    .ant-tooltip-arrow {
+    .ant-tooltip-arrow,
+    .ant-popover-arrow {
       display: none;
     }
-    &-placement-left .ant-tooltip-arrow {
+    &-placement-left .ant-tooltip-arrow,
+    &-placement-left .ant-popover-arrow {
       top: calc(50% - 6px);
       left: calc(100% + 3px);
       border-top: 7px solid transparent;
@@ -1070,7 +1490,8 @@
       border-right: unset;
       border-bottom: 5px solid transparent;
     }
-    &-placement-right .ant-tooltip-arrow {
+    &-placement-right .ant-tooltip-arrow,
+    &-placement-right .ant-popover-arrow {
       top: calc(50% - 6px);
       left: calc(0% - 3px);
       border-top: 5px solid transparent;
@@ -1078,7 +1499,8 @@
       border-right: 9px solid @light-grey;
       border-bottom: 7px solid transparent;
     }
-    &-placement-bottom .ant-tooltip-arrow {
+    &-placement-bottom .ant-tooltip-arrow,
+    &-placement-bottom .ant-popover-arrow {
       top: calc(0% - 7px);
       border-top: unset;
       border-left: 5px solid transparent;
@@ -1098,29 +1520,42 @@
     &.ant-zoom-down {
     }
     &.ant-zoom-down-leave,
-    &.ant-zoom-down-leave-active {
+    &.ant-zoom-down-leave-active,
+    &.ant-zoom-big-leave,
+    &.ant-zoom-big-leave-active {
       display: none;
     }
   }
 
   // Antd select
   .ant-select {
-    min-width: 175px;
+    min-width: 150px;
     margin: @spacing-sm 0;
-    padding: 0;
     font-size: @base-font-size;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-radius: @round-radius;
-    box-shadow: @neu-shadow-low;
-    padding: @spacing-sm @spacing-sm;
+    border-radius: @border-radius;
+    box-shadow: @neu-shadow;
+    padding: @spacing-sm @spacing-md;
     cursor: pointer;
+    transition: box-shadow @transition-duration ease-in-out;
+    &:hover {
+      box-shadow: @neu-shadow-low;
+    }
+    &:active,
+    &-open {
+      box-shadow: @neu-shadow-inset;
+      &:hover {
+        box-shadow: @neu-shadow-inset;
+      }
+    }
 
     &-selector {
       width: 100%;
     }
+    //TODO: Enable search feature here
     &-selection-search {
       display: none;
     }
@@ -1133,18 +1568,20 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      right: @spacing-sm;
+      right: @spacing-md;
     }
 
     &-dropdown {
       position: absolute;
       overflow: hidden;
       font-size: inherit;
-      background-color: @grey;
+      background: @light-grey;
+      color: @black;
       border-radius: @border-radius;
       box-shadow: @drop-shadow;
+      backdrop-filter: blur(2px);
       outline: none;
-      pointer-events: unset;
+      pointer-events: unset !important;
 
       &::before {
         position: absolute;
@@ -1162,22 +1599,24 @@
       }
     }
     &-item {
-      padding: @spacing-sm @spacing-md;
-      font-size: @base-font-size;
-      opacity: @subtle-opacity;
+      position: relative;
+      width: 100%;
+      padding: @spacing-sm @spacing-lg;
+      border-bottom: 1px solid @dark-grey;
       cursor: pointer;
-      img {
-        width: 20px;
-        height: auto;
-        margin-right: @spacing-sm;
+      &:last-of-type {
+        border-color: transparent;
       }
 
       &-option-state {
         display: none;
       }
       &-option-active {
-        background: @gradient;
-        color: @white;
+        background: rgba(0, 0, 0, 0.125);
+        border-color: @jet-green;
+        &:last-of-type {
+          border-color: @jet-green;
+        }
       }
       &-option-content {
         display: flex;
@@ -1195,10 +1634,12 @@
     background: @light-grey;
     color: @black;
     border-radius: @border-radius;
-    box-shadow: @neu-shadow-low;
+    box-shadow: @drop-shadow;
+    backdrop-filter: blur(2px);
+    background: rgba(var(--white), @disabled-opacity);
     overflow: hidden;
-    pointer-events: unset;
-
+    pointer-events: unset !important;
+    z-index: 1000;
     &::before {
       position: absolute;
       top: 0;
@@ -1209,6 +1650,16 @@
       content: '';
     }
 
+    &-trigger {
+      cursor: pointer;
+
+      // Antd down icon
+      .anticon-down {
+        font-size: @xs-font-size;
+        margin-left: @spacing-xs;
+      }
+    }
+
     &-menu {
       list-style: none;
       padding: 0;
@@ -1216,25 +1667,26 @@
       align-items: flex-start;
       justify-content: center;
       flex-direction: column;
+      margin: unset;
       cursor: pointer;
 
       &-item {
         position: relative;
         width: 100%;
         padding: @spacing-xs @spacing-lg;
-        border-bottom: 1px solid @white;
+        border-bottom: 1px solid @grey;
 
         &:hover,
         &-active,
         &.active {
-          background: @gradient;
-
-          .ant-dropdown-menu-title-content {
-            color: @white;
+          background: rgba(0, 0, 0, 0.125);
+          border-color: @jet-green;
+          &:last-of-type {
+            border-color: @jet-green;
           }
         }
         &:last-of-type {
-          border-bottom: none;
+          border-color: transparent;
         }
 
         .ant-dropdown-menu-title-content {
@@ -1256,12 +1708,12 @@
     width: 100%;
     max-width: 400px;
     border-radius: @border-radius;
-    box-shadow: @neu-shadow-low;
+    border: 2px solid @grey;
     overflow: hidden;
     margin: @spacing-sm 0;
 
     &-content {
-      padding: @spacing-lg;
+      padding: @spacing-sm @spacing-lg;
       opacity: @subtle-opacity;
       height: unset;
       border-radius: @border-radius;
@@ -1296,16 +1748,19 @@
   // Antd Card
   .ant-card {
     width: 95%;
-    max-width: 250px;
-    padding: @spacing-lg;
+    max-width: 300px;
     border-radius: @border-radius;
     box-shadow: @neu-shadow;
     margin: @spacing-xs 0;
-    &.clickable {
+    overflow: hidden;
+    transition: box-shadow @transition-duration ease-in-out;
+    &.clickable,
+    &-hoverable {
       cursor: pointer;
 
       &:hover {
         box-shadow: @neu-shadow-low;
+        transition: unset;
       }
       &:active {
         box-shadow: @neu-shadow-inset;
@@ -1317,15 +1772,20 @@
 
     // Optional cover image
     &-cover {
-      max-width: 300px;
+      width: 100%;
+      height: 150px;
 
       img {
         width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
     }
     // Card heading, w/optional extra element(s)
     &-head {
       position: relative;
+      padding: @spacing-lg;
+      padding-bottom: 0;
       margin-bottom: @spacing-md;
 
       &::before {
@@ -1342,7 +1802,7 @@
 
       &-wrapper {
         display: flex;
-        align-items: flex-start;
+        align-items: flex-end;
         justify-content: space-between;
         padding-bottom: @spacing-xs;
 
@@ -1355,49 +1815,99 @@
         }
       }
     }
-    // Optional card tabs
-    .ant-tabs-nav-operations {
-      display: none;
-    }
-    .ant-tabs-nav-list {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-
-      .ant-tabs-tab {
-        position: relative;
-        margin-right: @spacing-md;
-        opacity: @disabled-opacity;
-        cursor: pointer;
-        font-size: @sm-font-size;
-
+    // With tabs
+    .ant-tabs {
+      &-content {
+        padding: unset;
+      }
+      &-nav {
         &::before {
-          content: '';
-          position: absolute;
-          left: 0;
-          bottom: 0.5px;
-          width: 100%;
-          height: 1px;
-          border-radius: @round-radius;
-          background: @gradient;
-          opacity: 0;
-        }
-        &:hover,
-        &.ant-tabs-tab-active {
-          opacity: 1;
-          background-image: @gradient;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-        &.ant-tabs-tab-active::before {
-          opacity: 1;
+          display: none;
         }
       }
+      &-tab {
+        font-size: @sm-font-size !important;
+      }
     }
+
     // Body content of card
     &-body {
-      padding: @spacing-xs 0;
+      padding: @spacing-sm @spacing-xl @spacing-md @spacing-xl;
+    }
+    // Small card
+    &-small {
+      p,
+      span {
+        font-size: @sm-font-size;
+      }
+      &-head {
+        padding: @spacing-md;
+        padding-bottom: 0;
+      }
+      &-body {
+        padding: @spacing-md;
+        padding-top: @spacing-sm;
+      }
+    }
+  }
+
+  // Antd Tabs
+  .ant-tabs {
+    &-content {
+      padding: @spacing-md 0;
+    }
+    &-nav {
+      position: relative;
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 1px;
+        border-radius: @round-radius;
+        background: @grey;
+        box-shadow: @neu-shadow-inset-low;
+      }
+
+      .ant-tabs-nav-operations {
+        display: none;
+      }
+      .ant-tabs-nav-list {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+
+        .ant-tabs-tab {
+          position: relative;
+          margin-right: @spacing-md;
+          opacity: @disabled-opacity;
+          font-size: @lg-font-size;
+          transition: all @transition-duration ease-in-out;
+          cursor: pointer;
+
+          &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0px;
+            width: 100%;
+            height: 1px;
+            border-radius: @round-radius;
+            background: @jet-green;
+            opacity: 0;
+          }
+          &:hover,
+          &.ant-tabs-tab-active {
+            opacity: 1;
+            color: @jet-green;
+          }
+          &.ant-tabs-tab-active::before {
+            opacity: 1;
+          }
+        }
+      }
     }
   }
 
@@ -1451,6 +1961,28 @@
         }
         .ant-timeline-item-content {
           opacity: @disabled-opacity;
+        }
+      }
+    }
+    &-pending {
+      .ant-timeline-item {
+        &-last {
+          .ant-timeline-item-tail {
+            display: unset;
+          }
+        }
+        &-pending {
+          .ant-timeline-item-head {
+            background: @grey;
+          }
+          .ant-timeline-item-tail {
+            display: none;
+          }
+          .anticon {
+            position: absolute;
+            top: -1px;
+            left: -1px;
+          }
         }
       }
     }
@@ -1534,7 +2066,7 @@
       .ant-skeleton-title {
         width: 30%;
         height: 10px;
-        background: @grey;
+        background: @dark-grey;
         border-radius: @btn-radius;
       }
       .ant-skeleton-paragraph {
@@ -1547,39 +2079,59 @@
           height: 10px;
           margin-top: @spacing-xs;
           list-style: none;
-          background: @grey;
+          background: @dark-grey;
           border-radius: @btn-radius;
         }
       }
     }
     &-active {
-      //animation: ant-skeleton-loading 1.4s ease infinite;
+      * {
+        opacity: 1;
+        animation: skeleton-opacity 1.25s ease infinite;
+      }
+    }
+  }
+  // Shimmer animation
+  @keyframes skeleton-opacity {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.75;
+    }
+    100% {
+      opacity: 1;
     }
   }
 
-  // Antd list
+  // Antd List
   .ant-list {
     position: relative;
+    width: 100%;
     margin: @spacing-sm 0;
-    padding: @spacing-xs @spacing-sm;
     border-radius: @border-radius;
-    box-shadow: @neu-shadow-low;
     color: @black;
     font-size: @base-font-size;
     list-style: none;
 
     &-items {
       padding: 0;
+      margin: 0;
     }
-    &-item {
+    &-header,
+    &-footer {
+      opacity: @disabled-opacity;
+    }
+    &-header,
+    &-item,
+    &-footer {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: space-between;
-      padding: @spacing-sm;
-      color: @black;
-      border-bottom: 2px solid @grey;
+      padding: @spacing-md @spacing-lg;
+      border-bottom: 1px solid @dark-grey;
       &:last-of-type {
-        border: unset;
+        border-bottom: unset;
       }
 
       &-meta {
@@ -1607,8 +2159,32 @@
         -webkit-text-fill-color: transparent;
       }
     }
-    &-something-after-last-item {
-      padding-bottom: @spacing-lg;
+    &-footer {
+      border-top: 1px solid @dark-grey;
+    }
+
+    // Empty
+    .ant-empty {
+      padding: @spacing-md;
+      opacity: @disabled-opacity;
+      background: @white;
+      &-image {
+        display: none;
+      }
+      &-description {
+        text-transform: uppercase;
+      }
+    }
+
+    // Bordered
+    &-bordered {
+      border: 1px solid @dark-grey;
+      background: @grey;
+    }
+
+    // Small
+    &-sm {
+      font-size: @sm-font-size;
     }
   }
 
@@ -1621,7 +2197,8 @@
       margin-left: 2px;
       border-radius: @round-radius;
       padding: 1px 5px 0 5px;
-      // shimmer
+
+      // Shimmer Effect for Notifications
       background: #e5ebf4 -webkit-gradient(linear, 100% 0, 0 0, from(#e5ebf4), color-stop(0.5, #a9aaab), to(#e5ebf4));
       background-position: 50px top;
       background-size: 50px 100%;
@@ -1654,18 +2231,28 @@
   // Antd Tag
   .ant-tag {
     padding: @spacing-xs @spacing-sm;
+    margin: @spacing-xs;
     border-radius: @btn-radius;
-    box-shadow: @neu-shadow-low;
+    border: 1px solid @dark-grey;
     background: @grey;
+    opacity: @disabled-opacity;
+    transition: opacity @transition-duration ease-in-out;
     span {
       margin: 0 0 0 @spacing-sm;
     }
 
     &-has-color {
       color: @white;
+      svg path {
+        fill: @white;
+      }
     }
     &-hidden {
       display: none;
+    }
+
+    &:hover {
+      opacity: 1;
     }
   }
 
@@ -1679,38 +2266,15 @@
     align-items: center;
     justify-content: center;
 
-    &-show-info {
-      .ant-progress-outer {
-        width: calc(90% - 20px);
-      }
-
-      .ant-progress-text {
-        width: 30px;
-        margin-left: @spacing-sm;
-        color: @black;
-        font-size: @sm-font-size;
-        white-space: nowrap;
-        word-break: normal;
-      }
-    }
-    &-status-exception {
-      .anticon {
-        color: @failure;
-      }
-    }
-    &-status-success {
-      .anticon {
-        color: @success;
-      }
-    }
     &-line {
-      position: relative;
       width: 100%;
+      position: relative;
       font-size: inherit;
+      display: flex;
+      justify-content: space-between;
 
       .ant-progress-outer {
         width: inherit;
-
         .ant-progress-inner {
           position: relative;
           width: inherit;
@@ -1731,8 +2295,14 @@
           }
         }
       }
+      .ant-progress-text {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: -5px;
+        width: 25px;
+      }
     }
-    // TODO: finish circle styling and options
     &-circle {
       position: relative;
       &-path {
@@ -1744,8 +2314,137 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+        margin: unset;
+        font-size: 130%;
+        text-align: center;
         width: 100%;
+        span {
+          font-size: inherit;
+        }
       }
+    }
+    &-show-info {
+      .ant-progress-outer {
+        margin-right: 25px;
+        &-outer {
+          width: calc(90% - 20px);
+        }
+
+        &-text {
+          color: @black;
+          font-size: @sm-font-size;
+          white-space: nowrap;
+          word-break: normal;
+        }
+      }
+    }
+
+    &-status-success {
+      span {
+        color: @success;
+      }
+      svg path {
+        fill: @success;
+      }
+      &.ant-progress-line .ant-progress-outer .ant-progress-inner .ant-progress-bg {
+        background: @success;
+      }
+      .ant-progress-circle-path {
+        stroke: @success;
+      }
+    }
+    &-status-exception {
+      span {
+        color: @failure;
+      }
+      svg path {
+        fill: @failure;
+      }
+      &.ant-progress-line .ant-progress-outer .ant-progress-inner .ant-progress-bg {
+        background: @failure;
+      }
+      .ant-progress-circle-path {
+        stroke: @failure;
+      }
+    }
+  }
+
+  // Antd Alert
+  .ant-alert {
+    position: relative;
+    padding: @spacing-md;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background: @gradient;
+    border-radius: @btn-radius;
+    border: 1px solid @grey;
+    color: @white;
+    margin: @spacing-sm 0;
+    width: 100%;
+    &-success {
+      background: @success;
+    }
+    &-warning {
+      background: @warning;
+    }
+    &-error {
+      background: @failure;
+    }
+
+    button {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      margin: unset;
+      margin-top: 1px;
+      padding: unset;
+      background: unset;
+      &:active {
+        box-shadow: unset;
+      }
+    }
+    .anticon {
+      margin-right: @spacing-sm;
+      font-size: @lg-font-size;
+
+      path {
+        fill: @white;
+      }
+    }
+
+    &-with-description {
+      .anticon {
+        position: absolute;
+        top: @spacing-md;
+        left: @spacing-md;
+      }
+      .ant-alert-content {
+        margin-top: -2px;
+        padding-left: 25px;
+      }
+      .ant-alert-message {
+        border-bottom: 1px solid @grey;
+      }
+      .ant-alert-description {
+        margin-top: @spacing-xs;
+        font-size: @sm-font-size;
+        opacity: @subtle-opacity;
+      }
+      button {
+        top: -5px;
+        right: 37px;
+        transform: unset;
+        z-index: 1000;
+      }
+    }
+
+    // Closed
+    &.ant-alert-motion-leave,
+    &.ant-alert-motion-leave-active,
+    &.ant-alert-motion {
+      display: none;
     }
   }
 
@@ -1773,12 +2472,37 @@
         left: @spacing-md;
         font-size: @lg-font-size;
       }
+      svg path {
+        fill: @black;
+      }
+      &-success,
+      &-warning,
+      &-error {
+        .ant-notification-notice-message,
+        .ant-notification-notice-description {
+          margin-left: 25px;
+        }
+      }
       &-success {
+        .ant-notification-notice-message {
+          color: @success;
+        }
         svg path {
           fill: @success;
         }
       }
+      &-warning {
+        .ant-notification-notice-message {
+          color: @warning;
+        }
+        svg path {
+          fill: @warning;
+        }
+      }
       &-error {
+        .ant-notification-notice-message {
+          color: @failure;
+        }
         svg path {
           fill: @failure;
         }
@@ -1787,7 +2511,6 @@
         font-weight: @subheader-weight;
         font-size: @sm-font-size;
         margin-top: -2px;
-        margin-left: 30px;
         border-bottom: 1px solid rgba(var(--dark-grey), 0.25);
         line-height: 21px;
         text-transform: uppercase;
@@ -1796,7 +2519,6 @@
         opacity: @subtle-opacity;
         font-size: @base-font-size;
         padding-top: @spacing-xs;
-        margin-left: 30px;
       }
 
       &-close {
@@ -1841,12 +2563,52 @@
     transform: translateX(-50%);
     &-notice {
       width: unset;
-      background: @gradient;
+      background: @grey;
+      border: 1px solid @white;
 
+      &-icon,
+      .anticon {
+        position: relative;
+        top: unset;
+        left: unset;
+        font-size: @lg-font-size;
+        margin-right: @spacing-sm;
+      }
       span {
         opacity: 1;
-        color: @white;
+        color: @black;
         font-size: @base-font-size;
+      }
+    }
+
+    &-success {
+      .anticon {
+        path {
+          fill: @success;
+        }
+      }
+      span {
+        color: @success;
+      }
+    }
+    &-warning {
+      .anticon {
+        path {
+          fill: @warning;
+        }
+      }
+      span {
+        color: @warning;
+      }
+    }
+    &-error {
+      .anticon {
+        path {
+          fill: @failure;
+        }
+      }
+      span {
+        color: @failure;
       }
     }
 
