@@ -1,20 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import Jet_UI_EN from './languages/Jet_UI_EN.json';
 import Jet_Definitions_EN from './languages/Jet_Definitions_EN.json';
-import Jet_UI_ZH from './languages/Jet_UI_ZH.json';
-import Jet_Definitions_ZH from './languages/Jet_Definitions_ZH.json';
-import Jet_UI_KR from './languages/Jet_UI_KR.json';
-import Jet_Definitions_KR from './languages/Jet_Definitions_KR.json';
-import Jet_UI_RU from './languages/Jet_UI_RU.json';
-import Jet_Definitions_RU from './languages/Jet_Definitions_RU.json';
-import Jet_UI_TR from './languages/Jet_UI_TR.json';
-import Jet_Definitions_TR from './languages/Jet_Definitions_TR.json';
-import Jet_UI_DE from './languages/Jet_UI_DE.json';
-import Jet_Definitions_DE from './languages/Jet_Definitions_DE.json';
-import Jet_UI_IT from './languages/Jet_UI_IT.json';
-import Jet_Definitions_IT from './languages/Jet_Definitions_IT.json';
-import Jet_UI_SP from './languages/Jet_UI_SP.json';
-import Jet_Definitions_SP from './languages/Jet_Definitions_SP.json';
 
 // Localization context
 interface Localization {
@@ -39,7 +25,7 @@ export function LocalizationProvider(props: { children: JSX.Element }): JSX.Elem
     let locale: any = null;
 
     // Get user's IP to determine location/geobanning
-    async function getIP() {
+    const getIP = async () => {
       const ipKey = process.env.REACT_APP_IP_REGISTRY;
 
       try {
@@ -62,17 +48,17 @@ export function LocalizationProvider(props: { children: JSX.Element }): JSX.Elem
       } catch (err) {
         console.log(err);
       }
-    }
+    };
 
     // Check to see if user's locale is special case of Crimea
-    function isCrimea(locale: any) {
+    const isCrimea = (locale: any) => {
       const postalCode: string = locale?.postal.toString().substring(0, 2);
       if (postalCode === '95' || postalCode === '96' || postalCode === '97' || postalCode === '98') {
         return true;
       } else {
         return false;
       }
-    }
+    };
 
     getIP();
   }, [setPreferredLanguage]);
@@ -89,7 +75,7 @@ export function LocalizationProvider(props: { children: JSX.Element }): JSX.Elem
   );
 }
 
-// Geoban check hook
+// Geoban Hook
 export const useGeoban = () => {
   const context = useContext(LocalizationContext);
   return context.isGeobanned;
@@ -111,41 +97,13 @@ export const useLanguage = () => {
 // UI dictionary
 export const uiDictionary: any = {
   // English
-  en: Jet_UI_EN,
-  // Mandarin
-  zh: Jet_UI_ZH,
-  // Russian
-  ru: Jet_UI_RU,
-  // Turkish
-  tr: Jet_UI_TR,
-  // Korean
-  kr: Jet_UI_KR,
-  // German
-  de: Jet_UI_DE,
-  // Italian
-  it: Jet_UI_IT,
-  // Spanish
-  sp: Jet_UI_SP
+  en: Jet_UI_EN
 };
 
 // Definitions of various terminology
 export const definitions: any = {
   // English
-  en: Jet_Definitions_EN,
-  // Mandarin
-  zh: Jet_Definitions_ZH,
-  // Russian
-  ru: Jet_Definitions_RU,
-  // Turkish
-  tr: Jet_Definitions_TR,
-  // Korean
-  kr: Jet_Definitions_KR,
-  // German
-  de: Jet_Definitions_DE,
-  // Italian
-  it: Jet_Definitions_IT,
-  // Spanish
-  sp: Jet_Definitions_SP
+  en: Jet_Definitions_EN
 };
 
 // Banned countries

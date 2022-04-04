@@ -1,7 +1,7 @@
 import './styles/App.less';
 import { useMemo } from 'react';
 import { HashRouter, Route, Routes } from 'react-router-dom';
-import { DarkThemeProvider } from './contexts/darkTheme';
+import { DarkThemeProvider } from './contexts/Settings/darkTheme';
 import { LocalizationProvider } from './contexts/localization/localization';
 import { WalletProvider } from '@solana/wallet-adapter-react';
 import {
@@ -12,27 +12,20 @@ import {
   getSolongWallet,
   getSlopeWallet
 } from '@solana/wallet-adapter-wallets';
-import { RpcNodeContextProvider } from './contexts/rpcNode';
-import { BlockExplorerProvider } from './contexts/blockExplorer';
-import { TransactionsProvider } from './contexts/transactionLogs';
-import { TradeContextProvider } from './contexts/tradeContext';
-import { NativeValuesProvider } from './contexts/nativeValues';
-import { CopilotModalProvider } from './contexts/copilotModal';
-import { ConnectWalletModalProvider } from './contexts/connectWalletModal';
-import { RadarModalProvider } from './contexts/radarModal';
-import { ConnectWalletModal } from './components/ConnectWalletModal';
-import { CopilotModal } from './components/CopilotModal';
-import { RadarModal } from './components/RadarModal';
-import { TermsPrivacy } from './components/TermsPrivacy';
-import { Navbar } from './components/Navbar';
-import { NetworkWarningBanner } from './components/NetworkWarningBanner';
-import { Cockpit } from './views/Cockpit';
-import { TransactionLogs } from './views/TransactionLogs';
-import { Settings } from './views/Settings';
+import { ConnectWalletModalProvider } from './contexts/Modals/connectWalletModal';
+import { SendingTransactionProvider } from './contexts/transactions/sendingTransaction';
+import { NativeValuesProvider } from './contexts/BorrowView/nativeValues';
+import { CopilotModalProvider } from './contexts/Modals/copilotModal';
+import { RpcNodeContextProvider } from './contexts/Settings/rpcNode';
+import { BlockExplorerProvider } from './contexts/Settings/blockExplorer';
+import { ConnectWalletModal } from './components/Modals/ConnectWalletModal';
+import { CopilotModal } from './components/Modals/CopilotModal';
 
-// Jet V1
-import { UserContextProvider } from './v1/contexts/user';
-import { MarketContextProvider } from './v1/contexts/market';
+import { TermsPrivacy } from './components/Misc/TermsPrivacy';
+import { Navbar } from './components/Misc/Navbar';
+import { NetworkBanner } from './components/Misc/NetworkBanner';
+import { Disclaimer } from './components/Modals/DisclaimerModal';
+import { BorrowView } from './views/BorrowView';
 
 export function App(): JSX.Element {
   const wallets = useMemo(
@@ -49,43 +42,33 @@ export function App(): JSX.Element {
 
   return (
     <HashRouter basename={'/'}>
-      <LocalizationProvider>
-        <MarketContextProvider>
+      <DarkThemeProvider>
+        <LocalizationProvider>
           <WalletProvider wallets={wallets} autoConnect>
-            <UserContextProvider>
-              <ConnectWalletModalProvider>
-                <RpcNodeContextProvider>
+            <ConnectWalletModalProvider>
+              <RpcNodeContextProvider>
+                <NativeValuesProvider>
                   <BlockExplorerProvider>
-                    <TransactionsProvider>
-                      <TradeContextProvider>
-                        <NativeValuesProvider>
-                          <DarkThemeProvider>
-                            <CopilotModalProvider>
-                              <RadarModalProvider>
-                                <Navbar />
-                                <NetworkWarningBanner />
-                                <Routes>
-                                  <Route path="/" element={<Cockpit />} />
-                                  <Route path="/transactions" element={<TransactionLogs />} />
-                                  <Route path="/settings" element={<Settings />} />
-                                </Routes>
-                                <ConnectWalletModal />
-                                <CopilotModal />
-                                <RadarModal />
-                                <TermsPrivacy />
-                              </RadarModalProvider>
-                            </CopilotModalProvider>
-                          </DarkThemeProvider>
-                        </NativeValuesProvider>
-                      </TradeContextProvider>
-                    </TransactionsProvider>
+                    <SendingTransactionProvider>
+                      <CopilotModalProvider>
+                        <Navbar />
+                        <Routes>
+                          <Route path="/" element={<BorrowView />} />
+                        </Routes>
+                        <ConnectWalletModal />
+                        <CopilotModal />
+                        <NetworkBanner />
+                        <Disclaimer />
+                        <TermsPrivacy />
+                      </CopilotModalProvider>
+                    </SendingTransactionProvider>
                   </BlockExplorerProvider>
-                </RpcNodeContextProvider>
-              </ConnectWalletModalProvider>
-            </UserContextProvider>
+                </NativeValuesProvider>
+              </RpcNodeContextProvider>
+            </ConnectWalletModalProvider>
           </WalletProvider>
-        </MarketContextProvider>
-      </LocalizationProvider>
+        </LocalizationProvider>
+      </DarkThemeProvider>
     </HashRouter>
   );
 }

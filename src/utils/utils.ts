@@ -15,7 +15,7 @@ export function isValidHttpUrl(input: string): boolean {
   let url;
   try {
     url = new URL(input);
-  } catch (_) {
+  } catch {
     return false;
   }
 
