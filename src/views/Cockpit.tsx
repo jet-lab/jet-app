@@ -89,7 +89,7 @@ export function Cockpit(): JSX.Element {
               {user.walletInit ? (
                 <>
                   <h1
-                    className={`view-header 
+                    className={`view-header
                     ${
                       !user.position.borrowedValue || user.position.colRatio >= market.minColRatio + 0.25
                         ? 'success-text'

@@ -29,6 +29,7 @@ import { NetworkWarningBanner } from './components/NetworkWarningBanner';
 import { Cockpit } from './views/Cockpit';
 import { TransactionLogs } from './views/TransactionLogs';
 import { Settings } from './views/Settings';
+import { GlobalNotification } from './components/GlobalNotification';
 
 // Jet V1
 import { UserContextProvider } from './v1/contexts/user';
@@ -64,6 +65,7 @@ export function App(): JSX.Element {
                               <RadarModalProvider>
                                 <Navbar />
                                 <NetworkWarningBanner />
+                                <GlobalNotification />
                                 <Routes>
                                   <Route path="/" element={<Cockpit />} />
                                   <Route path="/transactions" element={<TransactionLogs />} />
