@@ -76,6 +76,9 @@ export function TradePanel(): JSX.Element {
       // No wallet balance to deposit
       if (!user.walletBalances[currentReserve.abbrev]) {
         setDisabledMessage(dictionary.cockpit.noBalanceForDeposit.replaceAll('{{ASSET}}', currentReserve.abbrev));
+      } else if (currentReserve.abbrev === 'ETH') {
+        console.log('currentReserve.abbrev');
+        setDisabledMessage('Sollet ETH will be sunset at the end of April. We do not accept Sollet ETH');
       } else {
         setDisabledInput(false);
       }
@@ -84,7 +87,7 @@ export function TradePanel(): JSX.Element {
       // No collateral to withdraw
       if (!user.collateralBalances[currentReserve.abbrev]) {
         setDisabledMessage(dictionary.cockpit.noDepositsForWithdraw.replaceAll('{{ASSET}}', currentReserve.abbrev));
-        // User is below PROGRRAM minimum c-ratio
+        // User is below PROGRAM minimum c-ratio
       } else if (user.position.borrowedValue && user.position.colRatio <= market.minColRatio) {
         setDisabledMessage(dictionary.cockpit.belowMinCRatio);
       } else {
@@ -96,6 +99,8 @@ export function TradePanel(): JSX.Element {
       if (!user.position.depositedValue) {
         setDisabledMessage(dictionary.cockpit.noDepositsForBorrow);
         // User is below minimum c-ratio
+      } else if (currentReserve.abbrev === 'ETH') {
+        setDisabledMessage('Sollet ETH will be sunset at the end of April. Borrowing ETH is not available');
       } else if (user.position.borrowedValue && user.position.colRatio <= market.minColRatio) {
         setDisabledMessage(dictionary.cockpit.belowMinCRatio);
         // No liquidity in market to borrow from
@@ -205,7 +210,7 @@ export function TradePanel(): JSX.Element {
             onClick: () => submitTrade()
           }
         };
-        
+
       // Depositing all SOL leaving no lamports for fees, inform and reject
       } else */ if (
         currentReserve.abbrev === 'SOL' &&
@@ -324,7 +329,7 @@ export function TradePanel(): JSX.Element {
         const depositAmount = tradeAmount.amount;
         [res, txids] = await deposit(currentReserve.abbrev, depositAmount);
       }
-      // Withdrawing
+      // Withdrawing sollet ETH
     } else if (tradeAction === 'withdraw') {
       // User is withdrawing more than liquidity in market
       if (tradeAmount.gt(currentReserve.availableLiquidity)) {

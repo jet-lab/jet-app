@@ -1,9 +1,33 @@
 import { useState } from 'react';
+import { useUser } from '../v1/contexts/user';
 
 export const GlobalNotification = () => {
-  const [show, setShow] = useState(true);
+  const user = useUser();
 
-  if (show) {
+  if (user.collateralBalances['ETH'] > 0 || user.loanBalances['ETH'] > 0) {
+    return (
+      <div className="network-warning-banner flex-centered">
+        <div>
+          <span className="bold-text">
+            {
+              'You currently have deposited or borrowed ETH.  We ask that you withdraw or repay any ETH positions on Jet Protocol as soon as possible as Sollet wrapped ETH will be sunset at the end of April.'
+            }
+            <br />
+          </span>
+          <div className="flex-centered">
+            <span className="link-btn" id="learn-link">
+              <a
+                href="https://jet-association.gitbook.io/jet-association-1.0.0/collateral-off-boarding/sunsetting-sollet-wrapped-eth"
+                target="_blank"
+                rel="noopener noreferrer">
+                Click here to learn more
+              </a>
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  } else {
     return (
       <div className="network-warning-banner flex-centered">
         <div>
@@ -26,7 +50,5 @@ export const GlobalNotification = () => {
         </div>
       </div>
     );
-  } else {
-    return null;
   }
 };
