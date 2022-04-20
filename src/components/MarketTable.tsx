@@ -81,7 +81,6 @@ export function MarketTable(): JSX.Element {
     }
     // Initialize current reserve on first load
     if (!currentReserve) {
-      console.log('sol');
       setCurrentReserve(market.reserves['SOL']);
     }
   }, [market.reserves]);

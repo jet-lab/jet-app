@@ -77,7 +77,6 @@ export function TradePanel(): JSX.Element {
       if (!user.walletBalances[currentReserve.abbrev]) {
         setDisabledMessage(dictionary.cockpit.noBalanceForDeposit.replaceAll('{{ASSET}}', currentReserve.abbrev));
       } else if (currentReserve.abbrev === 'ETH') {
-        console.log('currentReserve.abbrev');
         setDisabledMessage('Sollet ETH will be sunset at the end of April. We do not accept Sollet ETH');
       } else {
         setDisabledInput(false);
