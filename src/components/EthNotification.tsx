@@ -19,7 +19,8 @@ export const EthNotification = () => {
         setCurrentAction('withdraw');
       }}
       cancelButtonProps={{ style: { display: 'none' } }}
-      onCancel={() => setModalVisible(false)}>
+      onCancel={() => setModalVisible(false)}
+      maskClosable = {false}>
       <div>
         <div style={{ marginBottom: '5px' }}>
           <span className="bold-text">
