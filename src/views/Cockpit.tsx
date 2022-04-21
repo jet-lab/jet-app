@@ -10,6 +10,7 @@ import { HealthBar } from '../components/HealthBar';
 import { TradePanel } from '../components/TradePanel';
 import { MarketTable } from '../components/MarketTable';
 import { Checkbox } from 'antd';
+import { EthNotification } from '../components/EthNotification';
 
 // Jet V1
 import { useUser } from '../v1/contexts/user';
@@ -142,6 +143,7 @@ export function Cockpit(): JSX.Element {
         <div className="trade-table-container">
           <TradePanel />
           <MarketTable />
+          {user.collateralBalances['ETH'] > 0 || user.loanBalances['ETH'] > 0 ? <EthNotification /> : null}
         </div>
       </div>
     );
