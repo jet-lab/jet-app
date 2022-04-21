@@ -20,7 +20,7 @@ export const EthNotification = () => {
       }}
       cancelButtonProps={{ style: { display: 'none' } }}
       onCancel={() => setModalVisible(false)}
-      maskClosable = {false}>
+      maskClosable={false}>
       <div>
         <div style={{ marginBottom: '5px' }}>
           <span className="bold-text">
