@@ -5,13 +5,10 @@ import { useMarket } from '../v1/contexts/market';
 import { useTradeContext } from '../contexts/tradeContext';
 
 export const EthNotification = () => {
-    const [modalVisible, setModalVisible] = useState(true);
-    const user = useUser();
-    const market = useMarket();
-    const {
-      setCurrentReserve,
-      setCurrentAction,
-    } = useTradeContext();
+  const [modalVisible, setModalVisible] = useState(true);
+  const user = useUser();
+  const market = useMarket();
+  const { setCurrentReserve, setCurrentAction } = useTradeContext();
 
   return (
     <Modal
@@ -19,15 +16,14 @@ export const EthNotification = () => {
       visible={modalVisible}
       okText={'Withdraw & Repay ETH'}
       onOk={() => {
-        setModalVisible(false)
-        setCurrentReserve(market.reserves['ETH'])
-        setCurrentAction('withdraw')
+        setModalVisible(false);
+        setCurrentReserve(market.reserves['ETH']);
+        setCurrentAction('withdraw');
       }}
       cancelButtonProps={{ style: { display: 'none' } }}
-      onCancel={() => setModalVisible(false)}
-      >
+      onCancel={() => setModalVisible(false)}>
       <div>
-        <div style={{marginBottom: "5px"}}>
+        <div style={{ marginBottom: '5px' }}>
           <span className="bold-text">
             {
               'Sollet wrapped ETH will be sunset at the end of April. You currently have deposited or borrowed ETH. Please withdraw or repay any ETH positions on Jet Protocol immediately.'
@@ -47,6 +43,4 @@ export const EthNotification = () => {
       </div>
     </Modal>
   );
-}
-
-
+};

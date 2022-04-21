@@ -1,7 +1,4 @@
-
-
 export const GlobalNotification = () => {
-
   return (
     <div className="network-warning-banner flex-centered">
       <div>

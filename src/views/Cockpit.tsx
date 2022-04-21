@@ -143,7 +143,7 @@ export function Cockpit(): JSX.Element {
         <div className="trade-table-container">
           <TradePanel />
           <MarketTable />
-          {(user.collateralBalances['ETH'] > 0 || user.loanBalances['ETH'] > 0) ? <EthNotification/> : null}
+          {user.collateralBalances['ETH'] > 0 || user.loanBalances['ETH'] > 0 ? <EthNotification /> : null}
         </div>
       </div>
     );
