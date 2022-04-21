@@ -1,12 +1,10 @@
-import { Modal, Button } from 'antd';
+import { Modal } from 'antd';
 import { useState } from 'react';
-import { useUser } from '../v1/contexts/user';
 import { useMarket } from '../v1/contexts/market';
 import { useTradeContext } from '../contexts/tradeContext';
 
 export const EthNotification = () => {
   const [modalVisible, setModalVisible] = useState(true);
-  const user = useUser();
   const market = useMarket();
   const { setCurrentReserve, setCurrentAction } = useTradeContext();
 
