@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.5.0",
-    "@jet-lab/defi-yield-ts": "^1.0.8",
+    "@jet-lab/defi-yield-ts": "^1.0.10",
     "@jet-lab/jet-engine": "^0.2.19",
     "@project-serum/anchor": "^0.19.0",
     "@solana/wallet-adapter-base": "^0.7.1",
@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@craco/craco": "^6.4.3",
+    "@types/bn.js": "^5.1.0",
     "@types/bs58": "^4.0.1",
     "@types/node": "^17.0.17",
     "@types/react": "^17.0.37",

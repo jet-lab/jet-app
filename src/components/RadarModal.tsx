@@ -6,6 +6,7 @@ import { useTradeContext } from '../contexts/tradeContext';
 import { Modal } from 'antd';
 import { RateObserver, ProtocolRates } from '@jet-lab/defi-yield-ts';
 import { ReactComponent as RadarIcon } from '../styles/icons/radar_icon.svg';
+import { idl, cluster } from '../hooks/jet-client/useClient';
 
 export function RadarModal(): JSX.Element {
   const { darkTheme } = useDarkTheme();
@@ -39,7 +40,7 @@ export function RadarModal(): JSX.Element {
   useEffect(() => {
     async function getRates() {
       const rateObserver = new RateObserver();
-      const rates: ProtocolRates[] = await rateObserver.fetchAll();
+      const rates: ProtocolRates[] = await rateObserver.fetchAll(idl.metadata.cluster);
       for (const rate of rates) {
         for (const protocol of protocols) {
           if (rate.protocol === protocol.name) {
