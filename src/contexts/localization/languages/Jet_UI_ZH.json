@@ -163,6 +163,7 @@
   "transactions": {
     "title": "飞行日志",
     "date": "日期",
+    "time": "时间",
     "signature": "签章",
     "tradeAction": "交易",
     "tradeAmount": "金额",

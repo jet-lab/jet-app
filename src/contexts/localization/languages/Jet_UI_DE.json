@@ -163,6 +163,7 @@
   "transactions": {
     "title": "Flugbuch",
     "date": "Datum",
+    "time": "Time",
     "signature": "Signatur",
     "tradeAction": "Transaktion",
     "tradeAmount": "Betrag",

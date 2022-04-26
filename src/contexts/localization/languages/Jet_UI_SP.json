@@ -163,6 +163,7 @@
   "transactions": {
     "title": "Registro de Vuelo",
     "date": "Fecha",
+    "time": "Time",
     "signature": "Firma",
     "tradeAction": "Transacción",
     "tradeAmount": "Monto",

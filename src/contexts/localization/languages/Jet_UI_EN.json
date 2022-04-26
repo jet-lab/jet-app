@@ -163,6 +163,7 @@
   "transactions": {
     "title": "Flight Logs",
     "date": "Date",
+    "time": "Time",
     "signature": "Signature",
     "tradeAction": "Transaction",
     "tradeAmount": "Amount",
