@@ -104,7 +104,7 @@ export function TransactionsProvider(props: { children: JSX.Element }): JSX.Elem
               // Signature
               log.signature = signature;
 
-              const dateTime = new Date(log.blockTime * 1000)
+              const dateTime = new Date(log.blockTime * 1000);
               // UI date
               log.blockDate = dateTime.toLocaleDateString();
               //UI time
