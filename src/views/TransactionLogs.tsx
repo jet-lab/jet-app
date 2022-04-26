@@ -23,6 +23,7 @@ export function TransactionLogs(): JSX.Element {
           <thead>
             <tr>
               <th>{dictionary.transactions.date}</th>
+              <th>{dictionary.transactions.date}</th>
               <th>{dictionary.transactions.signature}</th>
               <th>{dictionary.transactions.tradeAction}</th>
               <th>{dictionary.transactions.tradeAmount}</th>
@@ -33,6 +34,7 @@ export function TransactionLogs(): JSX.Element {
             {logs.map((log, i) => (
               <tr key={i} onClick={() => window.open(getExplorerUrl(log.signature), '_blank')}>
                 <td>{log.blockDate}</td>
+                <td>{log.time}</td>
                 <td style={{ color: 'var(--success)' }}>{shortenPubkey(log.signature, 4)}</td>
                 <td className="reserve-detail">{log.tradeAction}</td>
                 <td className="asset">

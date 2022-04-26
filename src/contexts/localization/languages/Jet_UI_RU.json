@@ -163,6 +163,7 @@
   "transactions": {
     "title": "Бортовой журнал",
     "date": "Дата",
+    "time": "Time",
     "signature": "Подпись",
     "tradeAction": "Транзакция",
     "tradeAmount": "Сумма",

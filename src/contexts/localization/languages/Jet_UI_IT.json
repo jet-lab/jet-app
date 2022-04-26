@@ -163,6 +163,7 @@
   "transactions": {
     "title": "Diario di bordo",
     "date": "Data",
+    "time": "Time",
     "signature": "Firma",
     "tradeAction": "Transazione",
     "tradeAmount": "Quantità",

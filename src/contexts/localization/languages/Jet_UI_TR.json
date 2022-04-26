@@ -162,6 +162,7 @@
   "transactions": {
     "title": "Uçuş Kayırları",
     "date": "Tarih",
+    "time": "Time",
     "signature": "İmza",
     "tradeAction": "İşlem",
     "tradeAmount": "Miktar",

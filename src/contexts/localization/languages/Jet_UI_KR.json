@@ -163,6 +163,7 @@
   "transactions": {
     "title": "비행 기록",
     "date": "날짜",
+    "time": "Time",
     "signature": "서명",
     "tradeAction": "거래",
     "tradeAmount": "비용",

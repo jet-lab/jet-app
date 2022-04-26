@@ -12,6 +12,7 @@ import { timeout } from '../utils/utils';
 // Transaction logs context
 interface TransactionLog extends TransactionResponse {
   blockDate: string;
+  time: string;
   signature: string;
   tradeAction: string;
   tradeAmount: TokenAmount;
@@ -102,8 +103,12 @@ export function TransactionsProvider(props: { children: JSX.Element }): JSX.Elem
               }
               // Signature
               log.signature = signature;
+
+              const dateTime = new Date(log.blockTime * 1000)
               // UI date
-              log.blockDate = new Date(log.blockTime * 1000).toLocaleDateString();
+              log.blockDate = dateTime.toLocaleDateString();
+              //UI time
+              log.time = dateTime.toLocaleTimeString('en-US', { hour12: false });
               // If we found mint match, add tx to logs
               if (log.tokenAbbrev) {
                 return log;
