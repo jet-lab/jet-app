@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Connection } from '@solana/web3.js';
-import { cluster, useProvider } from '../hooks/jet-client/useClient';
+import { cluster, useProvider, idl } from '../hooks/jet-client/useClient';
 
 // RPC node context
 interface RpcNode {
@@ -36,7 +36,7 @@ export function RpcNodeContextProvider(props: { children: JSX.Element }): JSX.El
     };
 
     const checkNetworkPerformance = async () => {
-      const connection = new Connection('https://api.mainnet-beta.solana.com/');
+      const connection = new Connection(idl.metadata.cluster);
       const samples = await connection.getRecentPerformanceSamples(15);
       const totalTps = samples.reduce((acc, val) => {
         return acc + val.numTransactions / val.samplePeriodSecs;
