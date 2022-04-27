@@ -23,7 +23,7 @@ export function TransactionLogs(): JSX.Element {
           <thead>
             <tr>
               <th>{dictionary.transactions.date}</th>
-              <th>{dictionary.transactions.date}</th>
+              <th>{dictionary.transactions.time}</th>
               <th>{dictionary.transactions.signature}</th>
               <th>{dictionary.transactions.tradeAction}</th>
               <th>{dictionary.transactions.tradeAmount}</th>
