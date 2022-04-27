@@ -10,16 +10,18 @@ import { useLanguage } from './localization/localization';
 import { timeout } from '../utils/utils';
 
 // Transaction logs context
-interface TransactionLog extends TransactionResponse {
+interface TransactionLog {
   blockDate: string;
   time: string;
   signature: string;
+  sigIndex: number; //signature index that we used to find this transaction
   tradeAction: string;
   tradeAmount: TokenAmount;
   tokenAbbrev: string;
   tokenDecimals: number;
   tokenPrice: number;
 }
+
 interface TransactionLogs {
   loadingLogs: boolean;
   logs: TransactionLog[];
@@ -27,6 +29,7 @@ interface TransactionLogs {
   addLog: (signature: string) => Promise<void>;
   searchMoreLogs: () => void;
 }
+
 const TransactionsContext = createContext<TransactionLogs>({
   loadingLogs: false,
   logs: [],
@@ -47,7 +50,11 @@ export function TransactionsProvider(props: { children: JSX.Element }): JSX.Elem
   const [noMoreSignatures, setNoMoreSignatures] = useState(false);
 
   // Get transaction details from a signature
-  async function getLogDetail(log: TransactionLog, signature: string) {
+  async function getLogDetail(
+    log: TransactionResponse,
+    signature: string,
+    sigIndex?: number
+  ): Promise<TransactionLog | undefined> {
     if (!(log.meta?.logMessages && log.blockTime)) {
       return;
     }
@@ -70,9 +77,10 @@ export function TransactionsProvider(props: { children: JSX.Element }): JSX.Elem
             for (let i = 0; i < 8; i++) {
               txInstBytes.push(bs58.decode(inst.data)[i]);
             }
+            const jetLog = {} as TransactionLog;
             // If those bytes match any of our instructions label trade action
             if (JSON.stringify(instructionBytes[progInst]) === JSON.stringify(txInstBytes)) {
-              log.tradeAction = dictionary.transactions[progInst];
+              jetLog.tradeAction = dictionary.transactions[progInst];
               // Determine asset and trade amount
               for (const pre of log.meta.preTokenBalances as any[]) {
                 for (const post of log.meta.postTokenBalances as any[]) {
@@ -88,10 +96,10 @@ export function TransactionsProvider(props: { children: JSX.Element }): JSX.Elem
                         ) {
                           break;
                         }
-                        log.tokenAbbrev = reserve.abbrev;
-                        log.tokenDecimals = reserve.decimals;
-                        log.tokenPrice = reserve.price;
-                        log.tradeAmount = new TokenAmount(
+                        jetLog.tokenAbbrev = reserve.abbrev;
+                        jetLog.tokenDecimals = reserve.decimals;
+                        jetLog.tokenPrice = reserve.price;
+                        jetLog.tradeAmount = new TokenAmount(
                           new BN(post.uiTokenAmount.amount - pre.uiTokenAmount.amount),
                           reserve.decimals,
                           reserve.tokenMint
@@ -102,22 +110,25 @@ export function TransactionsProvider(props: { children: JSX.Element }): JSX.Elem
                 }
               }
               // Signature
-              log.signature = signature;
+              jetLog.signature = signature;
 
               const dateTime = new Date(log.blockTime * 1000);
               // UI date
-              log.blockDate = dateTime.toLocaleDateString();
+              jetLog.blockDate = dateTime.toLocaleDateString();
               //UI time
-              log.time = dateTime.toLocaleTimeString('en-US', { hour12: false });
+              jetLog.time = dateTime.toLocaleTimeString('en-US', { hour12: false });
+              //add signature index that we have iterated over
+              jetLog.sigIndex = sigIndex ? sigIndex : 0;
               // If we found mint match, add tx to logs
-              if (log.tokenAbbrev) {
-                return log;
+              if (jetLog.tokenAbbrev) {
+                return jetLog;
               }
             }
           }
         }
       }
     }
+    return;
   }
 
   // Get transaction details for multiple signatures
@@ -125,37 +136,46 @@ export function TransactionsProvider(props: { children: JSX.Element }): JSX.Elem
     // Begin loading transaction logs
     setLoadingLogs(true);
 
-    // Iterate through signatures to get detailed logs
-    let index = logs.length ? logs.length + 1 : 0;
+    //At which index of the signature array do we want to start finding more Jet transactions
+    let sigIndex = logs.length ? logs[logs.length - 1].sigIndex + 1 : 0;
     const newLogs: TransactionLog[] = [];
+
+    // Iterate through signatures to find Jet transactions up to 10 transactions
     while (newLogs.length < 10) {
-      // Get current signature from index
-      const currentSignature = sigs[index]?.signature;
+      // Get current signature string using signatures index
+      const currentSignature = sigs[sigIndex]?.signature;
       if (!currentSignature) {
         return;
       }
 
-      // Get confirmed transaction for signature
+      // Get confirmed transaction response
       const log = await connection.getTransaction(currentSignature, {
         commitment: 'confirmed'
       });
-      const detailedLog = log ? await getLogDetail(log as TransactionLog, currentSignature) : null;
+
+      //If it's a Jet transaction, make a TransactionLog
+      const detailedLog = log ? await getLogDetail(log, currentSignature, sigIndex) : null;
+
       if (detailedLog) {
         newLogs.push(detailedLog);
       }
 
-      // Increment current index
-      index++;
+      // Increment current signature index
+      sigIndex++;
+      console.log('current sigindex + 1', sigIndex);
 
       // If we run out of signatures, break
-      if (index >= sigs.length) {
+      if (sigIndex >= sigs.length) {
         setNoMoreSignatures(true);
         break;
       }
     }
 
-    // Add transaction logs and stop loading
-    setLogs([...logs, ...newLogs]);
+    // Add transaction logs if there are new ones to add
+    if (newLogs.length > 0) {
+      setLogs([...logs, ...newLogs]);
+    }
+
     setLoadingLogs(false);
   }
 
@@ -166,11 +186,11 @@ export function TransactionsProvider(props: { children: JSX.Element }): JSX.Elem
     setLoadingLogs(true);
 
     // Keep trying to get confirmed log (may take a few seconds for validation)
-    let log: TransactionLog | null = null;
+    let log = null;
     while (!log) {
-      log = (await connection.getTransaction(signature, {
+      log = await connection.getTransaction(signature, {
         commitment: 'confirmed'
-      })) as unknown as TransactionLog | null;
+      });
       timeout(2000);
     }
 
