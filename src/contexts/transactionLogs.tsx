@@ -162,7 +162,6 @@ export function TransactionsProvider(props: { children: JSX.Element }): JSX.Elem
 
       // Increment current signature index
       sigIndex++;
-      console.log('current sigindex + 1', sigIndex);
 
       // If we run out of signatures, break
       if (sigIndex >= sigs.length) {
