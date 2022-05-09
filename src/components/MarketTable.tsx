@@ -65,7 +65,6 @@ export function MarketTable(): JSX.Element {
 
   // Update reserves array on market changes
   useEffect(() => {
-    console.log('run');
     const reserves = [];
     for (const reserve of Object.values(market.reserves)) {
       reserves.push(reserve);
