@@ -1,11 +1,4 @@
-import { BN } from '@project-serum/anchor';
 import * as anchor from '@project-serum/anchor';
-import {
-  MintInfo,
-  MintLayout,
-  AccountInfo as TokenAccountInfo,
-  AccountLayout as TokenAccountLayout
-} from '@solana/spl-token';
 import {
   AccountInfo,
   Commitment,
@@ -18,26 +11,14 @@ import {
   TransactionInstruction
 } from '@solana/web3.js';
 import { Buffer } from 'buffer';
-import type {
-  HasPublicKey,
-  IdlMetadata,
-  JetMarketReserveInfo,
-  MarketAccount,
-  ObligationAccount,
-  ObligationPositionStruct,
-  ReserveAccount,
-  ReserveConfigStruct,
-  ReserveStateStruct,
-  ToBytes
-} from '../models/JetTypes';
+import type { HasPublicKey, IdlMetadata, ReserveConfigStruct, ToBytes } from '../models/JetTypes';
 import { TxnResponse } from '../models/JetTypes';
-import { MarketReserveInfoList, PositionInfoList, ReserveStateLayout } from './layout';
 import { TokenAmount } from './tokens';
 import { idl } from '../../hooks/jet-client/useClient';
+import { parseMintAccount, parseTokenAccount } from '@jet-lab/jet-engine';
 
 // Find PDA functions and jet algorithms that are reimplemented here
 export const SOL_DECIMALS = 9;
-export const NULL_PUBKEY = new PublicKey('11111111111111111111111111111111');
 
 // Find PDA addresses
 /** Find market authority. */
@@ -178,11 +159,8 @@ export const getTokenAccountAndSubscribe = async function (
     publicKey,
     (account, context) => {
       if (account !== null) {
-        if (account.data.length !== 165) {
-          console.log('account data length', account.data.length);
-        }
         const decoded = parseTokenAccount(account, publicKey);
-        const amount = TokenAmount.tokenAccount(decoded.data, decimals);
+        const amount = TokenAmount.tokenAccount(decoded, decimals);
         callback(amount, context);
       } else {
         callback(undefined, context);
@@ -213,8 +191,8 @@ export const getMintInfoAndSubscribe = async function (
     publicKey,
     (account, context) => {
       if (account !== null) {
-        const mintInfo = MintLayout.decode(account.data) as MintInfo;
-        const amount = TokenAmount.mint(mintInfo);
+        const decoded = parseMintAccount(account, publicKey);
+        const amount = TokenAmount.mint(decoded);
         callback(amount, context);
       } else {
         callback(undefined, context);
@@ -431,76 +409,6 @@ export const sendAllTransactions = async (
 export const explorerUrl = (txid: string) => {
   const clusterParam = process.env.REACT_APP_CLUSTER === 'devnet' ? `?cluster=devnet` : '';
   return `https://explorer.solana.com/transaction/${txid}${clusterParam}`;
-};
-
-export const parseTokenAccount = (account: AccountInfo<Buffer>, accountPubkey: PublicKey) => {
-  const data = TokenAccountLayout.decode(account.data);
-
-  // PublicKeys and BNs are currently Uint8 arrays and
-  // booleans are really Uint8s. Convert them
-  const decoded: AccountInfo<TokenAccountInfo> = {
-    ...account,
-    data: {
-      address: accountPubkey,
-      mint: new PublicKey(data.mint),
-      owner: new PublicKey(data.owner),
-      amount: new BN(data.amount, undefined, 'le'),
-      delegate: (data as any).delegateOption ? new PublicKey(data.delegate!) : null,
-      delegatedAmount: new BN(data.delegatedAmount, undefined, 'le'),
-      isInitialized: (data as any).state !== 0,
-      isFrozen: (data as any).state === 2,
-      isNative: !!(data as any).isNativeOption,
-      rentExemptReserve: new BN(0, undefined, 'le'),
-      closeAuthority: (data as any).closeAuthorityOption ? new PublicKey(data.closeAuthority!) : null
-    }
-  };
-  return decoded;
-};
-
-export const parseMarketAccount = (account: Buffer, coder: anchor.Coder) => {
-  const market = coder.accounts.decode<MarketAccount>('Market', account);
-
-  const reserveInfoData = new Uint8Array(market.reserves as any as number[]);
-  const reserveInfoList = MarketReserveInfoList.decode(reserveInfoData) as JetMarketReserveInfo[];
-
-  market.reserves = reserveInfoList;
-  return market;
-};
-
-export const parseReserveAccount = (account: Buffer, coder: anchor.Coder) => {
-  const reserve = coder.accounts.decode<ReserveAccount>('Reserve', account);
-
-  const reserveState = ReserveStateLayout.decode(Buffer.from(reserve.state as any as number[])) as ReserveStateStruct;
-
-  reserve.state = reserveState;
-  return reserve;
-};
-
-export const parseObligationAccount = (account: Buffer, coder: anchor.Coder) => {
-  const obligation = coder.accounts.decode<ObligationAccount>('Obligation', account);
-
-  const parsePosition = (position: any) => {
-    const pos: ObligationPositionStruct = {
-      account: new PublicKey(position.account),
-      amount: new BN(position.amount),
-      side: position.side,
-      reserveIndex: position.reserveIndex,
-      _reserved: []
-    };
-    return pos;
-  };
-
-  obligation.collateral = PositionInfoList.decode(Buffer.from(obligation.collateral as any as number[])).map(
-    parsePosition
-  );
-
-  obligation.loans = PositionInfoList.decode(Buffer.from(obligation.loans as any as number[])).map(parsePosition);
-
-  return obligation;
-};
-
-export const parseU192 = (data: Buffer | number[]) => {
-  return new BN(data, undefined, 'le');
 };
 
 export const parseIdlMetadata = (idlMetadata: IdlMetadata): IdlMetadata => {

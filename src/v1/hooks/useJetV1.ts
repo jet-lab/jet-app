@@ -1,8 +1,16 @@
 import { Keypair, PublicKey, Signer, SystemProgram, SYSVAR_RENT_PUBKEY, TransactionInstruction } from '@solana/web3.js';
 import * as anchor from '@project-serum/anchor';
 import { BN } from '@project-serum/anchor';
-import { ASSOCIATED_TOKEN_PROGRAM_ID, NATIVE_MINT } from '@solana/spl-token';
-import { AccountLayout as TokenAccountLayout, Token, TOKEN_PROGRAM_ID, u64 } from '@solana/spl-token';
+import {
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  createAssociatedTokenAccountInstruction,
+  createCloseAccountInstruction,
+  createInitializeAccountInstruction,
+  createMintToInstruction,
+  getMinimumBalanceForRentExemptAccount,
+  NATIVE_MINT
+} from '@solana/spl-token';
+import { AccountLayout as TokenAccountLayout, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { Buffer } from 'buffer';
 import { TxnResponse } from '../models/JetTypes';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -77,20 +85,14 @@ export const useJetV1 = () => {
         lamports: parseInt(lamports.addn(rent).toString())
       });
 
-      initTokenAccountIx = Token.createInitAccountInstruction(
+      initTokenAccountIx = createInitializeAccountInstruction(
         TOKEN_PROGRAM_ID,
         NATIVE_MINT,
         depositSourcePubkey,
         publicKey
       );
 
-      closeTokenAccountIx = Token.createCloseAccountInstruction(
-        TOKEN_PROGRAM_ID,
-        depositSourcePubkey,
-        publicKey,
-        publicKey,
-        []
-      );
+      closeTokenAccountIx = createCloseAccountInstruction(TOKEN_PROGRAM_ID, depositSourcePubkey, publicKey);
     }
 
     // Create the deposit note dest account if it doesn't exist
@@ -229,7 +231,7 @@ export const useJetV1 = () => {
       // There isn't an easy way to unwrap sol without
       // closing the account, so we avoid closing the
       // associated token account.
-      const rent = await Token.getMinBalanceRentForExemptAccount(connection);
+      const rent = await getMinimumBalanceForRentExemptAccount(connection);
 
       wsolKeypair = Keypair.generate();
       withdrawAccount = wsolKeypair.publicKey;
@@ -240,7 +242,7 @@ export const useJetV1 = () => {
         space: TokenAccountLayout.span,
         lamports: rent
       });
-      initWsolIx = Token.createInitAccountInstruction(
+      initWsolIx = createInitializeAccountInstruction(
         TOKEN_PROGRAM_ID,
         reserve.tokenMintPubkey,
         withdrawAccount,
@@ -248,7 +250,7 @@ export const useJetV1 = () => {
       );
     } else if (!asset.walletTokenExists) {
       // Create the wallet token account if it doesn't exist
-      createAssociatedTokenAccountIx = Token.createAssociatedTokenAccountInstruction(
+      createAssociatedTokenAccountIx = createAssociatedTokenAccountInstruction(
         ASSOCIATED_TOKEN_PROGRAM_ID,
         TOKEN_PROGRAM_ID,
         asset.tokenMintPubkey,
@@ -301,7 +303,7 @@ export const useJetV1 = () => {
 
     // Unwrap sol
     if (asset.tokenMintPubkey.equals(NATIVE_MINT) && wsolKeypair) {
-      closeWsolIx = Token.createCloseAccountInstruction(TOKEN_PROGRAM_ID, withdrawAccount, publicKey, publicKey, []);
+      closeWsolIx = createCloseAccountInstruction(TOKEN_PROGRAM_ID, withdrawAccount, publicKey);
     }
 
     const ixs: InstructionAndSigner[] = [
@@ -358,7 +360,7 @@ export const useJetV1 = () => {
       // There isn't an easy way to unwrap sol without
       // closing the account, so we avoid closing the
       // associated token account.
-      const rent = await Token.getMinBalanceRentForExemptAccount(connection);
+      const rent = await getMinimumBalanceForRentExemptAccount(connection);
 
       wsolKeypair = Keypair.generate();
       receiverAccount = wsolKeypair.publicKey;
@@ -369,7 +371,7 @@ export const useJetV1 = () => {
         space: TokenAccountLayout.span,
         lamports: rent
       });
-      initWsoltokenAccountIx = Token.createInitAccountInstruction(
+      initWsoltokenAccountIx = createInitializeAccountInstruction(
         TOKEN_PROGRAM_ID,
         reserve.tokenMintPubkey,
         wsolKeypair.publicKey,
@@ -377,7 +379,7 @@ export const useJetV1 = () => {
       );
     } else if (!asset.walletTokenExists) {
       // Create the wallet token account if it doesn't exist
-      createTokenAccountIx = Token.createAssociatedTokenAccountInstruction(
+      createTokenAccountIx = createAssociatedTokenAccountInstruction(
         ASSOCIATED_TOKEN_PROGRAM_ID,
         TOKEN_PROGRAM_ID,
         asset.tokenMintPubkey,
@@ -431,13 +433,7 @@ export const useJetV1 = () => {
 
     // If withdrawing SOL, unwrap it by closing
     if (asset.tokenMintPubkey.equals(NATIVE_MINT)) {
-      closeTokenAccountIx = Token.createCloseAccountInstruction(
-        TOKEN_PROGRAM_ID,
-        receiverAccount,
-        publicKey,
-        publicKey,
-        []
-      );
+      closeTokenAccountIx = createCloseAccountInstruction(TOKEN_PROGRAM_ID, receiverAccount, publicKey);
     }
 
     const ixs: InstructionAndSigner[] = [
@@ -511,20 +507,14 @@ export const useJetV1 = () => {
         lamports: parseInt(lamports.addn(rent).toString())
       });
 
-      initTokenAccountIx = Token.createInitAccountInstruction(
+      initTokenAccountIx = createInitializeAccountInstruction(
         TOKEN_PROGRAM_ID,
         NATIVE_MINT,
         depositSourcePubkey,
         publicKey
       );
 
-      closeTokenAccountIx = Token.createCloseAccountInstruction(
-        TOKEN_PROGRAM_ID,
-        depositSourcePubkey,
-        publicKey,
-        publicKey,
-        []
-      );
+      closeTokenAccountIx = createCloseAccountInstruction(TOKEN_PROGRAM_ID, depositSourcePubkey, publicKey);
     } else if (!asset.walletTokenExists) {
       return [TxnResponse.Failed, []];
     }
@@ -677,7 +667,7 @@ export const useJetV1 = () => {
     let txid: string[] = [];
 
     if (!asset.walletTokenExists) {
-      const createTokenAccountIx = Token.createAssociatedTokenAccountInstruction(
+      const createTokenAccountIx = createAssociatedTokenAccountInstruction(
         ASSOCIATED_TOKEN_PROGRAM_ID,
         TOKEN_PROGRAM_ID,
         asset.tokenMintPubkey,
@@ -722,13 +712,11 @@ export const useJetV1 = () => {
       [res, txid] = await sendTransaction(program.provider, ix, signers);
     } else {
       // Mint to the destination token account
-      const mintToIx = Token.createMintToInstruction(
-        TOKEN_PROGRAM_ID,
+      const mintToIx = createMintToInstruction(
         reserve.tokenMintPubkey,
         asset.walletTokenPubkey,
         publicKey,
-        [],
-        new u64(lamports.toArray())
+        BigInt(lamports.toString())
       );
       ix.push(mintToIx);
 

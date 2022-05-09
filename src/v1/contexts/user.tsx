@@ -3,7 +3,7 @@ import type { Asset, AssetStore, Obligation } from '../models/JetTypes';
 import { PublicKey } from '@solana/web3.js';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { BN } from '@project-serum/anchor';
-import { Token, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID, NATIVE_MINT } from '@solana/spl-token';
+import { NATIVE_MINT, getAssociatedTokenAddress } from '@solana/spl-token';
 import {
   findCollateralAddress,
   findDepositNoteAddress,
@@ -12,10 +12,9 @@ import {
   findObligationAddress,
   getAccountInfoAndSubscribe,
   getTokenAccountAndSubscribe,
-  parseObligationAccount,
   SOL_DECIMALS
 } from '../util/programUtil';
-import { coder, useProvider, useProgram } from '../../hooks/jet-client/useClient';
+import { useProvider, useProgram } from '../../hooks/jet-client/useClient';
 import { TokenAmount } from '../util/tokens';
 import { useMarket } from './market';
 
@@ -87,20 +86,6 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
     const promises: Promise<number>[] = [];
     if (!assets || !publicKey) {
       return;
-    }
-
-    // Obligation
-    if (assets.obligationPubkey) {
-      promise = getAccountInfoAndSubscribe(connection, assets.obligationPubkey, (account: any) => {
-        if (account != null) {
-          assets.obligation = {
-            ...account,
-            data: parseObligationAccount(account.data, coder)
-          };
-          deriveValues(assets);
-        }
-      });
-      promises.push(promise);
     }
 
     // Wallet native SOL balance
@@ -319,12 +304,7 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
 
           const asset: Asset = {
             tokenMintPubkey,
-            walletTokenPubkey: await Token.getAssociatedTokenAddress(
-              ASSOCIATED_TOKEN_PROGRAM_ID,
-              TOKEN_PROGRAM_ID,
-              tokenMintPubkey,
-              publicKey
-            ),
+            walletTokenPubkey: await getAssociatedTokenAddress(tokenMintPubkey, publicKey),
             walletTokenExists: false,
             walletTokenBalance: TokenAmount.zero(reserve.decimals),
             depositNotePubkey,

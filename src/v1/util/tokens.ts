@@ -1,5 +1,6 @@
+import { bigIntToBn } from '@jet-lab/jet-engine';
 import { BN } from '@project-serum/anchor';
-import type { AccountInfo as TokenAccountInfo, MintInfo, u64 } from '@solana/spl-token';
+import type { Account, Mint } from '@solana/spl-token';
 
 // Token Amounts
 export class TokenAmount {
@@ -27,12 +28,12 @@ export class TokenAmount {
     return new TokenAmount(new BN(0), decimals ?? 0);
   }
 
-  public static tokenAccount(tokenAccount: TokenAccountInfo, decimals: number) {
-    return new TokenAmount(tokenAccount.amount, decimals);
+  public static tokenAccount(tokenAccount: Account, decimals: number) {
+    return new TokenAmount(bigIntToBn(tokenAccount.amount), decimals);
   }
 
-  public static mint(mint: MintInfo) {
-    return new TokenAmount(new BN(mint.supply), mint.decimals);
+  public static mint(mint: Mint) {
+    return new TokenAmount(bigIntToBn(mint.supply), mint.decimals);
   }
 
   public static tokens(tokenAmount: string, decimals: number) {
@@ -171,15 +172,15 @@ export type AmountUnits = {
 export class Amount {
   private constructor(public units: AmountUnits, public value: BN) {}
 
-  static tokens(amount: number | u64): Amount {
+  static tokens(amount: number | BN): Amount {
     return new Amount({ tokens: {} }, new BN(amount));
   }
 
-  static depositNotes(amount: number | u64): Amount {
+  static depositNotes(amount: number | BN): Amount {
     return new Amount({ depositNotes: {} }, new BN(amount));
   }
 
-  static loanNotes(amount: number | u64): Amount {
+  static loanNotes(amount: number | BN): Amount {
     return new Amount({ loanNotes: {} }, new BN(amount));
   }
 }

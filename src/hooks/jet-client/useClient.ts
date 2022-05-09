@@ -7,6 +7,7 @@ import { useRpcNode } from '../../contexts/rpcNode';
 import localnetIdl from './idl/localnet/jet.json';
 import devnetIdl from './idl/devnet/jet.json';
 import mainnetBetaIdl from './idl/mainnet-beta/jet.json';
+import { BorshCoder } from '@project-serum/anchor';
 
 export let idl: any;
 export const cluster = process.env.REACT_APP_CLUSTER ?? 'devnet';
@@ -18,7 +19,7 @@ if (cluster === 'localnet') {
   idl = devnetIdl;
 }
 
-export const coder = new anchor.Coder(idl);
+export const coder = new BorshCoder(idl);
 
 const confirmOptions = {
   skipPreflight: false,

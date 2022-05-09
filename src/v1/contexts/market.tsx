@@ -1,7 +1,7 @@
 import { AccountInfo, PublicKey } from '@solana/web3.js';
 import { BN } from '@project-serum/anchor';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { coder, idl, useProvider } from '../../hooks/jet-client/useClient';
+import { idl, useProvider } from '../../hooks/jet-client/useClient';
 import type { MarketAccount, Reserve } from '../models/JetTypes';
 import { parsePriceData } from '@pythnetwork/client';
 import {
@@ -10,11 +10,8 @@ import {
   getCcRate,
   getDepositRate,
   getMintInfoAndSubscribe,
-  getTokenAccountAndSubscribe,
-  parseMarketAccount,
-  parseReserveAccount
+  getTokenAccountAndSubscribe
 } from '../util/programUtil';
-import { MarketReserveInfoList } from '../util/layout';
 import { parseIdlMetadata } from '../util/programUtil';
 import { TokenAmount } from '../util/tokens';
 
@@ -71,49 +68,7 @@ export function MarketContextProvider(props: { children: JSX.Element }): JSX.Ele
     let promise: Promise<number>;
     const promises: Promise<number>[] = [];
 
-    // Market subscription
-    promise = getAccountInfoAndSubscribe(connection, idlMetadata.market.market, (account: any) => {
-      if (account != null) {
-        console.assert(MarketReserveInfoList.span === 12288);
-        const decoded = parseMarketAccount(account.data, coder);
-        for (const reserveStruct of decoded.reserves) {
-          for (const abbrev in reserves) {
-            if (reserves[abbrev].accountPubkey.equals(reserveStruct.reserve)) {
-              reserves[abbrev].liquidationPremium = reserveStruct.liquidationBonus;
-              reserves[abbrev].depositNoteExchangeRate = reserveStruct.depositNoteExchangeRate;
-              reserves[abbrev].loanNoteExchangeRate = reserveStruct.loanNoteExchangeRate;
-
-              deriveValues(reserves, reserves[abbrev]);
-              setReserves({ ...reserves });
-              break;
-            }
-          }
-        }
-      }
-    });
-    promises.push(promise);
-
     for (const reserveMeta of idlMetadata.reserves) {
-      // Reserve
-      promise = getAccountInfoAndSubscribe(connection, reserveMeta.accounts.reserve, (account: any) => {
-        if (account != null) {
-          const decoded = parseReserveAccount(account.data, coder);
-
-          reserves[reserveMeta.abbrev].maximumLTV = decoded.config.minCollateralRatio;
-          reserves[reserveMeta.abbrev].liquidationPremium = decoded.config.liquidationPremium;
-          reserves[reserveMeta.abbrev].outstandingDebt = new TokenAmount(
-            decoded.state.outstandingDebt,
-            reserveMeta.decimals
-          ).divb(new BN(Math.pow(10, 15)));
-          reserves[reserveMeta.abbrev].accruedUntil = decoded.state.accruedUntil;
-          reserves[reserveMeta.abbrev].config = decoded.config;
-
-          deriveValues(reserves, reserves[reserveMeta.abbrev]);
-          setReserves({ ...reserves });
-        }
-      });
-      promises.push(promise);
-
       // Deposit Note Mint
       promise = getMintInfoAndSubscribe(connection, reserveMeta.accounts.depositNoteMint, (amount: any) => {
         if (amount != null) {
