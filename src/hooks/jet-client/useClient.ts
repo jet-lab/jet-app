@@ -42,10 +42,13 @@ export function useProvider() {
   const wallet = useWallet();
   const confirmOptions = useConfirmOptions();
 
-  return useMemo(
+  const provider = useMemo(
     () => new anchor.Provider(connection, wallet as any, confirmOptions),
-    [connection, wallet, confirmOptions]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [connection, confirmOptions]
   );
+  (provider as any).wallet = wallet;
+  return provider;
 }
 
 export function useProgram() {

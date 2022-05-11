@@ -34,7 +34,10 @@ import { TransactionLogs } from './views/TransactionLogs';
 // Jet V1
 import { UserContextProvider } from './v1/contexts/user';
 import { MarketContextProvider } from './v1/contexts/market';
+import { MarginContextProvider } from './contexts/marginContext';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
+const queryClient = new QueryClient();
 export function App(): JSX.Element {
   const wallets = useMemo(
     () => [
@@ -50,46 +53,50 @@ export function App(): JSX.Element {
 
   return (
     <HashRouter basename={'/'}>
-      <LocalizationProvider>
-        <MarketContextProvider>
-          <WalletProvider wallets={wallets} autoConnect>
-            <UserContextProvider>
-              <ConnectWalletModalProvider>
-                <SettingsModalProvider>
-                  <RpcNodeContextProvider>
-                    <BlockExplorerProvider>
-                      <TransactionsProvider>
-                        <TradeContextProvider>
-                          <NativeValuesProvider>
-                            <DarkThemeProvider>
-                              <CopilotModalProvider>
-                                <RadarModalProvider>
-                                  <Navbar />
-                                  <NetworkWarningBanner />
-                                  <Routes>
-                                    <Route path="/" element={<Cockpit />} />
-                                    <Route path="/transactions" element={<TransactionLogs />} />
-                                    <Route path="/settings" element={<Settings />} />
-                                  </Routes>
-                                  <ConnectWalletModal />
-                                  <Settings />
-                                  <CopilotModal />
-                                  <RadarModal />
-                                  <TermsPrivacy />
-                                </RadarModalProvider>
-                              </CopilotModalProvider>
-                            </DarkThemeProvider>
-                          </NativeValuesProvider>
-                        </TradeContextProvider>
-                      </TransactionsProvider>
-                    </BlockExplorerProvider>
-                  </RpcNodeContextProvider>
-                </SettingsModalProvider>
-              </ConnectWalletModalProvider>
-            </UserContextProvider>
-          </WalletProvider>
-        </MarketContextProvider>
-      </LocalizationProvider>
+      <QueryClientProvider client={queryClient}>
+        <LocalizationProvider>
+          <MarketContextProvider>
+            <WalletProvider wallets={wallets} autoConnect>
+              <MarginContextProvider>
+                <UserContextProvider>
+                  <ConnectWalletModalProvider>
+                    <SettingsModalProvider>
+                      <RpcNodeContextProvider>
+                        <BlockExplorerProvider>
+                          <TransactionsProvider>
+                            <TradeContextProvider>
+                              <NativeValuesProvider>
+                                <DarkThemeProvider>
+                                  <CopilotModalProvider>
+                                    <RadarModalProvider>
+                                      <Navbar />
+                                      <NetworkWarningBanner />
+                                      <Routes>
+                                        <Route path="/" element={<Cockpit />} />
+                                        <Route path="/transactions" element={<TransactionLogs />} />
+                                        <Route path="/settings" element={<Settings />} />
+                                      </Routes>
+                                      <ConnectWalletModal />
+                                      <Settings />
+                                      <CopilotModal />
+                                      <RadarModal />
+                                      <TermsPrivacy />
+                                    </RadarModalProvider>
+                                  </CopilotModalProvider>
+                                </DarkThemeProvider>
+                              </NativeValuesProvider>
+                            </TradeContextProvider>
+                          </TransactionsProvider>
+                        </BlockExplorerProvider>
+                      </RpcNodeContextProvider>
+                    </SettingsModalProvider>
+                  </ConnectWalletModalProvider>
+                </UserContextProvider>
+              </MarginContextProvider>
+            </WalletProvider>
+          </MarketContextProvider>
+        </LocalizationProvider>
+      </QueryClientProvider>
     </HashRouter>
   );
 }
