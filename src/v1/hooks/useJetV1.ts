@@ -1,6 +1,6 @@
 import { Keypair, PublicKey, Signer, SystemProgram, SYSVAR_RENT_PUBKEY, TransactionInstruction } from '@solana/web3.js';
 import * as anchor from '@project-serum/anchor';
-import { BN } from '@project-serum/anchor';
+import { BN, Program } from '@project-serum/anchor';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   createAssociatedTokenAccountInstruction,
@@ -16,7 +16,7 @@ import { TxnResponse } from '../models/JetTypes';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useUser } from '../contexts/user';
 import { useMarket } from '../contexts/market';
-import { useProgram, useProvider } from '../../hooks/jet-client/useClient';
+import { useMargin } from './../../contexts/marginContext';
 import { useBlockExplorer } from '../../contexts/blockExplorer';
 import { Amount } from '../util/tokens';
 import {
@@ -30,8 +30,8 @@ export const useJetV1 = () => {
   const { publicKey } = useWallet();
   const user = useUser();
   const market = useMarket();
-  const program = useProgram();
-  const { connection } = useProvider();
+  const { programs, connection } = useMargin();
+  const program = programs?.marginPool as any as Program;
   const { getExplorerUrl } = useBlockExplorer();
 
   const SECONDS_PER_HOUR: BN = new BN(3600);

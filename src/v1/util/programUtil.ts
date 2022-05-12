@@ -14,7 +14,7 @@ import { Buffer } from 'buffer';
 import type { HasPublicKey, IdlMetadata, ReserveConfigStruct, ToBytes } from '../models/JetTypes';
 import { TxnResponse } from '../models/JetTypes';
 import { TokenAmount } from './tokens';
-import { idl } from '../../hooks/jet-client/useClient';
+import { idl } from '../../contexts/marginContext';
 import { parseMintAccount, parseTokenAccount } from '@jet-lab/jet-engine';
 
 // Find PDA functions and jet algorithms that are reimplemented here

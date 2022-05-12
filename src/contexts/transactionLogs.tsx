@@ -4,7 +4,7 @@ import { ConfirmedSignatureInfo, TransactionResponse } from '@solana/web3.js';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { BN } from '@project-serum/anchor';
 import bs58 from 'bs58';
-import { idl, useProvider } from '../hooks/jet-client/useClient';
+import { idl, useMargin } from './marginContext';
 import { useRpcNode } from './rpcNode';
 import { useLanguage } from './localization/localization';
 import { timeout } from '../utils/utils';
@@ -41,7 +41,7 @@ const TransactionsContext = createContext<TransactionLogs>({
 // Transaction logs context provider
 export function TransactionsProvider(props: { children: JSX.Element }): JSX.Element {
   const { dictionary } = useLanguage();
-  const { connection } = useProvider();
+  const { connection } = useMargin();
   const { connected, publicKey } = useWallet();
   const { preferredNode } = useRpcNode();
   const [signatures, setSignatures] = useState<ConfirmedSignatureInfo[]>([]);

@@ -1,7 +1,7 @@
 import { AccountInfo, PublicKey } from '@solana/web3.js';
 import { BN } from '@project-serum/anchor';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { idl, useProvider } from '../../hooks/jet-client/useClient';
+import { idl, useMargin } from '../../contexts/marginContext';
 import type { MarketAccount, Reserve } from '../models/JetTypes';
 import { parsePriceData } from '@pythnetwork/client';
 import {
@@ -54,7 +54,7 @@ const MarketContext = createContext<Market>({
 // Market context provider
 export function MarketContextProvider(props: { children: JSX.Element }): JSX.Element {
   const minColRatio = 1.25;
-  const { connection } = useProvider();
+  const { connection } = useMargin();
   const [marketInit, setMarketInit] = useState<boolean>(false);
   const [accountPubkey, setAccountPubkey] = useState<PublicKey>({} as PublicKey);
   const [account, setAccount] = useState<AccountInfo<MarketAccount>>({} as AccountInfo<MarketAccount>);

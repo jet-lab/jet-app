@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from 'react';
-import { cluster } from '../hooks/jet-client/useClient';
+import { cluster } from './marginContext';
 
 // Block explorers
 const blockExplorers: Record<string, Record<string, string>> = {

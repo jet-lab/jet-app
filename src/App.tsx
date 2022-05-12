@@ -57,11 +57,11 @@ export function App(): JSX.Element {
         <LocalizationProvider>
           <MarketContextProvider>
             <WalletProvider wallets={wallets} autoConnect>
-              <MarginContextProvider>
-                <UserContextProvider>
-                  <ConnectWalletModalProvider>
-                    <SettingsModalProvider>
-                      <RpcNodeContextProvider>
+              <SettingsModalProvider>
+                <RpcNodeContextProvider>
+                  <MarginContextProvider>
+                    <UserContextProvider>
+                      <ConnectWalletModalProvider>
                         <BlockExplorerProvider>
                           <TransactionsProvider>
                             <TradeContextProvider>
@@ -88,11 +88,11 @@ export function App(): JSX.Element {
                             </TradeContextProvider>
                           </TransactionsProvider>
                         </BlockExplorerProvider>
-                      </RpcNodeContextProvider>
-                    </SettingsModalProvider>
-                  </ConnectWalletModalProvider>
-                </UserContextProvider>
-              </MarginContextProvider>
+                      </ConnectWalletModalProvider>
+                    </UserContextProvider>
+                  </MarginContextProvider>
+                </RpcNodeContextProvider>
+              </SettingsModalProvider>
             </WalletProvider>
           </MarketContextProvider>
         </LocalizationProvider>

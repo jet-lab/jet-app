@@ -6,7 +6,7 @@ import { useConnectWalletModal } from '../contexts/connectWalletModal';
 import { useTradeContext } from '../contexts/tradeContext';
 import { useNativeValues } from '../contexts/nativeValues';
 import { useRadarModal } from '../contexts/radarModal';
-import { cluster } from '../hooks/jet-client/useClient';
+import { cluster } from '../contexts/marginContext';
 import { Input, notification } from 'antd';
 import { NativeToggle } from './NativeToggle';
 import { Info } from './Info';

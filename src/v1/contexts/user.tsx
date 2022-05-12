@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import type { Asset, AssetStore, Obligation } from '../models/JetTypes';
 import { PublicKey } from '@solana/web3.js';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { BN } from '@project-serum/anchor';
+import { BN, Program } from '@project-serum/anchor';
 import { NATIVE_MINT, getAssociatedTokenAddress } from '@solana/spl-token';
 import {
   findCollateralAddress,
@@ -14,7 +14,7 @@ import {
   getTokenAccountAndSubscribe,
   SOL_DECIMALS
 } from '../util/programUtil';
-import { useProvider, useProgram } from '../../hooks/jet-client/useClient';
+import { useMargin } from '../../contexts/marginContext';
 import { TokenAmount } from '../util/tokens';
 import { useMarket } from './market';
 
@@ -51,8 +51,8 @@ const UserContext = createContext<User>({
 // User context provider
 export function UserContextProvider(props: { children: JSX.Element }): JSX.Element {
   const { connected, publicKey } = useWallet();
-  const { connection } = useProvider();
-  const program = useProgram();
+  const { programs, connection } = useMargin();
+  const program = programs?.marginPool as any as Program;
   const market = useMarket();
   const [walletInit, setWalletInit] = useState<boolean>(false);
   const [assets, setAssets] = useState<AssetStore>({
@@ -260,7 +260,7 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
     if (connected && publicKey) {
       // Get user token accounts
       const getAssetPubkeys = async (): Promise<AssetStore> => {
-        if (!Object.values(program) || !publicKey) {
+        if (!program || !publicKey) {
           return {} as AssetStore;
         }
 
