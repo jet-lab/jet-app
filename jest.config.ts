@@ -1,6 +1,6 @@
 export default {
   clearMocks: true,
-  collectCoverage: true,
+  collectCoverage: false,
   coverageThreshold: {
     global: {
       // lines: 1,
@@ -11,5 +11,5 @@ export default {
   },
   collectCoverageFrom: [    "**/*.{js,jsx,ts,tsx}"],
   coverageDirectory: "coverage",
-  setupFilesAfterEnv: ['<rootDir>/setupTests.ts'],
+  setupFilesAfterEnv: ['<rootDir>/setupTests.ts', '<rootDir>/src/__mocks__/localStorage.ts'],
 }
