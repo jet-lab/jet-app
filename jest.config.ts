@@ -1,4 +1,4 @@
-const config =  {
+const config = {
   clearMocks: true,
   collectCoverage: false,
   coverageThreshold: {
@@ -14,4 +14,4 @@ const config =  {
   setupFilesAfterEnv: ['<rootDir>/setupTests.ts', '<rootDir>/src/__mocks__/localStorage.ts']
 };
 
-export default config
+export default config;
