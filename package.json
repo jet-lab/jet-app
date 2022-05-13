@@ -10,7 +10,7 @@
     "test:coverage": "jest --coverage",
     "prepare": "husky install",
     "compile": "npx tsc --noEmit",
-    "precommit": "npm run fmt:fix && npm run lint && npm run test"
+    "precommit": "npm run compile && npm run fmt:fix && npm run lint && npm run test"
   },
   "dependencies": {
     "@ant-design/icons": "^4.5.0",
