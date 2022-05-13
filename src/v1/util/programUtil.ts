@@ -461,7 +461,7 @@ export const parseMarketAccount = (account: Buffer, coder: anchor.Coder) => {
   const market = coder.accounts.decode<MarketAccount>('Market', account);
 
   const reserveInfoData = new Uint8Array(market.reserves as any as number[]);
-  const reserveInfoList = MarketReserveInfoList.decode(reserveInfoData) as JetMarketReserveInfo[];
+  const reserveInfoList = MarketReserveInfoList.decode(reserveInfoData);
 
   market.reserves = reserveInfoList;
   return market;
@@ -470,7 +470,7 @@ export const parseMarketAccount = (account: Buffer, coder: anchor.Coder) => {
 export const parseReserveAccount = (account: Buffer, coder: anchor.Coder) => {
   const reserve = coder.accounts.decode<ReserveAccount>('Reserve', account);
 
-  const reserveState = ReserveStateLayout.decode(Buffer.from(reserve.state as any as number[])) as ReserveStateStruct;
+  const reserveState = ReserveStateLayout.decode(Buffer.from(reserve.state as any as number[]));
 
   reserve.state = reserveState;
   return reserve;
