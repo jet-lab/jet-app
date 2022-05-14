@@ -1,10 +1,8 @@
 import { BN } from '@project-serum/anchor';
 import { PublicKey } from '@solana/web3.js';
 import * as BL from '@solana/buffer-layout';
-import { JetMarketReserveInfo, ObligationPositionStruct } from '@jet-lab/jet-engine';
-import { ReserveStateStruct } from '../models/JetTypes';
 
-export class NumberField extends BL.Layout<BN> {
+export class NumberField extends BL.Layout {
   decode(b: Uint8Array, offset?: number): BN {
     const start = offset === undefined ? 0 : offset;
     const data = b.slice(start, start + this.span);
@@ -19,7 +17,7 @@ export class NumberField extends BL.Layout<BN> {
   }
 }
 
-export class SignedNumberField extends BL.Layout<BN> {
+export class SignedNumberField extends BL.Layout {
   decode(b: Uint8Array, offset?: number): BN {
     const start = offset === undefined ? 0 : offset;
     const data = b.slice(start, start + this.span);
@@ -34,7 +32,7 @@ export class SignedNumberField extends BL.Layout<BN> {
   }
 }
 
-export class PubkeyField extends BL.Layout<PublicKey> {
+export class PubkeyField extends BL.Layout {
   constructor(property?: string) {
     super(32, property);
   }
@@ -72,7 +70,7 @@ export function pubkeyField(property?: string): PubkeyField {
 
 const MAX_RESERVES = 32;
 
-const ReserveInfoStruct = BL.struct<JetMarketReserveInfo>([
+const ReserveInfoStruct = BL.struct([
   pubkeyField('reserve'),
   BL.blob(80, '_UNUSED_0_'),
   numberField('price'),
@@ -83,13 +81,13 @@ const ReserveInfoStruct = BL.struct<JetMarketReserveInfo>([
   BL.blob(158, '_UNUSED_1_'),
   u64Field('lastUpdated'),
   BL.u8('invalidated'),
-  BL.blob(7, '_UNUSED_1_') as any // Have to figure out a way to fix these
+  BL.blob(7, '_UNUSED_1_')
 ]);
 
 export const MarketReserveInfoList = BL.seq(ReserveInfoStruct, MAX_RESERVES);
 
 /// Reserve
-export const ReserveStateLayout = BL.struct<ReserveStateStruct>([
+export const ReserveStateLayout = BL.struct([
   i64Field('accruedUntil'),
   numberField('outstandingDebt'),
   numberField('uncollectedFees'),
@@ -99,16 +97,16 @@ export const ReserveStateLayout = BL.struct<ReserveStateStruct>([
   BL.blob(416, '_UNUSED_0_'),
   u64Field('lastUpdated'),
   BL.u8('invalidated'),
-  BL.blob(7, '_UNUSED_1_') as any
+  BL.blob(7, '_UNUSED_1_')
 ]);
 
 /// Obligation
-export const PositionInfo = BL.struct<ObligationPositionStruct>([
+export const PositionInfo = BL.struct([
   pubkeyField('account'),
   numberField('amount'),
   BL.u32('side'),
   BL.u16('reserveIndex'),
-  BL.blob(66, '_reserved') as any
+  BL.blob(66, '_reserved')
 ]);
 
 export const PositionInfoList = BL.seq(PositionInfo, 16, 'positions');
