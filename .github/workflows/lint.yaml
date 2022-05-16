@@ -21,8 +21,17 @@ jobs:
         with:
           cache: npm
 
-      - name: Prettier Check
-        run: npm ci && npm run fmt
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Formatting Check
+        run: npm run fmt
+
+      - name: Typescript Compilation
+        run: npm run compule
 
       - name: ESLint Check
         run: npm run lint
+
+      - name: Jest
+        run: npm run test
