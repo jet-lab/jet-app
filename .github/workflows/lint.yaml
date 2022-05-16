@@ -28,7 +28,7 @@ jobs:
         run: npm run fmt
 
       - name: Typescript Compilation
-        run: npm run compule
+        run: npm run compile
 
       - name: ESLint Check
         run: npm run lint
