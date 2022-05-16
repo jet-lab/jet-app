@@ -101,8 +101,7 @@ export function TransactionsProvider(props: { children: JSX.Element }): JSX.Elem
                         jetLog.tokenPrice = reserve.price;
                         jetLog.tradeAmount = new TokenAmount(
                           new BN(post.uiTokenAmount.amount - pre.uiTokenAmount.amount),
-                          reserve.decimals,
-                          reserve.tokenMint
+                          reserve.decimals
                         );
                       }
                     }

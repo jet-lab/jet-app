@@ -1,3 +1,4 @@
+import { JetTokens } from '@jet-lab/jet-engine';
 import type { AccountInfo, PublicKey } from '@solana/web3.js';
 import type BN from 'bn.js';
 import type { TokenAmount } from '../util/tokens';
@@ -84,7 +85,7 @@ export interface MarketMetadata {
 // Reserve
 export interface Reserve {
   name: string;
-  abbrev: string;
+  abbrev: JetTokens;
   marketSize: TokenAmount;
   outstandingDebt: TokenAmount;
   utilizationRate: number;
@@ -233,9 +234,6 @@ export interface AssetStore {
 }
 export interface Asset {
   tokenMintPubkey: PublicKey;
-  walletTokenPubkey: PublicKey;
-  walletTokenExists: boolean;
-  walletTokenBalance: TokenAmount;
   depositNotePubkey: PublicKey;
   depositNoteBump: number;
   depositNoteExists: boolean;

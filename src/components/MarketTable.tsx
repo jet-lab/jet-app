@@ -6,7 +6,7 @@ import { useConnectWalletModal } from '../contexts/connectWalletModal';
 import { useTradeContext } from '../contexts/tradeContext';
 import { useNativeValues } from '../contexts/nativeValues';
 import { useRadarModal } from '../contexts/radarModal';
-import { cluster } from '../contexts/marginContext';
+import { cluster, useMargin } from '../contexts/marginContext';
 import { Input, notification } from 'antd';
 import { NativeToggle } from './NativeToggle';
 import { Info } from './Info';
@@ -18,11 +18,11 @@ import { ReactComponent as RadarIcon } from '../styles/icons/radar_icon.svg';
 import { NATIVE_MINT } from '@solana/spl-token';
 import { useUser } from '../v1/contexts/user';
 import { useMarket } from '../v1/contexts/market';
-import { Reserve, TxnResponse } from '../v1/models/JetTypes';
-import { useJetV1 } from '../v1/hooks/useJetV1';
+import { Reserve } from '../v1/models/JetTypes';
 import { TokenAmount } from '../v1/util/tokens';
 import { FilterFilled } from '@ant-design/icons';
 import { AssetLogo } from './AssetLogo';
+import { TokenFaucet } from '@jet-lab/jet-engine';
 
 export function MarketTable(): JSX.Element {
   const { dictionary } = useLanguage();
@@ -38,7 +38,9 @@ export function MarketTable(): JSX.Element {
   // Jet V1
   const user = useUser();
   const market = useMarket();
-  const { airdrop } = useJetV1();
+
+  // Jet V2
+  const { config, provider, programs, poolsFetched, pools, marginAccount, walletBalances, userFetched } = useMargin();
 
   // If in development, can request airdrop for testing
   const doAirdrop = async (reserve: Reserve): Promise<void> => {
@@ -47,8 +49,13 @@ export function MarketTable(): JSX.Element {
       amount = TokenAmount.tokens('1', reserve.decimals);
     }
 
-    const [res] = await airdrop(reserve.abbrev, amount.amount);
-    if (res === TxnResponse.Success) {
+    const token = config.tokens[reserve.abbrev];
+
+    try {
+      if (!publicKey) {
+        throw new Error('Wallet not connected');
+      }
+      await TokenFaucet.airdrop(provider, amount.amount, token.mint, publicKey, token.faucet);
       notification.success({
         message: dictionary.copilot.alert.success,
         description: dictionary.copilot.alert.airdropSuccess
@@ -56,7 +63,8 @@ export function MarketTable(): JSX.Element {
           .replaceAll('{{RESERVE ABBREV}}', reserve.abbrev),
         placement: 'bottomLeft'
       });
-    } else if (res === TxnResponse.Failed) {
+    } catch (err: any) {
+      console.log(err);
       notification.error({
         message: dictionary.copilot.alert.failed,
         description: dictionary.cockpit.txFailed,

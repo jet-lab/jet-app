@@ -26,8 +26,8 @@ export interface User {
   setAssets: (assets: AssetStore) => void;
   position: Obligation;
   setPosition: (position: Obligation) => void;
-  walletBalances: Record<string, number>;
-  setWalletBalances: (walletBalances: Record<string, number>) => void;
+  // walletBalances: Record<string, number>;
+  // setWalletBalances: (walletBalances: Record<string, number>) => void;
   collateralBalances: Record<string, number>;
   setCollateralBalances: (collateralBalances: Record<string, number>) => void;
   loanBalances: Record<string, number>;
@@ -40,8 +40,8 @@ const UserContext = createContext<User>({
   setAssets: () => null,
   position: {} as unknown as Obligation,
   setPosition: () => null,
-  walletBalances: {},
-  setWalletBalances: () => null,
+  // walletBalances: {},
+  // setWalletBalances: () => null,
   collateralBalances: {},
   setCollateralBalances: () => null,
   loanBalances: {},
@@ -93,9 +93,9 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
       if (account != null) {
         // Need to be careful constructing a BN from a number.
         // If the user has more than 2^53 lamports it will throw for not having enough precision.
-        assets.tokens.SOL.walletTokenBalance = new TokenAmount(new BN(account?.lamports.toString() ?? 0), SOL_DECIMALS);
-        assets.sol = assets.tokens.SOL.walletTokenBalance;
-        walletBalances.SOL = assets.sol.tokens;
+        // assets.tokens.SOL.walletTokenBalance = new TokenAmount(new BN(account?.lamports.toString() ?? 0), SOL_DECIMALS);
+        // assets.sol = assets.tokens.SOL.walletTokenBalance;
+        // walletBalances.SOL = assets.sol.tokens;
 
         setWalletBalances(walletBalances);
         if (walletInit) {
@@ -110,20 +110,20 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
       const reserve = market.reserves[abbrev];
 
       // Wallet token account
-      promise = getTokenAccountAndSubscribe(connection, asset.walletTokenPubkey, reserve.decimals, (amount: any) => {
-        if (amount != null) {
-          asset.walletTokenBalance = amount ?? new TokenAmount(new BN(0), reserve.decimals);
-          asset.walletTokenExists = !!amount;
+      // promise = getTokenAccountAndSubscribe(connection, asset.walletTokenPubkey, reserve.decimals, (amount: any) => {
+      //   if (amount != null) {
+      //     asset.walletTokenBalance = amount ?? new TokenAmount(new BN(0), reserve.decimals);
+      //     asset.walletTokenExists = !!amount;
 
-          // Update wallet token balance
-          if (!asset.tokenMintPubkey.equals(NATIVE_MINT)) {
-            walletBalances[reserve.abbrev] = asset.walletTokenBalance.tokens;
-            setWalletBalances(walletBalances);
-          }
-          deriveValues(assets);
-        }
-      });
-      promises.push(promise);
+      //     // Update wallet token balance
+      //     if (!asset.tokenMintPubkey.equals(NATIVE_MINT)) {
+      //       walletBalances[reserve.abbrev] = asset.walletTokenBalance.tokens;
+      //       setWalletBalances(walletBalances);
+      //     }
+      //     deriveValues(assets);
+      //   }
+      // });
+      // promises.push(promise);
 
       // Reserve deposit notes
       promise = getTokenAccountAndSubscribe(
@@ -304,9 +304,9 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
 
           const asset: Asset = {
             tokenMintPubkey,
-            walletTokenPubkey: await getAssociatedTokenAddress(tokenMintPubkey, publicKey),
-            walletTokenExists: false,
-            walletTokenBalance: TokenAmount.zero(reserve.decimals),
+            // walletTokenPubkey: await getAssociatedTokenAddress(tokenMintPubkey, publicKey),
+            // walletTokenExists: false,
+            // walletTokenBalance: TokenAmount.zero(reserve.decimals),
             depositNotePubkey,
             depositNoteBump,
             depositNoteExists: false,
@@ -356,8 +356,6 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
         setAssets,
         position,
         setPosition,
-        walletBalances,
-        setWalletBalances,
         collateralBalances,
         setCollateralBalances,
         loanBalances,

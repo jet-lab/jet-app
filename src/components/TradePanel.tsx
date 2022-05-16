@@ -44,7 +44,7 @@ export function TradePanel(): JSX.Element {
   const { deposit, withdraw, borrow, repay } = useJetV1();
 
   // Jet V2
-  const { config, programs, poolsFetched, pools, marginAccount, marginAccountFetched } = useMargin();
+  const { config, programs, poolsFetched, pools, marginAccount, walletBalances, userFetched } = useMargin();
 
   // Input values
   const [maxInput, setMaxInput] = useState<number>(0);
@@ -78,7 +78,7 @@ export function TradePanel(): JSX.Element {
     // Depositing
     if (currentAction === 'deposit') {
       // No wallet balance to deposit
-      if (!userV1.walletBalances[currentReserve.abbrev]) {
+      if (!walletBalances[currentReserve.abbrev].amount.tokens) {
         setDisabledMessage(dictionary.cockpit.noBalanceForDeposit.replaceAll('{{ASSET}}', currentReserve.abbrev));
       } else if (currentReserve.abbrev === 'ETH') {
         setDisabledMessage('Sollet ETH will be sunset at the end of April. We do not accept Sollet ETH');
@@ -217,8 +217,8 @@ export function TradePanel(): JSX.Element {
       // Depositing all SOL leaving no lamports for fees, inform and reject
       } else */ if (
         currentReserve.abbrev === 'SOL' &&
-        currentAmount <= userV1.walletBalances[currentReserve.abbrev] &&
-        currentAmount > userV1.walletBalances[currentReserve.abbrev] - 0.02
+        currentAmount <= walletBalances[currentReserve.abbrev].amount.tokens &&
+        currentAmount > walletBalances[currentReserve.abbrev].amount.tokens - 0.02
       ) {
         copilotAlert = {
           status: 'danger',
@@ -325,7 +325,7 @@ export function TradePanel(): JSX.Element {
     // Depositing
     if (tradeAction === 'deposit') {
       // User is depositing more than they have in their wallet
-      if (tradeAmount.tokens > userV1.walletBalances[currentReserve.abbrev]) {
+      if (tradeAmount.tokens > walletBalances[currentReserve.abbrev].amount.tokens) {
         inputError = dictionary.cockpit.notEnoughAsset.replaceAll('{{ASSET}}', currentReserve.abbrev);
         // Otherwise, send deposit
       } else {
@@ -371,7 +371,7 @@ export function TradePanel(): JSX.Element {
       if (tradeAmount.tokens > userV1.loanBalances[currentReserve.abbrev]) {
         inputError = dictionary.cockpit.oweLess;
         // User input amount is larger than wallet balance
-      } else if (tradeAmount.tokens > userV1.walletBalances[currentReserve.abbrev]) {
+      } else if (tradeAmount.tokens > walletBalances[currentReserve.abbrev].amount.tokens) {
         inputError = dictionary.cockpit.notEnoughAsset.replaceAll('{{ASSET}}', currentReserve.abbrev);
         // Otherwise, send repay
       } else {
@@ -446,7 +446,7 @@ export function TradePanel(): JSX.Element {
   // If user disconnects wallet, reset inputs
   useEffect(() => {
     setCurrentAmount(null);
-  }, [marginAccountFetched]);
+  }, [userFetched]);
 
   return (
     <div className="trade-panel flex align-center justify-start">
@@ -504,7 +504,7 @@ export function TradePanel(): JSX.Element {
             </span>
             <div className="flex-centered">
               <p className="center-text">
-                {marginAccountFetched && currentReserve
+                {userFetched && currentReserve
                   ? currencyFormatter(maxInput, false, currentReserve.decimals) + ' ' + currentReserve.abbrev
                   : '--'}
               </p>
@@ -518,7 +518,7 @@ export function TradePanel(): JSX.Element {
               <Info term="adjustedCollateralizationRatio" />
             </div>
             <p>
-              {marginAccountFetched
+              {userFetched
                 ? (userV1.position.borrowedValue || (currentAction === 'borrow' && currentAmount)) && adjustedRatio > 10
                   ? '>1000%'
                   : (userV1.position.borrowedValue || (currentAction === 'borrow' && currentAmount)) &&
@@ -536,7 +536,7 @@ export function TradePanel(): JSX.Element {
           currency
           value={currentAmount}
           maxInput={maxInput}
-          disabled={!marginAccountFetched || disabledInput}
+          disabled={!userFetched || disabledInput}
           loading={sendingTrade}
           error={inputError}
           onClick={() => setInputError('')}
@@ -558,7 +558,7 @@ export function TradePanel(): JSX.Element {
           min={0}
           max={100}
           step={1}
-          disabled={!marginAccountFetched || disabledInput}
+          disabled={!userFetched || disabledInput}
           onChange={percent => {
             const currentAmount = maxInput * (percent / 100);
             setCurrentAmount(currentAmount);

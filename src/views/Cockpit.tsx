@@ -28,7 +28,7 @@ export function Cockpit(): JSX.Element {
   const market = useMarket();
 
   // Jet V2
-  const { config, programs, poolsFetched, pools, marginAccount, marginAccountFetched } = useMargin();
+  const { config, programs, poolsFetched, pools, marginAccount, walletBalances, userFetched } = useMargin();
 
   // If user has not accepted disclaimer, alert them to accept
   const acceptedDisclaimer = localStorage.getItem('jetDisclaimerAccepted') === 'true';
@@ -91,7 +91,7 @@ export function Cockpit(): JSX.Element {
                 <h2 className="view-subheader">{dictionary.cockpit.yourRatio}</h2>
                 <Info term="collateralizationRatio" />
               </div>
-              {marginAccountFetched ? (
+              {userFetched ? (
                 <>
                   <h1
                     className={`view-header
@@ -121,21 +121,21 @@ export function Cockpit(): JSX.Element {
             <div className="flex-centered column">
               <div className="trade-position-value flex-centered column">
                 <h2 className="view-subheader">{dictionary.cockpit.totalDepositedValue}</h2>
-                {marginAccountFetched ? (
-                  <p className="gradient-text">{currencyFormatter(userV1.position.depositedValue ?? 0, true)}</p>
+                {userFetched ? (
+                  <p className="gradient-text">{currencyFormatter(userV1.position.depositedValue, true)}</p>
                 ) : (
                   <p>--</p>
                 )}
               </div>
               <div className="trade-position-value flex-centered column">
                 <h2 className="view-subheader">{dictionary.cockpit.totalBorrowedValue}</h2>
-                {marginAccountFetched ? (
-                  <p className="gradient-text">{currencyFormatter(userV1.position.borrowedValue ?? 0, true)}</p>
+                {userFetched ? (
+                  <p className="gradient-text">{currencyFormatter(userV1.position.borrowedValue, true)}</p>
                 ) : (
                   <p>--</p>
                 )}
               </div>
-              {marginAccountFetched && (
+              {userFetched && (
                 <div className="trade-position-value min-c-note flex align-start justify-center">
                   <WarningFilled style={{ margin: '2px 5px 0 0' }} />
                   <span>

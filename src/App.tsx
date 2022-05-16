@@ -55,11 +55,11 @@ export function App(): JSX.Element {
     <HashRouter basename={'/'}>
       <QueryClientProvider client={queryClient}>
         <LocalizationProvider>
-          <MarketContextProvider>
-            <WalletProvider wallets={wallets} autoConnect>
+          <WalletProvider wallets={wallets} autoConnect>
+            <MarginContextProvider>
               <SettingsModalProvider>
-                <RpcNodeContextProvider>
-                  <MarginContextProvider>
+                <MarketContextProvider>
+                  <RpcNodeContextProvider>
                     <UserContextProvider>
                       <ConnectWalletModalProvider>
                         <BlockExplorerProvider>
@@ -90,11 +90,11 @@ export function App(): JSX.Element {
                         </BlockExplorerProvider>
                       </ConnectWalletModalProvider>
                     </UserContextProvider>
-                  </MarginContextProvider>
-                </RpcNodeContextProvider>
+                  </RpcNodeContextProvider>
+                </MarketContextProvider>
               </SettingsModalProvider>
-            </WalletProvider>
-          </MarketContextProvider>
+            </MarginContextProvider>
+          </WalletProvider>
         </LocalizationProvider>
       </QueryClientProvider>
     </HashRouter>

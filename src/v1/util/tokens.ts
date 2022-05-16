@@ -25,7 +25,7 @@ export class TokenAmount {
   }
 
   public static zero(decimals: number) {
-    return new TokenAmount(new BN(0), decimals ?? 0);
+    return new TokenAmount(new BN(0), decimals);
   }
 
   public static tokenAccount(tokenAccount: Account, decimals: number) {

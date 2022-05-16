@@ -1,4 +1,5 @@
 import {
+  AssociatedToken,
   JetClient,
   JetCluster,
   JetConfig,
@@ -14,8 +15,22 @@ import localnetIdl from '../hooks/jet-client/idl/localnet/jet.json';
 import devnetIdl from '../hooks/jet-client/idl/devnet/jet.json';
 import mainnetBetaIdl from '../hooks/jet-client/idl/mainnet-beta/jet.json';
 import { BorshCoder, Provider } from '@project-serum/anchor';
-import { ConfirmOptions, Connection } from '@solana/web3.js';
+import { ConfirmOptions, Connection, PublicKey } from '@solana/web3.js';
 import { useRpcNode } from './rpcNode';
+
+export let idl: any;
+export const cluster = (process.env.REACT_APP_CLUSTER ?? 'devnet') as JetCluster;
+const config = JetClient.getConfig(cluster);
+if (cluster === 'localnet') {
+  idl = localnetIdl;
+} else if (cluster === 'mainnet-beta') {
+  idl = mainnetBetaIdl;
+} else {
+  idl = devnetIdl;
+}
+const DEFAULT_WALLET_BALANCES = Object.fromEntries(
+  Object.values(config.tokens).map(token => [token.symbol, AssociatedToken.zeroAux(PublicKey.default, token.decimals)])
+) as Record<JetTokens, AssociatedToken>;
 
 interface MarginContextState {
   connection: Connection;
@@ -24,28 +39,20 @@ interface MarginContextState {
   programs?: JetPrograms;
   poolsFetched: boolean;
   pools: Record<JetTokens, MarginPool> | undefined;
-  marginAccountFetched: boolean;
+  userFetched: boolean;
   marginAccount: MarginAccount | undefined;
+  walletBalances: Record<JetTokens, AssociatedToken>;
 }
+
 const MarginContext = createContext<MarginContextState>({
   poolsFetched: false,
-  marginAccountFetched: false
+  userFetched: false
 } as MarginContextState);
-
-export let idl: any;
-export const cluster = (process.env.REACT_APP_CLUSTER ?? 'devnet') as JetCluster;
-if (cluster === 'localnet') {
-  idl = localnetIdl;
-} else if (cluster === 'mainnet-beta') {
-  idl = mainnetBetaIdl;
-} else {
-  idl = devnetIdl;
-}
 
 export const coder = new BorshCoder(idl);
 
 const confirmOptions = {
-  skipPreflight: false,
+  skipPreflight: true,
   commitment: 'recent',
   preflightCommitment: 'recent'
 } as ConfirmOptions;
@@ -70,35 +77,45 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
 
   const provider = useProvider();
   const { connection } = provider;
+
   const endpoint = connection.rpcEndpoint;
 
-  const config = JetClient.getConfig(cluster);
-  const { data: programs } = useQuery(['programs'], async () => {
-    return await JetClient.connect(provider, config);
-  });
+  const { data: programs } = useQuery(
+    ['programs'],
+    async () => {
+      console.log('Fetching programs');
+      return await JetClient.connect(provider, config);
+    },
+    { refetchOnWindowFocus: false }
+  );
 
-  const { data: pools, isFetched: isPoolsFetched } = useQuery(
+  const { data: pools, isFetched: poolsFetched } = useQuery(
     ['pools', endpoint],
     async () => {
       if (!programs) {
         return;
       }
+      console.log('Fetching pools');
       return await MarginPool.loadAll(programs);
     },
     { enabled: !!programs }
   );
 
-  const { data: marginAccount, isFetched: marginAccountFetched } = useQuery(
+  const { data: user, isFetched: userFetched } = useQuery(
     ['user', endpoint, publicKey?.toBase58()],
     async () => {
       if (!programs || !publicKey) {
         return;
       }
+      console.log('Fetching user');
+      const walletBalances = await MarginAccount.loadTokens(programs, publicKey);
+      let marginAccount: MarginAccount | undefined;
       try {
-        return await MarginAccount.load(programs.margin, publicKey, 0);
+        marginAccount = await MarginAccount.load(programs, publicKey, 0);
       } catch {
-        console.log('no margin account');
+        // nothing
       }
+      return { marginAccount, walletBalances };
     },
     { enabled: !!programs && !!pools && !!publicKey }
   );
@@ -110,10 +127,11 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
         provider,
         config,
         programs,
-        poolsFetched: isPoolsFetched,
+        poolsFetched,
         pools,
-        marginAccountFetched,
-        marginAccount
+        userFetched,
+        marginAccount: user?.marginAccount,
+        walletBalances: user?.walletBalances ?? DEFAULT_WALLET_BALANCES
       }}>
       {props.children}
     </MarginContext.Provider>
