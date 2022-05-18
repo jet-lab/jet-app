@@ -5,12 +5,11 @@ import { DarkThemeProvider } from './contexts/darkTheme';
 import { LocalizationProvider } from './contexts/localization/localization';
 import { WalletProvider } from '@solana/wallet-adapter-react';
 import {
-  getMathWallet,
-  getPhantomWallet,
-  getSolflareWallet,
-  getSolletWallet,
-  getSolongWallet,
-  getSlopeWallet
+  PhantomWalletAdapter,
+  MathWalletAdapter,
+  SolflareWalletAdapter,
+  SolongWalletAdapter,
+  SolletWalletAdapter
 } from '@solana/wallet-adapter-wallets';
 import { RpcNodeContextProvider } from './contexts/rpcNode';
 import { BlockExplorerProvider } from './contexts/blockExplorer';
@@ -38,12 +37,12 @@ import { MarketContextProvider } from './v1/contexts/market';
 export function App(): JSX.Element {
   const wallets = useMemo(
     () => [
-      getPhantomWallet(),
-      getSolflareWallet(),
-      getSolongWallet(),
-      getMathWallet(),
-      getSolletWallet(),
-      getSlopeWallet()
+      new PhantomWalletAdapter(),
+      new MathWalletAdapter(),
+      new SolflareWalletAdapter(),
+      new SolongWalletAdapter(),
+      new SolletWalletAdapter(),
+      new SolletWalletAdapter()
     ],
     []
   );
