@@ -12,9 +12,7 @@ import { ReactComponent as WalletIcon } from '../styles/icons/wallet_icon.svg';
 import * as anchor from '@project-serum/anchor';
 import { defaultVariables, IncomingThemeVariables, NotificationsButton } from '@dialectlabs/react-ui';
 
-const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey(
-  'D2pyBevYb6dit1oCx6e8vCxFK9mBeYCRe8TTntk2Tm98'
-);
+const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey('9dfi492rC6PhFVwg6sJLQYqSme4yTBZ9hdQvmQTCno6i');
 
 export const themeVariables: IncomingThemeVariables = {
   dark: {
@@ -22,10 +20,13 @@ export const themeVariables: IncomingThemeVariables = {
       'w-10 h-10 shadow-xl shadow-neutral-800 border border-neutral-600 hover:shadow-neutral-700 bg-white text-black',
     modal: 'dialect-notfications', // 0.4 opacity based on trial-and-error
     textStyles: {
-      h1: "h1",
-      body: "bodyText"
+      body: 'bodyText',
+      header: 'titleHeader',
     },
-    header: "header"
+    header: "header",
+    scrollbar: "scrollbar",
+    divider: "divider",
+    section: "section"
   },
   animations: {
     popup: {
@@ -34,9 +35,9 @@ export const themeVariables: IncomingThemeVariables = {
       enterTo: 'opacity-100 scale-100',
       leave: 'transition-all duration-100 origin-top-right',
       leaveFrom: 'opacity-100 scale-100',
-      leaveTo: 'opacity-0 scale-75',
-    },
-  },
+      leaveTo: 'opacity-0 scale-75'
+    }
+  }
 };
 
 type ThemeType = 'light' | 'dark' | undefined;
@@ -75,20 +76,18 @@ export function Navbar(): JSX.Element {
               {link.title}
             </Link>
           ))}
-          <div style={{position: 'relative'}}>
+          <div style={{ position: 'relative' }}>
             <NotificationsButton
-                wallet={wallet}
-                network={'localnet'}
-                publicKey={DIALECT_PUBLIC_KEY}
-                theme={theme}
-                variables={themeVariables}
-                notifications={[
-                  { name: 'Welcome message', detail: 'On thread creation' },
-                ]}
-                channels={['web3', 'email', 'sms', 'telegram']}
-              />
+              wallet={wallet}
+              network={'localnet'}
+              publicKey={DIALECT_PUBLIC_KEY}
+              theme={theme}
+              variables={themeVariables}
+              notifications={[{ name: 'Welcome message', detail: 'On thread creation' }]}
+              channels={['web3', 'email', 'sms', 'telegram']}
+            />
           </div>
-        
+
           <Button
             ghost
             className="flex-centered"
@@ -97,7 +96,9 @@ export function Navbar(): JSX.Element {
             onClick={() => (wallet.connected ? wallet.disconnect() : setConnecting(true))}>
             <WalletIcon width="20px" />
             {wallet.connected
-              ? `${shortenPubkey(wallet.publicKey ? wallet.publicKey.toString() : '')} ${dictionary.settings.connected.toUpperCase()}`
+              ? `${shortenPubkey(
+                  wallet.publicKey ? wallet.publicKey.toString() : ''
+                )} ${dictionary.settings.connected.toUpperCase()}`
               : dictionary.settings.connect.toUpperCase()}
           </Button>
         </div>
@@ -144,7 +145,7 @@ export function Navbar(): JSX.Element {
               <WalletIcon width="20px" />
               {wallet.connected
                 ? `${shortenPubkey(
-                  wallet.publicKey ? wallet.publicKey.toString() : ''
+                    wallet.publicKey ? wallet.publicKey.toString() : ''
                   )} ${dictionary.settings.connected.toUpperCase()}`
                 : dictionary.settings.connect.toUpperCase()}
             </Button>
