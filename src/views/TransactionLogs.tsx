@@ -42,7 +42,7 @@ export function TransactionLogs(): JSX.Element {
                   &nbsp;
                   {log.tokenAbbrev}
                 </td>
-                <td>
+                <td style={{ paddingRight: '40px' }}>
                   <i className="fas fa-external-link-alt"></i>
                 </td>
               </tr>
