@@ -21,12 +21,12 @@ export const themeVariables: IncomingThemeVariables = {
     modal: 'dialect-notfications', // 0.4 opacity based on trial-and-error
     textStyles: {
       body: 'bodyText',
-      header: 'titleHeader',
+      header: 'titleHeader'
     },
-    header: "header",
-    scrollbar: "scrollbar",
-    divider: "divider",
-    section: "section"
+    header: 'header',
+    scrollbar: 'scrollbar',
+    divider: 'divider',
+    section: 'section'
   },
   animations: {
     popup: {
