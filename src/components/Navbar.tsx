@@ -15,19 +15,32 @@ import { defaultVariables, IncomingThemeVariables, NotificationsButton } from '@
 const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey('9dfi492rC6PhFVwg6sJLQYqSme4yTBZ9hdQvmQTCno6i');
 
 export const themeVariables: IncomingThemeVariables = {
-  dark: {
+  light: {
     bellButton:
-      'w-10 h-10 shadow-xl shadow-neutral-800 border border-neutral-600 hover:shadow-neutral-700 bg-white text-black',
-    modal: 'dialect-notfications', // 0.4 opacity based on trial-and-error
-    textStyles: {
-      body: 'bodyText',
-      header: 'titleHeader'
+      `w-10 h-10 border border-neutral-600 bg-white text-black jet-transparent jet-shadow-none jet-text-primary jet-nav-icon`,
+    modal: `${defaultVariables.light.modal} jet-modal-bg-custom sm:rounded-3xl shadow-xl shadow-neutral-900 sm:border border-[#ABABAB]/40`, // 0.4 opacity based on trial-and-error
+    button: 'jet-button jet-bg-green jet-pd-05',
+    secondaryButton: "jet-bg-transparent jet-border-green jet-text-green",
+    secondaryDangerButton: "jet-bg-transparent jet-border-red jet-text-red jet-pd-05",
+    disabledButton: "jet-bg-green jet-opacity-75 jet-pd-05",
+    divider: 'jet-divider',
+    iconButton: 'jet-icon jet-text-primary',
+    section: "jet-bg-light-gray jet-pd-05 jet-br-rd-1",
+    colors: {
+      bg: 'jet-bg',
+      secondary: 'jet-text-green',
+      brand: 'jet-bg-green',
+      errorBg: 'dt-bg-transparent',
+      primary: 'jet-text-primary',
+      accent: '',
+      accentSolid: 'dt-text-[#5895B9]',
+      highlight: 'dt-bg-subtle-day',
+      highlightSolid: 'jet-bg',
+      toggleBackgroundActive: 'jet-bg-green',
+      toggleThumb: 'dt-bg-[#EEEEEE]',
     },
-    header: 'header',
-    scrollbar: 'scrollbar',
-    divider: 'divider',
-    section: 'section'
   },
+  
   animations: {
     popup: {
       enter: 'transition-all duration-300 origin-top-right',
@@ -35,9 +48,9 @@ export const themeVariables: IncomingThemeVariables = {
       enterTo: 'opacity-100 scale-100',
       leave: 'transition-all duration-100 origin-top-right',
       leaveFrom: 'opacity-100 scale-100',
-      leaveTo: 'opacity-0 scale-75'
-    }
-  }
+      leaveTo: 'opacity-0 scale-75',
+    },
+  },
 };
 
 type ThemeType = 'light' | 'dark' | undefined;
@@ -61,7 +74,7 @@ export function Navbar(): JSX.Element {
   ];
   const accountLink = { title: dictionary.account.title, route: '/' };
 
-  const [theme, setTheme] = useState<ThemeType>('dark');
+  const [theme, setTheme] = useState<ThemeType>('light');
 
   return (
     <div className={`navbar-container flex-centered ${drawerOpened ? 'drawer-open' : ''}`}>
@@ -79,12 +92,12 @@ export function Navbar(): JSX.Element {
           <div style={{ position: 'relative' }}>
             <NotificationsButton
               wallet={wallet}
-              network={'localnet'}
+              network={'devnet'}
               publicKey={DIALECT_PUBLIC_KEY}
               theme={theme}
               variables={themeVariables}
               notifications={[{ name: 'Welcome message', detail: 'On thread creation' }]}
-              channels={['web3', 'email', 'sms', 'telegram']}
+              channels={['web3', 'email', 'telegram']}
             />
           </div>
 
