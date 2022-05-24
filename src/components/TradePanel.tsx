@@ -459,7 +459,7 @@ export function TradePanel(): JSX.Element {
             className={`trade-select flex justify-center align-center ${currentAction === action ? 'active' : ''} ${
               darkTheme ? 'dark' : ''
             }`}>
-            <p className="gradient-text semi-bold-text">{dictionary.cockpit[action].toUpperCase()}</p>
+            <p className="semi-bold-text">{dictionary.cockpit[action].toUpperCase()}</p>
           </div>
         ))}
         <div className="mobile-trade-select flex-centered">

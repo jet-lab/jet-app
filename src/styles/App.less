@@ -129,18 +129,6 @@
           opacity: 1;
         }
       }
-
-      .currency-input {
-        + .input-btn {
-          &:active {
-            i {
-              -webkit-text-fill-color: unset;
-            }
-
-            background: unset;
-          }
-        }
-      }
     }
   }
 
@@ -664,6 +652,7 @@
               letter-spacing: 0.5px;
               line-height: 17px;
               opacity: @disabled-opacity;
+              color: @secondary-3;
 
               &::after {
                 content: '';
@@ -672,7 +661,7 @@
                 bottom: 0;
                 height: 1px;
                 width: 100%;
-                background: @gradient;
+                background: @secondary-3;;
                 opacity: 0;
               }
             }
@@ -699,10 +688,11 @@
               box-shadow: unset;
 
               p {
+                color: @jet-green;
                 opacity: 1;
 
                 &::after {
-                  background: @gradient;
+                  background: @jet-green;
                   opacity: inherit;
                 }
               }
@@ -981,6 +971,7 @@
 
   // Transactions View
   .transaction-logs {
+    align-items: flex-start;
     .jet-icon {
       * {
         fill: @jet-green;
@@ -988,7 +979,7 @@
     }
     .table-container {
       width: 100%;
-      max-width: 630px;
+      max-width: 700px;
       margin: @spacing-lg 0;
       padding: @spacing-lg;
       border-radius: @border-radius;

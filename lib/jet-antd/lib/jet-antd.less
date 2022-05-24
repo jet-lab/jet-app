@@ -1979,13 +1979,17 @@
     &-selector {
       min-width: 80px;
       width: 100%;
-      padding: 0 @spacing-md;
+      padding: 0 @spacing-xl 0 @spacing-md;
       white-space: nowrap;
       z-index: 1;
     }
     &-arrow {
       position: absolute;
       right: @spacing-md;
+      line-height: unset;
+      .anticon {
+        margin: 2px 0 0 0 !important;
+      }
       svg,
       .jet-icon {
         transition: transform @transition-duration ease-out;

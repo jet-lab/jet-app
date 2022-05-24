@@ -136,117 +136,110 @@ export function MarketTable(): JSX.Element {
               </tr>
             </thead>
             <tbody>
-              {filteredMarketTable.map((reserve, i) => {
-                if (!hasSolletEth && reserve.abbrev === 'ETH') {
-                  return <></>;
-                } else {
-                  return (
-                    <tr
-                      key={i}
-                      className={currentReserve?.abbrev === reserve.abbrev ? 'active' : ''}
-                      onClick={() => setCurrentReserve(reserve)}>
-                      <td className="market-table-asset">
-                        <AssetLogo symbol={reserve.abbrev} height={25} />
-                        <span className="semi-bold-text">{reserve.name}</span>
-                        <span>≈{market.marketInit ? currencyFormatter(reserve.price, true, 2) : '--'}</span>
-                      </td>
-                      <td onClick={() => setReserveDetail(reserve)} className="reserve-detail text-btn bold-text">
-                        {reserve.abbrev} {dictionary.cockpit.detail}
-                      </td>
-                      <td className="cell-border-right">
-                        {market.marketInit
-                          ? `${totalAbbrev(reserve.availableLiquidity.tokens, reserve.price, nativeValues, 2)} ${
-                              nativeValues ? reserve.abbrev : ''
-                            }`
-                          : '--'}
-                      </td>
-                      <td>
-                        {market.marketInit ? (reserve.depositRate ? (reserve.depositRate * 100).toFixed(2) : 0) : '--'}%
-                      </td>
-                      <td>
-                        {market.marketInit ? (reserve.borrowRate ? (reserve.borrowRate * 100).toFixed(2) : 0) : '--'}%
-                      </td>
-                      <td className="clickable-icon cell-border-right" onClick={() => setRadarOpen(true)}>
-                        <RadarIcon width="18px" />
-                      </td>
-                      <td
-                        className={
-                          user.walletInit && user.walletBalances[reserve.abbrev]
-                            ? 'user-wallet-value text-btn semi-bold-text'
-                            : ''
+              {filteredMarketTable.map((reserve, i) => (
+                <tr
+                  key={i}
+                  className={currentReserve?.abbrev === reserve.abbrev ? 'active' : ''}
+                  onClick={() => setCurrentReserve(reserve)}>
+                  <td className="market-table-asset">
+                    <AssetLogo symbol={reserve.abbrev} height={25} />
+                    <span className="semi-bold-text">{reserve.name}</span>
+                    <span>≈{market.marketInit ? currencyFormatter(reserve.price, true, 2) : '--'}</span>
+                  </td>
+                  <td onClick={() => setReserveDetail(reserve)} className="reserve-detail text-btn bold-text">
+                    {reserve.abbrev} {dictionary.cockpit.detail}
+                  </td>
+                  <td className="cell-border-right">
+                    {market.marketInit
+                      ? `${totalAbbrev(reserve.availableLiquidity.tokens, reserve.price, nativeValues, 2)} ${
+                          nativeValues ? reserve.abbrev : ''
+                        }`
+                      : '--'}
+                  </td>
+                  <td>
+                    {market.marketInit ? (reserve.depositRate ? (reserve.depositRate * 100).toFixed(2) : 0) : '--'}%
+                  </td>
+                  <td>
+                    {market.marketInit ? (reserve.borrowRate ? (reserve.borrowRate * 100).toFixed(2) : 0) : '--'}%
+                  </td>
+                  <td className="clickable-icon cell-border-right" onClick={() => setRadarOpen(true)}>
+                    <RadarIcon width="18px" />
+                  </td>
+                  <td
+                    className={
+                      user.walletInit && user.walletBalances[reserve.abbrev]
+                        ? 'user-wallet-value text-btn semi-bold-text'
+                        : ''
+                    }
+                    onClick={() => {
+                      if (user.walletInit && user.walletBalances[reserve.abbrev]) {
+                        setCurrentAction('deposit');
+                        setCurrentAmount(user.walletBalances[reserve.abbrev]);
+                      }
+                    }}>
+                    {user.walletInit
+                      ? user.walletBalances[reserve.abbrev] > 0 && user.walletBalances[reserve.abbrev] < 0.0005
+                        ? '~0'
+                        : totalAbbrev(user.walletBalances[reserve.abbrev] ?? 0, reserve.price, nativeValues, 3)
+                      : '--'}
+                  </td>
+                  <td
+                    className={
+                      user.walletInit && user.collateralBalances[reserve.abbrev]
+                        ? 'user-collateral-value text-btn semi-bold-text'
+                        : ''
+                    }
+                    onClick={() => {
+                      if (user.walletInit && user.collateralBalances[reserve.abbrev]) {
+                        setCurrentAction('withdraw');
+                        setCurrentAmount(user.collateralBalances[reserve.abbrev]);
+                      }
+                    }}>
+                    {user.walletInit
+                      ? user.collateralBalances[reserve.abbrev] > 0 && user.collateralBalances[reserve.abbrev] < 0.0005
+                        ? '~0'
+                        : totalAbbrev(user.collateralBalances[reserve.abbrev] ?? 0, reserve.price, nativeValues, 3)
+                      : '--'}
+                  </td>
+                  <td
+                    className={
+                      user.walletInit && user.loanBalances[reserve.abbrev]
+                        ? 'user-loan-value text-btn semi-bold-text'
+                        : ''
+                    }
+                    onClick={() => {
+                      if (user.walletInit && user.loanBalances[reserve.abbrev]) {
+                        setCurrentAction('repay');
+                        setCurrentAmount(user.loanBalances[reserve.abbrev]);
+                      }
+                    }}>
+                    {user.walletInit
+                      ? user.loanBalances[reserve.abbrev] > 0 && user.loanBalances[reserve.abbrev] < 0.0005
+                        ? '~0'
+                        : totalAbbrev(user.loanBalances[reserve.abbrev] ?? 0, reserve.price, nativeValues, 3)
+                      : '--'}
+                  </td>
+                  {/* Faucet for testing if in development */}
+                  {cluster === 'devnet' ? (
+                    <td
+                      onClick={async () => {
+                        if (user.walletInit && publicKey) {
+                          doAirdrop(reserve);
+                        } else {
+                          setConnecting(true);
                         }
-                        onClick={() => {
-                          if (user.walletInit && user.walletBalances[reserve.abbrev]) {
-                            setCurrentAction('deposit');
-                            setCurrentAmount(user.walletBalances[reserve.abbrev]);
-                          }
-                        }}>
-                        {user.walletInit
-                          ? user.walletBalances[reserve.abbrev] > 0 && user.walletBalances[reserve.abbrev] < 0.0005
-                            ? '~0'
-                            : totalAbbrev(user.walletBalances[reserve.abbrev] ?? 0, reserve.price, nativeValues, 3)
-                          : '--'}
-                      </td>
-                      <td
-                        className={
-                          user.walletInit && user.collateralBalances[reserve.abbrev]
-                            ? 'user-collateral-value text-btn semi-bold-text'
-                            : ''
-                        }
-                        onClick={() => {
-                          if (user.walletInit && user.collateralBalances[reserve.abbrev]) {
-                            setCurrentAction('withdraw');
-                            setCurrentAmount(user.collateralBalances[reserve.abbrev]);
-                          }
-                        }}>
-                        {user.walletInit
-                          ? user.collateralBalances[reserve.abbrev] > 0 &&
-                            user.collateralBalances[reserve.abbrev] < 0.0005
-                            ? '~0'
-                            : totalAbbrev(user.collateralBalances[reserve.abbrev] ?? 0, reserve.price, nativeValues, 3)
-                          : '--'}
-                      </td>
-                      <td
-                        className={
-                          user.walletInit && user.loanBalances[reserve.abbrev]
-                            ? 'user-loan-value text-btn semi-bold-text'
-                            : ''
-                        }
-                        onClick={() => {
-                          if (user.walletInit && user.loanBalances[reserve.abbrev]) {
-                            setCurrentAction('repay');
-                            setCurrentAmount(user.loanBalances[reserve.abbrev]);
-                          }
-                        }}>
-                        {user.walletInit
-                          ? user.loanBalances[reserve.abbrev] > 0 && user.loanBalances[reserve.abbrev] < 0.0005
-                            ? '~0'
-                            : totalAbbrev(user.loanBalances[reserve.abbrev] ?? 0, reserve.price, nativeValues, 3)
-                          : '--'}
-                      </td>
-                      {/* Faucet for testing if in development */}
-                      {cluster === 'devnet' ? (
-                        <td
-                          onClick={async () => {
-                            if (user.walletInit && publicKey) {
-                              doAirdrop(reserve);
-                            } else {
-                              setConnecting(true);
-                            }
-                          }}>
-                          <i
-                            className="clickable-icon gradient-text fas fa-parachute-box"
-                            title={`Airdrop ${reserve.abbrev}`}></i>
-                        </td>
-                      ) : (
-                        <td>
-                          <ArrowIcon width="25px" />
-                        </td>
-                      )}
-                    </tr>
-                  );
-                }
-              })}
+                      }}>
+                      <i
+                        className="clickable-icon gradient-text fas fa-parachute-box"
+                        title={`Airdrop ${reserve.abbrev}`}></i>
+                    </td>
+                  ) : (
+                    <td>
+                      <ArrowIcon width="25px" />
+                    </td>
+                  )}
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
