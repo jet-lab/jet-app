@@ -2,135 +2,175 @@
   This is a stylesheet for both Jet UI stylings
   and targeted Antd component stylings. Please review our frontend
   documentation for best development/design practices.
-
+  
   *Note* Do not include any antd default stylesheets in your app.
 ***************************/
-
 /***************************
   Jet Variables
 ***************************/
 :root {
   // Light theme color variables
-  --lt-black: 69, 69, 69;
-  --lt-dark-grey: 128, 128, 128;
-  --lt-grey: 216, 223, 236;
-  --lt-light-grey: 225, 231, 241;
-  --lt-white: 229, 235, 244;
+  --lt-primary: 219, 225, 234;
+  --lt-primary-2: 198, 204, 214;
+  --lt-primary-3: 179, 179, 179;
+  --lt-primary-4: 150, 150, 150;
+  --lt-secondary: 5, 5, 5;
+  --lt-secondary-2: 10, 10, 10;
+  --lt-secondary-3: 30, 30, 30;
+  --lt-secondary-4: 70, 70, 70;
+  --lt-secondary-5: 100, 100, 100;
 
   // Dark theme color variables
-  --dt-black: 255, 255, 255;
-  --dt-dark-grey: 175, 175, 175;
-  --dt-grey: 30, 30, 35;
-  --dt-light-grey: 28, 28, 35;
-  --dt-white: 35, 35, 35;
+  --dt-primary: 60, 60, 60;
+  --dt-primary-2: 41, 41, 41;
+  --dt-primary-3: 33, 33, 33;
+  --dt-primary-4: 30, 29, 29;
+  --dt-secondary: 244, 244, 244;
+  --dt-secondary-2: 226, 226, 226;
+  --dt-secondary-3: 199, 199, 199;
+  --dt-secondary-4: 172, 172, 172;
+  --dt-secondary-5: 136, 136, 136;
 
-  // Reference color variables (set to light theme by default)
-  --black: var(--lt-black);
-  --dark-grey: var(--lt-dark-grey);
-  --grey: var(--lt-grey);
-  --light-grey: var(--lt-light-grey);
-  --white: var(--lt-white);
+  // Reference color variables (set to dark theme by default)
+  --primary: var(--dt-primary);
+  --primary-2: var(--dt-primary-2);
+  --primary-3: var(--dt-primary-3);
+  --primary-4: var(--dt-primary-4);
+  --secondary: var(--dt-secondary);
+  --secondary-2: var(--dt-secondary-2);
+  --secondary-3: var(--dt-secondary-3);
+  --secondary-4: var(--dt-secondary-4);
+  --secondary-5: var(--dt-secondary-5);
 
   // Light theme shadow variables
   --lt-light-shadow: rgba(255, 255, 255, 1);
   --lt-dark-shadow: rgba(0, 0, 0, 0.25);
 
   // Dark theme shadow variables
-  --dt-light-shadow: rgba(255, 255, 255, 0.1);
-  --dt-dark-shadow: rgba(0, 0, 0, 0.5);
+  --dt-light-shadow: rgba(255, 255, 255, 0.2);
+  --dt-dark-shadow: rgba(0, 0, 0, 1);
 
-  // Reference shadow variables (set to light theme by default)
-  --light-shadow: var(--lt-light-shadow);
-  --dark-shadow: var(--lt-dark-shadow);
+  // Reference shadow variables (set to dark theme by default)
+  --light-shadow: var(--dt-light-shadow);
+  --dark-shadow: var(--dt-dark-shadow);
+
+  // Drop shadows
+  --lt-drop-shadow: 0 3px 6px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.1);
+  --dt-drop-shadow: 0 3px 6px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.2);
+
+  // Reference for drop shadow (set to dark theme by default)
+  --drop-shadow: var(--dt-drop-shadow);
 
   // Other root colors
-  --jet-green: #3d9e83;
-  --jet-blue: #278db6;
-  --light-green-1: #8ebbb1;
-  --light-green-2: #72ab9b;
-  --success: #53bd9f;
+  --jet-green: #86ceb8;
+  --jet-green-2: #71a897;
+  --jet-green-3: #639485;
+  --jet-blue: #84c1ca;
+  --jet-blue-2: #65a5b5;
+  --jet-teal: #348995;
+  --success: #86ceb8;
   --warning: #e3cb79;
-  --failure: #ec6a69;
+  --danger: #e36868;
 }
 
 // Base colors
-@black: rgb(var(--black));
-@dark-grey: rgb(var(--dark-grey));
-@grey: rgb(var(--grey));
-@light-grey: rgb(var(--light-grey));
-@white: rgb(var(--white));
+@primary: rgb(var(--primary));
+@primary-2: rgb(var(--primary-2));
+@primary-3: rgb(var(--primary-3));
+@primary-4: rgb(var(--primary-4));
+@secondary: rgb(var(--secondary));
+@secondary-2: rgb(var(--secondary-2));
+@secondary-3: rgb(var(--secondary-3));
+@secondary-4: rgb(var(--secondary-4));
+@secondary-5: rgb(var(--secondary-5));
 @jet-green: var(--jet-green);
+@jet-green-2: var(--jet-green-2);
+@jet-green-3: var(--jet-green-3);
 @jet-blue: var(--jet-blue);
-@light-green-1: var(--light-green-1);
-@light-green-2: var(--light-green-2);
+@jet-blue-2: var(--jet-blue-2);
 @success: var(--success);
+@success-2: var(--success-2);
 @warning: var(--warning);
-@failure: var(--failure);
-@gradient: linear-gradient(135deg, @jet-green 25%, @jet-blue 85%);
+@danger: var(--danger);
+
+// Gradients
+@gradient: linear-gradient(135deg, @jet-green 0%, @jet-blue 100%);
+
+// Backgrounds
+@modal-bg: rgba(0, 0, 0, 0.6);
+@header-bg: rgba(0, 0, 0, 0.05);
+@success-bg: rgba(134, 206, 184, 0.25);
+@danger-bg: rgba(227, 104, 104, 0.25);
 
 // Base shadow elements
 @light-shadow: var(--light-shadow);
 @dark-shadow: var(--dark-shadow);
 
 // Regular neu shadows
-@neu-shadow-low: -3px -3px 6px @light-shadow, 3px 3px 6px @dark-shadow;
-@neu-shadow: -4px -4px 8px @light-shadow, 4px 4px 8px @dark-shadow;
+@neu-shadow: -2px -2px 10px @light-shadow, 2px 2px 10px @dark-shadow;
+@neu-shadow-2: -2px -2px 6px @light-shadow, 2px 2px 6px @dark-shadow;
+@neu-shadow-3: -1px -1px 5px @light-shadow, 1px 1px 5px @dark-shadow;
+@neu-shadow-sm: -1px -1px 3px @light-shadow, 1px 1px 3px @dark-shadow;
+@neu-shadow-sm-2: -1px -1px 3px @light-shadow, 1px 1px 3px @dark-shadow;
 
 // Inset neu shadows
-@neu-shadow-inset-low: inset -1.5px -1.5px 3.5px @light-shadow, inset 1.5px 1.5px 3.5px @dark-shadow;
-@neu-shadow-inset: inset -2px -2px 5px @light-shadow, inset 2px 2px 5px @dark-shadow;
+@neu-shadow-inset: inset -2px -2px 8px @light-shadow, inset 2px 2px 8px @dark-shadow;
+@neu-shadow-inset-2: inset -2px -2px 4px @light-shadow, inset 2px 2px 4px @dark-shadow;
+@neu-shadow-inset-3: inset -1px -1px 4px @light-shadow, inset 1px 1px 4px @dark-shadow;
+@neu-shadow-inset-sm: inset -1px -1px 2px @light-shadow, inset 1px 1px 2px @dark-shadow;
+@neu-shadow-inset-sm-2: inset -0.5px -0.5px 1.5px @light-shadow, inset 0.5px 0.5px 1.5px @dark-shadow;
 
 // Color neu shadows
-@neu-shadow-inset-success: inset -2px -2px 4px #78d6bb, inset 2px 2px 4px #28866c;
-@neu-shadow-inset-failure: inset -2px -2px 4px #f58d8d, inset 2px 2px 4px #c94646;
-@neu-shadow-inset-gradient-low: inset -1px -1.25px 3px #45b2dd, inset 1px 1.25px 3px #20755d;
-@neu-shadow-inset-gradient: inset -1.5px -1.5px 4px #45b2dd, inset 1.5px 1.5px 4px #20755d;
+@neu-shadow-inset-success: inset -1px -1px 2px #78d6bb, inset 1px 1px 2px #28866c;
+@neu-shadow-inset-danger: inset -1px -1px 2px #f58d8d, inset 1px 1px 2px #c94646;
+@neu-shadow-inset-green: inset -1px -1px 2px #b0edda, inset 1px 1px 2px #4f9983;
 
 // Drop shadow
-@drop-shadow: 0 3px 6px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.1);
+@drop-shadow: var(--drop-shadow);
 
 // Border radius
-@border-radius: 4px;
-@btn-radius: 3px;
+@xs-border-radius: 3px;
+@sm-border-radius: 5px;
+@border-radius: 10px;
+@lg-border-radius: 15px;
 @round-radius: 50px;
 
 // Nav
 @nav-height: 55px;
 
 // Button padding
-@btn-padding: 6px 14px 5px 14px;
-@secondary-btn-padding: 5px 12px 4px 12px;
+@btn-padding: 9px 12px;
 
 // Fonts
 @xs-font-size: 10px;
 @sm-font-size: 12px;
 @base-font-size: 14px;
 @lg-font-size: 16px;
-@header-font-size: 30px;
-@xl-font-size: 40px;
+@xl-font-size: 30px;
+@xxl-font-size: 35px;
 
-@header-weight: 300;
-@semi-bold-weight: 500;
-@subheader-weight: 550;
-@bold-weight: 600;
+@semi-bold-weight: 400;
+@bold-weight: 700;
 
 // Opacities
-@subtle-opacity: 0.95;
+@subtle-opacity: 0.85;
 @disabled-opacity: 0.75;
-@half-opacity: 0.65;
+@half-opacity: 0.5;
 
 // Standardized spacing
-@spacing-xs: 4px;
-@spacing-sm: 8px;
-@spacing-md: 12px;
-@spacing-lg: 18px;
-@spacing-xl: 24px;
+@spacing-xs: 5px;
+@spacing-sm: 10px;
+@spacing-md: 15px;
+@spacing-lg: 20px;
+@spacing-xl: 25px;
 
 // View width clamp
 @view-clamp: clamp(250px, calc(100% - @spacing-sm * 2), 1150px);
 
 // Transition Duration
-@transition-duration: 0.125s;
+@transition-duration-short: 0.1s;
+@transition-duration: 0.15s;
+@transition-duration-long: 0.5s;
 
 /***************************
   General Jet UI Styles / Boilerplate
@@ -142,25 +182,49 @@
   position: relative;
   margin: 0;
   margin-top: @nav-height;
-  background: @white;
-  color: @black;
+  background: @primary;
+  color: @secondary;
   overflow-x: hidden;
   font-size: @base-font-size;
-  font-family: 'Poppins', Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-family: 'Lato', Helvetica Neue, Helvetica, Arial, sans-serif;
   letter-spacing: 0.25px;
   width: 100vw;
   min-height: calc(100vh - (@nav-height + 30px));
   padding-bottom: 30px;
-  *:focus-visible {
-    outline: unset;
+  * {
+    font-family: inherit;
+    &:focus-visible {
+      outline: unset;
+    }
   }
   &.ant-scrolling-effect {
     overflow: unset !important;
   }
 
-  // Svg's
-  svg path {
-    fill: @black;
+  // Jet Svg's
+  svg.jet-icon {
+    width: 25px;
+    height: 25px;
+    * {
+      fill: @secondary;
+    }
+  }
+
+  // Animation classes
+  .animated {
+    transition: all @transition-duration ease-out;
+  }
+  .flash-opacity {
+    opacity: @half-opacity;
+  }
+  .flash-opacity-subtle {
+    opacity: @disabled-opacity;
+  }
+  .flash-background-success {
+    background-color: @success-bg;
+  }
+  .flash-background-danger {
+    background-color: @danger-bg;
   }
 
   // Flexbox utility
@@ -205,6 +269,28 @@
   .column {
     flex-direction: column;
   }
+  .wrap {
+    flex-wrap: wrap;
+  }
+
+  // Disabled elements
+  *[disabled],
+  .disabled,
+  .ant-typography-disabled {
+    opacity: @disabled-opacity !important;
+    cursor: not-allowed !important;
+  }
+
+  // Hidden elements
+  .no-display {
+    display: none !important;
+  }
+  .no-opacity {
+    opacity: 0 !important;
+  }
+  .no-shadow {
+    box-shadow: unset !important;
+  }
 
   // Text
   h1,
@@ -219,18 +305,19 @@
     text-decoration: none;
     font-style: normal;
     font-weight: normal;
-    color: @black;
+    color: @secondary;
   }
   h1 {
-    font-size: @header-font-size;
-    font-weight: @header-weight;
+    font-size: @xl-font-size;
+    font-weight: @semi-bold-weight;
     line-height: 35px;
     margin: @spacing-md 0;
   }
   h2 {
-    opacity: @half-opacity;
-    font-weight: @subheader-weight;
-    line-height: 21px;
+    color: @secondary-3;
+    font-size: @lg-font-size;
+    font-weight: @semi-bold-weight;
+    line-height: @lg-font-size;
     text-transform: uppercase;
     margin: @spacing-sm 0;
   }
@@ -252,8 +339,9 @@
     color: inherit;
   }
   span {
-    opacity: @subtle-opacity;
+    color: @secondary-3;
     font-size: @sm-font-size;
+    line-height: 18px;
   }
   code {
     font-family: monospace;
@@ -263,7 +351,17 @@
     font-weight: @bold-weight;
   }
   mark {
-    background-color: @light-green-1;
+    background-color: @jet-green-2;
+  }
+  .small-accent-text {
+    font-size: @xs-font-size;
+    color: @secondary-3;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+  .green-text {
+    opacity: 1;
+    color: @jet-green;
   }
   .gradient-text {
     opacity: 1;
@@ -273,7 +371,7 @@
   }
   .secondary-text,
   .ant-typography-secondary {
-    opacity: @disabled-opacity;
+    color: @secondary-3;
   }
   .success-text,
   .ant-typography-success {
@@ -285,14 +383,11 @@
   }
   .danger-text,
   .ant-typography-danger {
-    color: @failure;
+    color: @danger;
   }
   .italic-text,
   .ant-typography i {
     font-style: italic;
-  }
-  .bold-text {
-    font-weight: @bold-weight;
   }
   .center-text {
     text-align: center;
@@ -304,15 +399,16 @@
   .ant-btn-link span {
     opacity: 1;
     text-decoration: none;
-    letter-spacing: 1px;
+    letter-spacing: 0.05em;
     cursor: pointer;
-    transition: opacity @transition-duration ease-in-out;
+    transition: opacity @transition-duration ease-out;
 
     &:hover {
       text-decoration: underline;
+      text-underline-offset: 1px;
     }
     &:active {
-      opacity: @disabled-opacity;
+      opacity: @subtle-opacity;
     }
     &.disabled {
       &:hover {
@@ -323,15 +419,18 @@
   .link-btn,
   a.ant-typography,
   .ant-btn-link span {
-    color: @jet-green;
+    color: @jet-blue;
   }
 
   // Views
   .view {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
     width: @view-clamp;
     padding: @spacing-lg @spacing-sm;
     margin: 0 auto;
-    transition: margin-left @transition-duration;
+    transition: margin @transition-duration ease-out;
 
     &-header {
       font-size: 90px;
@@ -345,24 +444,45 @@
       font-size: @xs-font-size;
       margin: 0;
     }
+    &-row {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    // For transitions
+    &-element {
+      border-radius: @lg-border-radius;
+      box-shadow: @neu-shadow;
+      transition: box-shadow @transition-duration-long ease-out;
+      overflow: hidden;
+      &-transition-setup {
+        transition: box-shadow @transition-duration ease-out, background-color @transition-duration ease-in;
+      }
+      &-transitioning {
+        box-shadow: @neu-shadow-3;
+        background: rgba(var(--primary-3), 0.2);
+      }
+      &-hidden {
+        box-shadow: unset;
+        background: unset;
+        * {
+          opacity: @subtle-opacity;
+          transition: opacity @transition-duration-long ease-out;
+        }
+      }
+      &-item {
+        transition: opacity @transition-duration ease-out !important;
+        &-hidden {
+          opacity: 0 !important;
+        }
+      }
+    }
   }
 
   /***************************
     Jet / Antd Components
   ***************************/
-
-  // Disabled elements
-  *[disabled],
-  .disabled,
-  .ant-typography-disabled {
-    cursor: not-allowed !important;
-    opacity: @disabled-opacity !important;
-  }
-
-  // Hidden elements
-  .hidden {
-    display: none;
-  }
 
   // Buttons
   button,
@@ -370,21 +490,24 @@
   .ant-radio-button-wrapper,
   .ant-pagination-item {
     position: relative;
-    background: @gradient;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: none;
-    border-radius: @btn-radius;
+    border-radius: @sm-border-radius;
     padding: @btn-padding;
-    cursor: pointer;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     -webkit-touch-callout: none;
     margin: @spacing-xs;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.1em;
     font-size: @sm-font-size;
-    font-weight: @semi-bold-weight;
-    font-family: inherit;
-    color: @white;
-    transition: opacity @transition-duration ease-in-out;
+    font-weight: @bold-weight;
+    background: @jet-green;
+    color: @primary;
+    opacity: @subtle-opacity;
+    transition: opacity @transition-duration ease-out, background-color @transition-duration ease-out;
+    cursor: pointer;
     span {
       text-transform: inherit;
       letter-spacing: inherit;
@@ -392,22 +515,46 @@
       font-weight: inherit;
       color: inherit;
     }
-    // Antd button loader icon
-    &-loading-icon {
-      margin-right: @spacing-sm;
-      svg path {
-        margin-right: @spacing-sm;
-        fill: @white;
+    // Buttons with icons
+    svg {
+      margin-right: @spacing-xs;
+      &.jet-icon {
+        margin-right: 2px;
+      }
+      * {
+        fill: @primary;
+      }
+    }
+
+    // Buttons with only icons
+    &-icon-only {
+      svg {
+        margin: unset;
+      }
+    }
+
+    // Loading icon
+    .ant-btn-loading-icon {
+      margin-right: @spacing-xs;
+      display: none;
+
+      svg {
+        margin: unset;
+      }
+    }
+    &-loading {
+      .ant-btn-loading-icon {
+        display: inline-block;
       }
     }
 
     &:hover,
     &:active {
-      opacity: @subtle-opacity;
+      opacity: 1;
     }
     &:active {
-      opacity: @disabled-opacity;
-      box-shadow: @neu-shadow-inset-gradient;
+      opacity: @subtle-opacity;
+      box-shadow: @neu-shadow-inset-green;
     }
 
     // Secondary / Connect button / Dropdown buttons
@@ -415,13 +562,14 @@
     &-background-ghost,
     &-ghost {
       background: unset;
-      border: 1px solid @dark-grey;
-      padding: @secondary-btn-padding;
-      color: @dark-grey;
-      opacity: @disabled-opacity;
+      border: 1px solid @secondary-3;
+      color: @secondary-3;
       span {
         opacity: 1;
         color: inherit;
+      }
+      svg * {
+        fill: @secondary;
       }
 
       &:hover {
@@ -429,7 +577,7 @@
       }
       &:active {
         box-shadow: unset;
-        background: rgba(var(--grey), 0.75);
+        background: rgba(var(--primary-3), @subtle-opacity);
       }
     }
 
@@ -438,11 +586,9 @@
     &-dashed {
       background: unset;
       span {
-        background-image: @gradient;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        color: @jet-green;
       }
-      svg path {
+      svg * {
         fill: @jet-green;
       }
 
@@ -453,8 +599,8 @@
         left: -1px;
         width: calc(100% + 2px);
         height: calc(100% + 2px);
-        border-radius: @btn-radius;
-        background: @gradient;
+        border-radius: @sm-border-radius;
+        background: @jet-green;
         z-index: -1;
       }
       &::after {
@@ -464,8 +610,8 @@
         left: 0px;
         width: 100%;
         height: 100%;
-        border-radius: calc(@btn-radius - 1px);
-        background: @white;
+        border-radius: calc(@sm-border-radius - 1px);
+        background: @primary;
         z-index: -1;
       }
 
@@ -481,8 +627,24 @@
       &:active {
         box-shadow: unset;
         &::after {
-          background: @grey;
+          background: rgba(var(--primary-3), @subtle-opacity);
         }
+      }
+    }
+
+    // Function button
+    &.function-btn {
+      background: @primary-2;
+      color: @secondary;
+      opacity: 1;
+      &:hover,
+      &.active {
+        background: @primary-3;
+        opacity: 1;
+      }
+      &:active {
+        box-shadow: unset;
+        opacity: @disabled-opacity;
       }
     }
 
@@ -490,16 +652,42 @@
     &-text,
     &-link {
       background: unset;
-      color: @black;
+      color: @secondary;
       padding: unset;
       margin: unset;
+      opacity: @subtle-opacity;
+      transition: opacity @transition-duration ease-out;
 
+      &:hover {
+        opacity: 1;
+      }
       &:active {
+        opacity: @subtle-opacity;
         box-shadow: unset;
       }
     }
     &-link {
       color: @jet-green;
+      svg * {
+        fill: @jet-green;
+      }
+    }
+    &-text {
+      padding: @btn-padding;
+      transition: opacity @transition-duration ease-out, background-color @transition-duration ease-out;
+      svg * {
+        fill: @secondary;
+      }
+      &:hover {
+        opacity: 1;
+        background: rgba(var(--primary-3), @subtle-opacity);
+        span {
+          text-decoration: unset;
+        }
+      }
+      &:active {
+        background: @primary-3;
+      }
     }
 
     // Full width button
@@ -529,30 +717,16 @@
     // Error button
     &.error-btn,
     &-dangerous {
-      background: @failure;
+      background: @danger;
 
       &:active {
-        box-shadow: @neu-shadow-inset-failure;
-      }
-    }
-
-    // Disabled
-    &.disabled,
-    &[disabled] {
-      &:hover {
-        opacity: @disabled-opacity;
-      }
-      &.secondary-btn:hover {
-        background: inherit;
-      }
-      &:active {
-        box-shadow: unset;
+        box-shadow: @neu-shadow-inset-danger;
       }
     }
 
     // Antd circle button
     &.ant-btn-circle {
-      padding: @spacing-xs calc(@spacing-sm - 1px);
+      padding: @spacing-xs calc(@spacing-sm - 3px) calc(@spacing-xs - 2px) calc(@spacing-sm - 3px);
       border-radius: @round-radius;
     }
 
@@ -568,6 +742,22 @@
 
       .ant-btn-loading-icon {
         margin: unset;
+      }
+    }
+
+    // Disabled
+    &.disabled,
+    &[disabled] {
+      background: @secondary-5;
+      &.secondary-btn:hover {
+        background: inherit;
+      }
+      &:active {
+        box-shadow: unset;
+      }
+
+      span {
+        cursor: not-allowed;
       }
     }
 
@@ -596,44 +786,107 @@
       }
     }
   }
+  // Icon button
+  .icon-btn {
+    padding: @spacing-sm;
+    margin: @spacing-xs;
+    border-radius: @round-radius;
+    font-size: @lg-font-size;
+    transition: background-color @transition-duration ease-out;
+    cursor: pointer;
+    svg * {
+      fill: @secondary-3;
+      transition: fill @transition-duration ease-out;
+    }
+    &:hover,
+    &.active {
+      background: @primary-3;
+      svg * {
+        fill: @secondary;
+      }
+    }
+    &:active {
+      opacity: @disabled-opacity;
+    }
+  }
 
   // General Input
   input {
     width: 100%;
-    padding: @spacing-md @spacing-lg;
+    padding: @spacing-sm @spacing-md;
     margin: @spacing-xs 0;
-    box-shadow: @neu-shadow-inset;
-    background: @white;
-    color: @black;
+    box-shadow: @neu-shadow-inset-sm;
+    background: @primary-2;
+    color: @secondary;
     font-size: @base-font-size;
     border: none;
-    border-radius: @border-radius;
+    border-radius: @sm-border-radius;
     box-sizing: border-box;
     -webkit-box-sizing: border-box;
     -webkit-appearance: none;
     -moz-box-sizing: border-box;
+    transition: box-shadow @transition-duration ease-out, color @transition-duration-short ease-out;
 
     &::placeholder {
-      opacity: @disabled-opacity;
+      opacity: @subtle-opacity;
     }
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
       -webkit-appearance: none;
       margin: 0;
     }
-    &:focus {
-      box-shadow: @neu-shadow-inset-low;
+    &:hover,
+    &:focus,
+    &.has-value {
+      box-shadow: @neu-shadow-inset-sm-2;
+    }
+    &.disabled,
+    &.warning,
+    &.error {
+      border: unset;
+      border-bottom: 2px solid;
+    }
+    &.warning {
+      border-color: @warning;
     }
     &.error {
-      border: 1px solid @failure;
-
-      &::placeholder {
-        color: @failure;
-      }
+      border-color: @danger;
     }
 
     &[type='number'] {
       -moz-appearance: textfield;
+    }
+
+    // Secondary input style
+    &.secondary-input {
+      background: transparent;
+      box-shadow: unset;
+      border-radius: unset;
+      border-bottom: 1px solid @primary-3;
+      padding: @spacing-xs @spacing-sm;
+      transition: border-color @transition-duration ease-out;
+
+      &[disabled] {
+        border-color: @secondary-3;
+        &:hover,
+        &:focus,
+        &.has-value {
+          border-color: @secondary-3;
+        }
+      }
+      &.warning {
+        border-color: @warning;
+      }
+      &.error {
+        border-color: @danger;
+      }
+      &:hover,
+      &.has-value {
+        border-color: @jet-green-3;
+      }
+      &:focus {
+        border-color: @jet-green;
+      }
     }
 
     // Antd checkbox
@@ -641,60 +894,25 @@
       position: relative;
       width: 18px;
       height: 18px;
+      padding: unset;
       opacity: 0;
-      padding: 0 25px 0 0;
       box-shadow: unset;
-      + span {
-        position: absolute;
-        width: 18px;
-        height: 18px;
-        top: -3px;
-        left: 0;
-        opacity: 1;
-        border-radius: @btn-radius;
-        box-shadow: @neu-shadow-inset;
-        border: 1px solid @jet-green;
-        background: @grey;
-        cursor: pointer;
-
-        &:hover {
-          box-shadow: @neu-shadow-inset-low;
-        }
-      }
-
       &:checked {
         + span {
-          box-shadow: @neu-shadow-inset-gradient;
-          background: @jet-green;
-          &::before,
           &::after {
-            content: '';
-            position: absolute;
-            top: 8.5px;
-            left: 1px;
-            width: 16px;
-            height: 1px;
-            background: @white;
-            transform: rotate(45deg);
+            background: @jet-green;
           }
-          &::after {
-            left: unset;
-            right: 1px;
-            transform: rotate(-45deg);
-          }
-
-          &:hover {
-            box-shadow: @neu-shadow-inset-gradient-low;
+          &:hover::after {
+            background: @jet-green;
           }
         }
       }
       &[disabled] {
         + span {
           cursor: not-allowed;
-          opacity: @half-opacity;
-
-          &:hover {
-            box-shadow: @neu-shadow-inset;
+          opacity: @disabled-opacity;
+          &:hover::after {
+            background: transparent;
           }
         }
       }
@@ -702,42 +920,218 @@
     // Antd Radio
     &[type='radio'] {
       position: relative;
-      width: 20px;
-      height: 20px;
+      width: 15px;
+      height: 15px;
+      margin: 0;
       padding: 0;
-      margin: 0 @spacing-sm -5px 0;
       border-radius: @round-radius;
-      background: @grey;
-      box-shadow: @neu-shadow-inset;
-      transition: all @transition-duration ease-in-out;
+      box-shadow: unset;
+      background: @primary-3;
       cursor: pointer;
 
-      &:hover {
-        box-shadow: @neu-shadow-inset-low;
-      }
       &::after {
         content: '';
-        width: 50%;
-        height: 50%;
+        width: 9px;
+        height: 9px;
         position: absolute;
-        top: 25%;
-        left: 25%;
+        top: 3px;
+        left: 3px;
         background: @gradient;
         border-radius: @round-radius;
         opacity: 0;
-        transition: opacity @transition-duration ease-in-out;
+        transition: opacity @transition-duration ease-out;
       }
+    }
+
+    // Remove all the weird clear buttons
+    &[type='search']::-ms-clear {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+    &[type='search']::-ms-reveal {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+    &[type='search']::-webkit-search-decoration,
+    &[type='search']::-webkit-search-cancel-button,
+    &[type='search']::-webkit-search-results-button,
+    &[type='search']::-webkit-search-results-decoration {
+      display: none;
     }
   }
   // Antd Checkbox
   .ant-checkbox-wrapper {
-    span:last-of-type {
-      font-size: @base-font-size;
-      margin-top: 1px;
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+    &:hover {
+      .ant-checkbox-inner {
+        border-color: @secondary-3;
+      }
+      span {
+        color: @secondary-3;
+      }
+    }
+    &-disabled:hover {
+      .ant-checkbox-inner {
+        border-color: @secondary-4;
+        cursor: not-allowed !important;
+      }
+      &.secondary-checkbox {
+        .ant-checkbox-inner {
+          &::after {
+            background: unset !important;
+          }
+        }
+        span {
+          color: @secondary-4 !important;
+        }
+      }
+    }
+    span {
+      margin-left: calc(18px + @spacing-xs);
+      line-height: 18px;
+      color: @secondary-4;
+      transition: color @transition-duration ease-out;
+    }
+    .ant-checkbox {
+      position: relative;
+      margin: unset;
+      &-inner {
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        top: 0;
+        left: 0;
+        opacity: 1;
+        margin: -1px 0 0 0;
+        border: 1px solid @secondary-4;
+        border-radius: @sm-border-radius;
+        overflow: hidden;
+        cursor: pointer;
+        &::before {
+          content: '';
+          position: absolute;
+          top: 4px;
+          left: 3px;
+          width: 8px;
+          height: 4px;
+          border: 2px solid transparent;
+          border-top: unset;
+          border-right: unset;
+          transform: rotate(-45deg);
+          transition: border-color @transition-duration ease-out;
+          z-index: 1;
+        }
+        &::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: transparent;
+          transition: background-color @transition-duration ease-out;
+        }
+      }
+      input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: -1px 0 0 0;
+      }
+      &-checked {
+        .ant-checkbox-inner {
+          border-color: @jet-green !important;
+          background: @jet-green !important;
+          &::before {
+            border-color: @primary !important;
+          }
+          &::after {
+            background: @jet-green !important;
+          }
+        }
+        + span {
+          color: @jet-green !important;
+        }
+      }
     }
     &-disabled {
-      span:last-of-type {
-        opacity: @half-opacity;
+      cursor: unset;
+      &:hover {
+        .ant-checkbox-inner {
+          &::after {
+            background: unset;
+          }
+        }
+        span {
+          color: @secondary-4;
+        }
+      }
+      span {
+        opacity: @disabled-opacity;
+      }
+    }
+
+    // Secondary checkbox
+    &.secondary-checkbox {
+      input {
+        margin-top: -3px;
+      }
+      span {
+        font-size: @xs-font-size;
+        text-transform: uppercase;
+      }
+      &:hover {
+        .ant-checkbox-inner {
+          &::after {
+            background: @jet-green-3;
+          }
+        }
+        span {
+          color: @secondary-3;
+        }
+      }
+      .ant-checkbox {
+        &-inner {
+          position: absolute;
+          width: 18px;
+          height: 18px;
+          top: 0;
+          left: 0;
+          opacity: 1;
+          margin: -3px 0 0 0;
+          background: @primary-2;
+          border-radius: unset;
+          border: unset;
+          cursor: pointer;
+          &::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 12px;
+            height: 12px;
+            background: transparent;
+            transition: background-color @transition-duration ease-out;
+          }
+          &:hover::after {
+            background: @jet-green-3;
+          }
+        }
+        &-checked {
+          .ant-checkbox-inner {
+            background: @primary-2 !important;
+            &::before {
+              border-color: transparent !important;
+            }
+          }
+          + span {
+            color: @secondary-3 !important;
+          }
+        }
       }
     }
   }
@@ -752,7 +1146,7 @@
       right: @spacing-sm;
 
       span {
-        opacity: @disabled-opacity;
+        opacity: @subtle-opacity;
         margin: 0 1px;
         cursor: pointer;
 
@@ -768,10 +1162,11 @@
     position: relative;
     width: 100%;
     border-radius: @border-radius;
-    border-collapse: separate;
+    border-collapse: collapse;
     border-spacing: 0 @spacing-xs;
-    background: @white;
-    color: @black;
+    background: inherit;
+    color: inherit;
+    overflow-x: scroll;
 
     thead {
       position: relative;
@@ -784,84 +1179,82 @@
         }
       }
       th {
+        min-width: 70px;
         background: inherit;
-        padding: inherit;
-        color: inherit;
-        min-width: 60px;
-        font-weight: @bold-weight;
+        padding: @spacing-xs @spacing-sm;
         font-size: @xs-font-size;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.07em;
         text-transform: uppercase;
         text-align: left;
-        color: rgba(var(--black), @half-opacity);
+        color: @secondary-5;
 
         &:first-of-type {
           padding-left: @spacing-md;
         }
         &:last-of-type {
+          padding-right: @spacing-md;
           min-width: unset;
         }
       }
-
-      &::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        height: 1px;
-        background: @jet-green;
-        border-bottom: 2px solid @white;
-      }
     }
-    tr {
-      border-radius: @border-radius;
-      cursor: pointer;
-      transition: background-color @transition-duration ease-in-out;
-
-      &:hover {
-        background: @grey;
-      }
-      &:active {
-        box-shadow: @neu-shadow-inset;
-      }
-
-      // If you don't want row interactions
-      &.no-interaction {
-        cursor: unset;
-        td {
-          cursor: unset;
-        }
+    tbody {
+      tr {
+        border-radius: @border-radius;
+        cursor: pointer;
+        transition: background-color @transition-duration ease-in-out, box-shadow @transition-duration-short ease-in-out;
 
         &:hover {
-          background: inherit;
+          background: @primary-2;
         }
         &:active {
-          box-shadow: unset;
+          box-shadow: @neu-shadow-inset-3;
+          transition: background-color @transition-duration ease-in-out;
+        }
+        &.active {
+          box-shadow: @neu-shadow-inset-sm;
+          background: @primary-2;
+        }
+        &.no-interaction {
+          cursor: unset;
+          &:hover {
+            background: unset;
+          }
+          &:active {
+            box-shadow: unset;
+          }
+          &.active {
+            box-shadow: unset;
+            background: unset;
+          }
+        }
+
+        // Darker bg on row
+        &.dark-bg {
+          td {
+            background: rgba(0, 0, 0, 0.2);
+          }
         }
       }
     }
     td {
+      min-width: 75px;
+      height: 15px;
       background: inherit;
-      padding: inherit;
-      color: inherit;
-      opacity: @subtle-opacity;
+      color: @secondary-3;
       position: relative;
       font-size: @base-font-size;
       border-radius: unset;
-      padding: @spacing-md @spacing-xs;
+      padding: @spacing-sm @spacing-md;
       background: transparent;
       text-align: left;
+      transition: opacity @transition-duration ease-in-out;
       cursor: pointer;
-      opacity: @subtle-opacity;
 
       &:first-of-type {
-        padding-left: @spacing-md;
         border-top-left-radius: @border-radius;
         border-bottom-left-radius: @border-radius;
       }
       &:last-of-type {
-        padding-right: @spacing-md;
         border-top-right-radius: @border-radius;
         border-bottom-right-radius: @border-radius;
       }
@@ -870,12 +1263,13 @@
   // Antd table
   .ant-table-wrapper {
     position: relative;
+    overflow: scroll;
 
     .ant-table {
       &-bordered {
         tr {
           td {
-            border-bottom: 1px solid @dark-grey;
+            border-bottom: 1px solid @primary-2;
             border-radius: unset;
           }
           &:last-of-type {
@@ -883,23 +1277,6 @@
               border: unset;
             }
           }
-        }
-      }
-    }
-
-    // If you don't want row interactions
-    &.no-interaction {
-      tr {
-        cursor: unset;
-        td {
-          cursor: unset;
-        }
-
-        &:hover {
-          background: inherit;
-        }
-        &:active {
-          box-shadow: unset;
         }
       }
     }
@@ -914,27 +1291,83 @@
 
       button {
         background: unset;
-        color: @black;
+        color: @secondary;
       }
+    }
+  }
+  // Top border for rows
+  .row-top-border {
+    tbody {
+      tr {
+        border-top: 1px solid @primary;
+      }
+    }
+  }
+  // If you don't want row interactions
+  .no-row-interaction {
+    tbody {
+      tr {
+        cursor: unset;
+        td {
+          border-radius: unset;
+          cursor: unset;
+        }
+
+        &:hover {
+          background: inherit;
+        }
+        &:active {
+          box-shadow: unset;
+        }
+      }
+    }
+  }
+  // If table's last column is an icon
+  .last-column-icon {
+    tbody {
+      tr {
+        td:last-of-type {
+          opacity: 0;
+          transition: opacity @transition-duration ease-out;
+        }
+
+        &.active,
+        &:hover {
+          td:last-of-type {
+            opacity: inherit;
+          }
+        }
+      }
+    }
+  }
+  // Fix mozilla table row background issue
+  @-moz-document url-prefix() {
+    tr.active {
+      background: @primary;
     }
   }
 
   // Antd Radios
   .ant-radio-wrapper {
-    box-sizing: border-box;
-    margin: 0 @spacing-sm 0 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: @spacing-xs @spacing-sm;
     padding: 0;
-    color: @black;
+    color: @secondary-3;
     font-size: @base-font-size;
     list-style: none;
-    position: relative;
     cursor: pointer;
+    span {
+      color: inherit;
+    }
 
     .ant-radio {
-      box-sizing: border-box;
-      margin: 0;
+      width: 15px;
+      height: 15px;
+      margin-right: @spacing-xs;
       padding: 0;
-      color: @black;
+      color: @secondary;
       font-size: @base-font-size;
       list-style: none;
       font-feature-settings: 'tnum';
@@ -956,18 +1389,18 @@
     align-items: center;
     justify-content: center;
     background: unset;
-    border: 1px solid @dark-grey;
-    color: @black;
+    border: 1px solid @primary-3;
+    color: @secondary;
     margin: 0;
-    transition: all @transition-duration ease-in-out;
+    transition: all @transition-duration ease-out;
     &:hover {
-      background: @grey;
+      background: @primary-2;
       box-shadow: unset;
     }
     &:active,
     &-checked {
       background: @jet-green;
-      opacity: @disabled-opacity;
+      opacity: @subtle-opacity;
       box-shadow: unset;
     }
     &-checked {
@@ -990,12 +1423,12 @@
       border-radius: unset;
 
       &:first-of-type {
-        border-top-left-radius: @btn-radius;
-        border-bottom-left-radius: @btn-radius;
+        border-top-left-radius: @sm-border-radius;
+        border-bottom-left-radius: @sm-border-radius;
       }
       &:last-of-type {
-        border-top-right-radius: @btn-radius;
-        border-bottom-right-radius: @btn-radius;
+        border-top-right-radius: @sm-border-radius;
+        border-bottom-right-radius: @sm-border-radius;
       }
     }
   }
@@ -1003,13 +1436,13 @@
   // Antd Divider
   .ant-divider {
     position: relative;
-    width: 100%;
+    width: 90%;
     min-width: 50px;
-    height: 3px;
+    height: 4px;
     margin: @spacing-sm 0;
     border-radius: @border-radius;
-    box-shadow: @neu-shadow-inset-low;
-    background: @grey;
+    box-shadow: @neu-shadow-inset-sm-2;
+    background: @primary;
 
     &-vertical {
       width: 3px;
@@ -1032,8 +1465,8 @@
         width: 30%;
         height: 3px;
         border-radius: @border-radius;
-        box-shadow: @neu-shadow-inset-low;
-        background: @grey;
+        box-shadow: @neu-shadow-inset-2;
+        background: @primary-2;
         z-index: 1;
       }
       &::after {
@@ -1041,7 +1474,7 @@
         right: 0;
       }
       span {
-        opacity: @half-opacity;
+        color: @secondary-5;
         position: absolute;
         left: 50%;
         top: 50%;
@@ -1057,7 +1490,7 @@
           width: 45%;
         }
         span {
-          left: 40%;
+          left: 32%;
         }
       }
       &-right {
@@ -1078,7 +1511,7 @@
   .ant-breadcrumb {
     span {
       a {
-        opacity: @disabled-opacity;
+        opacity: @subtle-opacity;
         &:hover {
           opacity: 1;
         }
@@ -1102,21 +1535,22 @@
   .ant-page-header {
     position: relative;
     padding: @spacing-md @spacing-lg;
-    border: 1px solid @grey;
+    border: 1px solid @primary-2;
 
     &-back {
       margin-right: @spacing-md;
-      opacity: @disabled-opacity;
-      transition: opacity @transition-duration ease-in-out;
+      opacity: @subtle-opacity;
+      transition: opacity @transition-duration ease-out;
       cursor: pointer;
       &:hover {
         opacity: 1;
       }
       &:active {
-        opacity: @disabled-opacity;
+        opacity: @subtle-opacity;
       }
 
-      .anticon {
+      .anticon,
+      .jet-icon {
         font-size: @lg-font-size;
       }
     }
@@ -1133,13 +1567,13 @@
       }
       &-title {
         margin-right: @spacing-md;
-        font-size: @header-font-size;
-        line-height: @header-font-size;
-        font-weight: @header-weight;
+        font-size: @xl-font-size;
+        line-height: @xl-font-size;
+        font-weight: @semi-bold-weight;
       }
       &-sub-title {
         font-size: @base-font-size;
-        opacity: @disabled-opacity;
+        opacity: @subtle-opacity;
       }
     }
   }
@@ -1160,11 +1594,12 @@
     }
     &-item {
       background: unset;
-      border: 1px solid @dark-grey;
-      padding: @spacing-xs @spacing-md;
-      color: @dark-grey;
-      opacity: @disabled-opacity;
+      border: 1px solid @secondary-5;
+      padding: @spacing-xs @spacing-sm;
+      color: @secondary-5;
+      opacity: @subtle-opacity;
       font-size: @xs-font-size;
+      transition: all @transition-duration ease-out;
       span {
         opacity: 1;
         color: inherit;
@@ -1172,13 +1607,15 @@
 
       &:hover {
         opacity: 1;
+        color: @primary;
+        background: @jet-green-2;
       }
       &:active,
       &-active {
         opacity: 1;
         box-shadow: unset;
         background: @jet-green;
-        color: @white;
+        color: @primary;
       }
     }
 
@@ -1191,35 +1628,33 @@
   // Antd Modal
   .ant-modal-wrap {
     width: 100%;
-    height: calc(100% - @nav-height);
+    height: 100%;
     position: fixed;
-    top: @nav-height;
+    top: 0;
     left: 0;
-    background: rgba(var(--light-grey), 0.95);
-    z-index: 1000;
+    background: @modal-bg;
+    z-index: 5001;
 
     .ant-modal-content {
       position: fixed;
-      top: calc(50% + @nav-height / 2);
+      top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 80%;
-      max-width: 275px;
-      box-shadow: @neu-shadow-low;
-      background: @light-grey;
-      border-radius: @border-radius;
-      padding: @spacing-sm @spacing-lg;
+      width: calc(100% - (@spacing-sm * 2));
+      max-width: 260px;
+      background: @primary;
+      border-radius: @lg-border-radius;
+      padding: @spacing-lg;
+      overflow: hidden;
 
       .ant-modal-title {
-        font-size: @header-font-size;
-        font-weight: @header-weight;
-        line-height: calc(@header-font-size + 5px);
+        font-size: @xl-font-size;
+        font-weight: @semi-bold-weight;
+        line-height: calc(@xl-font-size + 5px);
         padding: @spacing-lg 0 @spacing-sm 0;
       }
 
       .ant-modal-body {
-        padding: @spacing-md 0;
-
         h2 {
           font-weight: @semi-bold-weight;
         }
@@ -1233,68 +1668,91 @@
         align-items: center;
         justify-content: center;
         flex-direction: column-reverse;
-        padding: @spacing-sm 0;
+        padding-top: @spacing-md;
 
-        .ant-btn:first-of-type {
-          background: unset;
-          border: unset;
-          color: @black;
-          opacity: @half-opacity;
-          margin: 0;
+        .ant-btn {
+          width: 100%;
+          &:first-of-type {
+            margin: unset;
+            padding-bottom: unset;
+            background: unset;
+            border: unset;
+            color: @secondary-3;
 
-          &:hover {
-            text-decoration: underline;
-          }
-          &:active {
-            box-shadow: unset;
-            opacity: @disabled-opacity;
+            &:hover {
+              text-decoration: underline;
+              text-underline-offset: 1px;
+            }
+            &:active {
+              box-shadow: unset;
+            }
           }
         }
       }
 
       .ant-modal-close {
         position: absolute;
-        top: -7px;
-        right: @spacing-xs;
-        padding: 0;
+        top: @spacing-sm;
+        right: 4px;
         background: unset;
-        opacity: @subtle-opacity;
         z-index: 1000;
         cursor: pointer;
         span {
           display: none;
         }
 
+        &::before,
         &::after {
-          content: '+';
+          content: '';
           position: absolute;
           top: 0;
           right: 0;
-          font-size: 28px;
-          font-weight: 200;
+          width: 12px;
+          height: 1px;
+          border-radius: @round-radius;
           transform: rotate(45deg);
-          color: @black;
-          opacity: @disabled-opacity;
+          background: @secondary-3;
+          transition: background-color @transition-duration ease-out;
+        }
+        &::after {
+          transform: rotate(-45deg);
         }
 
         &:hover {
+          &::before,
           &::after {
-            opacity: 1;
+            background: @secondary;
           }
         }
-
         &:active {
           box-shadow: unset;
         }
       }
+    }
 
-      button {
+    // Modals with headers
+    .header-modal {
+      .modal-header {
         width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 45px;
+        background: @primary-2;
+
+        &-title {
+          font-size: @lg-font-size;
+          font-weight: @bold-weight;
+          margin: unset;
+        }
+      }
+      .ant-modal-content {
+        padding-top: calc(@spacing-lg * 2.5);
       }
     }
   }
-  // Have to do this so the modal goes away, weirdly enough
-  .ant-fade-leave-active {
+  // When modal is closed
+  .ant-fade-leave {
     + .ant-modal-wrap {
       display: none;
     }
@@ -1303,91 +1761,77 @@
   // Antd Switch
   .ant-switch {
     position: relative;
-    margin: @spacing-sm 0;
-    height: 30px;
-    min-width: 50px;
-    background: @grey;
+    height: 18px;
+    min-width: 37px;
+    background: @primary-3;
+    padding: unset;
     border-radius: @round-radius;
-    box-shadow: @neu-shadow-inset;
-    padding: 0 @spacing-md;
     cursor: pointer;
     span {
-      color: @dark-grey;
+      color: @secondary-3;
     }
-    svg path {
-      fill: @dark-grey;
+    svg * {
+      fill: @secondary-3;
     }
 
     &-handle {
       position: absolute;
-      top: 6px;
-      left: 7px;
-      width: 17px;
-      height: 17px;
+      top: 2px;
+      left: 2px;
+      width: 14px;
+      height: 14px;
       border-radius: @round-radius;
-      transition: all @transition-duration ease-in-out;
+      transition: all @transition-duration ease-out;
 
       &::before {
         content: '';
         position: absolute;
         inset: 0;
-        background: @grey;
-        box-shadow: @neu-shadow-inset-low;
+        background: @jet-green;
         border-radius: @round-radius;
       }
     }
     &-inner {
       margin: 0 0 0 20px;
-      transition: margin @transition-duration ease-in-out;
+      transition: margin @transition-duration ease-out;
     }
-
     &:active {
+      box-shadow: unset;
       .ant-switch-handle {
         width: 24px;
       }
       &.ant-switch-checked {
         .ant-switch-handle {
-          left: calc(100% - 31px);
+          left: calc(100% - 26px);
         }
       }
-    }
-    &:hover {
-      box-shadow: @neu-shadow-inset-low;
     }
 
     // Checked state
     &-checked {
-      background: @gradient;
-      box-shadow: @neu-shadow-inset-gradient;
+      background: @jet-green;
       span {
-        color: @white;
+        color: @primary;
       }
-      svg path {
-        fill: @white;
+      svg * {
+        fill: @primary;
       }
 
       .ant-switch-handle {
-        top: 7px;
-        left: calc(100% - 24px);
+        top: 2px;
+        left: calc(100% - 16px);
 
         &::before {
-          background: @white;
-          box-shadow: @neu-shadow-inset-low;
+          background: @primary-3;
         }
       }
       .ant-switch-inner {
         margin: 0 20px 0 0;
       }
 
-      &:hover {
-        background: @gradient;
-        box-shadow: @neu-shadow-inset-gradient-low;
-      }
-
       // Checked and disabled
       &.ant-switch-disabled:hover {
         opacity: @disabled-opacity;
-        box-shadow: @neu-shadow-inset-gradient;
       }
     }
 
@@ -1398,7 +1842,6 @@
 
       &:hover {
         opacity: @disabled-opacity;
-        box-shadow: @neu-shadow-inset;
       }
     }
 
@@ -1414,14 +1857,14 @@
         }
       }
       span {
-        color: rgb(var(--lt-white));
-        opacity: @disabled-opacity;
+        color: rgb(var(--lt-primary));
+        opacity: @subtle-opacity;
         -webkit-text-fill-color: unset;
       }
 
       &.ant-switch-checked {
         background: @gradient;
-        box-shadow: @neu-shadow-inset-gradient-low;
+        box-shadow: @neu-shadow-inset-green;
 
         .ant-switch-handle {
           &::before {
@@ -1438,15 +1881,14 @@
     pointer-events: none;
     position: absolute;
     max-width: 200px;
-    background: @light-grey;
-    color: @black;
-    padding: @spacing-md;
-    border-radius: @border-radius;
-    box-shadow: @drop-shadow;
+    background: @primary-2;
+    color: @secondary-3;
+    padding: @spacing-sm;
+    border-radius: @sm-border-radius;
     backdrop-filter: blur(2px);
-    background: rgba(var(--white), @disabled-opacity);
+    background: rgba(var(--primary-3), @disabled-opacity);
     pointer-events: all !important;
-    transition: all @transition-duration ease-in-out;
+    transition: all @transition-duration ease-out;
     z-index: 10;
 
     &-title {
@@ -1464,7 +1906,7 @@
       height: 0;
       border-left: 7px solid transparent;
       border-right: 7px solid transparent;
-      border-top: 9px solid @light-grey;
+      border-top: 9px solid @primary-2;
       z-index: 9;
     }
     &-inner {
@@ -1481,7 +1923,7 @@
       top: calc(50% - 6px);
       left: calc(100% + 3px);
       border-top: 7px solid transparent;
-      border-left: 9px solid @light-grey;
+      border-left: 9px solid @primary-2;
       border-right: unset;
       border-bottom: 5px solid transparent;
     }
@@ -1491,7 +1933,7 @@
       left: calc(0% - 3px);
       border-top: 5px solid transparent;
       border-left: unset;
-      border-right: 9px solid @light-grey;
+      border-right: 9px solid @primary-2;
       border-bottom: 7px solid transparent;
     }
     &-placement-bottom .ant-tooltip-arrow,
@@ -1500,7 +1942,7 @@
       border-top: unset;
       border-left: 5px solid transparent;
       border-right: 7px solid transparent;
-      border-bottom: 9px solid @light-grey;
+      border-bottom: 9px solid @primary-2;
     }
 
     // When mouse leaves + when hidden
@@ -1508,12 +1950,7 @@
     &.ant-zoom-big-fast-leave {
       display: none;
     }
-    // Slider tooltip follow pattern
-    // TODO: fix tooltip not catching up at first due to below classes:
-    &.ant-zoom-down-enter,
-    &.ant-zoom-down-enter-active,
-    &.ant-zoom-down {
-    }
+    // Slider tooltip follow patter
     &.ant-zoom-down-leave,
     &.ant-zoom-down-leave-active,
     &.ant-zoom-big-leave,
@@ -1524,98 +1961,151 @@
 
   // Antd select
   .ant-select {
-    min-width: 150px;
-    margin: @spacing-sm 0;
-    font-size: @base-font-size;
     position: relative;
     display: flex;
+    justify-content: center;
     align-items: center;
-    justify-content: space-between;
-    border-radius: @border-radius;
-    box-shadow: @neu-shadow;
-    padding: @spacing-sm @spacing-md;
+    margin: @spacing-xs 0;
+    padding: calc(@spacing-sm - 2px) @spacing-md;
+    padding-left: unset;
+    font-size: @base-font-size;
+    border-radius: @sm-border-radius;
+    background: rgba(var(--primary-3), @disabled-opacity);
+    transition: background-color @transition-duration ease-out;
     cursor: pointer;
-    transition: box-shadow @transition-duration ease-in-out;
     &:hover {
-      box-shadow: @neu-shadow-low;
+      background: @primary-3;
     }
-    &:active,
-    &-open {
-      box-shadow: @neu-shadow-inset;
-      &:hover {
-        box-shadow: @neu-shadow-inset;
-      }
-    }
-
     &-selector {
+      min-width: 80px;
       width: 100%;
-    }
-    //TODO: Enable search feature here
-    &-selection-search {
-      display: none;
-    }
-    &-selection-item {
-      padding: @spacing-xs;
-      font-size: @base-font-size;
-      opacity: @subtle-opacity;
+      padding: 0 @spacing-md;
+      white-space: nowrap;
+      z-index: 1;
     }
     &-arrow {
       position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
       right: @spacing-md;
+      svg,
+      .jet-icon {
+        transition: transform @transition-duration ease-out;
+      }
+    }
+    .jet-icon {
+      width: 10px;
+      height: 10px;
+      margin-top: 2px;
+      * {
+        fill: @secondary-3;
+      }
+    }
+    &-open {
+      background: @primary-3;
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+      &:hover {
+        background: @primary-3;
+      }
+      .ant-select-arrow svg {
+        transform: rotate(180deg);
+      }
+    }
+    &-selection {
+      &-item {
+        display: flex;
+        font-size: @base-font-size;
+        color: @secondary-3;
+      }
+      &-search {
+        display: none;
+      }
     }
 
     &-dropdown {
       position: absolute;
       overflow: hidden;
       font-size: inherit;
-      background: @light-grey;
-      color: @black;
-      border-radius: @border-radius;
-      box-shadow: @drop-shadow;
       backdrop-filter: blur(2px);
+      background: rgba(var(--primary-3), @disabled-opacity);
+      color: @secondary;
+      border-bottom-right-radius: @sm-border-radius;
+      border-bottom-left-radius: @sm-border-radius;
       outline: none;
       pointer-events: unset !important;
-
-      &::before {
-        position: absolute;
-        top: 0;
-        right: 0;
-        left: -7px;
-        z-index: -9999;
-        opacity: 0.0001;
-        content: '';
-      }
+      z-index: 5002;
 
       // For when dropdown is not visible
       &.ant-slide-up-leave-active {
         display: none;
       }
+
+      // Bigger dropdown sizing
+      &.lg-dropdown {
+        font-size: @spacing-md;
+      }
+      &.xl-dropdown {
+        font-size: @xl-font-size;
+      }
+
+      // Round dropdown
+      &.rounded-dropdown {
+        border-radius: @sm-border-radius;
+      }
     }
     &-item {
-      position: relative;
-      width: 100%;
-      padding: @spacing-sm @spacing-lg;
-      border-bottom: 1px solid @dark-grey;
+      text-align: center;
+      padding: @btn-padding;
+      transition: background-color @transition-duration-short ease-out;
       cursor: pointer;
-      &:last-of-type {
-        border-color: transparent;
-      }
 
       &-option-state {
         display: none;
       }
+      &-option-selected {
+        background: @primary-2;
+      }
       &-option-active {
-        background: rgba(0, 0, 0, 0.125);
-        border-color: @jet-green;
-        &:last-of-type {
-          border-color: @jet-green;
-        }
+        background: @primary-3;
       }
       &-option-content {
         display: flex;
+        justify-content: center;
         align-items: center;
+        color: @secondary-3;
+
+        svg {
+          margin-right: @spacing-sm;
+        }
+      }
+    }
+
+    // Disabled
+    &-disabled {
+      cursor: not-allowed;
+      &:hover {
+        background: rgba(var(--primary-3), @disabled-opacity);
+      }
+    }
+
+    // Autocomplete
+    &-auto-complete {
+      padding: unset;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      background: unset;
+      &:hover,
+      &.ant-select-focused {
+        background: unset;
+      }
+      .ant-select-selection-search {
+        display: block;
+      }
+      .ant-select-selector {
+        padding: unset;
+      }
+      input {
+        padding: @spacing-sm;
+        margin: unset;
       }
     }
   }
@@ -1623,39 +2113,68 @@
   // Antd Dropdown Menu
   .ant-dropdown {
     position: absolute;
-    left: calc(50% - 70px);
-    top: calc(50% - 50px);
-    transform: translate(-50%, -50%);
-    background: @light-grey;
-    color: @black;
-    border-radius: @border-radius;
-    box-shadow: @drop-shadow;
+    background: @primary-2;
+    color: @secondary;
+    border-radius: @sm-border-radius;
     backdrop-filter: blur(2px);
-    background: rgba(var(--white), @disabled-opacity);
+    background: rgba(var(--primary-3), @disabled-opacity);
     overflow: hidden;
     pointer-events: unset !important;
-    z-index: 1000;
-    &::before {
-      position: absolute;
-      top: 0;
-      right: 0;
-      left: -7px;
-      z-index: -9999;
-      opacity: 0.0001;
-      content: '';
-    }
+    z-index: 5002;
 
     &-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: @secondary-3;
+      padding: 0 @spacing-md;
+      letter-spacing: 0.07em;
+      transition: color @transition-duration ease-out;
       cursor: pointer;
 
-      // Antd down icon
-      .anticon-down {
-        font-size: @xs-font-size;
+      // Down icon
+      .anticon {
         margin-left: @spacing-xs;
+        svg {
+          transition: transform @transition-duration ease-out;
+          * {
+            fill: @secondary-3;
+            transition: fill @transition-duration ease-out;
+          }
+        }
+      }
+      .jet-icon {
+        width: 10px;
+        height: 10px;
+        margin-left: @spacing-xs;
+        transition: transform @transition-duration ease-out;
+        * {
+          fill: @secondary-3;
+          transition: fill @transition-duration ease-out;
+        }
+      }
+
+      &:hover,
+      &.ant-dropdown-open {
+        color: @secondary;
+        svg * {
+          fill: @secondary;
+        }
+      }
+      &.ant-typography-disabled {
+        &:hover,
+        &.ant-dropdown-open {
+          color: @secondary-3;
+          svg * {
+            fill: @secondary-3;
+          }
+        }
       }
     }
 
     &-menu {
+      width: 100%;
+      position: relative;
       list-style: none;
       padding: 0;
       display: flex;
@@ -1666,33 +2185,38 @@
       cursor: pointer;
 
       &-item {
+        width: inherit;
         position: relative;
-        width: 100%;
-        padding: @spacing-xs @spacing-lg;
-        border-bottom: 1px solid @grey;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: @spacing-sm 0;
+        transition: background-color @transition-duration-short ease-out;
 
         &:hover,
         &-active,
         &.active {
-          background: rgba(0, 0, 0, 0.125);
-          border-color: @jet-green;
-          &:last-of-type {
-            border-color: @jet-green;
-          }
-        }
-        &:last-of-type {
-          border-color: transparent;
-        }
-
-        .ant-dropdown-menu-title-content {
-          font-size: @base-font-size;
-          opacity: @subtle-opacity;
+          background: @primary-3;
         }
       }
     }
 
+    // Dropdown is open
+    &-open {
+      .anticon {
+        svg {
+          transform: rotate(180deg);
+        }
+      }
+      .jet-icon {
+        transform: rotate(180deg);
+      }
+    }
+
     // When mouse leaves + hidden
-    &-hidden,
+    &-hidden {
+      display: none;
+    }
     &.ant-slide-up-leave-active {
       display: none;
     }
@@ -1703,7 +2227,7 @@
     width: 100%;
     max-width: 400px;
     border-radius: @border-radius;
-    border: 2px solid @grey;
+    border: 2px solid @primary-2;
     overflow: hidden;
     margin: @spacing-sm 0;
 
@@ -1726,13 +2250,14 @@
       cursor: pointer;
       padding: @spacing-md @spacing-lg;
       padding-right: @spacing-xl;
-      background: @light-grey;
+      background: @primary-2;
       opacity: @subtle-opacity;
       font-size: @base-font-size;
 
-      .anticon {
-        color: @dark-grey;
-        opacity: @disabled-opacity;
+      .anticon,
+      .jet-icon {
+        color: @primary-2;
+        opacity: @subtle-opacity;
       }
       span {
         margin-right: @spacing-sm;
@@ -1748,20 +2273,20 @@
     box-shadow: @neu-shadow;
     margin: @spacing-xs 0;
     overflow: hidden;
-    transition: box-shadow @transition-duration ease-in-out;
+    transition: box-shadow @transition-duration ease-out;
     &.clickable,
     &-hoverable {
       cursor: pointer;
 
       &:hover {
-        box-shadow: @neu-shadow-low;
+        box-shadow: @neu-shadow-3;
         transition: unset;
       }
       &:active {
         box-shadow: @neu-shadow-inset;
       }
       &.active {
-        box-shadow: @neu-shadow-inset-low;
+        box-shadow: @neu-shadow-inset-2;
       }
     }
 
@@ -1791,8 +2316,8 @@
         width: 100%;
         height: 2px;
         border-radius: @border-radius;
-        box-shadow: @neu-shadow-inset-low;
-        background: @grey;
+        box-shadow: @neu-shadow-inset-2;
+        background: @secondary-3;
       }
 
       &-wrapper {
@@ -1848,23 +2373,8 @@
 
   // Antd Tabs
   .ant-tabs {
-    &-content {
-      padding: @spacing-md 0;
-    }
     &-nav {
       position: relative;
-      &::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        height: 1px;
-        border-radius: @round-radius;
-        background: @grey;
-        box-shadow: @neu-shadow-inset-low;
-      }
-
       .ant-tabs-nav-operations {
         display: none;
       }
@@ -1875,33 +2385,53 @@
         justify-content: flex-start;
 
         .ant-tabs-tab {
-          position: relative;
-          margin-right: @spacing-md;
-          opacity: @disabled-opacity;
-          font-size: @lg-font-size;
-          transition: all @transition-duration ease-in-out;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: @spacing-md @spacing-sm;
+          font-size: @xs-font-size;
+          letter-spacing: 0.07em;
+          color: @secondary-5;
+          white-space: nowrap;
+          transition: color @transition-duration ease-out;
           cursor: pointer;
 
-          &::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0px;
-            width: 100%;
-            height: 1px;
-            border-radius: @round-radius;
-            background: @jet-green;
-            opacity: 0;
-          }
           &:hover,
-          &.ant-tabs-tab-active {
-            opacity: 1;
+          &-active {
             color: @jet-green;
           }
-          &.ant-tabs-tab-active::before {
-            opacity: 1;
-          }
         }
+      }
+    }
+    &-ink-bar {
+      position: absolute;
+      left: 0;
+      bottom: 0px;
+      width: 100%;
+      height: 2px;
+      background: @jet-green;
+      transition: left @transition-duration ease-out, background-color @transition-duration ease-out,
+        width @transition-duration ease-out;
+    }
+
+    // No active tabs
+    &.no-active-tabs {
+      .ant-tabs-ink-bar {
+        width: 0%;
+        background: transparent;
+      }
+    }
+
+    // Danger color
+    &.danger {
+      .ant-tabs-tab {
+        &-active {
+          color: @danger;
+        }
+      }
+      .ant-tabs-ink-bar {
+        background: @danger;
       }
     }
   }
@@ -1909,7 +2439,7 @@
   // Antd Timeline
   .ant-timeline {
     box-sizing: border-box;
-    color: @black;
+    color: @secondary;
     font-size: @base-font-size;
     margin: @spacing-sm 0;
     padding: 0;
@@ -1925,14 +2455,14 @@
         top: 10px;
         left: 6px;
         height: calc(100% - 10px);
-        border-left: 2px solid @grey;
+        border-left: 2px solid @primary-2;
       }
       &-head {
         position: absolute;
         width: 10px;
         height: 10px;
         background: @gradient;
-        border: 2px solid @grey;
+        border: 2px solid @primary-2;
         border-radius: 100px;
       }
       &-content {
@@ -1952,10 +2482,10 @@
       // Incomplete timeline item
       &.incomplete {
         .ant-timeline-item-head {
-          background: @grey;
+          background: @primary-2;
         }
         .ant-timeline-item-content {
-          opacity: @disabled-opacity;
+          opacity: @subtle-opacity;
         }
       }
     }
@@ -1968,12 +2498,13 @@
         }
         &-pending {
           .ant-timeline-item-head {
-            background: @grey;
+            background: @primary-2;
           }
           .ant-timeline-item-tail {
             display: none;
           }
-          .anticon {
+          .anticon,
+          .jet-icon {
             position: absolute;
             top: -1px;
             left: -1px;
@@ -1986,61 +2517,87 @@
   // Antd Slider
   .ant-slider {
     position: relative;
-    width: 90%;
-    margin: @spacing-sm auto;
-    cursor: pointer;
+    width: 100%;
+    padding-bottom: @spacing-xl;
 
     &-rail {
       position: absolute;
-      width: 100%;
-      height: 5px;
-      background-color: rgba(var(--black), 0.5);
-      box-shadow: @neu-shadow-inset-low;
+      width: calc(100% + 12px);
+      margin-left: -6px;
+      height: 6px;
+      background-color: @primary-2;
       border-radius: @round-radius;
     }
     &-track {
       position: absolute;
-      height: 5px;
+      margin-left: -6px;
+      height: 6px;
       background: @gradient;
       border-radius: @round-radius;
+      border-top-right-radius: 0px;
+      border-bottom-right-radius: 0px;
+      transition: width @transition-duration-short ease-out;
     }
     &-step {
       position: absolute;
       width: 100%;
-      height: 5px;
+      height: 6px;
       border-radius: @round-radius;
     }
     &-handle {
       position: absolute;
-      width: 12px;
-      height: 12px;
+      width: 13px;
+      height: 13px;
       margin-top: -4px;
-      background: @grey;
-      box-shadow: @neu-shadow-inset-low;
+      margin-left: -1px;
+      background: @jet-green;
       border-radius: @round-radius;
-      border: 1px solid @jet-blue;
+      transition: left @transition-duration-short ease-out;
       cursor: pointer;
     }
     &-mark {
       position: absolute;
-      top: 8px;
-      left: 0;
-      width: 100%;
+      width: calc(100% - 13px);
+      top: 10px;
+      left: 4px;
       font-size: @sm-font-size;
 
       &-text {
         position: absolute;
-        color: @black;
-        cursor: pointer;
-        opacity: @disabled-opacity;
+        color: @secondary-5;
         font-size: @xs-font-size;
+        transition: color @transition-duration ease-out;
+        cursor: pointer;
+
+        &:hover {
+          color: @secondary-3;
+        }
+        &:active,
+        &-active {
+          color: @secondary;
+          &:hover {
+            color: @secondary;
+          }
+        }
       }
     }
 
     &-disabled {
-      opacity: @disabled-opacity;
+      opacity: @half-opacity;
       cursor: not-allowed;
 
+      .ant-slider-mark-text {
+        cursor: not-allowed;
+        &:hover,
+        &:active {
+          color: @secondary-5;
+        }
+        &-active {
+          &:hover {
+            color: @secondary;
+          }
+        }
+      }
       .ant-slider-handle {
         pointer-events: none;
       }
@@ -2049,10 +2606,19 @@
 
   // Antd Skeleton
   .ant-skeleton {
-    display: table;
+    display: flex;
     width: 100%;
-    margin: @spacing-sm 0;
+    text-align: inherit;
 
+    &-avatar {
+      border-radius: @round-radius;
+      background: @primary-2;
+      margin-right: @spacing-xs;
+
+      &-square {
+        border-radius: @sm-border-radius;
+      }
+    }
     &-content {
       display: table-cell;
       width: 100%;
@@ -2060,42 +2626,63 @@
 
       .ant-skeleton-title {
         width: 30%;
-        height: 10px;
-        background: @dark-grey;
-        border-radius: @btn-radius;
+        height: 3px;
+        background: @primary-2;
+        border-radius: @sm-border-radius;
+        margin: unset;
       }
       .ant-skeleton-paragraph {
         margin-top: @spacing-sm;
-        border-radius: @btn-radius;
+        border-radius: @sm-border-radius;
         padding: 0;
 
         li {
           width: 100%;
-          height: 10px;
+          height: 3px;
           margin-top: @spacing-xs;
           list-style: none;
-          background: @dark-grey;
-          border-radius: @btn-radius;
+          background: @primary-3;
+          border-radius: @sm-border-radius;
         }
       }
     }
     &-active {
-      * {
-        opacity: 1;
-        animation: skeleton-opacity 1.25s ease infinite;
+      .ant-skeleton-avatar,
+      .ant-skeleton-title,
+      .ant-skeleton-paragraph li {
+        background: @secondary-3;
+        animation: skeleton-loading 1.25s ease infinite;
+      }
+    }
+
+    // Custom alignment of skeleton items
+    &.align-center {
+      .ant-skeleton-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+    }
+    &.align-right {
+      .ant-skeleton-content {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        flex-direction: column;
       }
     }
   }
   // Shimmer animation
-  @keyframes skeleton-opacity {
+  @keyframes skeleton-loading {
     0% {
-      opacity: 1;
+      background: @secondary-3;
     }
     50% {
-      opacity: 0.75;
+      background: @secondary-5;
     }
     100% {
-      opacity: 1;
+      background: @secondary-3;
     }
   }
 
@@ -2105,7 +2692,7 @@
     width: 100%;
     margin: @spacing-sm 0;
     border-radius: @border-radius;
-    color: @black;
+    color: @secondary;
     font-size: @base-font-size;
     list-style: none;
 
@@ -2115,7 +2702,7 @@
     }
     &-header,
     &-footer {
-      opacity: @disabled-opacity;
+      opacity: @subtle-opacity;
     }
     &-header,
     &-item,
@@ -2124,7 +2711,7 @@
       align-items: center;
       justify-content: space-between;
       padding: @spacing-md @spacing-lg;
-      border-bottom: 1px solid @dark-grey;
+      border-bottom: 1px solid @primary-2;
       &:last-of-type {
         border-bottom: unset;
       }
@@ -2139,7 +2726,7 @@
           opacity: @subtle-opacity;
         }
         &-description {
-          opacity: @disabled-opacity;
+          opacity: @subtle-opacity;
         }
       }
       &-action {
@@ -2155,31 +2742,30 @@
       }
     }
     &-footer {
-      border-top: 1px solid @dark-grey;
-    }
-
-    // Empty
-    .ant-empty {
-      padding: @spacing-md;
-      opacity: @disabled-opacity;
-      background: @white;
-      &-image {
-        display: none;
-      }
-      &-description {
-        text-transform: uppercase;
-      }
+      border-top: 1px solid @primary-2;
     }
 
     // Bordered
     &-bordered {
-      border: 1px solid @dark-grey;
-      background: @grey;
+      border: 1px solid @primary-2;
+      background: @primary-2;
     }
 
     // Small
     &-sm {
       font-size: @sm-font-size;
+    }
+  }
+  // Empty image
+  .ant-empty {
+    padding: @spacing-md;
+    opacity: @subtle-opacity;
+    background: inherit;
+    &-image {
+      display: none;
+    }
+    &-description {
+      text-transform: uppercase;
     }
   }
 
@@ -2227,19 +2813,19 @@
   .ant-tag {
     padding: @spacing-xs @spacing-sm;
     margin: @spacing-xs;
-    border-radius: @btn-radius;
-    border: 1px solid @dark-grey;
-    background: @grey;
-    opacity: @disabled-opacity;
-    transition: opacity @transition-duration ease-in-out;
+    border-radius: @sm-border-radius;
+    border: 1px solid @primary-2;
+    background: @primary-2;
+    opacity: @subtle-opacity;
+    transition: opacity @transition-duration ease-out;
     span {
       margin: 0 0 0 @spacing-sm;
     }
 
     &-has-color {
-      color: @white;
-      svg path {
-        fill: @white;
+      color: @primary;
+      svg * {
+        fill: @primary;
       }
     }
     &-hidden {
@@ -2255,7 +2841,7 @@
   .ant-progress {
     margin: @spacing-sm 0;
     padding: 0;
-    color: @black;
+    color: @secondary;
     font-size: @base-font-size;
     display: flex;
     align-items: center;
@@ -2274,7 +2860,7 @@
           position: relative;
           width: inherit;
           overflow: hidden;
-          background-color: @grey;
+          background-color: @primary-2;
           border-radius: @round-radius;
 
           .ant-progress-bg {
@@ -2326,7 +2912,7 @@
         }
 
         &-text {
-          color: @black;
+          color: @secondary;
           font-size: @sm-font-size;
           white-space: nowrap;
           word-break: normal;
@@ -2338,7 +2924,7 @@
       span {
         color: @success;
       }
-      svg path {
+      svg * {
         fill: @success;
       }
       &.ant-progress-line .ant-progress-outer .ant-progress-inner .ant-progress-bg {
@@ -2350,16 +2936,16 @@
     }
     &-status-exception {
       span {
-        color: @failure;
+        color: @danger;
       }
-      svg path {
-        fill: @failure;
+      svg * {
+        fill: @danger;
       }
       &.ant-progress-line .ant-progress-outer .ant-progress-inner .ant-progress-bg {
-        background: @failure;
+        background: @danger;
       }
       .ant-progress-circle-path {
-        stroke: @failure;
+        stroke: @danger;
       }
     }
   }
@@ -2372,9 +2958,9 @@
     align-items: center;
     justify-content: flex-start;
     background: @gradient;
-    border-radius: @btn-radius;
-    border: 1px solid @grey;
-    color: @white;
+    border-radius: @sm-border-radius;
+    border: 1px solid @primary-2;
+    color: @primary;
     margin: @spacing-sm 0;
     width: 100%;
     &-success {
@@ -2384,7 +2970,7 @@
       background: @warning;
     }
     &-error {
-      background: @failure;
+      background: @danger;
     }
 
     button {
@@ -2400,17 +2986,19 @@
         box-shadow: unset;
       }
     }
-    .anticon {
+    .anticon,
+    .jet-icon {
       margin-right: @spacing-sm;
       font-size: @lg-font-size;
 
-      path {
-        fill: @white;
+      * {
+        fill: @primary;
       }
     }
 
     &-with-description {
-      .anticon {
+      .anticon,
+      .jet-icon {
         position: absolute;
         top: @spacing-md;
         left: @spacing-md;
@@ -2420,7 +3008,7 @@
         padding-left: 25px;
       }
       .ant-alert-message {
-        border-bottom: 1px solid @grey;
+        border-bottom: 1px solid @primary-2;
       }
       .ant-alert-description {
         margin-top: @spacing-xs;
@@ -2448,41 +3036,42 @@
   .ant-message {
     position: fixed;
     bottom: 0px;
-    z-index: 10000;
+    z-index: 5003;
 
     &-notice {
       position: relative;
       width: 250px;
       padding: @spacing-md;
       margin: @spacing-md;
-      border-radius: @border-radius;
+      border-radius: @sm-border-radius;
       box-shadow: @drop-shadow;
       backdrop-filter: blur(2px);
-      background: rgba(var(--white), @disabled-opacity);
+      background: rgba(var(--primary-3), @subtle-opacity);
 
       &-icon,
-      .anticon {
+      .anticon,
+      .jet-icon {
         position: absolute;
         top: @spacing-md;
-        left: @spacing-md;
+        left: @spacing-sm;
         font-size: @lg-font-size;
       }
-      svg path {
-        fill: @black;
+      svg * {
+        fill: @secondary;
       }
       &-success,
       &-warning,
       &-error {
         .ant-notification-notice-message,
         .ant-notification-notice-description {
-          margin-left: 25px;
+          margin-left: @spacing-lg;
         }
       }
       &-success {
         .ant-notification-notice-message {
           color: @success;
         }
-        svg path {
+        svg * {
           fill: @success;
         }
       }
@@ -2490,59 +3079,69 @@
         .ant-notification-notice-message {
           color: @warning;
         }
-        svg path {
+        svg * {
           fill: @warning;
         }
       }
       &-error {
         .ant-notification-notice-message {
-          color: @failure;
+          color: @danger;
         }
-        svg path {
-          fill: @failure;
+        svg * {
+          fill: @danger;
         }
       }
       &-message {
-        font-weight: @subheader-weight;
+        font-weight: @bold-weight;
         font-size: @sm-font-size;
         margin-top: -2px;
-        border-bottom: 1px solid rgba(var(--dark-grey), 0.25);
+        border-bottom: 1px solid @secondary-5;
         line-height: 21px;
         text-transform: uppercase;
       }
       &-description {
-        opacity: @subtle-opacity;
+        color: @secondary-3;
         font-size: @base-font-size;
         padding-top: @spacing-xs;
       }
 
       &-close {
-        width: 20px;
         position: absolute;
-        top: -3px;
-        right: @spacing-md;
+        top: 12px;
+        right: @spacing-xs;
+        padding: @spacing-xs;
+        background: unset;
         z-index: 1000;
         cursor: pointer;
         span {
           display: none;
         }
 
+        &::before,
         &::after {
-          content: '+';
+          content: '';
           position: absolute;
-          top: 50%;
-          left: 50%;
-          font-size: 24px;
-          font-weight: 200;
-          transform: translate(-50%, -50%);
+          top: 0;
+          right: 0;
+          width: 12px;
+          height: 1px;
+          border-radius: @round-radius;
           transform: rotate(45deg);
-          opacity: @disabled-opacity;
+          background: @secondary-3;
+          transition: background-color @transition-duration ease-out;
+        }
+        &::after {
+          transform: rotate(-45deg);
         }
 
         &:hover {
+          &::before,
           &::after {
-            opacity: 1;
+            background: @secondary;
           }
+        }
+        &:active {
+          box-shadow: unset;
         }
       }
     }
@@ -2558,11 +3157,12 @@
     transform: translateX(-50%);
     &-notice {
       width: unset;
-      background: @grey;
-      border: 1px solid @white;
+      background: @primary-2;
+      border: 1px solid @primary;
 
       &-icon,
-      .anticon {
+      .anticon,
+      .jet-icon {
         position: relative;
         top: unset;
         left: unset;
@@ -2571,14 +3171,15 @@
       }
       span {
         opacity: 1;
-        color: @black;
+        color: @secondary;
         font-size: @base-font-size;
       }
     }
 
     &-success {
-      .anticon {
-        path {
+      .anticon,
+      .jet-icon {
+        * {
           fill: @success;
         }
       }
@@ -2587,8 +3188,9 @@
       }
     }
     &-warning {
-      .anticon {
-        path {
+      .anticon,
+      .jet-icon {
+        * {
           fill: @warning;
         }
       }
@@ -2597,13 +3199,14 @@
       }
     }
     &-error {
-      .anticon {
-        path {
-          fill: @failure;
+      .anticon,
+      .jet-icon {
+        * {
+          fill: @danger;
         }
       }
       span {
-        color: @failure;
+        color: @danger;
       }
     }
 
@@ -2620,72 +3223,70 @@
     top: 0;
     transform: translateX(-50%);
     width: 100vw;
-    background: @gradient;
-    z-index: 10000;
-    svg path {
-      fill: rgb(var(--lt-white));
-    }
+    background: rgb(var(--dt-primary-2));
+    z-index: 5000;
 
     nav {
       width: clamp(250px, 95%, 1750px);
       height: @nav-height;
 
-      button {
-        margin-left: @spacing-lg;
-        border-color: rgb(var(--lt-white));
-        color: rgb(var(--lt-white));
-
-        svg {
-          opacity: @disabled-opacity;
-          margin-right: @spacing-sm;
+      .nav-section {
+        width: 33.3%;
+      }
+      .nav-logo {
+        width: 100px;
+        cursor: pointer;
+        transition: opacity @transition-duration ease-out;
+        &:hover {
+          opacity: @subtle-opacity;
         }
       }
-
-      .logo {
-        width: 185px;
-        cursor: pointer;
-      }
-
       .nav-link {
         position: relative;
         margin: 0 @spacing-lg;
-        opacity: @subtle-opacity;
-        letter-spacing: 2px;
+        color: rgb(var(--dt-secondary-4));
+        letter-spacing: 0.1em;
         font-size: @sm-font-size;
-        font-weight: @bold-weight;
+        font-weight: @semi-bold-weight;
         text-transform: uppercase;
-        color: rgb(var(--lt-white));
-        transition: opacity @transition-duration ease-in-out;
-        &::after {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-          height: 1px;
-          background: rgb(var(--lt-white));
-          opacity: 0;
-          transition: opacity @transition-duration ease-in-out;
-        }
+        transition: color @transition-duration ease-out;
+        cursor: pointer;
 
         &.active,
         &:hover {
-          opacity: 1;
-          &::after {
-            opacity: 1;
+          color: rgb(var(--dt-secondary));
+        }
+        &:active {
+          opacity: @subtle-opacity;
+        }
+      }
+      .icon-btn {
+        svg * {
+          fill: rgb(var(--dt-secondary-3));
+        }
+        &:hover,
+        &.active {
+          background: rgb(var(--dt-primary-3));
+          svg * {
+            fill: rgb(var(--dt-secondary));
           }
         }
       }
 
       &.mobile {
+        position: relative;
         display: none;
         transition: margin-left @transition-duration;
 
-        .account {
-          margin-bottom: -2px;
+        .settings {
+          font-size: 20px;
         }
-        .logo {
-          width: 170px;
+        .nav-logo {
+          width: 100px;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
         }
         .hamburger {
           margin: @spacing-xs;
@@ -2696,7 +3297,7 @@
           span {
             width: 100%;
             height: 2px;
-            background: rgb(var(--lt-white));
+            background: rgb(var(--dt-secondary-3));
           }
 
           &.close {
@@ -2716,6 +3317,17 @@
           }
         }
 
+        button {
+          color: rgb(var(--dt-primary));
+
+          svg {
+            opacity: @subtle-opacity;
+            * {
+              fill: rgb(var(--dt-primary));
+            }
+          }
+        }
+
         // Mobile Drawer
         .drawer {
           position: absolute;
@@ -2724,8 +3336,8 @@
           top: 0;
           left: 100vw;
           padding: @spacing-xl 0;
-          background: rgb(var(--dt-grey));
-          color: rgb(var(--lt-white));
+          background: @primary-2;
+          color: @secondary;
           transition: left @transition-duration;
 
           &-top {
@@ -2740,7 +3352,8 @@
             height: 30%;
             .footer-link {
               font-size: @sm-font-size;
-              opacity: @disabled-opacity;
+              opacity: @subtle-opacity;
+              margin: @spacing-xs 0;
             }
             .ant-switch {
               margin: @spacing-lg 0;
@@ -2754,13 +3367,9 @@
     &.drawer-open {
       .mobile {
         margin-left: -100vw;
-
-        .drawer {
-          left: 50vw;
-        }
       }
 
-      & + .view-container {
+      & + .view {
         margin-left: -50vw;
       }
     }
@@ -2773,18 +3382,18 @@
     }
 
     .wallets {
-      margin: @spacing-md;
       position: relative;
 
       .wallet {
-        width: 200px;
+        width: 225px;
         margin: @spacing-xs 0;
-        padding: @spacing-sm @spacing-lg;
+        padding: @spacing-xs @spacing-md;
         cursor: pointer;
         border-radius: 50px;
+        transition: background-color @transition-duration ease-out, box-shadow @transition-duration-short ease-out;
 
         img {
-          margin: 0 @spacing-md;
+          margin: 0 @spacing-md 0 @spacing-xs;
         }
         p {
           font-size: @base-font-size;
@@ -2794,26 +3403,43 @@
           margin: @spacing-sm;
         }
         svg {
-          opacity: 0;
           margin: 0 0 0 @spacing-lg;
+          opacity: 0;
+          transition: opacity @transition-duration ease-out;
 
-          path {
+          * {
             fill: @jet-green;
           }
         }
         &.active,
         &:active,
         &:hover {
-          background: @grey;
-          box-shadow: @neu-shadow-inset-low;
+          background: @primary-2;
+          box-shadow: @neu-shadow-inset-sm;
 
           svg {
             opacity: 1;
           }
         }
         &:active {
-          box-shadow: @neu-shadow-inset;
+          box-shadow: @neu-shadow-inset-2;
         }
+      }
+    }
+  }
+
+  // Settings Modal
+  .settings-modal {
+    color: @secondary-3;
+    .setting {
+      margin: @spacing-xs 0;
+      &-title {
+        font-size: @xs-font-size;
+        color: @secondary-5;
+        margin: @spacing-xs @spacing-sm;
+      }
+      .ant-select {
+        width: calc(100% - @spacing-md);
       }
     }
   }
@@ -2827,10 +3453,10 @@
     width: 100%;
 
     a {
-      margin: @spacing-xs @spacing-sm;
+      margin: @spacing-xs;
     }
     span {
-      opacity: @disabled-opacity;
+      opacity: @subtle-opacity;
       margin: @spacing-xs;
       cursor: pointer;
 
@@ -2842,30 +3468,27 @@
 }
 
 // Mobile styling
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 800px) {
   .jet-app {
     width: 100%;
     min-height: calc((1vh * 100) - (@nav-height + 30px));
     margin: @nav-height 0 0 0;
 
+    // General inputs
     input {
       font-size: @sm-font-size;
     }
-    // Mobile browsers do a weird thing to the ::after element's position
-    // so we replace the pseudo-element border with a plain green border on each <th>
+
+    // General tables
     table {
-      thead {
-        th {
-          border-bottom: 1px solid @jet-green;
-        }
-        &:after {
-          display: none;
-        }
+      td {
+        font-size: @sm-font-size;
+        padding: @spacing-sm @spacing-md;
       }
     }
 
     // Views
-    .view-container {
+    .view {
       margin: 0;
     }
 
@@ -2887,7 +3510,7 @@
     // Antd Notification / Message
     .ant-notification,
     .ant-message {
-      left: 50%;
+      left: 50% !important;
       right: unset;
       transform: translateX(-50%);
     }
@@ -2905,9 +3528,6 @@
         }
 
         .left-container {
-          &-logo {
-            width: 140px;
-          }
           &-hamburger {
             display: flex;
           }
@@ -2941,6 +3561,14 @@
       .ant-modal-content {
         width: 100%;
         box-shadow: unset;
+      }
+    }
+
+    // Settings Modal
+    .settings-modal {
+      .ant-modal-body {
+        max-height: 300px;
+        overflow-y: scroll;
       }
     }
   }

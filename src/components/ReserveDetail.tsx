@@ -11,6 +11,7 @@ import { Info } from './Info';
 
 // Jet V1
 import { Reserve } from '../v1/models/JetTypes';
+import { AssetLogo } from './AssetLogo';
 
 export function ReserveDetail(props: { reserve: Reserve; close: () => void }): JSX.Element {
   const { dictionary } = useLanguage();
@@ -28,7 +29,7 @@ export function ReserveDetail(props: { reserve: Reserve; close: () => void }): J
       <div className="reserve-detail-modal modal-content flex-centered column">
         <div className="flex-centered column">
           <div className="flex align-center-justify-center">
-            <img src={`img/cryptos/${props.reserve?.abbrev}.png`} alt={`${props.reserve?.abbrev} Logo`} />
+            <AssetLogo symbol={props.reserve?.abbrev} height={45} style={{ marginRight: 10 }} />
             <h1 className="modal-content-header">{props.reserve?.name.toUpperCase()}</h1>
           </div>
           <span>
@@ -114,8 +115,8 @@ export function ReserveDetail(props: { reserve: Reserve; close: () => void }): J
             <p>{props.reserve?.liquidationPremium / 100}%</p>
           </div>
         </div>
-        <Divider />
         <Button
+          block
           onClick={() => {
             if (connected) {
               props.close();

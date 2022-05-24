@@ -22,7 +22,7 @@ export function ConnectWalletModal(): JSX.Element {
       className="connect-wallet-modal"
       onCancel={() => setConnecting(false)}>
       <div className="flex-centered column">
-        <img src="img/jet/jet_logo_gradient.png" width="120px" height="auto" alt="Jet Protocol" />
+        <img src="img/jet/jet_logo.png" width="120px" height="auto" alt="Jet Protocol" />
         <span>{dictionary.settings.worldOfDefi}</span>
         <Divider />
         <div className="wallets flex-centered column">

@@ -21,6 +21,8 @@ import { useMarket } from '../v1/contexts/market';
 import { Reserve, TxnResponse } from '../v1/models/JetTypes';
 import { useJetV1 } from '../v1/hooks/useJetV1';
 import { TokenAmount } from '../v1/util/tokens';
+import { FilterFilled } from '@ant-design/icons';
+import { AssetLogo } from './AssetLogo';
 
 export function MarketTable(): JSX.Element {
   const { dictionary } = useLanguage();
@@ -107,7 +109,7 @@ export function MarketTable(): JSX.Element {
               setFilteredMarketTable(filteredMarket);
             }}
           />
-          <i className="gradient-text fas fa-search"></i>
+          <FilterFilled />
         </div>
         <div className="table-container">
           <table>
@@ -136,7 +138,7 @@ export function MarketTable(): JSX.Element {
             <tbody>
               {filteredMarketTable.map((reserve, i) => {
                 if (!hasSolletEth && reserve.abbrev === 'ETH') {
-                  return;
+                  return <></>;
                 } else {
                   return (
                     <tr
@@ -144,7 +146,7 @@ export function MarketTable(): JSX.Element {
                       className={currentReserve?.abbrev === reserve.abbrev ? 'active' : ''}
                       onClick={() => setCurrentReserve(reserve)}>
                       <td className="market-table-asset">
-                        <img src={`img/cryptos/${reserve.abbrev}.png`} alt={`${reserve.abbrev} Icon`} />
+                        <AssetLogo symbol={reserve.abbrev} height={25} />
                         <span className="semi-bold-text">{reserve.name}</span>
                         <span>≈{market.marketInit ? currencyFormatter(reserve.price, true, 2) : '--'}</span>
                       </td>

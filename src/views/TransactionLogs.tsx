@@ -4,6 +4,7 @@ import { useBlockExplorer } from '../contexts/blockExplorer';
 import { totalAbbrev } from '../utils/currency';
 import { shortenPubkey } from '../utils/utils';
 import { Loader } from '../components/Loader';
+import { ReactComponent as ArrowIcon } from '../styles/icons/arrow_icon.svg';
 
 // Jet V1
 import { useUser } from '../v1/contexts/user';
@@ -42,8 +43,8 @@ export function TransactionLogs(): JSX.Element {
                   &nbsp;
                   {log.tokenAbbrev}
                 </td>
-                <td style={{ paddingRight: '40px' }}>
-                  <i className="fas fa-external-link-alt"></i>
+                <td>
+                  <ArrowIcon className="jet-icon" />
                 </td>
               </tr>
             ))}
@@ -51,19 +52,17 @@ export function TransactionLogs(): JSX.Element {
               <td></td>
               <td></td>
               <td style={{ padding: '10px 0 0 0' }}>
-                {loadingLogs ? (
-                  <Loader button />
-                ) : (
-                  <span
-                    className={`text-btn ${!user.walletInit || loadingLogs || noMoreSignatures ? 'disabled' : ''}`}
-                    onClick={() => {
-                      if (user.walletInit && !(loadingLogs || noMoreSignatures)) {
-                        searchMoreLogs();
-                      }
-                    }}>
-                    {dictionary.loading.loadMore.toUpperCase()}
-                  </span>
-                )}
+                <span
+                  className={`text-btn ${!user.walletInit || loadingLogs || noMoreSignatures ? 'disabled' : ''}`}
+                  onClick={() => {
+                    if (user.walletInit && !(loadingLogs || noMoreSignatures)) {
+                      searchMoreLogs();
+                    }
+                  }}>
+                  {loadingLogs
+                    ? `${dictionary.loading.loading.toUpperCase()}..`
+                    : dictionary.loading.loadMore.toUpperCase()}
+                </span>
               </td>
               <td></td>
               <td></td>

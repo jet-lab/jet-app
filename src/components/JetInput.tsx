@@ -1,8 +1,9 @@
 import { useTradeContext } from '../contexts/tradeContext';
 import { currencyFormatter } from '../utils/currency';
 import { Input } from 'antd';
-import { Loader } from './Loader';
+import { AssetLogo } from './AssetLogo';
 import { ReactComponent as ArrowIcon } from '../styles/icons/arrow_icon.svg';
+import { LoadingOutlined } from '@ant-design/icons';
 
 export function JetInput(props: {
   type: 'text' | 'number';
@@ -34,7 +35,7 @@ export function JetInput(props: {
         />
         {props.currency && currentReserve && (
           <>
-            <img src={`img/cryptos/${currentReserve.abbrev}.png`} alt={`${currentReserve.abbrev} Logo`} />
+            <AssetLogo symbol={currentReserve.abbrev} height={20} />
             <div className="asset-abbrev-usd flex align-end justify-center column">
               <span>{currentReserve.abbrev}</span>
               <span>
@@ -51,7 +52,7 @@ export function JetInput(props: {
             props.submit();
           }
         }}>
-        {props.loading ? <Loader button /> : <ArrowIcon width={30} />}
+        {props.loading ? <LoadingOutlined /> : <ArrowIcon width={30} />}
       </div>
     </div>
   );

@@ -16,7 +16,7 @@ export function DarkThemeProvider(props: { children: JSX.Element }): JSX.Element
   useEffect(() => {
     setTimeout(() => {
       localStorage.setItem('jetDarkUI', JSON.stringify(darkTheme));
-      ['black', 'dark-grey', 'grey', 'light-grey', 'white', 'light-shadow', 'dark-shadow'].forEach(color => {
+      ['black', 'secondary-5', 'grey', 'primary-3', 'white', 'light-shadow', 'dark-shadow'].forEach(color => {
         document.documentElement.style.setProperty(`--${color}`, `var(--${darkTheme ? 'dt' : 'lt'}-${color})`);
       });
     }, 150);

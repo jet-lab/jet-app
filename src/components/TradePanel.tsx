@@ -217,7 +217,7 @@ export function TradePanel(): JSX.Element {
         currentAmount > user.walletBalances[currentReserve.abbrev] - 0.02
       ) {
         copilotAlert = {
-          status: 'failure',
+          status: 'danger',
           detail: <span>{dictionary.cockpit.insufficientLamports}</span>,
           closeable: true
         };
@@ -227,7 +227,7 @@ export function TradePanel(): JSX.Element {
       // User is withdrawing between 125% and 130%, allow trade but warn them
       if (user.position.borrowedValue && adjustedRatio > 0 && adjustedRatio <= market.minColRatio + 0.05) {
         copilotAlert = {
-          status: 'failure',
+          status: 'danger',
           detail: (
             <span>
               {dictionary.cockpit.subjectToLiquidation
@@ -265,7 +265,7 @@ export function TradePanel(): JSX.Element {
         // but not below min-ratio, warn and allow trade
         if (adjustedRatio >= market.minColRatio || !user.position.borrowedValue) {
           copilotAlert = {
-            status: 'failure',
+            status: 'danger',
             detail: (
               <span>
                 {dictionary.cockpit.subjectToLiquidation
@@ -283,7 +283,7 @@ export function TradePanel(): JSX.Element {
           // and below minimum ratio, inform and reject
         } else if (adjustedRatio < market.minColRatio && adjustedRatio < user.position.colRatio) {
           copilotAlert = {
-            status: 'failure',
+            status: 'danger',
             detail: (
               <span>
                 {dictionary.cockpit.rejectTrade

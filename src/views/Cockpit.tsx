@@ -15,6 +15,7 @@ import { EthNotification } from '../components/EthNotification';
 // Jet V1
 import { useUser } from '../v1/contexts/user';
 import { useMarket } from '../v1/contexts/market';
+import { WarningFilled } from '@ant-design/icons';
 
 export function Cockpit(): JSX.Element {
   const isGeobanned = useGeoban();
@@ -32,7 +33,7 @@ export function Cockpit(): JSX.Element {
   useEffect(() => {
     if (cluster === 'mainnet-beta' && !acceptedDisclaimer) {
       setAlert({
-        status: 'failure',
+        status: 'danger',
         overview: dictionary.copilot.alert.warning,
         detail: (
           <span>
@@ -131,7 +132,7 @@ export function Cockpit(): JSX.Element {
               </div>
               {user.walletInit && (
                 <div className="trade-position-value min-c-note flex align-start justify-center">
-                  <i className="fas fa-exclamation-triangle"></i>
+                  <WarningFilled style={{ margin: '2px 5px 0 0' }} />
                   <span>
                     {dictionary.cockpit.minColRatioNote.replace('{{MIN_COL_RATIO}}', market.minColRatio * 100)}
                   </span>
