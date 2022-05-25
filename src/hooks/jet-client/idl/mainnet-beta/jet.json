@@ -2134,7 +2134,7 @@
   "metadata": {
     "address": "JPv1rCqrhagNNmJVM5J1he7msQ5ybtvE1nNuHpDHMNU",
     "serumProgramId": "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
-    "cluster": "https://jetprot-main-0d7b.mainnet.rpcpool.com/",
+    "cluster": "https://jetprot-main-0d7b.mainnet.rpcpool.com",
     "market": {
       "market": "9oiXzad28vLhT2TkFoVRRRcwYKrSF7E3XPUJpwcarCAo",
       "marketAuthority": "7gpj9cpzBBW9Ci1yMwWz7iGbQYpm5fZmadNQyrYsqch8"
