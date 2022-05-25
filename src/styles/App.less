@@ -249,8 +249,8 @@
   // Percentage Chart
   .percentage-chart {
     position: relative;
-    width: 145px;
-    height: 145px;
+    width: 140px;
+    height: 140px;
     justify-content: space-around;
     box-shadow: @neu-shadow;
     border-radius: 100px;
@@ -258,20 +258,20 @@
     .chart-info,
     .inset-chart-shadow,
     svg {
-      width: 145px;
+      width: 140px;
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
     }
     .inset-chart-shadow {
-      width: 127px;
-      height: 127px;
+      width: 122px;
+      height: 122px;
       box-shadow: @neu-shadow-inset;
       border-radius: 100px;
     }
     svg {
-      width: 156px;
+      width: 151px;
       stroke: @danger;
 
       path:first-of-type {
@@ -295,16 +295,19 @@
     .ant-modal-content {
       max-width: 325px !important;
     }
+    h1 {
+      font-size: 27px;
+    }
     h1,
     p {
       margin: unset !important;
     }
 
     &-modal {
-      img {
-        width: 40px;
-        height: 40px;
-        padding: 0 @spacing-sm;
+      .asset-logo {
+        width: 35px;
+        height: 35px;
+        margin-top: 3px;
       }
 
       .asset-info-color {
@@ -372,12 +375,7 @@
       }
     }
     &-asset {
-      margin: @spacing-md 0;
-      img {
-        width: 40px;
-        height: 40px;
-        padding: 0 @spacing-xs;
-      }
+      margin: @spacing-xs 0;
     }
     span {
       opacity: @disabled-opacity;
@@ -386,7 +384,7 @@
     }
     .ant-modal-content {
       width: auto;
-      max-width: unset;
+      max-width: 400px;
       overflow: hidden;
       padding: unset;
 
@@ -423,6 +421,8 @@
             }
             td {
               font-size: @base-font-size;
+              padding-left: unset;
+              padding-right: unset;
               text-align: center;
             }
             tr {
@@ -565,6 +565,10 @@
       flex-wrap: wrap;
       margin-bottom: @spacing-xl;
 
+      .ant-skeleton {
+        width: 250px;
+        margin: 40px 0;
+      }
       .trade-market-tvl {
         margin-right: @spacing-xl;
       }
@@ -1181,41 +1185,39 @@
     }
     // Percentage Chart
     .percentage-chart {
-      width: 110px;
-      height: 110px;
+      width: 115px;
+      height: 115px;
       margin: @spacing-md 0;
 
       .chart-info {
-        width: 110px;
+        width: 115px;
       }
       .inset-chart-shadow {
-        width: 102px;
-        height: 102px;
+        width: 107px;
+        height: 107px;
       }
       svg {
-        width: 126px;
+        width: 131px;
         stroke: @danger;
       }
     }
     // Reserve Detail Modal
     .reserve-detail-modal {
+      .ant-modal-content {
+        max-width: unset;
+      }
       span {
         font-size: @xs-font-size;
       }
-      img {
-        width: 30px;
-        height: 30px;
+      .asset-logo {
+        width: 25px;
+        height: 25px;
       }
       button {
         margin-bottom: @spacing-lg;
 
         span {
           font-size: inherit;
-        }
-      }
-      .reserve-subdetail {
-        span {
-          font-size: 9px;
         }
       }
     }
@@ -1384,6 +1386,12 @@
             }
           }
         }
+      }
+    }
+    // Transaction Logs
+    .transaction-logs {
+      .table-container {
+        max-width: 300px;
       }
     }
     // Settings View

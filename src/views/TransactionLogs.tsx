@@ -1,9 +1,10 @@
+import { useWallet } from '@solana/wallet-adapter-react';
 import { useLanguage } from '../contexts/localization/localization';
+import { useConnectWalletModal } from '../contexts/connectWalletModal';
 import { useTransactionLogs } from '../contexts/transactionLogs';
 import { useBlockExplorer } from '../contexts/blockExplorer';
 import { totalAbbrev } from '../utils/currency';
 import { shortenPubkey } from '../utils/utils';
-import { Loader } from '../components/Loader';
 import { ReactComponent as ArrowIcon } from '../styles/icons/arrow_icon.svg';
 
 // Jet V1
@@ -11,6 +12,8 @@ import { useUser } from '../v1/contexts/user';
 
 export function TransactionLogs(): JSX.Element {
   const { dictionary } = useLanguage();
+  const { connected } = useWallet();
+  const { setConnecting } = useConnectWalletModal();
   const { getExplorerUrl } = useBlockExplorer();
   const { loadingLogs, logs, noMoreSignatures, searchMoreLogs } = useTransactionLogs();
 
@@ -53,15 +56,22 @@ export function TransactionLogs(): JSX.Element {
               <td></td>
               <td style={{ padding: '10px 0 0 0' }}>
                 <span
-                  className={`text-btn ${!user.walletInit || loadingLogs || noMoreSignatures ? 'disabled' : ''}`}
+                  className={`text-btn ${
+                    (connected && !user.walletInit) || loadingLogs || noMoreSignatures ? 'disabled' : ''
+                  }`}
                   onClick={() => {
+                    if (!connected) {
+                      setConnecting(true);
+                    }
                     if (user.walletInit && !(loadingLogs || noMoreSignatures)) {
                       searchMoreLogs();
                     }
                   }}>
-                  {loadingLogs
-                    ? `${dictionary.loading.loading.toUpperCase()}..`
-                    : dictionary.loading.loadMore.toUpperCase()}
+                  {connected
+                    ? loadingLogs
+                      ? `${dictionary.loading.loading.toUpperCase()}..`
+                      : dictionary.loading.loadMore.toUpperCase()
+                    : dictionary.settings.connect.toUpperCase()}
                 </span>
               </td>
               <td></td>

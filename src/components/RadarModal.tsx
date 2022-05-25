@@ -7,6 +7,7 @@ import { Modal } from 'antd';
 import { RateObserver, ProtocolRates } from '@jet-lab/defi-yield-ts';
 import { ReactComponent as RadarIcon } from '../styles/icons/radar_icon.svg';
 import { idl } from '../hooks/jet-client/useClient';
+import { AssetLogo } from './AssetLogo';
 
 export function RadarModal(): JSX.Element {
   const { darkTheme } = useDarkTheme();
@@ -68,7 +69,7 @@ export function RadarModal(): JSX.Element {
         <p>{dictionary.copilot.radar.interestRadar.toUpperCase()}</p>
       </div>
       <div className="radar-modal-asset flex-centered">
-        <img src={`img/cryptos/${currentReserve?.abbrev}.png`} alt={`${currentReserve?.abbrev} Logo`} />
+        <AssetLogo symbol={currentReserve?.abbrev ?? ''} height={30} style={{ marginRight: 5 }} />
         <h1>{currentReserve?.abbrev}</h1>
       </div>
       <div className="table-container">

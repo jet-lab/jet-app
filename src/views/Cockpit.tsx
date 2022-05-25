@@ -9,7 +9,7 @@ import { Info } from '../components/Info';
 import { HealthBar } from '../components/HealthBar';
 import { TradePanel } from '../components/TradePanel';
 import { MarketTable } from '../components/MarketTable';
-import { Checkbox } from 'antd';
+import { Checkbox, Skeleton } from 'antd';
 import { EthNotification } from '../components/EthNotification';
 
 // Jet V1
@@ -73,13 +73,13 @@ export function Cockpit(): JSX.Element {
           <div className="trade-market-tvl flex align-start justify-center column">
             <h2 className="view-subheader">{dictionary.cockpit.totalSupply}</h2>
             <h1 className={`view-header ${market.marketInit ? 'gradient-text' : ''}`}>
-              {market.marketInit ? totalAbbrev(market.totalSupply) : '--'}
+              {market.marketInit ? totalAbbrev(market.totalSupply) : <Skeleton paragraph={false} active />}
             </h1>
           </div>
           <div className="trade-market-tvl flex align-start justify-center column">
             <h2 className="view-subheader">{dictionary.reserveDetail.totalBorrowed}</h2>
             <h1 className={`view-header ${market.marketInit ? 'gradient-text' : ''}`}>
-              {market.marketInit ? totalAbbrev(market.totalBorrowed) : '--'}
+              {market.marketInit ? totalAbbrev(market.totalBorrowed) : <Skeleton paragraph={false} active />}
             </h1>
           </div>
           <div className="trade-position-snapshot flex-centered">

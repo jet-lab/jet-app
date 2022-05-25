@@ -8,14 +8,14 @@ export function AssetLogo(props: { symbol: string; height: number; style?: React
   const { symbol, height } = props;
 
   if (symbol === 'USDC') {
-    return <USDC height={height} width={height} style={props.style} />;
+    return <USDC className="asset-logo" height={height} width={height} style={props.style} />;
   } else if (symbol === 'SOL') {
-    return <SOL height={height} width={height} style={props.style} />;
+    return <SOL className="asset-logo" height={height} width={height} style={props.style} />;
   } else if (symbol === 'BTC') {
-    return <BTC height={height} width={height} style={props.style} />;
+    return <BTC className="asset-logo" height={height} width={height} style={props.style} />;
   } else if (symbol === 'ETH') {
-    return <ETH height={height} width={height} style={props.style} />;
+    return <ETH className="asset-logo" height={height} width={height} style={props.style} />;
   } else {
-    return <Skeleton.Avatar active size={height} shape="square" style={props.style} />;
+    return <Skeleton.Avatar className="asset-logo" active size={height} shape="square" style={props.style} />;
   }
 }
