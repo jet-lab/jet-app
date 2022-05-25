@@ -6,7 +6,7 @@ import { useTradeContext } from '../contexts/tradeContext';
 import { Modal } from 'antd';
 import { RateObserver, ProtocolRates } from '@jet-lab/defi-yield-ts';
 import { ReactComponent as RadarIcon } from '../styles/icons/radar_icon.svg';
-import { idl, cluster } from '../hooks/jet-client/useClient';
+import { idl } from '../hooks/jet-client/useClient';
 
 export function RadarModal(): JSX.Element {
   const { darkTheme } = useDarkTheme();

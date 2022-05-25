@@ -9,10 +9,55 @@ import { Button, Switch } from 'antd';
 import { ReactComponent as AccountIcon } from '../styles/icons/account_icon.svg';
 import { ReactComponent as WalletIcon } from '../styles/icons/wallet_icon.svg';
 
+import * as anchor from '@project-serum/anchor';
+import { defaultVariables, IncomingThemeVariables, NotificationsButton } from '@dialectlabs/react-ui';
+
+const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey('9dfi492rC6PhFVwg6sJLQYqSme4yTBZ9hdQvmQTCno6i');
+
+export const themeVariables: IncomingThemeVariables = {
+  light: {
+    bellButton: `w-10 h-10 border border-neutral-600 bg-white text-black jet-transparent jet-shadow-none jet-text-primary jet-nav-icon`,
+    modal: `${defaultVariables.light.modal} jet-modal-bg-custom sm:rounded-3xl shadow-xl shadow-neutral-900 sm:border border-[#ABABAB]/40`, // 0.4 opacity based on trial-and-error
+    button: 'jet-button jet-bg-green jet-pd-05',
+    secondaryButton: 'jet-bg-transparent jet-border-green jet-text-green',
+    secondaryDangerButton: 'jet-bg-transparent jet-border-red jet-text-red jet-pd-05',
+    disabledButton: 'jet-bg-green jet-opacity-75 jet-pd-05',
+    divider: 'jet-divider',
+    iconButton: 'jet-icon jet-text-primary',
+    section: 'jet-bg-light-gray jet-pd-05 jet-br-rd-1',
+    colors: {
+      bg: 'jet-bg',
+      secondary: 'jet-text-green',
+      brand: 'jet-bg-green',
+      errorBg: 'dt-bg-transparent',
+      primary: 'jet-text-primary',
+      accent: '',
+      accentSolid: 'dt-text-[#5895B9]',
+      highlight: 'dt-bg-subtle-day',
+      highlightSolid: 'jet-bg',
+      toggleBackgroundActive: 'jet-bg-green',
+      toggleThumb: 'dt-bg-[#EEEEEE]'
+    }
+  },
+
+  animations: {
+    popup: {
+      enter: 'transition-all duration-300 origin-top-right',
+      enterFrom: 'opacity-0 scale-75',
+      enterTo: 'opacity-100 scale-100',
+      leave: 'transition-all duration-100 origin-top-right',
+      leaveFrom: 'opacity-100 scale-100',
+      leaveTo: 'opacity-0 scale-75'
+    }
+  }
+};
+
+type ThemeType = 'light' | 'dark' | undefined;
+
 export function Navbar(): JSX.Element {
   const { dictionary } = useLanguage();
   const { pathname } = useLocation();
-  const { connected, disconnect, publicKey } = useWallet();
+  const wallet = useWallet();
   const { setConnecting } = useConnectWalletModal();
   const { darkTheme, toggleDarkTheme } = useDarkTheme();
   const [drawerOpened, setDrawerOpened] = useState(false);
@@ -28,6 +73,8 @@ export function Navbar(): JSX.Element {
   ];
   const accountLink = { title: dictionary.account.title, route: '/' };
 
+  const [theme, setTheme] = useState<ThemeType>('light');
+
   return (
     <div className={`navbar-container flex-centered ${drawerOpened ? 'drawer-open' : ''}`}>
       {/* Desktop Nav */}
@@ -41,15 +88,29 @@ export function Navbar(): JSX.Element {
               {link.title}
             </Link>
           ))}
+          <div style={{ position: 'relative' }}>
+            <NotificationsButton
+              wallet={wallet}
+              network={'devnet'}
+              publicKey={DIALECT_PUBLIC_KEY}
+              theme={theme}
+              variables={themeVariables}
+              notifications={[{ name: 'Welcome message', detail: 'On thread creation' }]}
+              channels={['web3', 'email', 'telegram']}
+            />
+          </div>
+
           <Button
             ghost
             className="flex-centered"
             style={{ textTransform: 'unset' }}
-            title={connected ? dictionary.settings.disconnect : dictionary.settings.connect}
-            onClick={() => (connected ? disconnect() : setConnecting(true))}>
+            title={wallet.connected ? dictionary.settings.disconnect : dictionary.settings.connect}
+            onClick={() => (wallet.connected ? wallet.disconnect() : setConnecting(true))}>
             <WalletIcon width="20px" />
-            {connected
-              ? `${shortenPubkey(publicKey ? publicKey.toString() : '')} ${dictionary.settings.connected.toUpperCase()}`
+            {wallet.connected
+              ? `${shortenPubkey(
+                  wallet.publicKey ? wallet.publicKey.toString() : ''
+                )} ${dictionary.settings.connected.toUpperCase()}`
               : dictionary.settings.connect.toUpperCase()}
           </Button>
         </div>
@@ -84,19 +145,19 @@ export function Navbar(): JSX.Element {
               ghost
               className="flex-centered small-btn"
               style={{ textTransform: 'unset' }}
-              title={connected ? dictionary.settings.disconnect : dictionary.settings.connect}
+              title={wallet.connected ? dictionary.settings.disconnect : dictionary.settings.connect}
               onClick={() => {
-                if (connected) {
-                  disconnect();
+                if (wallet.connected) {
+                  wallet.disconnect();
                 } else {
                   setConnecting(true);
                   setDrawerOpened(false);
                 }
               }}>
               <WalletIcon width="20px" />
-              {connected
+              {wallet.connected
                 ? `${shortenPubkey(
-                    publicKey ? publicKey.toString() : ''
+                    wallet.publicKey ? wallet.publicKey.toString() : ''
                   )} ${dictionary.settings.connected.toUpperCase()}`
                 : dictionary.settings.connect.toUpperCase()}
             </Button>
