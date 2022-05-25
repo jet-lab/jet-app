@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { TokenAmount } from '@jet-lab/jet-engine';
+import { TokenAmount } from '@jet-lab/margin';
 import { ConfirmedSignatureInfo, TransactionResponse } from '@solana/web3.js';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { BN } from '@project-serum/anchor';

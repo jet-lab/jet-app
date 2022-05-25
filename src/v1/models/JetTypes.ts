@@ -1,7 +1,6 @@
-import { JetTokens } from '@jet-lab/jet-engine';
+import { MarginTokens, TokenAmount } from '@jet-lab/margin';
 import type { AccountInfo, PublicKey } from '@solana/web3.js';
 import type BN from 'bn.js';
-import type { TokenAmount } from '../util/tokens';
 
 // Web3
 export interface HasPublicKey {
@@ -85,7 +84,7 @@ export interface MarketMetadata {
 // Reserve
 export interface Reserve {
   name: string;
-  abbrev: JetTokens;
+  abbrev: MarginTokens;
   marketSize: TokenAmount;
   outstandingDebt: TokenAmount;
   utilizationRate: number;

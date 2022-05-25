@@ -15,7 +15,7 @@ import {
   SOL_DECIMALS
 } from '../util/programUtil';
 import { useMargin } from '../../contexts/marginContext';
-import { TokenAmount } from '../util/tokens';
+import { TokenAmount } from '@jet-lab/margin';
 import { useMarket } from './market';
 
 // User context

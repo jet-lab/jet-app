@@ -1,46 +1,23 @@
-import {
-  Connection,
-  Keypair,
-  PublicKey,
-  Signer,
-  SystemProgram,
-  SYSVAR_RENT_PUBKEY,
-  TransactionInstruction
-} from '@solana/web3.js';
-import * as anchor from '@project-serum/anchor';
-import { Address, BN, Program, translateAddress } from '@project-serum/anchor';
-import {
-  ASSOCIATED_TOKEN_PROGRAM_ID,
-  createAssociatedTokenAccountInstruction,
-  createCloseAccountInstruction,
-  createInitializeAccountInstruction,
-  createMintToInstruction,
-  getAssociatedTokenAddress,
-  getMinimumBalanceForRentExemptAccount,
-  NATIVE_MINT
-} from '@solana/spl-token';
-import { AccountLayout as TokenAccountLayout, TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { Buffer } from 'buffer';
+import { Keypair, PublicKey, Signer, TransactionInstruction } from '@solana/web3.js';
+import { BN, Program } from '@project-serum/anchor';
 import { TxnResponse } from '../models/JetTypes';
-import { useWallet } from '@solana/wallet-adapter-react';
 import { useUser } from '../contexts/user';
 import { useMarket } from '../contexts/market';
 import { useMargin } from './../../contexts/marginContext';
 import { useBlockExplorer } from '../../contexts/blockExplorer';
-import { Amount } from '../util/tokens';
 import {
   InstructionAndSigner,
   sendAllTransactions,
   sendTransaction,
   transactionErrorToString
 } from '../util/programUtil';
-import { AssociatedToken } from '@jet-lab/jet-engine';
+import { MarginTokens, PoolAmount } from '@jet-lab/margin';
 
 export const useJetV1 = () => {
   // const { publicKey } = useWallet();
   const user = useUser();
   const market = useMarket();
-  const { programs } = useMargin();
+  const { programs, provider } = useMargin();
   const program = programs?.marginPool as any as Program;
   const { getExplorerUrl } = useBlockExplorer();
 
@@ -52,7 +29,7 @@ export const useJetV1 = () => {
   const FAUCET_PROGRAM_ID = new PublicKey('4bXpkKSV8swHSnwqtzuboGPaPDeEgAn4Vt8GfarV5rZt');
 
   // Deposit
-  const deposit = async (abbrev: string, lamports: BN): Promise<[res: TxnResponse, txid: string[]]> => {
+  const deposit = async (abbrev: MarginTokens, lamports: BN): Promise<[res: TxnResponse, txid: string[]]> => {
     // if (!user.assets || !publicKey || !program) {
     //   return [TxnResponse.Failed, []];
     // }
@@ -167,7 +144,7 @@ export const useJetV1 = () => {
     const ix = [].filter(ix => ix) as TransactionInstruction[];
     const signers = [].filter(signer => signer) as Keypair[];
     try {
-      return await sendTransaction(program.provider, ix, signers);
+      return await sendTransaction(provider, ix, signers);
     } catch (err) {
       console.error(`Deposit error: ${transactionErrorToString(err)}`);
       return [TxnResponse.Failed, []];
@@ -175,7 +152,7 @@ export const useJetV1 = () => {
   };
 
   // Withdraw
-  const withdraw = async (abbrev: string, amount: Amount): Promise<[res: TxnResponse, txid: string[]]> => {
+  const withdraw = async (abbrev: MarginTokens, amount: PoolAmount): Promise<[res: TxnResponse, txid: string[]]> => {
     // if (!user.assets || !publicKey || !program) {
     //   return [TxnResponse.Failed, []];
     // }
@@ -290,7 +267,7 @@ export const useJetV1 = () => {
     ];
 
     try {
-      const [res, txids] = await sendAllTransactions(program.provider, ixs);
+      const [res, txids] = await sendAllTransactions(provider, ixs);
       return [res, txids];
     } catch (err) {
       console.error(`Withdraw error: ${transactionErrorToString(err)}`);
@@ -299,7 +276,7 @@ export const useJetV1 = () => {
   };
 
   // Borrow
-  const borrow = async (abbrev: string, amount: Amount): Promise<[res: TxnResponse, txid: string[]]> => {
+  const borrow = async (abbrev: MarginTokens, amount: PoolAmount): Promise<[res: TxnResponse, txid: string[]]> => {
     // if (!user.assets || !publicKey || !program) {
     //   return [TxnResponse.Failed, []];
     // }
@@ -419,7 +396,7 @@ export const useJetV1 = () => {
 
     try {
       // Make deposit RPC call
-      const [res, txids] = await sendAllTransactions(program.provider, ixs);
+      const [res, txids] = await sendAllTransactions(provider, ixs);
       return [res, txids];
     } catch (err) {
       console.error(`Borrow error: ${transactionErrorToString(err)}`);
@@ -428,7 +405,7 @@ export const useJetV1 = () => {
   };
 
   // Repay
-  const repay = async (abbrev: string, amount: Amount): Promise<[res: TxnResponse, txid: string[]]> => {
+  const repay = async (abbrev: MarginTokens, amount: PoolAmount): Promise<[res: TxnResponse, txid: string[]]> => {
     // if (!user.assets || !publicKey || !program) {
     //   return [TxnResponse.Failed, []];
     // }
@@ -513,206 +490,12 @@ export const useJetV1 = () => {
     const signers = [].filter(signer => signer) as Signer[];
 
     try {
-      return await sendTransaction(program.provider, ix, signers);
+      return await sendTransaction(provider, ix, signers);
     } catch (err) {
       console.error(`Repay error: ${transactionErrorToString(err)}`);
       return [TxnResponse.Failed, []];
     }
   };
-
-  // const buildInitObligationIx = (): TransactionInstruction | undefined => {
-  //   if (!program || !user.assets || !publicKey) {
-  //     return;
-  //   }
-
-  //   return program.instruction.initObligation(user.assets.obligationBump, {
-  //     accounts: {
-  //       market: market.accountPubkey.toString(),
-  //       marketAuthority: market.authorityPubkey.toString(),
-
-  //       borrower: publicKey.toString(),
-  //       obligation: user.assets.obligationPubkey.toString(),
-
-  //       tokenProgram: TOKEN_PROGRAM_ID.toString(),
-  //       systemProgram: SystemProgram.programId.toString()
-  //     }
-  //   });
-  // };
-
-  // /** Creates ixs to refresh all reserves. */
-  // const buildRefreshReserveIxs = () => {
-  //   const ix: TransactionInstruction[] = [];
-
-  //   if (!user.assets) {
-  //     return ix;
-  //   }
-
-  //   for (const assetAbbrev in user.assets.tokens) {
-  //     const refreshReserveIx = buildRefreshReserveIx(assetAbbrev);
-  //     if (refreshReserveIx) {
-  //       ix.push(refreshReserveIx);
-  //     }
-  //   }
-  //   return ix;
-  // };
-
-  // /**Sends transactions to refresh all reserves
-  //  * until it can be fully refreshed once more. */
-  // const refreshOldReserves = async (): Promise<[res: TxnResponse, txid: string[]]> => {
-  //   if (!program) {
-  //     return [TxnResponse.Failed, []];
-  //   }
-
-  //   let res: TxnResponse = TxnResponse.Success;
-  //   let txid: string[] = [];
-
-  //   for (const abbrev in market.reserves) {
-  //     const reserve = market.reserves[abbrev];
-  //     let accruedUntil = reserve.accruedUntil;
-
-  //     while (accruedUntil.add(MAX_ACCRUAL_SECONDS).lt(new BN(Math.floor(Date.now() / 1000)))) {
-  //       const refreshReserveIx = buildRefreshReserveIx(abbrev);
-
-  //       const ix = [refreshReserveIx].filter(ix => ix) as TransactionInstruction[];
-
-  //       try {
-  //         [res, txid] = await sendTransaction(program.provider, ix);
-  //       } catch (err) {
-  //         console.log(transactionErrorToString(err));
-  //         return [TxnResponse.Failed, []];
-  //       }
-  //       accruedUntil = accruedUntil.add(MAX_ACCRUAL_SECONDS);
-  //     }
-  //   }
-  //   return [res, txid];
-  // };
-
-  // const buildRefreshReserveIx = (abbrev: string) => {
-  //   if (!program) {
-  //     return;
-  //   }
-  //   const reserve = market.reserves[abbrev];
-
-  //   const refreshInstruction = program.instruction.refreshReserve({
-  //     accounts: {
-  //       market: market.accountPubkey.toString(),
-  //       marketAuthority: market.authorityPubkey.toString(),
-
-  //       reserve: reserve.accountPubkey.toString(),
-  //       feeNoteVault: reserve.feeNoteVaultPubkey.toString(),
-  //       depositNoteMint: reserve.depositNoteMintPubkey.toString(),
-
-  //       pythOraclePrice: reserve.pythPricePubkey.toString(),
-  //       tokenProgram: TOKEN_PROGRAM_ID.toString()
-  //     }
-  //   });
-
-  //   return refreshInstruction;
-  // };
-
-  // Faucet
-  // const airdrop = async (
-  //   connection: Connection,
-  //   lamports: BN,
-  //   mint: Address,
-  //   owner: Address,
-  //   faucet?: Address
-  // ): Promise<[res: TxnResponse, txid: string[]]> => {
-  //   const mintAddress = translateAddress(mint);
-  //   const ownerAddress = translateAddress(owner);
-
-  //   const ix: TransactionInstruction[] = [];
-
-  //   let res: TxnResponse = TxnResponse.Failed;
-  //   let txid: string[] = [];
-
-  //   const destination = await AssociatedToken.load(connection, mintAddress, owner);
-
-  //   // Optionally create a token account for wallet
-  //   if (!mintAddress.equals(NATIVE_MINT) && !destination.exists) {
-  //     const createTokenAccountIx = createAssociatedTokenAccountInstruction(
-  //       ownerAddress,
-  //       destination.address,
-  //       ownerAddress,
-  //       mintAddress
-  //     );
-  //     ix.push(createTokenAccountIx);
-  //   }
-
-  //   if (mintAddress.equals(NATIVE_MINT)) {
-  //     // Sol airdrop
-  //     try {
-  //       // Use a specific endpoint. A hack because some devnet endpoints are unable to airdrop
-  //       const endpoint = new anchor.web3.Connection(
-  //         'https://api.devnet.solana.com',
-  //         anchor.Provider.defaultOptions().commitment
-  //       );
-  //       const airdropTxnId = await endpoint.requestAirdrop(ownerAddress, parseInt(lamports.toString()));
-  //       console.log(`Transaction ${getExplorerUrl(airdropTxnId)}`);
-  //       const confirmation = await endpoint.confirmTransaction(airdropTxnId);
-  //       if (confirmation.value.err) {
-  //         console.error(`Airdrop error: ${transactionErrorToString(confirmation.value.err.toString())}`);
-  //         return [TxnResponse.Failed, []];
-  //       } else {
-  //         return [TxnResponse.Success, [airdropTxnId]];
-  //       }
-  //     } catch (error) {
-  //       console.error(`Airdrop error: ${transactionErrorToString(error)}`);
-  //       return [TxnResponse.Failed, []];
-  //     }
-  //   } else if (faucet) {
-  //     // Faucet airdrop
-  //     const faucetAirdropIx = await buildFaucetAirdropIx(
-  //       lamports,
-  //       mintAddress,
-  //       destination.address,
-  //       translateAddress(faucet)
-  //     );
-  //     ix.push(faucetAirdropIx);
-
-  //     [res, txid] = await sendTransaction(program.provider, ix);
-  //   } else {
-  //     // Mint to the destination token account
-  //     const mintToIx = createMintToInstruction(
-  //       mintAddress,
-  //       destination.address,
-  //       ownerAddress,
-  //       BigInt(lamports.toString())
-  //     );
-  //     ix.push(mintToIx);
-
-  //     [res, txid] = await sendTransaction(program.provider, ix);
-  //   }
-
-  //   return [res, txid];
-  // };
-
-  // const buildFaucetAirdropIx = async (
-  //   amount: BN,
-  //   tokenMintPublicKey: PublicKey,
-  //   destinationAccountPubkey: PublicKey,
-  //   faucetPubkey: PublicKey
-  // ) => {
-  //   const pubkeyNonce = await PublicKey.findProgramAddress([new TextEncoder().encode('faucet')], FAUCET_PROGRAM_ID);
-
-  //   const keys = [
-  //     { pubkey: pubkeyNonce[0], isSigner: false, isWritable: false },
-  //     {
-  //       pubkey: tokenMintPublicKey,
-  //       isSigner: false,
-  //       isWritable: true
-  //     },
-  //     { pubkey: destinationAccountPubkey, isSigner: false, isWritable: true },
-  //     { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },
-  //     { pubkey: faucetPubkey, isSigner: false, isWritable: false }
-  //   ];
-
-  //   return new TransactionInstruction({
-  //     programId: FAUCET_PROGRAM_ID,
-  //     data: Buffer.from([1, ...amount.toArray('le', 8)]),
-  //     keys
-  //   });
-  // };
 
   return {
     deposit,

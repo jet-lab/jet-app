@@ -19,10 +19,10 @@ import { NATIVE_MINT } from '@solana/spl-token';
 import { useUser } from '../v1/contexts/user';
 import { useMarket } from '../v1/contexts/market';
 import { Reserve } from '../v1/models/JetTypes';
-import { TokenAmount } from '../v1/util/tokens';
+import { TokenAmount } from '@jet-lab/margin';
 import { FilterFilled } from '@ant-design/icons';
 import { AssetLogo } from './AssetLogo';
-import { TokenFaucet } from '@jet-lab/jet-engine';
+import { TokenFaucet } from '@jet-lab/margin';
 
 export function MarketTable(): JSX.Element {
   const { dictionary } = useLanguage();
@@ -55,11 +55,11 @@ export function MarketTable(): JSX.Element {
       if (!publicKey) {
         throw new Error('Wallet not connected');
       }
-      await TokenFaucet.airdrop(provider, amount.amount, token.mint, publicKey, token.faucet);
+      await TokenFaucet.airdrop(provider, amount.lamports, token.mint, publicKey, token.faucet);
       notification.success({
         message: dictionary.copilot.alert.success,
         description: dictionary.copilot.alert.airdropSuccess
-          .replaceAll('{{UI AMOUNT}}', amount.uiAmount)
+          .replaceAll('{{UI AMOUNT}}', amount.uiTokens)
           .replaceAll('{{RESERVE ABBREV}}', reserve.abbrev),
         placement: 'bottomLeft'
       });

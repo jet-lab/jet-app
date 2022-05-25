@@ -1,26 +1,26 @@
 import {
-  AssociatedToken,
-  JetClient,
-  JetCluster,
-  JetConfig,
-  JetPrograms,
-  JetTokens,
+  MarginCluster,
+  MarginConfig,
+  MarginTokens,
   MarginAccount,
-  MarginPool
-} from '@jet-lab/jet-engine';
+  MarginPool,
+  AssociatedToken,
+  MarginClient,
+  MarginPrograms
+} from '@jet-lab/margin';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { createContext, useContext, useMemo } from 'react';
 import { useQuery } from 'react-query';
 import localnetIdl from '../hooks/jet-client/idl/localnet/jet.json';
 import devnetIdl from '../hooks/jet-client/idl/devnet/jet.json';
 import mainnetBetaIdl from '../hooks/jet-client/idl/mainnet-beta/jet.json';
-import { BorshCoder, Provider } from '@project-serum/anchor';
+import { AnchorProvider, BorshCoder } from '@project-serum/anchor';
 import { ConfirmOptions, Connection, PublicKey } from '@solana/web3.js';
 import { useRpcNode } from './rpcNode';
 
 export let idl: any;
-export const cluster = (process.env.REACT_APP_CLUSTER ?? 'devnet') as JetCluster;
-const config = JetClient.getConfig(cluster);
+export const cluster = (process.env.REACT_APP_CLUSTER ?? 'devnet') as MarginCluster;
+const config = MarginClient.getConfig(cluster);
 if (cluster === 'localnet') {
   idl = localnetIdl;
 } else if (cluster === 'mainnet-beta') {
@@ -30,18 +30,18 @@ if (cluster === 'localnet') {
 }
 const DEFAULT_WALLET_BALANCES = Object.fromEntries(
   Object.values(config.tokens).map(token => [token.symbol, AssociatedToken.zeroAux(PublicKey.default, token.decimals)])
-) as Record<JetTokens, AssociatedToken>;
+) as Record<MarginTokens, AssociatedToken>;
 
 interface MarginContextState {
   connection: Connection;
-  provider: Provider;
-  config: JetConfig;
-  programs?: JetPrograms;
+  provider: AnchorProvider;
+  config: MarginConfig;
+  programs?: MarginPrograms;
   poolsFetched: boolean;
-  pools: Record<JetTokens, MarginPool> | undefined;
+  pools: Record<MarginTokens, MarginPool> | undefined;
   userFetched: boolean;
   marginAccount: MarginAccount | undefined;
-  walletBalances: Record<JetTokens, AssociatedToken>;
+  walletBalances: Record<MarginTokens, AssociatedToken>;
 }
 
 const MarginContext = createContext<MarginContextState>({
@@ -63,31 +63,23 @@ function useProvider() {
   const wallet = useWallet();
 
   const provider = useMemo(
-    () => new Provider(connection, wallet as any, confirmOptions),
+    () => new AnchorProvider(connection, wallet as any, confirmOptions),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [connection, confirmOptions]
   );
   (provider as any).wallet = wallet;
-  return provider;
+
+  const programs = MarginClient.getPrograms(provider, config);
+  return { programs, provider };
 }
 
 // Trade info context provider
 export function MarginContextProvider(props: { children: JSX.Element }): JSX.Element {
   const { publicKey } = useWallet();
 
-  const provider = useProvider();
+  const { provider, programs } = useProvider();
   const { connection } = provider;
-
   const endpoint = connection.rpcEndpoint;
-
-  const { data: programs } = useQuery(
-    ['programs'],
-    async () => {
-      console.log('Fetching programs');
-      return await JetClient.connect(provider, config);
-    },
-    { refetchOnWindowFocus: false }
-  );
 
   const { data: pools, isFetched: poolsFetched } = useQuery(
     ['pools', endpoint],
@@ -111,7 +103,7 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
       const walletBalances = await MarginAccount.loadTokens(programs, publicKey);
       let marginAccount: MarginAccount | undefined;
       try {
-        marginAccount = await MarginAccount.load(programs, publicKey, 0);
+        marginAccount = await MarginAccount.load(programs, provider, publicKey, 0);
       } catch {
         // nothing
       }

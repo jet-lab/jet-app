@@ -13,9 +13,8 @@ import {
 import { Buffer } from 'buffer';
 import type { HasPublicKey, IdlMetadata, ReserveConfigStruct, ToBytes } from '../models/JetTypes';
 import { TxnResponse } from '../models/JetTypes';
-import { TokenAmount } from './tokens';
 import { idl } from '../../contexts/marginContext';
-import { parseMintAccount, parseTokenAccount } from '@jet-lab/jet-engine';
+import { AssociatedToken, TokenAmount } from '@jet-lab/margin';
 
 // Find PDA functions and jet algorithms that are reimplemented here
 export const SOL_DECIMALS = 9;
@@ -159,9 +158,8 @@ export const getTokenAccountAndSubscribe = async function (
     publicKey,
     (account, context) => {
       if (account !== null) {
-        const decoded = parseTokenAccount(account, publicKey);
-        const amount = TokenAmount.tokenAccount(decoded, decimals);
-        callback(amount, context);
+        const decoded = AssociatedToken.decodeAccount(account, publicKey, decimals);
+        callback(decoded.amount, context);
       } else {
         callback(undefined, context);
       }
@@ -191,7 +189,7 @@ export const getMintInfoAndSubscribe = async function (
     publicKey,
     (account, context) => {
       if (account !== null) {
-        const decoded = parseMintAccount(account, publicKey);
+        const decoded = AssociatedToken.decodeMint(account, publicKey);
         const amount = TokenAmount.mint(decoded);
         callback(amount, context);
       } else {
@@ -280,7 +278,7 @@ export const getAccountInfoAndSubscribe = async function (
 };
 
 export const sendTransaction = async (
-  provider: anchor.Provider,
+  provider: anchor.AnchorProvider,
   instructions: TransactionInstruction[],
   signers?: Signer[],
   skipConfirmation?: boolean
@@ -329,7 +327,7 @@ export interface InstructionAndSigner {
 }
 
 export const sendAllTransactions = async (
-  provider: anchor.Provider,
+  provider: anchor.AnchorProvider,
   transactions: InstructionAndSigner[],
   skipConfirmation?: boolean
 ): Promise<[res: TxnResponse, txids: string[]]> => {

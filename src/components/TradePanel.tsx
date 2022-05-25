@@ -16,7 +16,7 @@ import { shortenPubkey } from '../utils/utils';
 import { useUser } from '../v1/contexts/user';
 import { useMarket } from '../v1/contexts/market';
 import { useJetV1 } from '../v1/hooks/useJetV1';
-import { Amount, TokenAmount } from '../v1/util/tokens';
+import { PoolAmount, TokenAmount } from '@jet-lab/margin';
 import { TxnResponse } from '../v1/models/JetTypes';
 import { useMargin } from '../contexts/marginContext';
 
@@ -107,7 +107,7 @@ export function TradePanel(): JSX.Element {
       } else if (userV1.position.borrowedValue && userV1.position.colRatio <= market.minColRatio) {
         setDisabledMessage(dictionary.cockpit.belowMinCRatio);
         // No liquidity in market to borrow from
-      } else if (currentReserve.availableLiquidity.amount.isZero()) {
+      } else if (currentReserve.availableLiquidity.lamports.isZero()) {
         setDisabledMessage(dictionary.cockpit.noLiquidity);
       } else {
         setDisabledInput(false);
@@ -329,7 +329,7 @@ export function TradePanel(): JSX.Element {
         inputError = dictionary.cockpit.notEnoughAsset.replaceAll('{{ASSET}}', currentReserve.abbrev);
         // Otherwise, send deposit
       } else {
-        const depositAmount = tradeAmount.amount;
+        const depositAmount = tradeAmount.lamports;
         [res, txids] = await deposit(currentReserve.abbrev, depositAmount);
       }
       // Withdrawing sollet ETH
@@ -348,8 +348,8 @@ export function TradePanel(): JSX.Element {
         // If user is withdrawing all, use collateral notes
         const withdrawAmount =
           tradeAmount.tokens === userV1.collateralBalances[currentReserve.abbrev]
-            ? Amount.depositNotes(userV1.assets.tokens[currentReserve.abbrev].collateralNoteBalance.amount)
-            : Amount.tokens(tradeAmount.amount);
+            ? PoolAmount.notes(userV1.assets.tokens[currentReserve.abbrev].collateralNoteBalance.lamports)
+            : PoolAmount.tokens(tradeAmount.lamports);
         [res, txids] = await withdraw(currentReserve.abbrev, withdrawAmount);
       }
       // Borrowing
@@ -362,7 +362,7 @@ export function TradePanel(): JSX.Element {
         inputError = dictionary.cockpit.belowMinCRatio;
         // Otherwise, send borrow
       } else {
-        const borrowAmount = Amount.tokens(tradeAmount.amount);
+        const borrowAmount = PoolAmount.tokens(tradeAmount.lamports);
         [res, txids] = await borrow(currentReserve.abbrev, borrowAmount);
       }
       // Repaying
@@ -378,8 +378,8 @@ export function TradePanel(): JSX.Element {
         // If user is repaying all, use loan notes
         const repayAmount =
           tradeAmount.tokens === userV1.loanBalances[currentReserve.abbrev]
-            ? Amount.loanNotes(userV1.assets.tokens[currentReserve.abbrev].loanNoteBalance.amount)
-            : Amount.tokens(tradeAmount.amount);
+            ? PoolAmount.notes(userV1.assets.tokens[currentReserve.abbrev].loanNoteBalance.lamports)
+            : PoolAmount.tokens(tradeAmount.lamports);
         [res, txids] = await repay(currentReserve.abbrev, repayAmount);
       }
     }
