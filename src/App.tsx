@@ -1,4 +1,4 @@
-import '@dialectlabs/react-ui/lib/index.css'
+import '@dialectlabs/react-ui/lib/index.css';
 import './styles/App.less';
 import { useMemo } from 'react';
 import { HashRouter, Route, Routes } from 'react-router-dom';
