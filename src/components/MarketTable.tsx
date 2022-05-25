@@ -175,20 +175,21 @@ export function MarketTable(): JSX.Element {
                   </td>
                   <td
                     className={
-                      user.walletInit && user.walletBalances[reserve.abbrev]
+                      user.walletInit && walletBalances[reserve.abbrev]
                         ? 'user-wallet-value text-btn semi-bold-text'
                         : ''
                     }
                     onClick={() => {
-                      if (user.walletInit && user.walletBalances[reserve.abbrev]) {
+                      if (user.walletInit && walletBalances[reserve.abbrev]) {
                         setCurrentAction('deposit');
-                        setCurrentAmount(user.walletBalances[reserve.abbrev]);
+                        setCurrentAmount(walletBalances[reserve.abbrev].amount.tokens);
                       }
                     }}>
                     {user.walletInit
-                      ? user.walletBalances[reserve.abbrev] > 0 && user.walletBalances[reserve.abbrev] < 0.0005
+                      ? walletBalances[reserve.abbrev].amount.tokens > 0 &&
+                        walletBalances[reserve.abbrev].amount.tokens < 0.0005
                         ? '~0'
-                        : totalAbbrev(user.walletBalances[reserve.abbrev] ?? 0, reserve.price, nativeValues, 3)
+                        : totalAbbrev(walletBalances[reserve.abbrev].amount.tokens ?? 0, reserve.price, nativeValues, 3)
                       : '--'}
                   </td>
                   <td
