@@ -280,16 +280,15 @@ export const getAccountInfoAndSubscribe = async function (
 export const sendTransaction = async (
   provider: anchor.AnchorProvider,
   instructions: TransactionInstruction[],
-  signers?: Signer[],
-  skipConfirmation?: boolean
+  signers?: Signer[]
 ): Promise<[res: TxnResponse, txid: string[]]> => {
   if (!provider.wallet?.publicKey) {
-    throw new Error('Wallet is not connected');
+    return [TxnResponse.Failed, []];
   }
   // Building phase
   let transaction = new Transaction();
   transaction.instructions = instructions;
-  transaction.recentBlockhash = (await provider.connection.getRecentBlockhash()).blockhash;
+  transaction.recentBlockhash = (await provider.connection.getLatestBlockhash()).blockhash;
   transaction.feePayer = provider.wallet.publicKey;
 
   // Signing phase
@@ -299,26 +298,22 @@ export const sendTransaction = async (
   try {
     transaction = await provider.wallet.signTransaction(transaction);
   } catch (err) {
-    console.log('Signing Transactions Failed', err, [TxnResponse.Failed, null]);
+    console.log('Signing Transactions cancelled', err);
     // wallet refused to sign
     return [TxnResponse.Cancelled, []];
   }
 
   // Sending phase
   const rawTransaction = transaction.serialize();
-  const txid = await provider.connection.sendRawTransaction(rawTransaction, provider.opts);
-  console.log(`Transaction ${explorerUrl(txid)} ${rawTransaction.byteLength} of 1232 bytes...`, transaction);
-
-  // Confirming phase
-  let res = TxnResponse.Success;
-  if (!skipConfirmation) {
-    const status = (await provider.connection.confirmTransaction(txid, provider.opts.commitment)).value;
-
-    if (status?.err && txid.length) {
-      res = TxnResponse.Failed;
-    }
+  console.log(`Transaction ${rawTransaction.byteLength} of 1232 bytes...`, transaction);
+  try {
+    const txid = [await provider.sendAndConfirm(transaction)];
+    const res = TxnResponse.Success;
+    return [res, txid];
+  } catch (err: any) {
+    console.log(err);
+    return [TxnResponse.Failed, []];
   }
-  return [res, [txid]];
 };
 
 export interface InstructionAndSigner {
@@ -328,80 +323,24 @@ export interface InstructionAndSigner {
 
 export const sendAllTransactions = async (
   provider: anchor.AnchorProvider,
-  transactions: InstructionAndSigner[],
-  skipConfirmation?: boolean
+  txWithSigners: {
+    tx: anchor.web3.Transaction;
+    signers?: anchor.web3.Signer[] | undefined;
+  }[]
 ): Promise<[res: TxnResponse, txids: string[]]> => {
   if (!provider.wallet?.publicKey) {
     throw new Error('Wallet is not connected');
   }
 
-  // Building and partial sign phase
-  const recentBlockhash = await provider.connection.getRecentBlockhash();
-  const txs: Transaction[] = [];
-  for (const tx of transactions) {
-    if (tx.ix.length === 0) {
-      continue;
-    }
-    const transaction = new Transaction();
-    transaction.instructions = tx.ix;
-    transaction.recentBlockhash = recentBlockhash.blockhash;
-    transaction.feePayer = provider.wallet.publicKey;
-    if (tx.signers && tx.signers.length > 0) {
-      transaction.partialSign(...tx.signers);
-    }
-    txs.push(transaction);
-  }
-
-  // Signing phase
-  let signedTransactions: Transaction[] = [];
-  try {
-    //solong does not have a signAllTransactions Func so we sign one by one
-    if (!provider.wallet.signAllTransactions) {
-      for (let i = 0; i < txs.length; i++) {
-        const signedTxn = await provider.wallet.signTransaction(txs[i]);
-        signedTransactions.push(signedTxn);
-      }
-    } else {
-      signedTransactions = await provider.wallet.signAllTransactions(txs);
-    }
-  } catch (err) {
-    console.log('Signing All Transactions Failed', err);
-    // wallet refused to sign
-    return [TxnResponse.Cancelled, []];
-  }
-
   // Sending phase
-  console.log('Transactions', txs);
-  let res = TxnResponse.Success;
-  const txids: string[] = [];
-  for (let i = 0; i < signedTransactions.length; i++) {
-    const transaction = signedTransactions[i];
-
-    // Transactions can be simulated against an old slot that
-    // does not include previously sent transactions. In most
-    // conditions only the first transaction can be simulated
-    // safely
-    const skipPreflightSimulation = i !== 0;
-    const opts: ConfirmOptions = {
-      ...provider.opts,
-      skipPreflight: skipPreflightSimulation
-    };
-
-    const rawTransaction = transaction.serialize();
-    const txid = await provider.connection.sendRawTransaction(rawTransaction, opts);
-    console.log(`Transaction ${explorerUrl(txid)} ${rawTransaction.byteLength} of 1232 bytes...`);
-    txids.push(txid);
-
-    // Confirming phase
-    if (!skipConfirmation) {
-      const status = (await provider.connection.confirmTransaction(txid, provider.opts.commitment)).value;
-
-      if (status?.err) {
-        res = TxnResponse.Failed;
-      }
-    }
+  console.log('Transactions', txWithSigners);
+  try {
+    const txids = await provider.sendAll(txWithSigners);
+    return [TxnResponse.Success, txids];
+  } catch (err: any) {
+    console.log(err);
+    return [TxnResponse.Failed, []];
   }
-  return [res, txids];
 };
 
 export const explorerUrl = (txid: string) => {

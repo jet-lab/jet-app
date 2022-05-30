@@ -362,8 +362,7 @@ export function TradePanel(): JSX.Element {
         inputError = dictionary.cockpit.belowMinCRatio;
         // Otherwise, send borrow
       } else {
-        const borrowAmount = PoolAmount.tokens(tradeAmount.lamports);
-        [res, txids] = await borrow(currentReserve.abbrev, borrowAmount);
+        [res, txids] = await borrow(currentReserve.abbrev, tradeAmount.lamports);
       }
       // Repaying
     } else if (tradeAction === 'repay') {

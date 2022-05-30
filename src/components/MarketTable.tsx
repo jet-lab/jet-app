@@ -40,7 +40,8 @@ export function MarketTable(): JSX.Element {
   const market = useMarket();
 
   // Jet V2
-  const { config, provider, programs, poolsFetched, pools, marginAccount, walletBalances, userFetched } = useMargin();
+  const { config, provider, programs, poolsFetched, pools, marginAccount, walletBalances, userFetched, refresh } =
+    useMargin();
 
   // If in development, can request airdrop for testing
   const doAirdrop = async (reserve: Reserve): Promise<void> => {
@@ -70,6 +71,8 @@ export function MarketTable(): JSX.Element {
         description: dictionary.cockpit.txFailed,
         placement: 'bottomLeft'
       });
+    } finally {
+      refresh();
     }
   };
 

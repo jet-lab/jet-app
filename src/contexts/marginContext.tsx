@@ -10,11 +10,11 @@ import {
 } from '@jet-lab/margin';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { createContext, useContext, useMemo } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import localnetIdl from '../hooks/jet-client/idl/localnet/jet.json';
 import devnetIdl from '../hooks/jet-client/idl/devnet/jet.json';
 import mainnetBetaIdl from '../hooks/jet-client/idl/mainnet-beta/jet.json';
-import { AnchorProvider, BorshCoder } from '@project-serum/anchor';
+import { AnchorProvider } from '@project-serum/anchor';
 import { ConfirmOptions, Connection, PublicKey } from '@solana/web3.js';
 import { useRpcNode } from './rpcNode';
 
@@ -42,14 +42,13 @@ interface MarginContextState {
   userFetched: boolean;
   marginAccount: MarginAccount | undefined;
   walletBalances: Record<MarginTokens, AssociatedToken>;
+  refresh: () => void;
 }
 
 const MarginContext = createContext<MarginContextState>({
   poolsFetched: false,
   userFetched: false
 } as MarginContextState);
-
-export const coder = new BorshCoder(idl);
 
 const confirmOptions = {
   skipPreflight: true,
@@ -75,6 +74,7 @@ function useProvider() {
 
 // Trade info context provider
 export function MarginContextProvider(props: { children: JSX.Element }): JSX.Element {
+  const queryClient = useQueryClient();
   const { publicKey } = useWallet();
 
   const { provider, programs } = useProvider();
@@ -87,7 +87,6 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
       if (!programs) {
         return;
       }
-      console.log('Fetching pools');
       return await MarginPool.loadAll(programs);
     },
     { enabled: !!programs }
@@ -99,7 +98,6 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
       if (!programs || !publicKey) {
         return;
       }
-      console.log('Fetching user');
       const walletBalances = await MarginAccount.loadTokens(programs, publicKey);
       let marginAccount: MarginAccount | undefined;
       try {
@@ -112,6 +110,13 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
     { enabled: !!programs && !!pools && !!publicKey }
   );
 
+  function refresh() {
+    setTimeout(() => {
+      queryClient.invalidateQueries('user');
+      queryClient.invalidateQueries('pools');
+    }, 2000);
+  }
+
   return (
     <MarginContext.Provider
       value={{
@@ -123,7 +128,8 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
         pools,
         userFetched,
         marginAccount: user?.marginAccount,
-        walletBalances: user?.walletBalances ?? DEFAULT_WALLET_BALANCES
+        walletBalances: user?.walletBalances ?? DEFAULT_WALLET_BALANCES,
+        refresh
       }}>
       {props.children}
     </MarginContext.Provider>
