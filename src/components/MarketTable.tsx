@@ -148,7 +148,7 @@ export function MarketTable(): JSX.Element {
             </thead>
             <tbody>
               {filteredMarketTable.map((reserve, i) => {
-                if (!hasSolletEth && reserve.abbrev === 'ETH') return
+                if (!hasSolletEth && reserve.abbrev === 'ETH') return;
                 return (
                   <tr
                     key={i}
@@ -164,8 +164,9 @@ export function MarketTable(): JSX.Element {
                     </td>
                     <td className="cell-border-right">
                       {market.marketInit
-                        ? `${totalAbbrev(reserve.availableLiquidity.tokens, reserve.price, nativeValues, 2)} ${nativeValues ? reserve.abbrev : ''
-                        }`
+                        ? `${totalAbbrev(reserve.availableLiquidity.tokens, reserve.price, nativeValues, 2)} ${
+                            nativeValues ? reserve.abbrev : ''
+                          }`
                         : '--'}
                     </td>
                     <td>
@@ -193,7 +194,12 @@ export function MarketTable(): JSX.Element {
                         ? walletBalances[reserve.abbrev].amount.tokens > 0 &&
                           walletBalances[reserve.abbrev].amount.tokens < 0.0005
                           ? '~0'
-                          : totalAbbrev(walletBalances[reserve.abbrev].amount.tokens ?? 0, reserve.price, nativeValues, 3)
+                          : totalAbbrev(
+                              walletBalances[reserve.abbrev].amount.tokens ?? 0,
+                              reserve.price,
+                              nativeValues,
+                              3
+                            )
                         : '--'}
                     </td>
                     <td
@@ -209,7 +215,8 @@ export function MarketTable(): JSX.Element {
                         }
                       }}>
                       {user.walletInit
-                        ? user.collateralBalances[reserve.abbrev] > 0 && user.collateralBalances[reserve.abbrev] < 0.0005
+                        ? user.collateralBalances[reserve.abbrev] > 0 &&
+                          user.collateralBalances[reserve.abbrev] < 0.0005
                           ? '~0'
                           : totalAbbrev(user.collateralBalances[reserve.abbrev] ?? 0, reserve.price, nativeValues, 3)
                         : '--'}
@@ -252,9 +259,8 @@ export function MarketTable(): JSX.Element {
                       </td>
                     )}
                   </tr>
-                )
-              }
-              )}
+                );
+              })}
             </tbody>
           </table>
         </div>
