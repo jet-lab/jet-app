@@ -29,6 +29,7 @@ import { NetworkWarningBanner } from './components/NetworkWarningBanner';
 import { Cockpit } from './views/Cockpit';
 import { TransactionLogs } from './views/TransactionLogs';
 import { Settings } from './views/Settings';
+// import { NotificationsModal } from '@dialectlabs/react-ui';
 
 // Jet V1
 import { UserContextProvider } from './v1/contexts/user';

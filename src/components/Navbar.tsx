@@ -12,7 +12,7 @@ import { ReactComponent as WalletIcon } from '../styles/icons/wallet_icon.svg';
 import * as anchor from '@project-serum/anchor';
 import { defaultVariables, IncomingThemeVariables, NotificationsButton } from '@dialectlabs/react-ui';
 
-const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey('9dfi492rC6PhFVwg6sJLQYqSme4yTBZ9hdQvmQTCno6i');
+const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey('AainXWecQt5TjGQgw5R6oLNu9zvvQcS1kkVbG9UQqaP8');
 
 export const themeVariables: IncomingThemeVariables = {
   light: {
@@ -25,6 +25,10 @@ export const themeVariables: IncomingThemeVariables = {
     divider: 'jet-divider',
     iconButton: 'jet-icon jet-text-primary',
     section: 'jet-bg-light-gray jet-pd-05 jet-br-rd-1',
+    // body: 'jet-text-break',
+    textStyles: {
+      body: 'jet-text-break'
+    },
     colors: {
       bg: 'jet-bg',
       secondary: 'jet-text-green',
@@ -61,6 +65,8 @@ export function Navbar(): JSX.Element {
   const { setConnecting } = useConnectWalletModal();
   const { darkTheme, toggleDarkTheme } = useDarkTheme();
   const [drawerOpened, setDrawerOpened] = useState(false);
+  const [theme, setTheme] = useState<ThemeType>('light');
+
   const navLinks = [
     { title: dictionary.cockpit.title, route: '/' },
     { title: dictionary.transactions.title, route: '/transactions' },
@@ -72,8 +78,6 @@ export function Navbar(): JSX.Element {
     { title: dictionary.termsPrivacy.glossary, url: 'https://docs.jetprotocol.io/jet-protocol/terms-and-definitions' }
   ];
   const accountLink = { title: dictionary.account.title, route: '/' };
-
-  const [theme, setTheme] = useState<ThemeType>('light');
 
   return (
     <div className={`navbar-container flex-centered ${drawerOpened ? 'drawer-open' : ''}`}>
@@ -88,16 +92,24 @@ export function Navbar(): JSX.Element {
               {link.title}
             </Link>
           ))}
-          <div style={{ position: 'relative' }}>
-            <NotificationsButton
-              wallet={wallet}
-              network={'devnet'}
-              publicKey={DIALECT_PUBLIC_KEY}
-              theme={theme}
-              variables={themeVariables}
-              notifications={[{ name: 'Welcome message', detail: 'On thread creation' }]}
-              channels={['web3', 'email', 'telegram']}
-            />
+          <div className="modal-container">
+            <div style={{ position: 'relative' }}>
+              <NotificationsButton
+                wallet={wallet}
+                network={'mainnet'}
+                publicKey={DIALECT_PUBLIC_KEY}
+                theme={theme}
+                variables={themeVariables}
+                notifications={[
+                  {
+                    name: 'LOW Collateral-RATIO',
+                    detail: 'You will get notified when your COLLATERALIZATION RATIO falls to dangerous levels'
+                  }
+                ]}
+                channels={['web3', 'email', 'telegram']}
+                rpcUrl={'https://jetprot-main-0d7b.mainnet.rpcpool.com'}
+              />
+            </div>
           </div>
 
           <Button
