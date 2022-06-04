@@ -396,14 +396,16 @@ const interpolate = (x: number, x0: number, x1: number, y0: number, y1: number):
 
 /** Continuous Compounding Rate
  */
-export const getCcRate = (reserveConfig: ReserveConfigStruct, utilRate: number): number => {
+
+
+export const getCcRate = (config: MarginPoolConfig | ReserveConfigStruct, utilRate: number): number =>{
   const basisPointFactor = 10000;
-  const util1 = reserveConfig.utilizationRate1 / basisPointFactor;
-  const util2 = reserveConfig.utilizationRate2 / basisPointFactor;
-  const borrow0 = reserveConfig.borrowRate0 / basisPointFactor;
-  const borrow1 = reserveConfig.borrowRate1 / basisPointFactor;
-  const borrow2 = reserveConfig.borrowRate2 / basisPointFactor;
-  const borrow3 = reserveConfig.borrowRate3 / basisPointFactor;
+  const util1 = config.utilizationRate1 / basisPointFactor;
+  const util2 = config.utilizationRate2 / basisPointFactor;
+  const borrow0 = config.borrowRate0 / basisPointFactor;
+  const borrow1 = config.borrowRate1 / basisPointFactor;
+  const borrow2 = config.borrowRate2 / basisPointFactor;
+  const borrow3 = config.borrowRate3 / basisPointFactor;
 
   if (utilRate <= util1) {
     return interpolate(utilRate, 0, util1, borrow0, borrow1);
