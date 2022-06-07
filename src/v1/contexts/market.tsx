@@ -3,9 +3,7 @@ import { BN } from '@project-serum/anchor';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { idl, useMargin } from '../../contexts/marginContext';
 import type { MarketAccount, Reserve } from '../models/JetTypes';
-import { parsePriceData } from '@pythnetwork/client';
 import {
-  getAccountInfoAndSubscribe,
   getBorrowRate,
   getCcRate,
   getDepositRate,
