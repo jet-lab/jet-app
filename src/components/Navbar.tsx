@@ -1,62 +1,16 @@
 import { useState } from 'react';
+import * as anchor from '@project-serum/anchor';
 import { Link, useLocation } from 'react-router-dom';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useConnectWalletModal } from '../contexts/connectWalletModal';
 import { useLanguage } from '../contexts/localization/localization';
 import { useDarkTheme } from '../contexts/darkTheme';
 import { shortenPubkey } from '../utils/utils';
+import { useRpcNode } from '../contexts/rpcNode';
 import { Button, Switch } from 'antd';
 import { ReactComponent as AccountIcon } from '../styles/icons/account_icon.svg';
 import { ReactComponent as WalletIcon } from '../styles/icons/wallet_icon.svg';
-
-import * as anchor from '@project-serum/anchor';
 import { defaultVariables, IncomingThemeVariables, NotificationsButton } from '@dialectlabs/react-ui';
-
-const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey('AainXWecQt5TjGQgw5R6oLNu9zvvQcS1kkVbG9UQqaP8');
-
-export const themeVariables: IncomingThemeVariables = {
-  light: {
-    bellButton: `w-10 h-10 border border-neutral-600 bg-white text-black jet-transparent jet-shadow-none jet-text-primary jet-nav-icon`,
-    modal: `${defaultVariables.light.modal} jet-modal-bg-custom sm:rounded-3xl shadow-xl shadow-neutral-900 sm:border border-[#ABABAB]/40`, // 0.4 opacity based on trial-and-error
-    button: 'jet-button jet-bg-green jet-pd-05',
-    secondaryButton: 'jet-bg-transparent jet-border-green jet-text-green',
-    secondaryDangerButton: 'jet-bg-transparent jet-border-red jet-text-red jet-pd-05',
-    disabledButton: 'jet-bg-green jet-opacity-75 jet-pd-05',
-    divider: 'jet-divider',
-    iconButton: 'jet-icon jet-text-primary',
-    section: 'jet-bg-light-gray jet-pd-05 jet-br-rd-1',
-    // body: 'jet-text-break',
-    textStyles: {
-      body: 'jet-text-break'
-    },
-    colors: {
-      bg: 'jet-bg',
-      secondary: 'jet-text-green',
-      brand: 'jet-bg-green',
-      errorBg: 'dt-bg-transparent',
-      primary: 'jet-text-primary',
-      accent: '',
-      accentSolid: 'dt-text-[#5895B9]',
-      highlight: 'dt-bg-subtle-day',
-      highlightSolid: 'jet-bg',
-      toggleBackgroundActive: 'jet-bg-green',
-      toggleThumb: 'dt-bg-[#EEEEEE]'
-    }
-  },
-
-  animations: {
-    popup: {
-      enter: 'transition-all duration-300 origin-top-right',
-      enterFrom: 'opacity-0 scale-75',
-      enterTo: 'opacity-100 scale-100',
-      leave: 'transition-all duration-100 origin-top-right',
-      leaveFrom: 'opacity-100 scale-100',
-      leaveTo: 'opacity-0 scale-75'
-    }
-  }
-};
-
-type ThemeType = 'light' | 'dark' | undefined;
 
 export function Navbar(): JSX.Element {
   const { dictionary } = useLanguage();
@@ -65,7 +19,52 @@ export function Navbar(): JSX.Element {
   const { setConnecting } = useConnectWalletModal();
   const { darkTheme, toggleDarkTheme } = useDarkTheme();
   const [drawerOpened, setDrawerOpened] = useState(false);
-  const [theme, setTheme] = useState<ThemeType>('light');
+  const [theme, setTheme] = useState<'light' | 'dark' | undefined>('light');
+  const { preferredNode } = useRpcNode();
+
+  const dialectNode = preferredNode ? preferredNode : 'https://solana-api.projectserum.com';
+  const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey('AainXWecQt5TjGQgw5R6oLNu9zvvQcS1kkVbG9UQqaP8');
+  const dialectThemeVariables: IncomingThemeVariables = {
+    light: {
+      bellButton: `w-10 h-10 border border-neutral-600 bg-white text-black jet-transparent jet-shadow-none jet-text-primary jet-nav-icon`,
+      modal: `${defaultVariables.light.modal} jet-modal-bg-custom sm:rounded-3xl shadow-xl shadow-neutral-900 sm:border border-[#ABABAB]/40`, // 0.4 opacity based on trial-and-error
+      button: 'jet-button jet-bg-green jet-pd-05',
+      secondaryButton: 'jet-bg-transparent jet-border-green jet-text-green',
+      secondaryDangerButton: 'jet-bg-transparent jet-border-red jet-text-red jet-pd-05',
+      disabledButton: 'jet-bg-green jet-opacity-75 jet-pd-05',
+      divider: 'jet-divider',
+      iconButton: 'jet-icon jet-text-primary',
+      section: 'jet-bg-light-gray jet-pd-05 jet-br-rd-1',
+      // body: 'jet-text-break',
+      textStyles: {
+        body: 'jet-text-break'
+      },
+      colors: {
+        bg: 'jet-bg',
+        secondary: 'jet-text-green',
+        brand: 'jet-bg-green',
+        errorBg: 'dt-bg-transparent',
+        primary: 'jet-text-primary',
+        accent: '',
+        accentSolid: 'dt-text-[#5895B9]',
+        highlight: 'dt-bg-subtle-day',
+        highlightSolid: 'jet-bg',
+        toggleBackgroundActive: 'jet-bg-green',
+        toggleThumb: 'dt-bg-[#EEEEEE]'
+      }
+    },
+
+    animations: {
+      popup: {
+        enter: 'transition-all duration-300 origin-top-right',
+        enterFrom: 'opacity-0 scale-75',
+        enterTo: 'opacity-100 scale-100',
+        leave: 'transition-all duration-100 origin-top-right',
+        leaveFrom: 'opacity-100 scale-100',
+        leaveTo: 'opacity-0 scale-75'
+      }
+    }
+  };
 
   const navLinks = [
     { title: dictionary.cockpit.title, route: '/' },
@@ -94,12 +93,13 @@ export function Navbar(): JSX.Element {
           ))}
           <div className="modal-container">
             <div style={{ position: 'relative' }}>
+              {/* Dialect notification button is a wrapper of dialect notification modal */}
               <NotificationsButton
                 wallet={wallet}
                 network={'mainnet'}
                 publicKey={DIALECT_PUBLIC_KEY}
                 theme={theme}
-                variables={themeVariables}
+                variables={dialectThemeVariables}
                 notifications={[
                   {
                     name: 'LOW Collateral-RATIO',
@@ -107,7 +107,7 @@ export function Navbar(): JSX.Element {
                   }
                 ]}
                 channels={['web3', 'email', 'telegram']}
-                rpcUrl={'https://jetprot-main-0d7b.mainnet.rpcpool.com'}
+                rpcUrl={dialectNode}
               />
             </div>
           </div>
