@@ -206,8 +206,8 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
     // Calculate user's current position from ALL of those balances
     const updatedPosition: Obligation = { depositedValue: 0, borrowedValue: 0, colRatio: 0, utilizationRate: 0 };
     for (const abbrev in assets.tokens) {
-      updatedPosition.depositedValue += collateralBalances[abbrev] * market.reserves[abbrev].price;
-      updatedPosition.borrowedValue += loanBalances[abbrev] * market.reserves[abbrev].price;
+      // updatedPosition.depositedValue += collateralBalances[abbrev] * market.reserves[abbrev].price;
+      // updatedPosition.borrowedValue += loanBalances[abbrev] * market.reserves[abbrev].price;
       updatedPosition.colRatio = updatedPosition.borrowedValue
         ? updatedPosition.depositedValue / updatedPosition.borrowedValue
         : 0;
@@ -226,9 +226,9 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
       asset.maxDepositAmount = walletBalances[reserve.abbrev];
 
       // Max withdraw
-      asset.maxWithdrawAmount = updatedPosition.borrowedValue
-        ? (updatedPosition.depositedValue - market.minColRatio * updatedPosition.borrowedValue) / reserve.price
-        : asset.collateralBalance.tokens;
+      // asset.maxWithdrawAmount = updatedPosition.borrowedValue
+      //   ? (updatedPosition.depositedValue - market.minColRatio * updatedPosition.borrowedValue) / reserve.price
+      //   : asset.collateralBalance.tokens;
       if (asset.maxWithdrawAmount > asset.collateralBalance.tokens) {
         asset.maxWithdrawAmount = asset.collateralBalance.tokens;
       }
@@ -237,8 +237,8 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
       }
 
       // Max borrow
-      asset.maxBorrowAmount =
-        (updatedPosition.depositedValue / market.minColRatio - updatedPosition.borrowedValue) / reserve.price;
+      // asset.maxBorrowAmount =
+      //   (updatedPosition.depositedValue / market.minColRatio - updatedPosition.borrowedValue) / reserve.price;
       if (asset.maxBorrowAmount > reserve.availableLiquidity.tokens) {
         asset.maxBorrowAmount = reserve.availableLiquidity.tokens;
       }

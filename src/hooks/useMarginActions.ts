@@ -1,15 +1,9 @@
 import { BN } from '@project-serum/anchor';
-import { TxnResponse } from '../models/JetTypes';
-import { useUser } from '../contexts/user';
-import { useMarket } from '../contexts/market';
-import { useMargin } from './../../contexts/marginContext';
+import { TxnResponse } from '../v1/models/JetTypes';
+import { useMargin } from '../contexts/marginContext';
 import { MarginTokens, PoolAmount } from '@jet-lab/margin';
 
-export const useJetV1 = () => {
-  // const { publicKey } = useWallet();
-  const user = useUser();
-  const market = useMarket();
-
+export const useMarginActions = () => {
   // Jet V2
   const { config, provider, programs, poolsFetched, pools, marginAccount, walletBalances, userFetched, refresh } =
     useMargin();
@@ -20,8 +14,6 @@ export const useJetV1 = () => {
       console.log('Accounts not loaded', marginAccount, pools);
       throw new Error();
     }
-
-    console.log('Gt this far');
 
     const pool = pools[abbrev];
     const source = walletBalances[abbrev];

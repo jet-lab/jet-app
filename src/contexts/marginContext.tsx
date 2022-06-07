@@ -58,7 +58,7 @@ const confirmOptions = {
 
 function useProvider() {
   const { preferredNode } = useRpcNode();
-  const connection = useMemo(() => new Connection(preferredNode ?? idl.metadata.cluster, 'recent'), [preferredNode]);
+  const connection = useMemo(() => new Connection(preferredNode ?? config.url, 'recent'), [preferredNode]);
   const wallet = useWallet();
 
   const provider = useMemo(

@@ -94,8 +94,8 @@ export interface Reserve {
   /** The bonus awarded to liquidators when repaying a loan in exchange for a
   collateral asset. */
   liquidationPremium: number;
-  /** The price of the asset being stored in the reserve account. */
-  price: number;
+  // /** The price of the asset being stored in the reserve account. */
+  // price: number;
   decimals: number;
   /** The value of the deposit note (unit: reserve tokens per note token) */
   depositNoteExchangeRate: BN;

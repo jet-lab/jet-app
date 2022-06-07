@@ -18,7 +18,7 @@ export function JetInput(props: {
   onChange: (value: any) => unknown;
   submit: () => unknown;
 }): JSX.Element {
-  const { currentReserve } = useTradeContext();
+  const { currentPool } = useTradeContext();
 
   return (
     <div className={`jet-input flex-centered ${props.disabled ? 'disabled' : ''}`}>
@@ -33,13 +33,18 @@ export function JetInput(props: {
           onChange={e => props.onChange(e.target.value)}
           onPressEnter={() => props.submit()}
         />
-        {props.currency && currentReserve && (
+        {props.currency && currentPool && (
           <>
-            <AssetLogo symbol={currentReserve.abbrev} height={20} />
+            <AssetLogo symbol={currentPool.tokenConfig.symbol} height={20} />
             <div className="asset-abbrev-usd flex align-end justify-center column">
-              <span>{currentReserve.abbrev}</span>
+              <span>{currentPool.tokenConfig.symbol}</span>
               <span>
-                ≈ {currencyFormatter((Number(props.value) ?? 0) * (currentReserve ? currentReserve.price : 0), true, 2)}
+                ≈{' '}
+                {currencyFormatter(
+                  (Number(props.value) ?? 0) * (currentPool.tokenPrice !== undefined ? currentPool.tokenPrice : 0),
+                  true,
+                  2
+                )}
               </span>
             </div>
           </>

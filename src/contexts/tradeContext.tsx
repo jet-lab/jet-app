@@ -1,3 +1,4 @@
+import { MarginPool } from '@jet-lab/margin';
 import { createContext, useContext, useState } from 'react';
 
 // Jet V1
@@ -6,8 +7,12 @@ import { Reserve } from '../v1/models/JetTypes';
 // Current trade info UI context
 export type TradeAction = 'deposit' | 'withdraw' | 'borrow' | 'repay';
 interface TradeInfo {
+  /** @deprecated */
   currentReserve: Reserve | null;
+  /** @deprecated */
   setCurrentReserve: (reserve: Reserve) => void;
+  currentPool: MarginPool | undefined;
+  setCurrentPool: (pool: MarginPool) => void;
   currentAction: TradeAction;
   setCurrentAction: (action: TradeAction) => void;
   currentAmount: number | null;
@@ -18,6 +23,8 @@ interface TradeInfo {
 const TradeContext = createContext<TradeInfo>({
   currentReserve: null,
   setCurrentReserve: () => null,
+  currentPool: undefined,
+  setCurrentPool: () => null,
   currentAction: 'deposit',
   setCurrentAction: () => null,
   currentAmount: null,
@@ -29,6 +36,7 @@ const TradeContext = createContext<TradeInfo>({
 // Trade info context provider
 export function TradeContextProvider(props: { children: JSX.Element }): JSX.Element {
   const [currentReserve, setCurrentReserve] = useState<Reserve | null>(null);
+  const [currentPool, setCurrentPool] = useState<MarginPool | undefined>();
   const [currentAction, setCurrentAction] = useState('deposit' as TradeAction);
   const [currentAmount, setCurrentAmount] = useState<number | null>(null);
   const [sendingTrade, setSendingTrade] = useState<boolean>(false);
@@ -38,6 +46,8 @@ export function TradeContextProvider(props: { children: JSX.Element }): JSX.Elem
       value={{
         currentReserve,
         setCurrentReserve,
+        currentPool,
+        setCurrentPool,
         currentAction,
         setCurrentAction,
         currentAmount,
