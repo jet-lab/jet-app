@@ -119,18 +119,18 @@ export function MarketContextProvider(props: { children: JSX.Element }): JSX.Ele
       });
       promises.push(promise);
 
-      // Pyth Price
-      promise = getAccountInfoAndSubscribe(connection, reserveMeta.accounts.pythPrice, (account: any) => {
-        if (account != null) {
-          const price = parsePriceData(account.data).price;
-          if (price) {
-            reserves[reserveMeta.abbrev].price = price;
-            deriveValues(reserves, reserves[reserveMeta.abbrev]);
-            setReserves({ ...reserves });
-          }
-        }
-      });
-      promises.push(promise);
+      // // Pyth Price
+      // promise = getAccountInfoAndSubscribe(connection, reserveMeta.accounts.pythPrice, (account: any) => {
+      //   if (account != null) {
+      //     const price = parsePriceData(account.data).price;
+      //     if (price) {
+      //       reserves[reserveMeta.abbrev].price = price;
+      //       deriveValues(reserves, reserves[reserveMeta.abbrev]);
+      //       setReserves({ ...reserves });
+      //     }
+      //   }
+      // });
+      // promises.push(promise);
     }
 
     return await Promise.all(promises).then(() => setMarketInit(true));
@@ -148,12 +148,12 @@ export function MarketContextProvider(props: { children: JSX.Element }): JSX.Ele
     reserve.depositRate = getDepositRate(ccRate, reserve.utilizationRate);
 
     // Update market total value locked and reserve array from new values
-    let borrowed = 0;
-    let supply = 0;
+    const borrowed = 0;
+    const supply = 0;
     const reservesArray: Reserve[] = [];
     for (const r in reserves) {
-      borrowed += reserves[r].outstandingDebt.muln(reserves[r].price)?.tokens;
-      supply += reserves[r].marketSize.sub(reserves[r].outstandingDebt).muln(reserves[r].price)?.tokens;
+      // borrowed += reserves[r].outstandingDebt.muln(reserves[r].price)?.tokens;
+      // supply += reserves[r].marketSize.sub(reserves[r].outstandingDebt).muln(reserves[r].price)?.tokens;
       reservesArray.push(reserves[r]);
     }
     setTotalBorrowed(borrowed);
@@ -175,7 +175,7 @@ export function MarketContextProvider(props: { children: JSX.Element }): JSX.Ele
         borrowRate: 0,
         maximumLTV: 0,
         liquidationPremium: 0,
-        price: 0,
+        // price: 0,
         decimals: reserveMeta.decimals,
         depositNoteExchangeRate: new BN(0),
         loanNoteExchangeRate: new BN(0),

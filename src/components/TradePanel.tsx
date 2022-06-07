@@ -15,7 +15,7 @@ import { shortenPubkey } from '../utils/utils';
 // Jet V1
 import { useUser } from '../v1/contexts/user';
 import { useMarket } from '../v1/contexts/market';
-import { useJetV1 } from '../v1/hooks/useJetV1';
+import { useMarginActions } from '../hooks/useMarginActions';
 import { PoolAmount, TokenAmount } from '@jet-lab/margin';
 import { TxnResponse } from '../v1/models/JetTypes';
 import { useMargin } from '../contexts/marginContext';
@@ -28,6 +28,7 @@ export function TradePanel(): JSX.Element {
   const { addLog } = useTransactionLogs();
   const {
     currentReserve,
+    currentPool,
     currentAction,
     setCurrentAction,
     currentAmount,
@@ -41,7 +42,7 @@ export function TradePanel(): JSX.Element {
   // Jet V1 Trade Actions
   const userV1 = useUser();
   const market = useMarket();
-  const { deposit, withdraw, borrow, repay } = useJetV1();
+  const { deposit, withdraw, borrow, repay } = useMarginActions();
 
   // Jet V2
   const { config, programs, poolsFetched, pools, marginAccount, walletBalances, userFetched } = useMargin();
@@ -147,36 +148,36 @@ export function TradePanel(): JSX.Element {
   // Adjust user input and calculate updated c-ratio if
   // they were to submit current trade
   function adjustCollateralizationRatio(currentAmount = 0) {
-    if (!currentReserve || !userV1.assets) {
+    if (!currentReserve || !currentPool || !currentPool.tokenPrice || !userV1.assets) {
       return;
     }
 
     // Depositing
     if (currentAction === 'deposit') {
       setAdjustedRatio(
-        (userV1.position.depositedValue + currentAmount * currentReserve.price) /
+        (userV1.position.depositedValue + currentAmount * currentPool.tokenPrice) /
           (userV1.position.borrowedValue > 0 ? userV1.position.borrowedValue : 1)
       );
       // Withdrawing
     } else if (currentAction === 'withdraw') {
       setAdjustedRatio(
-        (userV1.position.depositedValue - currentAmount * currentReserve.price) /
+        (userV1.position.depositedValue - currentAmount * currentPool.tokenPrice) /
           (userV1.position.borrowedValue > 0 ? userV1.position.borrowedValue : 1)
       );
       // Borrowing
     } else if (currentAction === 'borrow') {
       setAdjustedRatio(
         userV1.position.depositedValue /
-          (userV1.position.borrowedValue + currentAmount * currentReserve.price > 0
-            ? userV1.position.borrowedValue + currentAmount * currentReserve.price
+          (userV1.position.borrowedValue + currentAmount * currentPool.tokenPrice > 0
+            ? userV1.position.borrowedValue + currentAmount * currentPool.tokenPrice
             : 1)
       );
       // Repaying
     } else if (currentAction === 'repay') {
       setAdjustedRatio(
         userV1.position.depositedValue /
-          (userV1.position.borrowedValue - currentAmount * currentReserve.price > 0
-            ? userV1.position.borrowedValue - currentAmount * currentReserve.price
+          (userV1.position.borrowedValue - currentAmount * currentPool.tokenPrice > 0
+            ? userV1.position.borrowedValue - currentAmount * currentPool.tokenPrice
             : 1)
       );
     }

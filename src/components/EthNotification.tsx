@@ -2,11 +2,17 @@ import { Modal } from 'antd';
 import { useState } from 'react';
 import { useMarket } from '../v1/contexts/market';
 import { useTradeContext } from '../contexts/tradeContext';
+import { useMargin } from '../contexts/marginContext';
 
 export const EthNotification = () => {
   const [modalVisible, setModalVisible] = useState(true);
+
+  // Jet V1
   const market = useMarket();
-  const { setCurrentReserve, setCurrentAction } = useTradeContext();
+  const { setCurrentReserve, setCurrentPool, setCurrentAction } = useTradeContext();
+
+  // Jet V2
+  const { pools } = useMargin();
 
   return (
     <Modal
@@ -16,6 +22,9 @@ export const EthNotification = () => {
       onOk={() => {
         setModalVisible(false);
         setCurrentReserve(market.reserves['ETH']);
+        if (pools) {
+          setCurrentPool(pools.ETH);
+        }
         setCurrentAction('withdraw');
       }}
       cancelButtonProps={{ style: { display: 'none' } }}
