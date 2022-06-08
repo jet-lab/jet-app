@@ -33,7 +33,7 @@ export function JetInput(props: {
           onChange={e => props.onChange(e.target.value)}
           onPressEnter={() => props.submit()}
         />
-        {props.currency && currentPool && (
+        {props.currency && currentPool && currentPool.tokenConfig && (
           <>
             <AssetLogo symbol={currentPool.tokenConfig.symbol} height={20} />
             <div className="asset-abbrev-usd flex align-end justify-center column">
