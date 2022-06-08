@@ -40,11 +40,11 @@ export function ReserveDetail({
           <>
             <div className="flex-centered column">
               <div className="flex align-center-justify-center">
-                <AssetLogo symbol={pool?.tokenConfig.symbol ?? ''} height={45} style={{ marginRight: 10 }} />
-                <h1 className="modal-content-header">{pool?.tokenConfig.symbol}</h1>
+                <AssetLogo symbol={pool?.tokenConfig?.symbol ?? ''} height={45} style={{ marginRight: 10 }} />
+                <h1 className="modal-content-header">{pool?.tokenConfig?.symbol}</h1>
               </div>
               <span>
-                1 {pool?.tokenConfig.symbol} ≈ {currencyFormatter(price, true, 2)}
+                1 {pool?.tokenConfig?.symbol} ≈ {currencyFormatter(price, true, 2)}
               </span>
             </div>
             <div className="native-toggle-container">
@@ -86,7 +86,7 @@ export function ReserveDetail({
                             2
                           )
                         : '--'}
-                      {nativeValues && ' ' + pool?.tokenConfig.symbol}
+                      {nativeValues && ' ' + pool?.tokenConfig?.symbol}
                     </p>
                   </span>
                 </div>
@@ -103,7 +103,7 @@ export function ReserveDetail({
                         !nativeValues,
                         2
                       )}
-                      {nativeValues && ' ' + pool?.tokenConfig.symbol}
+                      {nativeValues && ' ' + pool?.tokenConfig?.symbol}
                     </p>
                   </span>
                 </div>

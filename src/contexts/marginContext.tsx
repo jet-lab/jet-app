@@ -36,7 +36,7 @@ interface MarginContextState {
   connection: Connection;
   provider: AnchorProvider;
   config: MarginConfig;
-  programs?: MarginPrograms;
+  programs: MarginPrograms;
   poolsFetched: boolean;
   pools: Record<MarginTokens, MarginPool> | undefined;
   userFetched: boolean;

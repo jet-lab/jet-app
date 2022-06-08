@@ -58,7 +58,7 @@ export function MarketTable(): JSX.Element {
       if (!publicKey) {
         throw new Error('Wallet not connected');
       }
-      await TokenFaucet.airdrop(provider, amount.lamports, token.mint, publicKey, token.faucet);
+      await TokenFaucet.airdrop(programs, provider, amount.lamports, token.mint, publicKey, token.faucet);
       notification.success({
         message: dictionary.copilot.alert.success,
         description: dictionary.copilot.alert.airdropSuccess
