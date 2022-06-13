@@ -1,4 +1,4 @@
-import { MarginPool } from '@jet-lab/margin';
+import { Pool } from '@jet-lab/margin';
 import { createContext, useContext, useState } from 'react';
 
 // Jet V1
@@ -11,8 +11,8 @@ interface TradeInfo {
   currentReserve: Reserve | null;
   /** @deprecated */
   setCurrentReserve: (reserve: Reserve) => void;
-  currentPool: MarginPool | undefined;
-  setCurrentPool: (pool: MarginPool) => void;
+  currentPool: Pool | undefined;
+  setCurrentPool: (pool: Pool) => void;
   currentAction: TradeAction;
   setCurrentAction: (action: TradeAction) => void;
   currentAmount: number | null;
@@ -36,7 +36,7 @@ const TradeContext = createContext<TradeInfo>({
 // Trade info context provider
 export function TradeContextProvider(props: { children: JSX.Element }): JSX.Element {
   const [currentReserve, setCurrentReserve] = useState<Reserve | null>(null);
-  const [currentPool, setCurrentPool] = useState<MarginPool | undefined>();
+  const [currentPool, setCurrentPool] = useState<Pool | undefined>();
   const [currentAction, setCurrentAction] = useState('deposit' as TradeAction);
   const [currentAmount, setCurrentAmount] = useState<number | null>(null);
   const [sendingTrade, setSendingTrade] = useState<boolean>(false);

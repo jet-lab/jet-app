@@ -35,9 +35,9 @@ export function JetInput(props: {
         />
         {props.currency && currentPool && (
           <>
-            <AssetLogo symbol={currentPool.tokenConfig.symbol} height={20} />
+            <AssetLogo symbol={currentPool.tokenConfig?.symbol || ''} height={20} />
             <div className="asset-abbrev-usd flex align-end justify-center column">
-              <span>{currentPool.tokenConfig.symbol}</span>
+              <span>{currentPool.tokenConfig?.symbol}</span>
               <span>
                 ≈{' '}
                 {currencyFormatter(

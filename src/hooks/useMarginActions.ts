@@ -5,7 +5,7 @@ import { MarginTokens, PoolAmount } from '@jet-lab/margin';
 
 export const useMarginActions = () => {
   // Jet V2
-  const { config, provider, programs, poolsFetched, pools, marginAccount, walletBalances, userFetched, refresh } =
+  const { config, manager, poolsFetched, pools, marginAccount, walletBalances, userFetched, refresh } =
     useMargin();
 
   // Deposit
@@ -50,7 +50,11 @@ export const useMarginActions = () => {
         const txid = await marginAccount.createAccount();
         txids.push(txid);
       }
-      const txid = await pool.marginWithdraw(marginAccount, destination.address, amount);
+      const txid = await pool.marginWithdraw({
+        marginAccount,
+        destination: destination.address,
+        amount
+      });
       txids.push(txid);
       refresh();
       return [TxnResponse.Success, txids];
@@ -75,7 +79,9 @@ export const useMarginActions = () => {
         const txid = await marginAccount.createAccount();
         txids.push(txid);
       }
-      const txid = await pool.marginBorrow(marginAccount, amount);
+      const txid = await pool.marginBorrow({
+        marginAccount, amount
+      });
       txids.push(txid);
       refresh();
       return [TxnResponse.Success, txids];
@@ -100,7 +106,9 @@ export const useMarginActions = () => {
         const txid = await marginAccount.createAccount();
         txids.push(txid);
       }
-      const txid = await pool.marginRepay(marginAccount, amount);
+      const txid = await pool.marginRepay({
+        marginAccount, amount
+      });
       txids.push(txid);
       refresh();
       return [TxnResponse.Success, txids];
