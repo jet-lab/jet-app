@@ -2,8 +2,8 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import type { Asset, AssetStore, Obligation } from '../models/JetTypes';
 import { PublicKey } from '@solana/web3.js';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { BN } from '@project-serum/anchor';
-import { Token, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID, NATIVE_MINT } from '@solana/spl-token';
+import { BN, Program } from '@project-serum/anchor';
+import { NATIVE_MINT, getAssociatedTokenAddress } from '@solana/spl-token';
 import {
   findCollateralAddress,
   findDepositNoteAddress,
@@ -12,11 +12,10 @@ import {
   findObligationAddress,
   getAccountInfoAndSubscribe,
   getTokenAccountAndSubscribe,
-  parseObligationAccount,
   SOL_DECIMALS
 } from '../util/programUtil';
-import { coder, useProvider, useProgram } from '../../hooks/jet-client/useClient';
-import { TokenAmount } from '../util/tokens';
+import { useMargin } from '../../contexts/marginContext';
+import { TokenAmount } from '@jet-lab/margin';
 import { useMarket } from './market';
 
 // User context
@@ -27,8 +26,8 @@ export interface User {
   setAssets: (assets: AssetStore) => void;
   position: Obligation;
   setPosition: (position: Obligation) => void;
-  walletBalances: Record<string, number>;
-  setWalletBalances: (walletBalances: Record<string, number>) => void;
+  // walletBalances: Record<string, number>;
+  // setWalletBalances: (walletBalances: Record<string, number>) => void;
   collateralBalances: Record<string, number>;
   setCollateralBalances: (collateralBalances: Record<string, number>) => void;
   loanBalances: Record<string, number>;
@@ -41,8 +40,8 @@ const UserContext = createContext<User>({
   setAssets: () => null,
   position: {} as unknown as Obligation,
   setPosition: () => null,
-  walletBalances: {},
-  setWalletBalances: () => null,
+  // walletBalances: {},
+  // setWalletBalances: () => null,
   collateralBalances: {},
   setCollateralBalances: () => null,
   loanBalances: {},
@@ -52,8 +51,8 @@ const UserContext = createContext<User>({
 // User context provider
 export function UserContextProvider(props: { children: JSX.Element }): JSX.Element {
   const { connected, publicKey } = useWallet();
-  const { connection } = useProvider();
-  const program = useProgram();
+  const { manager, connection } = useMargin();
+  const program = manager.programs.marginPool as any as Program;
   const market = useMarket();
   const [walletInit, setWalletInit] = useState<boolean>(false);
   const [assets, setAssets] = useState<AssetStore>({
@@ -89,28 +88,14 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
       return;
     }
 
-    // Obligation
-    if (assets.obligationPubkey) {
-      promise = getAccountInfoAndSubscribe(connection, assets.obligationPubkey, (account: any) => {
-        if (account != null) {
-          assets.obligation = {
-            ...account,
-            data: parseObligationAccount(account.data, coder)
-          };
-          deriveValues(assets);
-        }
-      });
-      promises.push(promise);
-    }
-
     // Wallet native SOL balance
     promise = getAccountInfoAndSubscribe(connection, publicKey, (account: any) => {
       if (account != null) {
         // Need to be careful constructing a BN from a number.
         // If the user has more than 2^53 lamports it will throw for not having enough precision.
-        assets.tokens.SOL.walletTokenBalance = new TokenAmount(new BN(account?.lamports.toString() ?? 0), SOL_DECIMALS);
-        assets.sol = assets.tokens.SOL.walletTokenBalance;
-        walletBalances.SOL = assets.sol.tokens;
+        // assets.tokens.SOL.walletTokenBalance = new TokenAmount(new BN(account?.lamports.toString() ?? 0), SOL_DECIMALS);
+        // assets.sol = assets.tokens.SOL.walletTokenBalance;
+        // walletBalances.SOL = assets.sol.tokens;
 
         setWalletBalances(walletBalances);
         if (walletInit) {
@@ -125,20 +110,20 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
       const reserve = market.reserves[abbrev];
 
       // Wallet token account
-      promise = getTokenAccountAndSubscribe(connection, asset.walletTokenPubkey, reserve.decimals, (amount: any) => {
-        if (amount != null) {
-          asset.walletTokenBalance = amount ?? new TokenAmount(new BN(0), reserve.decimals);
-          asset.walletTokenExists = !!amount;
+      // promise = getTokenAccountAndSubscribe(connection, asset.walletTokenPubkey, reserve.decimals, (amount: any) => {
+      //   if (amount != null) {
+      //     asset.walletTokenBalance = amount ?? new TokenAmount(new BN(0), reserve.decimals);
+      //     asset.walletTokenExists = !!amount;
 
-          // Update wallet token balance
-          if (!asset.tokenMintPubkey.equals(NATIVE_MINT)) {
-            walletBalances[reserve.abbrev] = asset.walletTokenBalance.tokens;
-            setWalletBalances(walletBalances);
-          }
-          deriveValues(assets);
-        }
-      });
-      promises.push(promise);
+      //     // Update wallet token balance
+      //     if (!asset.tokenMintPubkey.equals(NATIVE_MINT)) {
+      //       walletBalances[reserve.abbrev] = asset.walletTokenBalance.tokens;
+      //       setWalletBalances(walletBalances);
+      //     }
+      //     deriveValues(assets);
+      //   }
+      // });
+      // promises.push(promise);
 
       // Reserve deposit notes
       promise = getTokenAccountAndSubscribe(
@@ -221,8 +206,8 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
     // Calculate user's current position from ALL of those balances
     const updatedPosition: Obligation = { depositedValue: 0, borrowedValue: 0, colRatio: 0, utilizationRate: 0 };
     for (const abbrev in assets.tokens) {
-      updatedPosition.depositedValue += collateralBalances[abbrev] * market.reserves[abbrev].price;
-      updatedPosition.borrowedValue += loanBalances[abbrev] * market.reserves[abbrev].price;
+      // updatedPosition.depositedValue += collateralBalances[abbrev] * market.reserves[abbrev].price;
+      // updatedPosition.borrowedValue += loanBalances[abbrev] * market.reserves[abbrev].price;
       updatedPosition.colRatio = updatedPosition.borrowedValue
         ? updatedPosition.depositedValue / updatedPosition.borrowedValue
         : 0;
@@ -241,9 +226,9 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
       asset.maxDepositAmount = walletBalances[reserve.abbrev];
 
       // Max withdraw
-      asset.maxWithdrawAmount = updatedPosition.borrowedValue
-        ? (updatedPosition.depositedValue - market.minColRatio * updatedPosition.borrowedValue) / reserve.price
-        : asset.collateralBalance.tokens;
+      // asset.maxWithdrawAmount = updatedPosition.borrowedValue
+      //   ? (updatedPosition.depositedValue - market.minColRatio * updatedPosition.borrowedValue) / reserve.price
+      //   : asset.collateralBalance.tokens;
       if (asset.maxWithdrawAmount > asset.collateralBalance.tokens) {
         asset.maxWithdrawAmount = asset.collateralBalance.tokens;
       }
@@ -252,8 +237,8 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
       }
 
       // Max borrow
-      asset.maxBorrowAmount =
-        (updatedPosition.depositedValue / market.minColRatio - updatedPosition.borrowedValue) / reserve.price;
+      // asset.maxBorrowAmount =
+      //   (updatedPosition.depositedValue / market.minColRatio - updatedPosition.borrowedValue) / reserve.price;
       if (asset.maxBorrowAmount > reserve.availableLiquidity.tokens) {
         asset.maxBorrowAmount = reserve.availableLiquidity.tokens;
       }
@@ -275,7 +260,7 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
     if (connected && publicKey) {
       // Get user token accounts
       const getAssetPubkeys = async (): Promise<AssetStore> => {
-        if (!Object.values(program) || !publicKey) {
+        if (!program || !publicKey) {
           return {} as AssetStore;
         }
 
@@ -319,14 +304,9 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
 
           const asset: Asset = {
             tokenMintPubkey,
-            walletTokenPubkey: await Token.getAssociatedTokenAddress(
-              ASSOCIATED_TOKEN_PROGRAM_ID,
-              TOKEN_PROGRAM_ID,
-              tokenMintPubkey,
-              publicKey
-            ),
-            walletTokenExists: false,
-            walletTokenBalance: TokenAmount.zero(reserve.decimals),
+            // walletTokenPubkey: await getAssociatedTokenAddress(tokenMintPubkey, publicKey),
+            // walletTokenExists: false,
+            // walletTokenBalance: TokenAmount.zero(reserve.decimals),
             depositNotePubkey,
             depositNoteBump,
             depositNoteExists: false,
@@ -376,8 +356,6 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
         setAssets,
         position,
         setPosition,
-        walletBalances,
-        setWalletBalances,
         collateralBalances,
         setCollateralBalances,
         loanBalances,

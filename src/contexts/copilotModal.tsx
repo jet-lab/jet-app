@@ -2,7 +2,7 @@ import { createContext, useContext, useState } from 'react';
 
 // Copilot modal context
 export interface Alert {
-  status: 'neutral' | 'success' | 'failure';
+  status: 'neutral' | 'success' | 'danger';
   overview?: string;
   detail: JSX.Element;
   solution?: JSX.Element;

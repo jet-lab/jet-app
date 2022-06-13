@@ -2,38 +2,35 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useConnectWalletModal } from '../contexts/connectWalletModal';
+import { useSettingsModal } from '../contexts/settingsModal';
 import { useLanguage } from '../contexts/localization/localization';
-import { useDarkTheme } from '../contexts/darkTheme';
 import { shortenPubkey } from '../utils/utils';
-import { Button, Switch } from 'antd';
-import { ReactComponent as AccountIcon } from '../styles/icons/account_icon.svg';
+import { Button } from 'antd';
 import { ReactComponent as WalletIcon } from '../styles/icons/wallet_icon.svg';
-
+import { SettingFilled } from '@ant-design/icons';
 export function Navbar(): JSX.Element {
   const { dictionary } = useLanguage();
   const { pathname } = useLocation();
   const { connected, disconnect, publicKey } = useWallet();
   const { setConnecting } = useConnectWalletModal();
-  const { darkTheme, toggleDarkTheme } = useDarkTheme();
+  const { setOpen } = useSettingsModal();
   const [drawerOpened, setDrawerOpened] = useState(false);
   const navLinks = [
     { title: dictionary.cockpit.title, route: '/' },
-    { title: dictionary.transactions.title, route: '/transactions' },
-    { title: dictionary.settings.title, route: '/settings' }
+    { title: dictionary.transactions.title, route: '/transactions' }
   ];
   const mobileFooterLinks = [
     { title: dictionary.termsPrivacy.termsOfService, url: 'https://www.jetprotocol.io/legal/terms-of-service' },
     { title: dictionary.termsPrivacy.privacyPolicy, url: 'https://www.jetprotocol.io/legal/privacy-policy' },
     { title: dictionary.termsPrivacy.glossary, url: 'https://docs.jetprotocol.io/jet-protocol/terms-and-definitions' }
   ];
-  const accountLink = { title: dictionary.account.title, route: '/' };
 
   return (
     <div className={`navbar-container flex-centered ${drawerOpened ? 'drawer-open' : ''}`}>
       {/* Desktop Nav */}
       <nav className="desktop flex align-center justify-between">
-        <Link className="logo flex-centered" to="/">
-          <img src="img/jet/jet_full_white.png" width="100%" height="auto" alt="Jet Protocol" />
+        <Link className="nav-logo flex-centered" to="/">
+          <img className="logo" src="img/jet/jet_logo.png" width="100%" height="auto" alt="Jet Protocol" />
         </Link>
         <div className="nav-links flex-centered">
           {navLinks.map(link => (
@@ -41,8 +38,8 @@ export function Navbar(): JSX.Element {
               {link.title}
             </Link>
           ))}
+          <SettingFilled className="icon-btn" onClick={() => setOpen(true)} />
           <Button
-            ghost
             className="flex-centered"
             style={{ textTransform: 'unset' }}
             title={connected ? dictionary.settings.disconnect : dictionary.settings.connect}
@@ -56,11 +53,9 @@ export function Navbar(): JSX.Element {
       </nav>
       {/* Mobile Nav */}
       <nav className="mobile flex align-center justify-between">
-        <Link className="account" to={accountLink.route}>
-          <AccountIcon width="25px" />
-        </Link>
-        <Link className="logo flex-centered" to="/">
-          <img className="logo" src="img/jet/jet_full_white.png" width="100%" height="auto" alt="Jet Protocol" />
+        <SettingFilled className="icon-btn" onClick={() => setOpen(true)} />
+        <Link className="nav-logo flex-centered" to="/">
+          <img src="img/jet/jet_logo.png" width="100%" height="auto" alt="Jet Protocol" />
         </Link>
         <div
           className={`hamburger flex align-center justify-between column ${drawerOpened ? 'close' : ''}`}
@@ -81,7 +76,6 @@ export function Navbar(): JSX.Element {
               </Link>
             ))}
             <Button
-              ghost
               className="flex-centered small-btn"
               style={{ textTransform: 'unset' }}
               title={connected ? dictionary.settings.disconnect : dictionary.settings.connect}
@@ -95,9 +89,7 @@ export function Navbar(): JSX.Element {
               }}>
               <WalletIcon width="20px" />
               {connected
-                ? `${shortenPubkey(
-                    publicKey ? publicKey.toString() : ''
-                  )} ${dictionary.settings.connected.toUpperCase()}`
+                ? shortenPubkey(publicKey ? publicKey.toString() : '')
                 : dictionary.settings.connect.toUpperCase()}
             </Button>
           </div>
@@ -107,13 +99,6 @@ export function Navbar(): JSX.Element {
                 {link.title}
               </a>
             ))}
-            <Switch
-              className="secondary-switch"
-              onClick={() => toggleDarkTheme()}
-              checked={darkTheme}
-              checkedChildren="Dark"
-              unCheckedChildren="Light"
-            />
           </div>
         </div>
       </nav>

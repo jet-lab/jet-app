@@ -1,22 +1,18 @@
 import { AccountInfo, PublicKey } from '@solana/web3.js';
 import { BN } from '@project-serum/anchor';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { coder, idl, useProvider } from '../../hooks/jet-client/useClient';
+import { idl, useMargin } from '../../contexts/marginContext';
 import type { MarketAccount, Reserve } from '../models/JetTypes';
-import { parsePriceData } from '@pythnetwork/client';
 import {
-  getAccountInfoAndSubscribe,
   getBorrowRate,
   getCcRate,
   getDepositRate,
   getMintInfoAndSubscribe,
-  getTokenAccountAndSubscribe,
-  parseMarketAccount,
-  parseReserveAccount
+  getTokenAccountAndSubscribe
 } from '../util/programUtil';
-import { MarketReserveInfoList } from '../util/layout';
 import { parseIdlMetadata } from '../util/programUtil';
-import { TokenAmount } from '../util/tokens';
+import { TokenAmount } from '@jet-lab/margin';
+import { MarginTokens } from '@jet-lab/margin';
 
 // Market context
 export interface Market {
@@ -57,7 +53,7 @@ const MarketContext = createContext<Market>({
 // Market context provider
 export function MarketContextProvider(props: { children: JSX.Element }): JSX.Element {
   const minColRatio = 1.25;
-  const { connection } = useProvider();
+  const { connection } = useMargin();
   const [marketInit, setMarketInit] = useState<boolean>(false);
   const [accountPubkey, setAccountPubkey] = useState<PublicKey>({} as PublicKey);
   const [account, setAccount] = useState<AccountInfo<MarketAccount>>({} as AccountInfo<MarketAccount>);
@@ -71,49 +67,7 @@ export function MarketContextProvider(props: { children: JSX.Element }): JSX.Ele
     let promise: Promise<number>;
     const promises: Promise<number>[] = [];
 
-    // Market subscription
-    promise = getAccountInfoAndSubscribe(connection, idlMetadata.market.market, (account: any) => {
-      if (account != null) {
-        console.assert(MarketReserveInfoList.span === 12288);
-        const decoded = parseMarketAccount(account.data, coder);
-        for (const reserveStruct of decoded.reserves) {
-          for (const abbrev in reserves) {
-            if (reserves[abbrev].accountPubkey.equals(reserveStruct.reserve)) {
-              reserves[abbrev].liquidationPremium = reserveStruct.liquidationBonus;
-              reserves[abbrev].depositNoteExchangeRate = reserveStruct.depositNoteExchangeRate;
-              reserves[abbrev].loanNoteExchangeRate = reserveStruct.loanNoteExchangeRate;
-
-              deriveValues(reserves, reserves[abbrev]);
-              setReserves({ ...reserves });
-              break;
-            }
-          }
-        }
-      }
-    });
-    promises.push(promise);
-
     for (const reserveMeta of idlMetadata.reserves) {
-      // Reserve
-      promise = getAccountInfoAndSubscribe(connection, reserveMeta.accounts.reserve, (account: any) => {
-        if (account != null) {
-          const decoded = parseReserveAccount(account.data, coder);
-
-          reserves[reserveMeta.abbrev].maximumLTV = decoded.config.minCollateralRatio;
-          reserves[reserveMeta.abbrev].liquidationPremium = decoded.config.liquidationPremium;
-          reserves[reserveMeta.abbrev].outstandingDebt = new TokenAmount(
-            decoded.state.outstandingDebt,
-            reserveMeta.decimals
-          ).divb(new BN(Math.pow(10, 15)));
-          reserves[reserveMeta.abbrev].accruedUntil = decoded.state.accruedUntil;
-          reserves[reserveMeta.abbrev].config = decoded.config;
-
-          deriveValues(reserves, reserves[reserveMeta.abbrev]);
-          setReserves({ ...reserves });
-        }
-      });
-      promises.push(promise);
-
       // Deposit Note Mint
       promise = getMintInfoAndSubscribe(connection, reserveMeta.accounts.depositNoteMint, (amount: any) => {
         if (amount != null) {
@@ -163,18 +117,18 @@ export function MarketContextProvider(props: { children: JSX.Element }): JSX.Ele
       });
       promises.push(promise);
 
-      // Pyth Price
-      promise = getAccountInfoAndSubscribe(connection, reserveMeta.accounts.pythPrice, (account: any) => {
-        if (account != null) {
-          const price = parsePriceData(account.data).price;
-          if (price) {
-            reserves[reserveMeta.abbrev].price = price;
-            deriveValues(reserves, reserves[reserveMeta.abbrev]);
-            setReserves({ ...reserves });
-          }
-        }
-      });
-      promises.push(promise);
+      // // Pyth Price
+      // promise = getAccountInfoAndSubscribe(connection, reserveMeta.accounts.pythPrice, (account: any) => {
+      //   if (account != null) {
+      //     const price = parsePriceData(account.data).price;
+      //     if (price) {
+      //       reserves[reserveMeta.abbrev].price = price;
+      //       deriveValues(reserves, reserves[reserveMeta.abbrev]);
+      //       setReserves({ ...reserves });
+      //     }
+      //   }
+      // });
+      // promises.push(promise);
     }
 
     return await Promise.all(promises).then(() => setMarketInit(true));
@@ -192,12 +146,12 @@ export function MarketContextProvider(props: { children: JSX.Element }): JSX.Ele
     reserve.depositRate = getDepositRate(ccRate, reserve.utilizationRate);
 
     // Update market total value locked and reserve array from new values
-    let borrowed = 0;
-    let supply = 0;
+    const borrowed = 0;
+    const supply = 0;
     const reservesArray: Reserve[] = [];
     for (const r in reserves) {
-      borrowed += reserves[r].outstandingDebt.muln(reserves[r].price)?.tokens;
-      supply += reserves[r].marketSize.sub(reserves[r].outstandingDebt).muln(reserves[r].price)?.tokens;
+      // borrowed += reserves[r].outstandingDebt.muln(reserves[r].price)?.tokens;
+      // supply += reserves[r].marketSize.sub(reserves[r].outstandingDebt).muln(reserves[r].price)?.tokens;
       reservesArray.push(reserves[r]);
     }
     setTotalBorrowed(borrowed);
@@ -211,7 +165,7 @@ export function MarketContextProvider(props: { children: JSX.Element }): JSX.Ele
     for (const reserveMeta of idlMetadata.reserves) {
       const reserve: Reserve = {
         name: reserveMeta.name,
-        abbrev: reserveMeta.abbrev,
+        abbrev: reserveMeta.abbrev as MarginTokens,
         marketSize: TokenAmount.zero(reserveMeta.decimals),
         outstandingDebt: TokenAmount.zero(reserveMeta.decimals),
         utilizationRate: 0,
@@ -219,7 +173,7 @@ export function MarketContextProvider(props: { children: JSX.Element }): JSX.Ele
         borrowRate: 0,
         maximumLTV: 0,
         liquidationPremium: 0,
-        price: 0,
+        // price: 0,
         decimals: reserveMeta.decimals,
         depositNoteExchangeRate: new BN(0),
         loanNoteExchangeRate: new BN(0),

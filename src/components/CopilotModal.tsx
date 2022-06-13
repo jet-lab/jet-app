@@ -33,20 +33,15 @@ export function CopilotModal(): JSX.Element {
         className="copilot-modal"
         onCancel={() => (alert?.closeable ? setAlert(undefined) : null)}>
         <div className="modal-content flex-centered column">
-          <img
-            src={`img/copilot/${alert?.status === 'neutral' ? 'copilot' : 'copilot_white'}.png`}
-            className={alert?.status === 'neutral' ? '' : alert?.status}
-            alt="Copilot Icon"
-          />
           <div className="body flex align-start justify-center column">
-            <h2 className={alert?.status === 'neutral' ? 'gradient-text' : alert?.status + '-text'}>
-              {alert?.overview ?? dictionary.copilot.header}
+            <h2 className={alert?.status === 'neutral' ? 'gradient-text' : 'warning-text'}>
+              {alert?.overview ?? dictionary.copilot.alert.warning}
             </h2>
             {alert?.detail}
             {alert?.solution}
             <Button
+              block
               disabled={alert?.action?.disabled}
-              className={`small-btn ${alert?.status === 'failure' ? 'error-btn' : ''}`}
               onClick={() => {
                 if (alert?.action) {
                   alert?.action.onClick();
@@ -65,12 +60,11 @@ export function CopilotModal(): JSX.Element {
         className="copilot-modal"
         onCancel={() => setDefinition(undefined)}>
         <div className="modal-content flex-centered column">
-          <img src={`img/copilot/copilot.png`} alt="Copilot Icon" />
           <div className="body flex align-start justify-center column">
             {collateralDetail && connected && <HealthBar fullDetail />}
             <h2 className="gradient-text">{definition?.term}</h2>
             <span>{definition?.definition}</span>
-            <Button size="small" onClick={() => setDefinition(undefined)}>
+            <Button block onClick={() => setDefinition(undefined)}>
               {dictionary.copilot.okay}
             </Button>
           </div>

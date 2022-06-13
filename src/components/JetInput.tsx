@@ -1,8 +1,9 @@
 import { useTradeContext } from '../contexts/tradeContext';
 import { currencyFormatter } from '../utils/currency';
 import { Input } from 'antd';
-import { Loader } from './Loader';
+import { AssetLogo } from './AssetLogo';
 import { ReactComponent as ArrowIcon } from '../styles/icons/arrow_icon.svg';
+import { LoadingOutlined } from '@ant-design/icons';
 
 export function JetInput(props: {
   type: 'text' | 'number';
@@ -17,7 +18,7 @@ export function JetInput(props: {
   onChange: (value: any) => unknown;
   submit: () => unknown;
 }): JSX.Element {
-  const { currentReserve } = useTradeContext();
+  const { currentPool } = useTradeContext();
 
   return (
     <div className={`jet-input flex-centered ${props.disabled ? 'disabled' : ''}`}>
@@ -32,13 +33,18 @@ export function JetInput(props: {
           onChange={e => props.onChange(e.target.value)}
           onPressEnter={() => props.submit()}
         />
-        {props.currency && currentReserve && (
+        {props.currency && currentPool && (
           <>
-            <img src={`img/cryptos/${currentReserve.abbrev}.png`} alt={`${currentReserve.abbrev} Logo`} />
+            <AssetLogo symbol={currentPool.tokenConfig?.symbol || ''} height={20} />
             <div className="asset-abbrev-usd flex align-end justify-center column">
-              <span>{currentReserve.abbrev}</span>
+              <span>{currentPool.tokenConfig?.symbol}</span>
               <span>
-                ≈ {currencyFormatter((Number(props.value) ?? 0) * (currentReserve ? currentReserve.price : 0), true, 2)}
+                ≈{' '}
+                {currencyFormatter(
+                  (Number(props.value) ?? 0) * (currentPool.tokenPrice !== undefined ? currentPool.tokenPrice : 0),
+                  true,
+                  2
+                )}
               </span>
             </div>
           </>
@@ -51,7 +57,7 @@ export function JetInput(props: {
             props.submit();
           }
         }}>
-        {props.loading ? <Loader button /> : <ArrowIcon width={30} />}
+        {props.loading ? <LoadingOutlined /> : <ArrowIcon width={30} />}
       </div>
     </div>
   );

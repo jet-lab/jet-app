@@ -8,7 +8,7 @@
 ***************************/
 // Variables
 @neu-table-shadow: -4px 0px 10px @light-shadow, 2px 4px 8px @dark-shadow;
-@health-gradient: linear-gradient(90deg, @failure 0%, @warning 25%, @success 75%);
+@health-gradient: linear-gradient(90deg, @danger 0%, @warning 25%, @success 75%);
 // App
 .jet-app {
   // Modals
@@ -27,12 +27,11 @@
 
   // Info Icon
   .info {
-    color: @black;
+    color: @secondary-3;
     opacity: @disabled-opacity;
     margin-left: 3px !important;
     font-size: 9px;
     line-height: 9px;
-    cursor: pointer;
     transition: opacity @transition-duration ease-in-out;
 
     &:hover {
@@ -46,20 +45,25 @@
       border-radius: @round-radius;
       border-top-right-radius: 0px;
       border-bottom-right-radius: 0px;
-      height: 55px;
+      height: 45px;
     }
 
     .input-btn {
-      height: 55px;
+      height: 45px;
       margin-left: -5px;
       background: @gradient;
       border-top-right-radius: @round-radius;
       border-bottom-right-radius: @round-radius;
-      padding: 0 @spacing-md;
+      padding: 0 @spacing-sm;
       cursor: pointer;
       z-index: 10;
       svg path {
-        fill: @white;
+        fill: @primary;
+      }
+      .anticon {
+        font-size: 25px !important;
+        margin-right: 5px;
+        margin-bottom: -2px;
       }
 
       &:active {
@@ -73,18 +77,17 @@
 
       input {
         position: relative;
-        font-size: 20px;
         padding-left: 55px;
         padding-right: 80px;
       }
       span {
         font-size: 15px;
-        color: @black;
+        color: @primary;
         opacity: @disabled-opacity;
         margin: -2px 0;
       }
-      img {
-        width: 35px;
+      svg {
+        width: 25px;
         height: auto;
         position: absolute;
         top: 50%;
@@ -101,7 +104,8 @@
 
         span {
           font-size: @base-font-size;
-          margin: -1px 0;
+          color: @secondary-3 !important;
+          margin: -1px 0 !important;
 
           &:last-of-type {
             font-size: @xs-font-size;
@@ -110,27 +114,7 @@
       }
 
       + .input-btn {
-        height: 51px;
-        border: 2px solid @white;
-        border-left: unset;
-        background: unset;
         margin-left: unset;
-        &:hover {
-          background: unset;
-        }
-
-        &:active,
-        &.loading {
-          background: @white;
-
-          svg {
-            opacity: 1;
-            path {
-              opacity: inherit;
-              fill: @jet-green;
-            }
-          }
-        }
       }
     }
 
@@ -145,21 +129,6 @@
           opacity: 1;
         }
       }
-
-      .currency-input {
-        + .input-btn {
-          &:hover {
-            background: unset;
-          }
-          &:active {
-            i {
-              -webkit-text-fill-color: unset;
-            }
-
-            background: unset;
-          }
-        }
-      }
     }
   }
 
@@ -168,15 +137,15 @@
     width: 60px;
     margin: 0 auto;
     padding: unset;
-    background: @grey;
-    box-shadow: @neu-shadow-inset;
+    background: @primary-2;
+    box-shadow: @neu-shadow-inset-sm;
     border-radius: @round-radius;
     cursor: pointer;
     overflow: hidden;
     opacity: @subtle-opacity;
     transition: box-shadow @transition-duration ease-in-out;
     &:hover {
-      box-shadow: @neu-shadow-inset-low;
+      box-shadow: @neu-shadow-inset-2;
       opacity: 1;
     }
     &:active {
@@ -186,7 +155,7 @@
     div {
       width: 50%;
       height: 100%;
-      padding: 3px 5px;
+      padding: 2px 5px;
       &:first-of-type {
         padding-right: 1px;
       }
@@ -195,16 +164,16 @@
       }
 
       svg path {
-        fill: @black;
+        fill: @secondary;
         opacity: @disabled-opacity;
       }
 
       &.active {
-        background: @gradient;
+        background: @jet-green;
         box-shadow: @neu-shadow;
 
         svg path {
-          fill: @white;
+          fill: @primary-3;
           opacity: 1;
         }
       }
@@ -246,7 +215,7 @@
       width: 80%;
       height: 80%;
       border-radius: 100%;
-      background: @white;
+      background: @secondary;
       box-shadow: -2px -2px 6px 0px @light-shadow, 2px 2px 6px 0px @dark-shadow, inset 0px 0px 0px 0px @light-shadow,
         inset 0px 0px 0px 0px @dark-shadow;
 
@@ -280,8 +249,8 @@
   // Percentage Chart
   .percentage-chart {
     position: relative;
-    width: 145px;
-    height: 145px;
+    width: 140px;
+    height: 140px;
     justify-content: space-around;
     box-shadow: @neu-shadow;
     border-radius: 100px;
@@ -289,21 +258,21 @@
     .chart-info,
     .inset-chart-shadow,
     svg {
-      width: 145px;
+      width: 140px;
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
     }
     .inset-chart-shadow {
-      width: 127px;
-      height: 127px;
+      width: 122px;
+      height: 122px;
       box-shadow: @neu-shadow-inset;
       border-radius: 100px;
     }
     svg {
-      width: 156px;
-      stroke: @failure;
+      width: 151px;
+      stroke: @danger;
 
       path:first-of-type {
         fill: none;
@@ -326,16 +295,19 @@
     .ant-modal-content {
       max-width: 325px !important;
     }
+    h1 {
+      font-size: 27px;
+    }
     h1,
     p {
       margin: unset !important;
     }
 
     &-modal {
-      img {
-        width: 40px;
-        height: 40px;
-        padding: 0 @spacing-sm;
+      .asset-logo {
+        width: 35px;
+        height: 35px;
+        margin-top: 3px;
       }
 
       .asset-info-color {
@@ -368,8 +340,8 @@
         margin: 2px @spacing-sm 0 @spacing-sm;
 
         &.borrowed {
-          background: @failure;
-          box-shadow: @neu-shadow-inset-failure;
+          background: @danger;
+          box-shadow: @neu-shadow-inset-danger;
         }
         &.liquid {
           background: @success;
@@ -381,6 +353,9 @@
 
         .reserve-subdetail {
           width: 50%;
+        }
+        &:last-of-type {
+          margin-bottom: @spacing-lg;
         }
       }
     }
@@ -396,15 +371,11 @@
       }
       svg {
         margin: 0 @spacing-xs;
+        fill: @secondary-3;
       }
     }
     &-asset {
-      margin: @spacing-md 0;
-      img {
-        width: 40px;
-        height: 40px;
-        padding: 0 @spacing-xs;
-      }
+      margin: @spacing-xs 0;
     }
     span {
       opacity: @disabled-opacity;
@@ -413,7 +384,7 @@
     }
     .ant-modal-content {
       width: auto;
-      max-width: unset;
+      max-width: 400px;
       overflow: hidden;
       padding: unset;
 
@@ -427,7 +398,6 @@
 
         table {
           border-collapse: collapse;
-          background: @light-grey;
 
           thead {
             th {
@@ -440,7 +410,7 @@
             &:after {
               width: 150%;
               border: unset;
-              background: @dark-grey;
+              background: @secondary-5;
               left: -25%;
             }
           }
@@ -451,12 +421,11 @@
             }
             td {
               font-size: @base-font-size;
+              padding-left: unset;
+              padding-right: unset;
               text-align: center;
             }
             tr {
-              td {
-                padding: @spacing-md 0;
-              }
               &:first-of-type {
                 td {
                   padding: @spacing-lg 0 @spacing-xs 0;
@@ -495,30 +464,11 @@
   .copilot-modal {
     overflow: hidden;
     flex-wrap: nowrap;
-
-    img {
-      width: 60px;
-      height: auto;
-      margin: @spacing-xs 0;
-      padding: 7px;
-      border-radius: 100px;
-      background: @white;
-      box-shadow: @neu-shadow-inset;
-
-      &.success {
-        background: @success;
-        box-shadow: @neu-shadow-inset-success;
-      }
-      &.failure {
-        background: @failure;
-        box-shadow: @neu-shadow-inset-failure;
-      }
-    }
     .body {
       max-width: 275px;
 
       h2 {
-        font-size: @lg-font-size;
+        font-size: @xl-font-size;
       }
       button {
         margin: @spacing-md auto 0 auto;
@@ -554,7 +504,7 @@
         bottom: -22px;
         margin: @spacing-xs;
         font-size: @sm-font-size;
-        color: @dark-grey;
+        color: @secondary-5;
       }
 
       &-indicator {
@@ -566,7 +516,7 @@
           height: 0;
           border-left: 5px solid transparent;
           border-right: 5px solid transparent;
-          border-top: 8px solid @black;
+          border-top: 8px solid @primary;
         }
         &-label {
           position: absolute;
@@ -583,7 +533,7 @@
 
       &-status {
         padding: 0 @spacing-sm;
-        border-right: 1px solid @dark-grey;
+        border-right: 1px solid @secondary-5;
         opacity: 0.5;
         &:last-of-type {
           border-right: unset;
@@ -611,22 +561,24 @@
 
     // Cockpit top data
     &-top {
+      width: 100%;
       flex-wrap: wrap;
       margin-bottom: @spacing-xl;
 
+      .ant-skeleton {
+        width: 250px;
+        margin: 40px 0;
+      }
       .trade-market-tvl {
         margin-right: @spacing-xl;
       }
       .trade-position-snapshot {
         min-width: 275px;
         border-radius: @border-radius;
-        box-shadow: @neu-shadow-inset;
+        box-shadow: @neu-shadow-inset-sm;
         padding: @spacing-sm @spacing-lg;
-        background: @light-grey;
+        background: @primary-2;
         transition: box-shadow @transition-duration ease-in-out;
-        &:hover {
-          box-shadow: @neu-shadow-inset-low;
-        }
 
         p {
           margin: -2px 0 0 0;
@@ -650,16 +602,16 @@
           }
         }
         .min-c-note {
-          max-width: 185px;
+          max-width: 160px;
           padding: unset;
 
           span {
             font-size: @xs-font-size;
-            color: @dark-grey;
+            color: @secondary-5;
           }
           i {
             font-size: @base-font-size;
-            color: @dark-grey;
+            color: @secondary-5;
             margin: 6px @spacing-sm 0 0;
           }
         }
@@ -670,7 +622,7 @@
       width: 100%;
       margin: 0 auto;
       border-radius: @border-radius;
-      box-shadow: @neu-table-shadow;
+      box-shadow: @neu-shadow-2;
       overflow: hidden;
 
       // Trade Panel
@@ -680,7 +632,7 @@
         padding-top: calc(@spacing-lg * 1.75);
         border-top-left-radius: @border-radius;
         border-top-right-radius: @border-radius;
-        background: @gradient;
+        background: @primary-3;
         overflow: hidden;
 
         .trade-select-container {
@@ -691,10 +643,9 @@
 
           .trade-select {
             width: 25%;
-            border-right: 2px solid @white;
             box-shadow: inset 0px -5px 8px -5px rgba(0, 0, 0, 0.3);
             padding: @spacing-xs 0;
-            background: @grey;
+            background: @primary;
             opacity: @subtle-opacity;
             cursor: pointer;
             transition: opacity @transition-duration ease-in-out;
@@ -705,6 +656,7 @@
               letter-spacing: 0.5px;
               line-height: 17px;
               opacity: @disabled-opacity;
+              color: @secondary-3;
 
               &::after {
                 content: '';
@@ -713,13 +665,13 @@
                 bottom: 0;
                 height: 1px;
                 width: 100%;
-                background: @gradient;
+                background: @secondary-3;
                 opacity: 0;
               }
             }
             // Dark theme select
             &.dark {
-              background: @grey;
+              background: @primary;
               opacity: 1;
 
               &:hover {
@@ -740,12 +692,11 @@
               box-shadow: unset;
 
               p {
-                color: @white;
-                -webkit-text-fill-color: unset;
+                color: @jet-green;
                 opacity: 1;
 
                 &::after {
-                  background: @white;
+                  background: @jet-green;
                   opacity: inherit;
                 }
               }
@@ -773,21 +724,21 @@
                 left: 0;
                 width: 100%;
                 height: 1px;
-                background: @white;
+                background: @secondary;
               }
 
               &-selector {
                 text-align: center;
               }
               &-selection-item {
-                color: @white;
+                color: @secondary;
                 font-weight: @semi-bold-weight;
               }
               svg {
                 width: 15px;
                 height: 15px;
                 path {
-                  fill: @white;
+                  fill: @secondary;
                 }
               }
             }
@@ -803,19 +754,22 @@
             width: calc(50% - (@spacing-sm * 2));
           }
           p {
-            color: @white;
+            color: @secondary-2;
             margin: 0;
             font-size: 21px;
           }
           span {
-            color: @white;
+            color: @secondary-2;
             font-size: @xs-font-size;
             opacity: @subtle-opacity;
             letter-spacing: 0.5px;
           }
+          .bold-text {
+            color: @secondary-3;
+          }
           .jet-input {
             span {
-              color: @black;
+              color: @primary;
               font-size: @base-font-size;
 
               &:last-of-type {
@@ -825,21 +779,21 @@
             }
           }
           .ant-slider {
-            width: 365px;
+            width: 300px;
             margin-top: 5px;
 
             &-rail {
-              background: rgba(var(--white), 0.5);
+              background: rgba(var(--secondary), 0.2);
             }
             &-track {
-              background: @white;
+              background: @jet-green;
             }
             &-handle {
-              border-color: @grey;
+              border-color: @secondary-3;
             }
           }
           .info path {
-            fill: @white;
+            fill: @secondary;
             margin-top: 1px;
           }
 
@@ -868,25 +822,35 @@
           input {
             height: unset;
             padding: 10px 35px;
-            background: @grey;
           }
 
-          i {
+          .anticon {
             padding: @spacing-xs;
             position: absolute;
             top: 12px;
             left: 9px;
-            font-size: 15px;
+            font-size: 12px;
             opacity: @subtle-opacity;
+            svg path {
+              fill: @secondary-5;
+            }
           }
         }
 
         .table-container {
           width: 100%;
-          border-top: @spacing-xs solid @white;
+          border-top: @spacing-xs solid @primary;
           overflow-x: scroll;
           thead tr {
             cursor: unset;
+          }
+          tbody {
+            tr {
+              border-bottom: 2px solid @primary;
+              &:last-of-type {
+                border-bottom-width: 10px;
+              }
+            }
           }
 
           th,
@@ -904,8 +868,8 @@
           }
           tr {
             &.active {
-              box-shadow: @neu-shadow-inset-low;
-              background: @grey;
+              box-shadow: @neu-shadow-inset-2;
+              background: @primary-2;
 
               &:active {
                 box-shadow: @neu-shadow-inset;
@@ -913,21 +877,20 @@
             }
 
             td {
+              padding: @spacing-md 0;
               &.gradient-text {
                 padding-bottom: calc(@spacing-md - 4px);
               }
               &.market-table-asset {
                 span,
-                img {
+                svg {
                   opacity: 1;
                   position: absolute;
                   top: 50%;
                   transform: translateY(-50%);
                   left: 45px;
                 }
-                img {
-                  height: 25px;
-                  width: auto;
+                svg {
                   left: 15px;
                 }
                 span {
@@ -958,13 +921,13 @@
                 }
               }
               &.user-wallet-value {
-                color: @black;
+                color: @secondary;
               }
               &.user-collateral-value {
                 color: @jet-green;
               }
               &.user-loan-value {
-                color: @failure;
+                color: @danger;
               }
               svg {
                 margin-bottom: -4px;
@@ -978,20 +941,20 @@
                   opacity: inherit;
                 }
                 &.cell-border-right {
-                  border-color: @white;
+                  border-color: @primary-3;
                 }
               }
             }
           }
           @-moz-document url-prefix() {
             tr.active {
-              background: @white;
+              background: @secondary;
             }
           }
 
           // Right side dividers
           .cell-border-right {
-            border-right: 2px solid @grey;
+            border-right: 1px solid @primary-2;
           }
           // Clickable icons
           .clickable-icon {
@@ -1012,10 +975,17 @@
 
   // Transactions View
   .transaction-logs {
+    align-items: flex-start;
+    .jet-icon {
+      * {
+        fill: @jet-green;
+      }
+    }
     .table-container {
       width: 100%;
-      max-width: 600px;
+      max-width: 700px;
       margin: @spacing-lg 0;
+      padding: @spacing-lg;
       border-radius: @border-radius;
       box-shadow: @neu-shadow;
       overflow-x: scroll;
@@ -1025,10 +995,6 @@
         padding: @spacing-md @spacing-lg @spacing-sm @spacing-lg;
         thead tr {
           cursor: unset;
-
-          th {
-            padding-bottom: @spacing-xs;
-          }
         }
         tr {
           &:last-of-type {
@@ -1067,6 +1033,9 @@
               opacity: 1;
             }
           }
+          td.asset {
+            padding-right: unset;
+          }
         }
       }
     }
@@ -1077,20 +1046,31 @@
     }
   }
 
-  // Settings View
+  // Settings Modal
   .settings {
-    width: 350px;
-    padding: @spacing-lg;
-    box-shadow: @neu-shadow-low;
-    border-radius: @border-radius;
-
+    padding-top: 35px;
+    h2 {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 45px;
+      background: @primary-2;
+      margin: unset;
+      text-transform: unset;
+    }
     .setting {
       &-title {
         margin: @spacing-sm 0 0 0;
+        color: @secondary-5;
       }
 
       input {
-        width: 275px;
+        width: 200px;
       }
 
       .rpc-info {
@@ -1103,7 +1083,6 @@
         width: 8px;
         height: 8px;
         border-radius: 50px;
-        margin: -1px @spacing-xs 0 @spacing-xs;
         opacity: @disabled-opacity;
       }
       .reset-rpc {
@@ -1135,14 +1114,13 @@
       }
     }
 
-    .socials {
-      a {
-        margin: @spacing-sm;
-        opacity: @subtle-opacity;
-        cursor: pointer;
-
-        &:hover {
-          opacity: 1;
+    .anticon {
+      font-size: 14px;
+      margin: @spacing-md @spacing-xs;
+      &:hover {
+        svg path {
+          transition: fill @transition-duration ease-out;
+          fill: @secondary;
         }
       }
     }
@@ -1175,7 +1153,7 @@
     // Modals
     .modal-content {
       &-header {
-        font-size: @header-font-size;
+        font-size: @lg-font-size;
         line-height: 32px;
       }
       &-subheader {
@@ -1207,41 +1185,39 @@
     }
     // Percentage Chart
     .percentage-chart {
-      width: 110px;
-      height: 110px;
+      width: 115px;
+      height: 115px;
       margin: @spacing-md 0;
 
       .chart-info {
-        width: 110px;
+        width: 115px;
       }
       .inset-chart-shadow {
-        width: 102px;
-        height: 102px;
+        width: 107px;
+        height: 107px;
       }
       svg {
-        width: 126px;
-        stroke: @failure;
+        width: 131px;
+        stroke: @danger;
       }
     }
     // Reserve Detail Modal
     .reserve-detail-modal {
+      .ant-modal-content {
+        max-width: unset;
+      }
       span {
         font-size: @xs-font-size;
       }
-      img {
-        width: 30px;
-        height: 30px;
+      .asset-logo {
+        width: 25px;
+        height: 25px;
       }
       button {
         margin-bottom: @spacing-lg;
 
         span {
           font-size: inherit;
-        }
-      }
-      .reserve-subdetail {
-        span {
-          font-size: 9px;
         }
       }
     }
@@ -1396,15 +1372,13 @@
                 }
                 &.market-table-asset {
                   span {
-                    &:first-of-type {
-                      top: 17px;
-                    }
-                    &:last-of-type {
-                      top: 32px;
-                    }
+                    display: none;
                   }
                 }
 
+                &:first-of-type {
+                  padding-right: unset;
+                }
                 &:last-of-type {
                   font-size: @lg-font-size;
                 }
@@ -1414,17 +1388,16 @@
         }
       }
     }
+    // Transaction Logs
+    .transaction-logs {
+      .table-container {
+        max-width: 300px;
+      }
+    }
     // Settings View
     .settings {
       width: 100%;
-      padding: unset;
       box-shadow: unset;
-
-      .setting {
-        input {
-          width: 240px;
-        }
-      }
     }
     // Init Failed
     .init-failed img {

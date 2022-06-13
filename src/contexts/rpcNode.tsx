@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Connection } from '@solana/web3.js';
-import { cluster, useProvider, idl } from '../hooks/jet-client/useClient';
+import { cluster, idl, useMargin } from './marginContext';
 
 // RPC node context
 interface RpcNode {
@@ -26,7 +26,7 @@ export function RpcNodeContextProvider(props: { children: JSX.Element }): JSX.El
 
   // Update ping and check for network congestion
   // whenever user's connection changes
-  const { connection } = useProvider();
+  const { connection } = useMargin();
   useEffect(() => {
     const getPing = async () => {
       const startTime = Date.now();

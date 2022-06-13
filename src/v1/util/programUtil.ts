@@ -1,11 +1,4 @@
-import { BN } from '@project-serum/anchor';
 import * as anchor from '@project-serum/anchor';
-import {
-  MintInfo,
-  MintLayout,
-  AccountInfo as TokenAccountInfo,
-  AccountLayout as TokenAccountLayout
-} from '@solana/spl-token';
 import {
   AccountInfo,
   Commitment,
@@ -18,26 +11,13 @@ import {
   TransactionInstruction
 } from '@solana/web3.js';
 import { Buffer } from 'buffer';
-import type {
-  HasPublicKey,
-  IdlMetadata,
-  JetMarketReserveInfo,
-  MarketAccount,
-  ObligationAccount,
-  ObligationPositionStruct,
-  ReserveAccount,
-  ReserveConfigStruct,
-  ReserveStateStruct,
-  ToBytes
-} from '../models/JetTypes';
+import type { HasPublicKey, IdlMetadata, ReserveConfigStruct, ToBytes } from '../models/JetTypes';
 import { TxnResponse } from '../models/JetTypes';
-import { MarketReserveInfoList, PositionInfoList, ReserveStateLayout } from './layout';
-import { TokenAmount } from './tokens';
-import { idl } from '../../hooks/jet-client/useClient';
+import { idl } from '../../contexts/marginContext';
+import { AssociatedToken, TokenAmount } from '@jet-lab/margin';
 
 // Find PDA functions and jet algorithms that are reimplemented here
 export const SOL_DECIMALS = 9;
-export const NULL_PUBKEY = new PublicKey('11111111111111111111111111111111');
 
 // Find PDA addresses
 /** Find market authority. */
@@ -178,12 +158,8 @@ export const getTokenAccountAndSubscribe = async function (
     publicKey,
     (account, context) => {
       if (account !== null) {
-        if (account.data.length !== 165) {
-          console.log('account data length', account.data.length);
-        }
-        const decoded = parseTokenAccount(account, publicKey);
-        const amount = TokenAmount.tokenAccount(decoded.data, decimals);
-        callback(amount, context);
+        const decoded = AssociatedToken.decodeAccount(account, publicKey, decimals);
+        callback(decoded.amount, context);
       } else {
         callback(undefined, context);
       }
@@ -213,8 +189,8 @@ export const getMintInfoAndSubscribe = async function (
     publicKey,
     (account, context) => {
       if (account !== null) {
-        const mintInfo = MintLayout.decode(account.data) as MintInfo;
-        const amount = TokenAmount.mint(mintInfo);
+        const decoded = AssociatedToken.decodeMint(account, publicKey);
+        const amount = TokenAmount.mint(decoded);
         callback(amount, context);
       } else {
         callback(undefined, context);
@@ -302,18 +278,17 @@ export const getAccountInfoAndSubscribe = async function (
 };
 
 export const sendTransaction = async (
-  provider: anchor.Provider,
+  provider: anchor.AnchorProvider,
   instructions: TransactionInstruction[],
-  signers?: Signer[],
-  skipConfirmation?: boolean
+  signers?: Signer[]
 ): Promise<[res: TxnResponse, txid: string[]]> => {
   if (!provider.wallet?.publicKey) {
-    throw new Error('Wallet is not connected');
+    return [TxnResponse.Failed, []];
   }
   // Building phase
   let transaction = new Transaction();
   transaction.instructions = instructions;
-  transaction.recentBlockhash = (await provider.connection.getRecentBlockhash()).blockhash;
+  transaction.recentBlockhash = (await provider.connection.getLatestBlockhash()).blockhash;
   transaction.feePayer = provider.wallet.publicKey;
 
   // Signing phase
@@ -323,26 +298,22 @@ export const sendTransaction = async (
   try {
     transaction = await provider.wallet.signTransaction(transaction);
   } catch (err) {
-    console.log('Signing Transactions Failed', err, [TxnResponse.Failed, null]);
+    console.log('Signing Transactions cancelled', err);
     // wallet refused to sign
     return [TxnResponse.Cancelled, []];
   }
 
   // Sending phase
   const rawTransaction = transaction.serialize();
-  const txid = await provider.connection.sendRawTransaction(rawTransaction, provider.opts);
-  console.log(`Transaction ${explorerUrl(txid)} ${rawTransaction.byteLength} of 1232 bytes...`, transaction);
-
-  // Confirming phase
-  let res = TxnResponse.Success;
-  if (!skipConfirmation) {
-    const status = (await provider.connection.confirmTransaction(txid, provider.opts.commitment)).value;
-
-    if (status?.err && txid.length) {
-      res = TxnResponse.Failed;
-    }
+  console.log(`Transaction ${rawTransaction.byteLength} of 1232 bytes...`, transaction);
+  try {
+    const txid = [await provider.sendAndConfirm(transaction)];
+    const res = TxnResponse.Success;
+    return [res, txid];
+  } catch (err: any) {
+    console.log(err);
+    return [TxnResponse.Failed, []];
   }
-  return [res, [txid]];
 };
 
 export interface InstructionAndSigner {
@@ -351,156 +322,30 @@ export interface InstructionAndSigner {
 }
 
 export const sendAllTransactions = async (
-  provider: anchor.Provider,
-  transactions: InstructionAndSigner[],
-  skipConfirmation?: boolean
+  provider: anchor.AnchorProvider,
+  txWithSigners: {
+    tx: anchor.web3.Transaction;
+    signers?: anchor.web3.Signer[] | undefined;
+  }[]
 ): Promise<[res: TxnResponse, txids: string[]]> => {
   if (!provider.wallet?.publicKey) {
     throw new Error('Wallet is not connected');
   }
 
-  // Building and partial sign phase
-  const recentBlockhash = await provider.connection.getRecentBlockhash();
-  const txs: Transaction[] = [];
-  for (const tx of transactions) {
-    if (tx.ix.length === 0) {
-      continue;
-    }
-    const transaction = new Transaction();
-    transaction.instructions = tx.ix;
-    transaction.recentBlockhash = recentBlockhash.blockhash;
-    transaction.feePayer = provider.wallet.publicKey;
-    if (tx.signers && tx.signers.length > 0) {
-      transaction.partialSign(...tx.signers);
-    }
-    txs.push(transaction);
-  }
-
-  // Signing phase
-  let signedTransactions: Transaction[] = [];
-  try {
-    //solong does not have a signAllTransactions Func so we sign one by one
-    if (!provider.wallet.signAllTransactions) {
-      for (let i = 0; i < txs.length; i++) {
-        const signedTxn = await provider.wallet.signTransaction(txs[i]);
-        signedTransactions.push(signedTxn);
-      }
-    } else {
-      signedTransactions = await provider.wallet.signAllTransactions(txs);
-    }
-  } catch (err) {
-    console.log('Signing All Transactions Failed', err);
-    // wallet refused to sign
-    return [TxnResponse.Cancelled, []];
-  }
-
   // Sending phase
-  console.log('Transactions', txs);
-  let res = TxnResponse.Success;
-  const txids: string[] = [];
-  for (let i = 0; i < signedTransactions.length; i++) {
-    const transaction = signedTransactions[i];
-
-    // Transactions can be simulated against an old slot that
-    // does not include previously sent transactions. In most
-    // conditions only the first transaction can be simulated
-    // safely
-    const skipPreflightSimulation = i !== 0;
-    const opts: ConfirmOptions = {
-      ...provider.opts,
-      skipPreflight: skipPreflightSimulation
-    };
-
-    const rawTransaction = transaction.serialize();
-    const txid = await provider.connection.sendRawTransaction(rawTransaction, opts);
-    console.log(`Transaction ${explorerUrl(txid)} ${rawTransaction.byteLength} of 1232 bytes...`);
-    txids.push(txid);
-
-    // Confirming phase
-    if (!skipConfirmation) {
-      const status = (await provider.connection.confirmTransaction(txid, provider.opts.commitment)).value;
-
-      if (status?.err) {
-        res = TxnResponse.Failed;
-      }
-    }
+  console.log('Transactions', txWithSigners);
+  try {
+    const txids = await provider.sendAll(txWithSigners);
+    return [TxnResponse.Success, txids];
+  } catch (err: any) {
+    console.log(err);
+    return [TxnResponse.Failed, []];
   }
-  return [res, txids];
 };
 
 export const explorerUrl = (txid: string) => {
   const clusterParam = process.env.REACT_APP_CLUSTER === 'devnet' ? `?cluster=devnet` : '';
   return `https://explorer.solana.com/transaction/${txid}${clusterParam}`;
-};
-
-export const parseTokenAccount = (account: AccountInfo<Buffer>, accountPubkey: PublicKey) => {
-  const data = TokenAccountLayout.decode(account.data);
-
-  // PublicKeys and BNs are currently Uint8 arrays and
-  // booleans are really Uint8s. Convert them
-  const decoded: AccountInfo<TokenAccountInfo> = {
-    ...account,
-    data: {
-      address: accountPubkey,
-      mint: new PublicKey(data.mint),
-      owner: new PublicKey(data.owner),
-      amount: new BN(data.amount, undefined, 'le'),
-      delegate: (data as any).delegateOption ? new PublicKey(data.delegate!) : null,
-      delegatedAmount: new BN(data.delegatedAmount, undefined, 'le'),
-      isInitialized: (data as any).state !== 0,
-      isFrozen: (data as any).state === 2,
-      isNative: !!(data as any).isNativeOption,
-      rentExemptReserve: new BN(0, undefined, 'le'),
-      closeAuthority: (data as any).closeAuthorityOption ? new PublicKey(data.closeAuthority!) : null
-    }
-  };
-  return decoded;
-};
-
-export const parseMarketAccount = (account: Buffer, coder: anchor.Coder) => {
-  const market = coder.accounts.decode<MarketAccount>('Market', account);
-
-  const reserveInfoData = new Uint8Array(market.reserves as any as number[]);
-  const reserveInfoList = MarketReserveInfoList.decode(reserveInfoData) as JetMarketReserveInfo[];
-
-  market.reserves = reserveInfoList;
-  return market;
-};
-
-export const parseReserveAccount = (account: Buffer, coder: anchor.Coder) => {
-  const reserve = coder.accounts.decode<ReserveAccount>('Reserve', account);
-
-  const reserveState = ReserveStateLayout.decode(Buffer.from(reserve.state as any as number[])) as ReserveStateStruct;
-
-  reserve.state = reserveState;
-  return reserve;
-};
-
-export const parseObligationAccount = (account: Buffer, coder: anchor.Coder) => {
-  const obligation = coder.accounts.decode<ObligationAccount>('Obligation', account);
-
-  const parsePosition = (position: any) => {
-    const pos: ObligationPositionStruct = {
-      account: new PublicKey(position.account),
-      amount: new BN(position.amount),
-      side: position.side,
-      reserveIndex: position.reserveIndex,
-      _reserved: []
-    };
-    return pos;
-  };
-
-  obligation.collateral = PositionInfoList.decode(Buffer.from(obligation.collateral as any as number[])).map(
-    parsePosition
-  );
-
-  obligation.loans = PositionInfoList.decode(Buffer.from(obligation.loans as any as number[])).map(parsePosition);
-
-  return obligation;
-};
-
-export const parseU192 = (data: Buffer | number[]) => {
-  return new BN(data, undefined, 'le');
 };
 
 export const parseIdlMetadata = (idlMetadata: IdlMetadata): IdlMetadata => {

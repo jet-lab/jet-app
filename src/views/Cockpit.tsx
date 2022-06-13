@@ -2,19 +2,20 @@ import { useEffect, useState } from 'react';
 import { useInitFailed } from '../contexts/init';
 import { useGeoban, useLanguage } from '../contexts/localization/localization';
 import { useAlert } from '../contexts/copilotModal';
-import { cluster } from '../hooks/jet-client/useClient';
+import { cluster, useMargin } from '../contexts/marginContext';
 import { currencyFormatter, totalAbbrev } from '../utils/currency';
 import { InitFailed } from '../components/InitFailed';
 import { Info } from '../components/Info';
 import { HealthBar } from '../components/HealthBar';
 import { TradePanel } from '../components/TradePanel';
 import { MarketTable } from '../components/MarketTable';
-import { Checkbox } from 'antd';
+import { Checkbox, Skeleton } from 'antd';
 import { EthNotification } from '../components/EthNotification';
 
 // Jet V1
 import { useUser } from '../v1/contexts/user';
 import { useMarket } from '../v1/contexts/market';
+import { WarningFilled } from '@ant-design/icons';
 
 export function Cockpit(): JSX.Element {
   const isGeobanned = useGeoban();
@@ -23,8 +24,11 @@ export function Cockpit(): JSX.Element {
   const { setAlert } = useAlert();
 
   // Jet V1
-  const user = useUser();
+  const userV1 = useUser();
   const market = useMarket();
+
+  // Jet V2
+  const { config, manager, poolsFetched, pools, marginAccount, walletBalances, userFetched } = useMargin();
 
   // If user has not accepted disclaimer, alert them to accept
   const acceptedDisclaimer = localStorage.getItem('jetDisclaimerAccepted') === 'true';
@@ -32,7 +36,7 @@ export function Cockpit(): JSX.Element {
   useEffect(() => {
     if (cluster === 'mainnet-beta' && !acceptedDisclaimer) {
       setAlert({
-        status: 'failure',
+        status: 'danger',
         overview: dictionary.copilot.alert.warning,
         detail: (
           <span>
@@ -72,13 +76,13 @@ export function Cockpit(): JSX.Element {
           <div className="trade-market-tvl flex align-start justify-center column">
             <h2 className="view-subheader">{dictionary.cockpit.totalSupply}</h2>
             <h1 className={`view-header ${market.marketInit ? 'gradient-text' : ''}`}>
-              {market.marketInit ? totalAbbrev(market.totalSupply) : '--'}
+              {market.marketInit ? totalAbbrev(market.totalSupply) : <Skeleton paragraph={false} active />}
             </h1>
           </div>
           <div className="trade-market-tvl flex align-start justify-center column">
             <h2 className="view-subheader">{dictionary.reserveDetail.totalBorrowed}</h2>
             <h1 className={`view-header ${market.marketInit ? 'gradient-text' : ''}`}>
-              {market.marketInit ? totalAbbrev(market.totalBorrowed) : '--'}
+              {market.marketInit ? totalAbbrev(market.totalBorrowed) : <Skeleton paragraph={false} active />}
             </h1>
           </div>
           <div className="trade-position-snapshot flex-centered">
@@ -87,24 +91,26 @@ export function Cockpit(): JSX.Element {
                 <h2 className="view-subheader">{dictionary.cockpit.yourRatio}</h2>
                 <Info term="collateralizationRatio" />
               </div>
-              {user.walletInit ? (
+              {userFetched ? (
                 <>
                   <h1
                     className={`view-header
                     ${
-                      !user.position.borrowedValue || user.position.colRatio >= market.minColRatio + 0.25
+                      !userV1.position.borrowedValue || userV1.position.colRatio >= market.minColRatio + 0.25
                         ? 'success-text'
-                        : user.position.colRatio <= market.minColRatio + 0.1
+                        : userV1.position.colRatio <= market.minColRatio + 0.1
                         ? 'danger-text'
                         : 'warning-text'
                     }`}
-                    style={{ pointerEvents: 'none', fontSize: !user.position.borrowedValue ? '125px' : '' }}>
-                    {user.position.borrowedValue > 0
-                      ? user.position.colRatio > 10
+                    style={{ pointerEvents: 'none', fontSize: !userV1.position.borrowedValue ? '125px' : '' }}>
+                    {userV1.position.borrowedValue > 0
+                      ? userV1.position.colRatio > 10
                         ? '>1000'
-                        : currencyFormatter(user.position.colRatio * 100, false, 1)
+                        : currencyFormatter(userV1.position.colRatio * 100, false, 1)
                       : '∞'}
-                    {user.position.borrowedValue > 0 && <span style={{ color: 'inherit', paddingLeft: '2px' }}>%</span>}
+                    {userV1.position.borrowedValue > 0 && (
+                      <span style={{ color: 'inherit', paddingLeft: '2px' }}>%</span>
+                    )}
                   </h1>
                   <HealthBar />
                 </>
@@ -115,23 +121,23 @@ export function Cockpit(): JSX.Element {
             <div className="flex-centered column">
               <div className="trade-position-value flex-centered column">
                 <h2 className="view-subheader">{dictionary.cockpit.totalDepositedValue}</h2>
-                {user.walletInit ? (
-                  <p className="gradient-text">{currencyFormatter(user.position.depositedValue ?? 0, true)}</p>
+                {userFetched ? (
+                  <p className="gradient-text">{currencyFormatter(userV1.position.depositedValue, true)}</p>
                 ) : (
                   <p>--</p>
                 )}
               </div>
               <div className="trade-position-value flex-centered column">
                 <h2 className="view-subheader">{dictionary.cockpit.totalBorrowedValue}</h2>
-                {user.walletInit ? (
-                  <p className="gradient-text">{currencyFormatter(user.position.borrowedValue ?? 0, true)}</p>
+                {userFetched ? (
+                  <p className="gradient-text">{currencyFormatter(userV1.position.borrowedValue, true)}</p>
                 ) : (
                   <p>--</p>
                 )}
               </div>
-              {user.walletInit && (
+              {userFetched && (
                 <div className="trade-position-value min-c-note flex align-start justify-center">
-                  <i className="fas fa-exclamation-triangle"></i>
+                  <WarningFilled style={{ margin: '2px 5px 0 0' }} />
                   <span>
                     {dictionary.cockpit.minColRatioNote.replace('{{MIN_COL_RATIO}}', market.minColRatio * 100)}
                   </span>
@@ -143,7 +149,7 @@ export function Cockpit(): JSX.Element {
         <div className="trade-table-container">
           <TradePanel />
           <MarketTable />
-          {user.collateralBalances['ETH'] > 0 || user.loanBalances['ETH'] > 0 ? <EthNotification /> : null}
+          {userV1.collateralBalances['ETH'] > 0 || userV1.loanBalances['ETH'] > 0 ? <EthNotification /> : null}
         </div>
       </div>
     );
