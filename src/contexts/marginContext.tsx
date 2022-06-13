@@ -6,7 +6,7 @@ import {
   Pool,
   PoolManager,
   AssociatedToken,
-  MarginClient,
+  MarginClient
 } from '@jet-lab/margin';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { createContext, useContext, useMemo } from 'react';
@@ -34,7 +34,7 @@ const DEFAULT_WALLET_BALANCES = Object.fromEntries(
 
 interface MarginContextState {
   connection: Connection;
-  manager: PoolManager,
+  manager: PoolManager;
   config: MarginConfig;
   poolsFetched: boolean;
   pools: Record<MarginTokens, Pool> | undefined;
@@ -68,8 +68,8 @@ function useProvider() {
   (provider as any).wallet = wallet;
 
   const programs = MarginClient.getPrograms(provider, config);
-  const manager = new PoolManager(programs, provider)
-  return {manager };
+  const manager = new PoolManager(programs, provider);
+  return { manager };
 }
 
 // Trade info context provider
@@ -92,14 +92,17 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
   const { data: user, isFetched: userFetched } = useQuery(
     ['user', endpoint, publicKey?.toBase58()],
     async () => {
-      if (!publicKey) return
-      const walletBalances = await MarginAccount.loadTokens(manager.programs, publicKey) as unknown as Record<MarginTokens, AssociatedToken>;
+      if (!publicKey) return;
+      const walletBalances = (await MarginAccount.loadTokens(manager.programs, publicKey)) as unknown as Record<
+        MarginTokens,
+        AssociatedToken
+      >;
       let marginAccount: MarginAccount | undefined;
       try {
         marginAccount = await MarginAccount.load({
-          programs: manager.programs, 
+          programs: manager.programs,
           provider: manager.provider,
-          owner: publicKey, 
+          owner: publicKey,
           seed: 0
         });
       } catch {

@@ -5,7 +5,6 @@ import { ReactComponent as BTC } from '../styles/icons/cryptos/BTC.svg';
 import { ReactComponent as ETH } from '../styles/icons/cryptos/ETH.svg';
 import { ReactComponent as SRM } from '../styles/icons/cryptos/SRM.svg';
 
-
 export function AssetLogo(props: { symbol: string; height: number; style?: React.CSSProperties }): JSX.Element {
   const { symbol, height } = props;
 

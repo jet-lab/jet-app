@@ -5,8 +5,7 @@ import { MarginTokens, PoolAmount } from '@jet-lab/margin';
 
 export const useMarginActions = () => {
   // Jet V2
-  const { config, manager, poolsFetched, pools, marginAccount, walletBalances, userFetched, refresh } =
-    useMargin();
+  const { config, manager, poolsFetched, pools, marginAccount, walletBalances, userFetched, refresh } = useMargin();
 
   // Deposit
   const deposit = async (abbrev: MarginTokens, lamports: BN): Promise<[res: TxnResponse, txid: string[]]> => {
@@ -80,7 +79,8 @@ export const useMarginActions = () => {
         txids.push(txid);
       }
       const txid = await pool.marginBorrow({
-        marginAccount, amount
+        marginAccount,
+        amount
       });
       txids.push(txid);
       refresh();
@@ -107,7 +107,8 @@ export const useMarginActions = () => {
         txids.push(txid);
       }
       const txid = await pool.marginRepay({
-        marginAccount, amount
+        marginAccount,
+        amount
       });
       txids.push(txid);
       refresh();
