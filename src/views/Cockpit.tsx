@@ -28,7 +28,7 @@ export function Cockpit(): JSX.Element {
   const market = useMarket();
 
   // Jet V2
-  const { config, programs, poolsFetched, pools, marginAccount, walletBalances, userFetched } = useMargin();
+  const { config, manager, poolsFetched, pools, marginAccount, walletBalances, userFetched } = useMargin();
 
   // If user has not accepted disclaimer, alert them to accept
   const acceptedDisclaimer = localStorage.getItem('jetDisclaimerAccepted') === 'true';

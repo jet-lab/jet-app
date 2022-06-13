@@ -3,6 +3,7 @@ import { ReactComponent as USDC } from '../styles/icons/cryptos/USDC.svg';
 import { ReactComponent as SOL } from '../styles/icons/cryptos/SOL.svg';
 import { ReactComponent as BTC } from '../styles/icons/cryptos/BTC.svg';
 import { ReactComponent as ETH } from '../styles/icons/cryptos/ETH.svg';
+import { ReactComponent as SRM } from '../styles/icons/cryptos/SRM.svg';
 
 export function AssetLogo(props: { symbol: string; height: number; style?: React.CSSProperties }): JSX.Element {
   const { symbol, height } = props;
@@ -13,6 +14,8 @@ export function AssetLogo(props: { symbol: string; height: number; style?: React
     return <SOL className="asset-logo" height={height} width={height} style={props.style} />;
   } else if (symbol === 'BTC') {
     return <BTC className="asset-logo" height={height} width={height} style={props.style} />;
+  } else if (symbol === 'SRM') {
+    return <SRM className="asset-logo" height={height} width={height} style={props.style} />;
   } else if (symbol === 'ETH') {
     return <ETH className="asset-logo" height={height} width={height} style={props.style} />;
   } else {

@@ -45,7 +45,7 @@ export function TradePanel(): JSX.Element {
   const { deposit, withdraw, borrow, repay } = useMarginActions();
 
   // Jet V2
-  const { config, programs, poolsFetched, pools, marginAccount, walletBalances, userFetched } = useMargin();
+  const { config, manager, poolsFetched, pools, marginAccount, walletBalances, userFetched } = useMargin();
 
   // Input values
   const [maxInput, setMaxInput] = useState<number>(0);

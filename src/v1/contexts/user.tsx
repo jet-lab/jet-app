@@ -51,8 +51,8 @@ const UserContext = createContext<User>({
 // User context provider
 export function UserContextProvider(props: { children: JSX.Element }): JSX.Element {
   const { connected, publicKey } = useWallet();
-  const { programs, connection } = useMargin();
-  const program = programs?.marginPool as any as Program;
+  const { manager, connection } = useMargin();
+  const program = manager.programs.marginPool as any as Program;
   const market = useMarket();
   const [walletInit, setWalletInit] = useState<boolean>(false);
   const [assets, setAssets] = useState<AssetStore>({
