@@ -19,7 +19,7 @@ import { NATIVE_MINT } from '@solana/spl-token';
 import { useUser } from '../v1/contexts/user';
 import { useMarket } from '../v1/contexts/market';
 import { Reserve } from '../v1/models/JetTypes';
-import { Pool, MarginTokens, TokenAmount } from '@jet-lab/margin';
+import { Pool, MarginTokens, TokenAmount, MarginPools } from '@jet-lab/margin';
 import { FilterFilled } from '@ant-design/icons';
 import { AssetLogo } from './AssetLogo';
 import { TokenFaucet } from '@jet-lab/margin';
@@ -146,7 +146,7 @@ export function MarketTable(): JSX.Element {
             </thead>
             <tbody>
               {pools &&
-                (Object.keys(pools) as MarginTokens[]).map((poolKey, index) => {
+                (Object.keys(pools) as MarginPools[]).map((poolKey, index) => {
                   const pool = pools[poolKey];
                   if (
                     !pool.name?.toLocaleLowerCase().includes(filter) &&
@@ -156,12 +156,11 @@ export function MarketTable(): JSX.Element {
                   return (
                     <tr
                       key={index}
-                      className={currentReserve?.abbrev === pool.symbol ? 'active' : ''}
+                      className={currentPool?.symbol === pool.symbol ? 'active' : ''}
                       onClick={() => {
-                        // setCurrentReserve(reserve);
-                        // if (pool) {
-                        //   setCurrentPool(pool);
-                        // }
+                        if (pool) {
+                          setCurrentPool(pool);
+                        }
                       }}>
                       <td className="market-table-asset">
                         <AssetLogo symbol={String(pool.symbol)} height={25} />
@@ -186,18 +185,21 @@ export function MarketTable(): JSX.Element {
                       </td>
                       <td
                         className={
-                          ''
-                          // userFetched && walletBalances[pool.symbol]
-                          //   ? 'user-wallet-value text-btn semi-bold-text'
-                          //   : ''
+                          
+                           userFetched && walletBalances[pool?.symbol || "BTC"]
+                           ? 'user-wallet-value text-btn semi-bold-text'
+                           : ''
                         }
                         onClick={() => {
-                          // if (userFetched && walletBalances[pool.symbol]) {
-                          //   setCurrentAction('deposit');
-                          //   setCurrentAmount(walletBalances[pool.symbol].amount.tokens);
-                          // }
+                          if (userFetched && walletBalances[pool.symbol ||  "BTC"]) {
+                             setCurrentAction('deposit');
+                             setCurrentAmount(walletBalances[pool.symbol ||  "BTC"].amount.tokens);
+                          }
                         }}>
-                        {/* {pool && pool.tokenPrice !== undefined
+                          
+                        {
+                           walletBalances[poolKey] != undefined ? walletBalances[poolKey].amount.tokens  : '--'
+                        /* {pool && pool.tokenPrice !== undefined && pool.symbol !== undefined
                         ? walletBalances[pool.symbol].amount.tokens > 0 &&
                           walletBalances[pool.symbol].amount.tokens < 0.0005
                           ? '~0'

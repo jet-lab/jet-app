@@ -94,13 +94,13 @@ export function RadarModal(): JSX.Element {
                   />
                 </td>
                 <td className="deposit-rate">
-                  {currentReserve?.abbrev && protocol.rates[currentReserve.abbrev]
-                    ? `${Math.ceil(protocol.rates[currentReserve.abbrev].deposit * 100 * 100) / 100}%`
+                  {currentPool?.symbol && protocol.rates[currentPool.symbol]
+                    ? `${Math.ceil(protocol.rates[currentPool.symbol].deposit * 100 * 100) / 100}%`
                     : '--'}
                 </td>
                 <td className="borrow-rate">
-                  {currentReserve?.abbrev && protocol.rates[currentReserve.abbrev]
-                    ? `${Math.ceil(protocol.rates[currentReserve.abbrev].borrow * 100 * 100) / 100}%`
+                  {currentPool?.symbol && protocol.rates[currentPool.symbol]
+                    ? `${Math.ceil(protocol.rates[currentPool.symbol].borrow * 100 * 100) / 100}%`
                     : '--'}
                 </td>
               </tr>
