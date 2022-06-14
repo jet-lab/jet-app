@@ -72,7 +72,7 @@ export function TradePanel(): JSX.Element {
     // Initially set to true and reset message
     setDisabledMessage('');
     setDisabledInput(true);
-    if (!currentPool || currentPool == undefined||  currentPool.symbol == undefined) {
+    if (!currentPool || currentPool == undefined || currentPool.symbol == undefined) {
       return;
     }
 
@@ -313,7 +313,7 @@ export function TradePanel(): JSX.Element {
   // Check user input and for Copilot warning
   // Then submit trade RPC call
   async function submitTrade() {
-    if (!currentPool  ||  currentPool.symbol == undefined || !userV1.assets || !currentAmount) {
+    if (!currentPool || currentPool.symbol == undefined || !userV1.assets || !currentAmount) {
       return;
     }
 

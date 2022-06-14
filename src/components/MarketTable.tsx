@@ -185,21 +185,19 @@ export function MarketTable(): JSX.Element {
                       </td>
                       <td
                         className={
-                          
-                           userFetched && walletBalances[pool?.symbol || "BTC"]
-                           ? 'user-wallet-value text-btn semi-bold-text'
-                           : ''
+                          userFetched && walletBalances[pool?.symbol || 'BTC']
+                            ? 'user-wallet-value text-btn semi-bold-text'
+                            : ''
                         }
                         onClick={() => {
-                          if (userFetched && walletBalances[pool.symbol ||  "BTC"]) {
-                             setCurrentAction('deposit');
-                             setCurrentAmount(walletBalances[pool.symbol ||  "BTC"].amount.tokens);
+                          if (userFetched && walletBalances[pool.symbol || 'BTC']) {
+                            setCurrentAction('deposit');
+                            setCurrentAmount(walletBalances[pool.symbol || 'BTC'].amount.tokens);
                           }
                         }}>
-                          
                         {
-                           walletBalances[poolKey] != undefined ? walletBalances[poolKey].amount.tokens  : '--'
-                        /* {pool && pool.tokenPrice !== undefined && pool.symbol !== undefined
+                          walletBalances[poolKey] != undefined ? walletBalances[poolKey].amount.tokens : '--'
+                          /* {pool && pool.tokenPrice !== undefined && pool.symbol !== undefined
                         ? walletBalances[pool.symbol].amount.tokens > 0 &&
                           walletBalances[pool.symbol].amount.tokens < 0.0005
                           ? '~0'
@@ -209,7 +207,8 @@ export function MarketTable(): JSX.Element {
                             nativeValues,
                             3
                           )
-                        : '--'} */}
+                        : '--'} */
+                        }
                       </td>
                       <td
                         className={

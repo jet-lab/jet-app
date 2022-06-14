@@ -40,7 +40,7 @@ interface MarginContextState {
   manager: PoolManager;
   config: MarginConfig;
   poolsFetched: boolean;
-  pools: Record<MarginTokens, Pool> | undefined;  
+  pools: Record<MarginTokens, Pool> | undefined;
   userFetched: boolean;
   marginAccount: MarginAccount | undefined;
   walletBalances: Record<MarginPools, AssociatedToken>;
@@ -52,7 +52,7 @@ interface MarginContextState {
 const MarginContext = createContext<MarginContextState>({
   poolsFetched: false,
   userFetched: false,
-  poolPositionsFetched: false,
+  poolPositionsFetched: false
 } as MarginContextState);
 
 const confirmOptions = {
@@ -105,11 +105,11 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
           programs: manager.programs,
           provider: manager.provider,
           owner: publicKey,
-          seed: 0,
+          seed: 0
         });
 
-        const poolPositions = marginAccount?.getAllPoolPositions()
-        return poolPositions
+        const poolPositions = marginAccount?.getAllPoolPositions();
+        return poolPositions;
       } catch {
         // nothing
       }
@@ -121,7 +121,7 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
     setTimeout(() => {
       queryClient.invalidateQueries('user');
       queryClient.invalidateQueries('pools');
-      queryClient.invalidateQueries('poolPositions')
+      queryClient.invalidateQueries('poolPositions');
     }, 2000);
   }
 
@@ -129,7 +129,7 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
     ['user', endpoint, publicKey?.toBase58()],
     async () => {
       if (!publicKey) return;
-      const walletBalances = (await MarginAccount.loadTokens(manager.programs, publicKey)) as MarginWalletTokens
+      const walletBalances = (await MarginAccount.loadTokens(manager.programs, publicKey)) as MarginWalletTokens;
       let marginAccount: MarginAccount | undefined;
       try {
         marginAccount = await MarginAccount.load({
@@ -141,8 +141,8 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
       } catch {
         // nothing
       }
-      const walletBalanceSource = walletBalances.map
-      return { marginAccount, walletBalanceSource};
+      const walletBalanceSource = walletBalances.map;
+      return { marginAccount, walletBalanceSource };
     },
     { enabled: !!manager.programs && !!pools && !!publicKey }
   );
@@ -172,4 +172,3 @@ export const useMargin = () => {
   const context = useContext(MarginContext);
   return context;
 };
-
