@@ -1,3 +1,4 @@
+import '@dialectlabs/react-ui/lib/index.css';
 import './styles/App.less';
 import { useMemo } from 'react';
 import { HashRouter, Route, Routes } from 'react-router-dom';
@@ -5,12 +6,11 @@ import { DarkThemeProvider } from './contexts/darkTheme';
 import { LocalizationProvider } from './contexts/localization/localization';
 import { WalletProvider } from '@solana/wallet-adapter-react';
 import {
-  getMathWallet,
-  getPhantomWallet,
-  getSolflareWallet,
-  getSolletWallet,
-  getSolongWallet,
-  getSlopeWallet
+  PhantomWalletAdapter,
+  MathWalletAdapter,
+  SolflareWalletAdapter,
+  SolongWalletAdapter,
+  SolletWalletAdapter
 } from '@solana/wallet-adapter-wallets';
 import { RpcNodeContextProvider } from './contexts/rpcNode';
 import { BlockExplorerProvider } from './contexts/blockExplorer';
@@ -29,6 +29,7 @@ import { NetworkWarningBanner } from './components/NetworkWarningBanner';
 import { Cockpit } from './views/Cockpit';
 import { TransactionLogs } from './views/TransactionLogs';
 import { Settings } from './views/Settings';
+// import { NotificationsModal } from '@dialectlabs/react-ui';
 
 // Jet V1
 import { UserContextProvider } from './v1/contexts/user';
@@ -37,12 +38,12 @@ import { MarketContextProvider } from './v1/contexts/market';
 export function App(): JSX.Element {
   const wallets = useMemo(
     () => [
-      getPhantomWallet(),
-      getSolflareWallet(),
-      getSolongWallet(),
-      getMathWallet(),
-      getSolletWallet(),
-      getSlopeWallet()
+      new PhantomWalletAdapter(),
+      new MathWalletAdapter(),
+      new SolflareWalletAdapter(),
+      new SolongWalletAdapter(),
+      new SolletWalletAdapter(),
+      new SolletWalletAdapter()
     ],
     []
   );

@@ -136,7 +136,7 @@ export function MarketTable(): JSX.Element {
             <tbody>
               {filteredMarketTable.map((reserve, i) => {
                 if (!hasSolletEth && reserve.abbrev === 'ETH') {
-                  return;
+                  return null;
                 } else {
                   return (
                     <tr
