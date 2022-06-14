@@ -31,17 +31,17 @@ describe('Utils - Currency', () => {
   describe('totalAbbrev', () => {
     it('should default to USD', () => {
       const result = totalAbbrev(testAmount);
-      expect(result).toEqual('$20,000.00');
+      expect(result).toEqual('$20.0K');
     });
 
     it('should accept a `price` parameter', () => {
       const result = totalAbbrev(testAmount, price);
-      expect(result).toEqual('$20,000.00');
+      expect(result).toEqual('$20.0K');
     });
 
     it('should accept a `native` parameter', () => {
       const result = totalAbbrev(testAmount, price, true);
-      expect(result).toEqual('20,000');
+      expect(result).toEqual('20.0K');
     });
 
     it('should accept a `digits` parameter', () => {
@@ -51,7 +51,7 @@ describe('Utils - Currency', () => {
 
     it('should ignore the digits parameter is the native parameter is true', () => {
       const result = totalAbbrev(testAmount, price, true, digits);
-      expect(result).toEqual('20,000');
+      expect(result).toEqual('20.0K');
     });
   });
 });
