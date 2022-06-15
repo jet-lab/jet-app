@@ -1,14 +1,14 @@
 import { BN } from '@project-serum/anchor';
 import { TxnResponse } from '../v1/models/JetTypes';
 import { useMargin } from '../contexts/marginContext';
-import { MarginTokens, PoolAmount } from '@jet-lab/margin';
+import { MarginPools, PoolAmount } from '@jet-lab/margin';
 
 export const useMarginActions = () => {
   // Jet V2
   const { config, manager, poolsFetched, pools, marginAccount, walletBalances, userFetched, refresh } = useMargin();
 
   // Deposit
-  const deposit = async (abbrev: MarginTokens, lamports: BN): Promise<[res: TxnResponse, txid: string[]]> => {
+  const deposit = async (abbrev: MarginPools, lamports: BN): Promise<[res: TxnResponse, txid: string[]]> => {
     if (!marginAccount || !pools) {
       console.log('Accounts not loaded', marginAccount, pools);
       throw new Error();
@@ -35,7 +35,7 @@ export const useMarginActions = () => {
   };
 
   // Withdraw
-  const withdraw = async (abbrev: MarginTokens, amount: PoolAmount): Promise<[res: TxnResponse, txid: string[]]> => {
+  const withdraw = async (abbrev: MarginPools, amount: PoolAmount): Promise<[res: TxnResponse, txid: string[]]> => {
     if (!marginAccount || !pools) {
       throw new Error();
     }
@@ -65,7 +65,7 @@ export const useMarginActions = () => {
   };
 
   // Borrow
-  const borrow = async (abbrev: MarginTokens, amount: BN): Promise<[res: TxnResponse, txid: string[]]> => {
+  const borrow = async (abbrev: MarginPools, amount: BN): Promise<[res: TxnResponse, txid: string[]]> => {
     if (!marginAccount || !pools) {
       throw new Error();
     }
@@ -93,7 +93,7 @@ export const useMarginActions = () => {
   };
 
   // Repay
-  const repay = async (abbrev: MarginTokens, amount: PoolAmount): Promise<[res: TxnResponse, txid: string[]]> => {
+  const repay = async (abbrev: MarginPools, amount: PoolAmount): Promise<[res: TxnResponse, txid: string[]]> => {
     if (!marginAccount || !pools) {
       throw new Error();
     }
