@@ -482,7 +482,6 @@ export function TradePanel(): JSX.Element {
             ))}
           </Select>
         </div>
-        ;
       </div>
       {disabledMessage ? (
         <div className="trade-section trade-section-disabled-message flex-centered column">
