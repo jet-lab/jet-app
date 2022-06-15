@@ -19,7 +19,7 @@ import { NATIVE_MINT } from '@solana/spl-token';
 import { useUser } from '../v1/contexts/user';
 import { useMarket } from '../v1/contexts/market';
 import { Reserve } from '../v1/models/JetTypes';
-import { Pool, MarginTokens, TokenAmount } from '@jet-lab/margin';
+import { Pool, MarginPools, TokenAmount } from '@jet-lab/margin';
 import { FilterFilled } from '@ant-design/icons';
 import { AssetLogo } from './AssetLogo';
 import { TokenFaucet } from '@jet-lab/margin';
@@ -51,7 +51,7 @@ export function MarketTable(): JSX.Element {
       amount = TokenAmount.tokens('1', pool.decimals);
     }
 
-    const token = config.tokens[pool.symbol as MarginTokens];
+    const token = config.tokens[pool.symbol as MarginPools];
 
     try {
       if (!publicKey) {
@@ -104,7 +104,7 @@ export function MarketTable(): JSX.Element {
     if (!currentPool && pools) {
       setCurrentPool(pools.SOL);
     }
-  }, [market.reserves]);
+  }, [market.reserves, currentPool, pools]);
 
   return (
     <>
@@ -146,8 +146,10 @@ export function MarketTable(): JSX.Element {
             </thead>
             <tbody>
               {pools &&
-                (Object.keys(pools) as MarginTokens[]).map((poolKey, index) => {
-                  const pool = pools[poolKey];
+                (Object.keys(pools) as MarginPools[]).map((poolKey, index) => {
+                  const pool: Pool = pools[poolKey];
+                  const walletBalance =
+                    userFetched && pool.symbol !== undefined ? walletBalances[pool.symbol] : undefined;
                   if (
                     !pool.name?.toLocaleLowerCase().includes(filter) &&
                     !pool.symbol?.toLocaleLowerCase().includes(filter)
@@ -156,12 +158,9 @@ export function MarketTable(): JSX.Element {
                   return (
                     <tr
                       key={index}
-                      className={currentReserve?.abbrev === pool.symbol ? 'active' : ''}
+                      className={currentPool?.symbol === pool.symbol ? 'active' : ''}
                       onClick={() => {
-                        // setCurrentReserve(reserve);
-                        // if (pool) {
-                        //   setCurrentPool(pool);
-                        // }
+                        setCurrentPool(pool);
                       }}>
                       <td className="market-table-asset">
                         <AssetLogo symbol={String(pool.symbol)} height={25} />
@@ -172,8 +171,7 @@ export function MarketTable(): JSX.Element {
                       </td>
                       <td
                         onClick={() => {
-                          // setReserveDetail(reserve);
-                          // setPoolDetail(pool);
+                          setPoolDetail(pool);
                         }}
                         className="reserve-detail text-btn bold-text">
                         {pool.symbol} {dictionary.cockpit.detail}
@@ -185,29 +183,18 @@ export function MarketTable(): JSX.Element {
                         <RadarIcon width="18px" />
                       </td>
                       <td
-                        className={
-                          ''
-                          // userFetched && walletBalances[pool.symbol]
-                          //   ? 'user-wallet-value text-btn semi-bold-text'
-                          //   : ''
-                        }
+                        className={walletBalance ? 'user-wallet-value text-btn semi-bold-text' : ''}
                         onClick={() => {
-                          // if (userFetched && walletBalances[pool.symbol]) {
-                          //   setCurrentAction('deposit');
-                          //   setCurrentAmount(walletBalances[pool.symbol].amount.tokens);
-                          // }
+                          if (walletBalance) {
+                            setCurrentAction('deposit');
+                            setCurrentAmount(walletBalance.amount.tokens);
+                          }
                         }}>
-                        {/* {pool && pool.tokenPrice !== undefined
-                        ? walletBalances[pool.symbol].amount.tokens > 0 &&
-                          walletBalances[pool.symbol].amount.tokens < 0.0005
-                          ? '~0'
-                          : totalAbbrev(
-                            walletBalances[pool.symbol].amount.tokens ?? 0,
-                            pool.tokenPrice,
-                            nativeValues,
-                            3
-                          )
-                        : '--'} */}
+                        {pool && walletBalance
+                          ? walletBalance.amount.tokens > 0 && walletBalance.amount.tokens < 0.0005
+                            ? '~0'
+                            : totalAbbrev(walletBalance.amount.tokens ?? 0, pool.tokenPrice, nativeValues, 3)
+                          : '--'}
                       </td>
                       <td
                         className={

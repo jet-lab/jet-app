@@ -12,7 +12,7 @@ import {
 } from '../util/programUtil';
 import { parseIdlMetadata } from '../util/programUtil';
 import { TokenAmount } from '@jet-lab/margin';
-import { MarginTokens } from '@jet-lab/margin';
+import { MarginPools } from '@jet-lab/margin';
 
 // Market context
 export interface Market {
@@ -165,7 +165,7 @@ export function MarketContextProvider(props: { children: JSX.Element }): JSX.Ele
     for (const reserveMeta of idlMetadata.reserves) {
       const reserve: Reserve = {
         name: reserveMeta.name,
-        abbrev: reserveMeta.abbrev as MarginTokens,
+        abbrev: reserveMeta.abbrev as MarginPools,
         marketSize: TokenAmount.zero(reserveMeta.decimals),
         outstandingDebt: TokenAmount.zero(reserveMeta.decimals),
         utilizationRate: 0,

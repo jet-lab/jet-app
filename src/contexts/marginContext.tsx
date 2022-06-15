@@ -1,12 +1,12 @@
 import {
   MarginCluster,
   MarginConfig,
-  MarginTokens,
   MarginAccount,
   Pool,
   PoolManager,
   AssociatedToken,
-  MarginClient
+  MarginClient,
+  MarginPools
 } from '@jet-lab/margin';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { createContext, useContext, useMemo } from 'react';
@@ -30,17 +30,17 @@ if (cluster === 'localnet') {
 }
 const DEFAULT_WALLET_BALANCES = Object.fromEntries(
   Object.values(config.tokens).map(token => [token.symbol, AssociatedToken.zeroAux(PublicKey.default, token.decimals)])
-) as Record<MarginTokens, AssociatedToken>;
+) as Record<MarginPools, AssociatedToken>;
 
 interface MarginContextState {
   connection: Connection;
   manager: PoolManager;
   config: MarginConfig;
   poolsFetched: boolean;
-  pools: Record<MarginTokens, Pool> | undefined;
+  pools: Record<MarginPools, Pool> | undefined;
   userFetched: boolean;
   marginAccount: MarginAccount | undefined;
-  walletBalances: Record<MarginTokens, AssociatedToken>;
+  walletBalances: Record<MarginPools, AssociatedToken>;
   refresh: () => void;
 }
 
@@ -93,10 +93,7 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
     ['user', endpoint, publicKey?.toBase58()],
     async () => {
       if (!publicKey) return;
-      const walletBalances = (await MarginAccount.loadTokens(manager.programs, publicKey)) as unknown as Record<
-        MarginTokens,
-        AssociatedToken
-      >;
+      const { map: walletBalances } = await MarginAccount.loadTokens(manager.programs, publicKey);
       let marginAccount: MarginAccount | undefined;
       try {
         marginAccount = await MarginAccount.load({
