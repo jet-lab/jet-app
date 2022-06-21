@@ -172,7 +172,7 @@ export function MarketTable(): JSX.Element {
                       <td
                         onClick={() => {
                           setPoolDetail(pool);
-                          setCurrentPool(pool)
+                          setCurrentPool(pool);
                         }}
                         className="reserve-detail text-btn bold-text">
                         {pool.symbol} {dictionary.cockpit.detail}
