@@ -21,7 +21,7 @@ export const useMarginActions = () => {
     try {
       if (!(await marginAccount.exists())) {
         const txid = await marginAccount.createAccount();
-        txids.push(txid);
+        txid && txids.push(txid);
       }
       const txid = await marginAccount.deposit(pool, source.address, lamports);
       txids.push(txid);
@@ -47,7 +47,7 @@ export const useMarginActions = () => {
     try {
       if (!(await marginAccount.exists())) {
         const txid = await marginAccount.createAccount();
-        txids.push(txid);
+        txid && txids.push(txid);
       }
       const txid = await pool.marginWithdraw({
         marginAccount,
@@ -76,7 +76,7 @@ export const useMarginActions = () => {
     try {
       if (!(await marginAccount.exists())) {
         const txid = await marginAccount.createAccount();
-        txids.push(txid);
+        txid && txids.push(txid);
       }
       const txid = await pool.marginBorrow({
         marginAccount,
@@ -104,7 +104,7 @@ export const useMarginActions = () => {
     try {
       if (!(await marginAccount.exists())) {
         const txid = await marginAccount.createAccount();
-        txids.push(txid);
+        txid && txids.push(txid);
       }
       const txid = await pool.marginRepay({
         marginAccount,

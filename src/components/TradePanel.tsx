@@ -72,7 +72,7 @@ export function TradePanel(): JSX.Element {
     // Initially set to true and reset message
     setDisabledMessage('');
     setDisabledInput(true);
-    if (!userV1 || !currentPool ||  currentPool === undefined || !currentPool.symbol) {
+    if (!userV1 || !currentPool || currentPool === undefined || !currentPool.symbol) {
       return;
     }
 
@@ -102,16 +102,16 @@ export function TradePanel(): JSX.Element {
       // User has not deposited any collateral
       if (!walletBalances[currentPool.symbol].amount) {
         setDisabledMessage(dictionary.cockpit.noDepositsForBorrow);
-  
+
         // User is below minimum c-ratio
-      // } else if (currentPool.symbol === 'ETH') {
-      //   setDisabledMessage('Sollet ETH will be sunset at the end of April. Borrowing ETH is not available');
-      // } else if (userV1.position.borrowedValue && userV1.position.colRatio <= market.minColRatio) {
-      //   setDisabledMessage(dictionary.cockpit.belowMinCRatio);
-      //   // No liquidity in market to borrow from
-      // } else if (currentPool.availableLiquidity.lamports.isZero()) {
-      //   setDisabledMessage(dictionary.cockpit.noLiquidity);
-       } else {
+        // } else if (currentPool.symbol === 'ETH') {
+        //   setDisabledMessage('Sollet ETH will be sunset at the end of April. Borrowing ETH is not available');
+        // } else if (userV1.position.borrowedValue && userV1.position.colRatio <= market.minColRatio) {
+        //   setDisabledMessage(dictionary.cockpit.belowMinCRatio);
+        //   // No liquidity in market to borrow from
+        // } else if (currentPool.availableLiquidity.lamports.isZero()) {
+        //   setDisabledMessage(dictionary.cockpit.noLiquidity);
+      } else {
         setDisabledInput(false);
       }
       // Repaying
@@ -127,7 +127,7 @@ export function TradePanel(): JSX.Element {
 
   // Get max input for current trade action and reserve
   function getMaxInput() {
-    if (!currentPool ||  currentPool === undefined ||  !currentPool.symbol) {
+    if (!currentPool || currentPool === undefined || !currentPool.symbol) {
       return;
     }
 
@@ -138,7 +138,7 @@ export function TradePanel(): JSX.Element {
       } else if (currentAction === 'withdraw') {
         max = userV1.assets.tokens[currentPool.symbol].maxWithdrawAmount;
       } else if (currentAction === 'borrow') {
-        max =  walletBalances[currentPool.symbol].amount.tokens;
+        max = walletBalances[currentPool.symbol].amount.tokens;
       } else if (currentAction === 'repay') {
         max = userV1.assets.tokens[currentPool.symbol].maxRepayAmount;
       }
@@ -324,7 +324,7 @@ export function TradePanel(): JSX.Element {
     let txids: string[] = [];
     let inputError = '';
     setSendingTrade(true);
-    
+
     // Depositing
     if (tradeAction === 'deposit') {
       // User is depositing more than they have in their wallet
@@ -493,11 +493,11 @@ export function TradePanel(): JSX.Element {
         <>
           <div className={`trade-section flex-centered column ${disabledInput ? 'disabled' : ''}`}>
             <span className="center-text bold-text">
-              {currentAction === 'deposit' 
+              {currentAction === 'deposit'
                 ? dictionary.cockpit.walletBalance.toUpperCase()
                 : currentAction === 'withdraw'
                 ? dictionary.cockpit.availableFunds.toUpperCase()
-                : currentAction === 'borrow' 
+                : currentAction === 'borrow'
                 ? currentPool && maxInput <= currentPool.availableLiquidity.tokens
                   ? dictionary.cockpit.maxBorrowAmount.toUpperCase()
                   : dictionary.cockpit.availableLiquidity.toUpperCase()
