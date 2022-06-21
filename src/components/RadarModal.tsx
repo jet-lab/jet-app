@@ -4,7 +4,6 @@ import { Modal } from 'antd';
 import { ReactComponent as RadarIcon } from '../styles/icons/radar_icon.svg';
 import { AssetLogo } from './AssetLogo';
 import { useTradeContext } from '../contexts/tradeContext';
-import { useDarkTheme } from '../contexts/darkTheme';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { useRpcNode } from '../contexts/rpcNode';
@@ -33,7 +32,6 @@ export const RadarModal: React.FC = () => {
   const { dictionary } = useLanguage();
   const { radarOpen, setRadarOpen } = useRadarModal();
   const { currentPool } = useTradeContext();
-  const { darkTheme } = useDarkTheme();
   const [protocolData, setProcolData] = useState<ProtocolData[]>([]);
   const [currentToken, setCurrentToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -76,6 +74,7 @@ export const RadarModal: React.FC = () => {
     if (currentPool?.symbol && currentToken !== currentPool.symbol) {
       fetchProtocols(currentPool.symbol);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentToken, currentPool]);
 
   if (!currentPool?.symbol) {
@@ -94,7 +93,7 @@ export const RadarModal: React.FC = () => {
       </div>
       {protocolData.length === 0 && (
         <div className="radar-loader">
-          <LoadingOutlined />
+          <LoadingOutlined className="green-text" />
         </div>
       )}
 
@@ -117,14 +116,10 @@ export const RadarModal: React.FC = () => {
             <tbody>
               {protocolData.map((protocol, idx) => {
                 return (
-                  <tr
-                    key={protocol.protocolName}
-                    className={`no-interaction ${(idx + 1) % 2 === 0 ? 'row-bg' : ''} ${darkTheme ? '' : 'white'}`}>
+                  <tr key={protocol.protocolName} className={`no-interaction ${(idx + 1) % 2 === 0 ? 'row-bg' : ''}`}>
                     <td>
                       <img
-                        src={`img/protocols/${protocol.protocolName.toLowerCase()}_${
-                          darkTheme ? 'white' : 'black'
-                        }.png`}
+                        src={`img/protocols/${protocol.protocolName.toLowerCase()}_white.png`}
                         alt={`${protocol} Logo`}
                       />
                     </td>

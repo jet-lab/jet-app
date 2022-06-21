@@ -23,7 +23,7 @@
     "native": "原生",
     "totalValueLocked": "总锁仓量",
     "totalBorrowed": "借贷总额",
-    "availableLiquidity": "可用流动性",
+    "depositedTokens": "可用流动性",
     "amountDeposited": "存款金额",
     "amountBorrowed": "借贷金额",
     "depositRate": "存款率",
@@ -97,7 +97,7 @@
   },
   "reserveDetail": {
     "reserveSize": "储备规模",
-    "availableLiquidity": "可用流动性",
+    "depositedTokens": "可用流动性",
     "utilisationRate": "使用率",
     "viewHistory": "查看历史",
     "totalBorrowed": "总借贷金额",

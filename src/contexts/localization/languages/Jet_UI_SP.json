@@ -23,7 +23,7 @@
     "native": "Nativo",
     "totalValueLocked": "Valor Total Depositado",
     "totalBorrowed": "Total Prestado",
-    "availableLiquidity": "Liquidez Disponible",
+    "depositedTokens": "Liquidez Disponible",
     "amountDeposited": "Depositado",
     "amountBorrowed": "Prestado",
     "depositRate": "Interés de Depósito",
@@ -97,7 +97,7 @@
   },
   "reserveDetail": {
     "reserveSize": "Tamaño de la Reserva",
-    "availableLiquidity": "Liquidez Disponible",
+    "depositedTokens": "Liquidez Disponible",
     "utilisationRate": "Ratio de Utilización",
     "viewHistory": "Historial",
     "totalBorrowed": "Total Prestado",

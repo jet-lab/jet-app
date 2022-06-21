@@ -232,15 +232,15 @@ export function UserContextProvider(props: { children: JSX.Element }): JSX.Eleme
       if (asset.maxWithdrawAmount > asset.collateralBalance.tokens) {
         asset.maxWithdrawAmount = asset.collateralBalance.tokens;
       }
-      if (asset.maxWithdrawAmount > reserve.availableLiquidity.tokens) {
-        asset.maxWithdrawAmount = reserve.availableLiquidity.tokens;
+      if (asset.maxWithdrawAmount > reserve.depositedTokens.tokens) {
+        asset.maxWithdrawAmount = reserve.depositedTokens.tokens;
       }
 
       // Max borrow
       // asset.maxBorrowAmount =
       //   (updatedPosition.depositedValue / market.minColRatio - updatedPosition.borrowedValue) / reserve.price;
-      if (asset.maxBorrowAmount > reserve.availableLiquidity.tokens) {
-        asset.maxBorrowAmount = reserve.availableLiquidity.tokens;
+      if (asset.maxBorrowAmount > reserve.depositedTokens.tokens) {
+        asset.maxBorrowAmount = reserve.depositedTokens.tokens;
       }
 
       // Max repay

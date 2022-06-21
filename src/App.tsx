@@ -1,7 +1,6 @@
 import './styles/App.less';
 import { useMemo } from 'react';
 import { HashRouter, Route, Routes } from 'react-router-dom';
-import { DarkThemeProvider } from './contexts/darkTheme';
 import { LocalizationProvider } from './contexts/localization/localization';
 import { WalletProvider } from '@solana/wallet-adapter-react';
 import {
@@ -17,13 +16,11 @@ import { BlockExplorerProvider } from './contexts/blockExplorer';
 import { TransactionsProvider } from './contexts/transactionLogs';
 import { TradeContextProvider } from './contexts/tradeContext';
 import { NativeValuesProvider } from './contexts/nativeValues';
-import { CopilotModalProvider } from './contexts/copilotModal';
 import { ConnectWalletModalProvider } from './contexts/connectWalletModal';
 import { SettingsModalProvider } from './contexts/settingsModal';
 import { RadarModalProvider } from './contexts/radarModal';
 import { ConnectWalletModal } from './components/ConnectWalletModal';
 import { Settings } from './views/Settings';
-import { CopilotModal } from './components/CopilotModal';
 import { RadarModal } from './components/RadarModal';
 import { TermsPrivacy } from './components/TermsPrivacy';
 import { Navbar } from './components/Navbar';
@@ -66,24 +63,18 @@ export function App(): JSX.Element {
                           <TransactionsProvider>
                             <TradeContextProvider>
                               <NativeValuesProvider>
-                                <DarkThemeProvider>
-                                  <CopilotModalProvider>
-                                    <RadarModalProvider>
-                                      <Navbar />
-                                      <NetworkWarningBanner />
-                                      <Routes>
-                                        <Route path="/" element={<Cockpit />} />
-                                        <Route path="/transactions" element={<TransactionLogs />} />
-                                        <Route path="/settings" element={<Settings />} />
-                                      </Routes>
-                                      <ConnectWalletModal />
-                                      <Settings />
-                                      <CopilotModal />
-                                      <RadarModal />
-                                      <TermsPrivacy />
-                                    </RadarModalProvider>
-                                  </CopilotModalProvider>
-                                </DarkThemeProvider>
+                                <RadarModalProvider>
+                                  <NetworkWarningBanner />
+                                  <Navbar />
+                                  <Routes>
+                                    <Route path="/" element={<Cockpit />} />
+                                    <Route path="/transactions" element={<TransactionLogs />} />
+                                  </Routes>
+                                  <ConnectWalletModal />
+                                  <Settings />
+                                  <RadarModal />
+                                  <TermsPrivacy />
+                                </RadarModalProvider>
                               </NativeValuesProvider>
                             </TradeContextProvider>
                           </TransactionsProvider>

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useInitFailed } from '../contexts/init';
 import { useGeoban, useLanguage } from '../contexts/localization/localization';
-import { useAlert } from '../contexts/copilotModal';
 import { cluster, useMargin } from '../contexts/marginContext';
 import { currencyFormatter, totalAbbrev } from '../utils/currency';
 import { InitFailed } from '../components/InitFailed';
@@ -10,7 +9,6 @@ import { HealthBar } from '../components/HealthBar';
 import { TradePanel } from '../components/TradePanel';
 import { MarketTable } from '../components/MarketTable';
 import { Checkbox, Skeleton } from 'antd';
-import { EthNotification } from '../components/EthNotification';
 
 // Jet V1
 import { useUser } from '../v1/contexts/user';
@@ -21,7 +19,6 @@ export function Cockpit(): JSX.Element {
   const isGeobanned = useGeoban();
   const { dictionary } = useLanguage();
   const { initFailed } = useInitFailed();
-  const { setAlert } = useAlert();
 
   // Jet V1
   const userV1 = useUser();
@@ -33,39 +30,7 @@ export function Cockpit(): JSX.Element {
   // If user has not accepted disclaimer, alert them to accept
   const acceptedDisclaimer = localStorage.getItem('jetDisclaimerAccepted') === 'true';
   const [dislaimerChecked, setDisclaimerChecked] = useState(false);
-  useEffect(() => {
-    if (cluster === 'mainnet-beta' && !acceptedDisclaimer) {
-      setAlert({
-        status: 'danger',
-        overview: dictionary.copilot.alert.warning,
-        detail: (
-          <span>
-            {dictionary.copilot.alert.disclaimer}
-            <br />
-            <br />
-            <a href="https://www.jetprotocol.io/legal/terms-of-service" target="_blank" rel="noopener noreferrer">
-              <span className="gradient-text link-btn">{dictionary.termsPrivacy.termsOfService}</span>
-            </a>
-            &nbsp;&nbsp;
-            <a href="https://www.jetprotocol.io/legal/privacy-policy" target="_blank" rel="noopener noreferrer">
-              <span className="gradient-text link-btn">{dictionary.termsPrivacy.privacyPolicy}</span>
-            </a>
-            <br />
-            <br />
-            <Checkbox onChange={e => setDisclaimerChecked(e.target.checked)}>
-              {dictionary.copilot.alert.acceptDisclaimer}
-            </Checkbox>
-          </span>
-        ),
-        closeable: false,
-        action: {
-          text: dictionary.copilot.alert.accept,
-          onClick: () => localStorage.setItem('jetDisclaimerAccepted', 'true'),
-          disabled: !dislaimerChecked
-        }
-      });
-    }
-  }, [acceptedDisclaimer, setAlert, dictionary, dislaimerChecked]);
+  useEffect(() => {}, []);
 
   if (initFailed || isGeobanned) {
     return <InitFailed />;
@@ -149,7 +114,6 @@ export function Cockpit(): JSX.Element {
         <div className="trade-table-container">
           <TradePanel />
           <MarketTable />
-          {userV1.collateralBalances['ETH'] > 0 || userV1.loanBalances['ETH'] > 0 ? <EthNotification /> : null}
         </div>
       </div>
     );

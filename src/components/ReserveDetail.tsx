@@ -1,6 +1,5 @@
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useConnectWalletModal } from '../contexts/connectWalletModal';
-import { useDefinition } from '../contexts/copilotModal';
 import { useLanguage } from '../contexts/localization/localization';
 import { useNativeValues } from '../contexts/nativeValues';
 import { currencyFormatter } from '../utils/currency';
@@ -10,7 +9,6 @@ import { PercentageChart } from './PercentageChart';
 import { Info } from './Info';
 
 // Jet V1
-import { Reserve } from '../v1/models/JetTypes';
 import { AssetLogo } from './AssetLogo';
 import { Pool } from '@jet-lab/margin';
 
@@ -19,22 +17,17 @@ export function ReserveDetail({
   pool,
   close
 }: {
-  reserve: Reserve | undefined;
+  reserve: Pool | undefined;
   pool: Pool | undefined;
   close: () => void;
 }): JSX.Element {
   const { dictionary } = useLanguage();
   const { connecting, setConnecting } = useConnectWalletModal();
   const { connected } = useWallet();
-  const { definition } = useDefinition();
   const { nativeValues } = useNativeValues();
   const price = pool?.tokenPrice !== undefined ? pool.tokenPrice : 0;
   return (
-    <Modal
-      footer={null}
-      className="reserve-detail"
-      visible={reserve && pool && !connecting && !definition}
-      onCancel={() => close()}>
+    <Modal footer={null} className="reserve-detail" visible={reserve && pool && !connecting} onCancel={() => close()}>
       <div className="reserve-detail-modal modal-content flex-centered column">
         {reserve && pool && (
           <>
@@ -80,8 +73,8 @@ export function ReserveDetail({
                       {pool.tokenPrice !== undefined
                         ? currencyFormatter(
                             nativeValues
-                              ? reserve.outstandingDebt.tokens
-                              : reserve.outstandingDebt.muln(pool.tokenPrice).tokens,
+                              ? reserve.borrowedTokens.tokens
+                              : reserve.borrowedTokens.muln(pool.tokenPrice).tokens,
                             !nativeValues,
                             2
                           )
@@ -93,13 +86,11 @@ export function ReserveDetail({
                 <div className="totals flex align-start justify-center">
                   <div className="asset-info-color liquid"></div>
                   <span>
-                    {dictionary.reserveDetail.availableLiquidity.toUpperCase()}
+                    {dictionary.reserveDetail.depositedTokens.toUpperCase()}
                     <br></br>
                     <p>
                       {currencyFormatter(
-                        nativeValues
-                          ? reserve.availableLiquidity.tokens
-                          : reserve.availableLiquidity.muln(price).tokens,
+                        nativeValues ? reserve.depositedTokens.tokens : reserve.depositedTokens.muln(price).tokens,
                         !nativeValues,
                         2
                       )}
@@ -107,23 +98,6 @@ export function ReserveDetail({
                     </p>
                   </span>
                 </div>
-              </div>
-            </div>
-            <Divider />
-            <div className="reserve-subdetails flex-centered">
-              <div className="modal-detail reserve-subdetail flex-centered column">
-                <span>
-                  {dictionary.reserveDetail.minimumCollateralizationRatio.toUpperCase()}
-                  <Info term="collateralizationRatio" />
-                </span>
-                <p>{reserve.maximumLTV / 100}%</p>
-              </div>
-              <div className="modal-detail reserve-subdetail flex-centered column">
-                <span>
-                  {dictionary.reserveDetail.liquidationPremium.toUpperCase()}
-                  <Info term="liquidationPremium" />
-                </span>
-                <p>{reserve.liquidationPremium / 100}%</p>
               </div>
             </div>
           </>
@@ -138,7 +112,7 @@ export function ReserveDetail({
             }
           }}>
           {connected
-            ? dictionary.reserveDetail.tradeAsset.replace('{{ASSET}}', reserve?.abbrev)
+            ? dictionary.reserveDetail.tradeAsset.replace('{{ASSET}}', reserve?.symbol)
             : dictionary.settings.connect}
         </Button>
       </div>

@@ -23,7 +23,7 @@
     "native": "Nativo",
     "totalValueLocked": "Valore di mercato bloccato",
     "totalBorrowed": "Totale in prestito",
-    "availableLiquidity": "Liquidità disponibile",
+    "depositedTokens": "Liquidità disponibile",
     "amountDeposited": "Depositato",
     "amountBorrowed": "Preso in prestito",
     "depositRate": "Frequenza di deposito",
@@ -97,7 +97,7 @@
   },
   "reserveDetail": {
     "reserveSize": "Dimensione della riserva",
-    "availableLiquidity": "Liquidità disponibile",
+    "depositedTokens": "Liquidità disponibile",
     "utilisationRate": "Rapporto di utilizzo",
     "viewHistory": "Visualizza cronologia",
     "totalBorrowed": "Totale preso in prestito",

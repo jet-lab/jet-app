@@ -8,6 +8,7 @@ import { useNativeValues } from '../contexts/nativeValues';
 import { useRadarModal } from '../contexts/radarModal';
 import { cluster, useMargin } from '../contexts/marginContext';
 import { Input, notification } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 import { NativeToggle } from './NativeToggle';
 import { Info } from './Info';
 import { ReserveDetail } from './ReserveDetail';
@@ -18,9 +19,8 @@ import { ReactComponent as RadarIcon } from '../styles/icons/radar_icon.svg';
 import { NATIVE_MINT } from '@solana/spl-token';
 import { useUser } from '../v1/contexts/user';
 import { useMarket } from '../v1/contexts/market';
-import { Reserve } from '../v1/models/JetTypes';
 import { Pool, MarginPools, TokenAmount } from '@jet-lab/margin';
-import { FilterFilled } from '@ant-design/icons';
+import { CloudFilled, FilterFilled } from '@ant-design/icons';
 import { AssetLogo } from './AssetLogo';
 import { TokenFaucet } from '@jet-lab/margin';
 
@@ -32,9 +32,9 @@ export function MarketTable(): JSX.Element {
     useTradeContext();
   const { setRadarOpen } = useRadarModal();
   const { nativeValues } = useNativeValues();
-  const [reservesArray, setReservesArray] = useState<Reserve[]>([]);
-  const [filteredMarketTable, setFilteredMarketTable] = useState<Reserve[]>([]);
-  const [reserveDetail, setReserveDetail] = useState<Reserve | undefined>();
+  const [reservesArray, setReservesArray] = useState<Pool[]>([]);
+  const [filteredMarketTable, setFilteredMarketTable] = useState<Pool[]>([]);
+  const [reserveDetail, setReserveDetail] = useState<Pool | undefined>();
   const [poolDetail, setPoolDetail] = useState<Pool | undefined>();
   // Jet V1
   const user = useUser();
@@ -86,24 +86,27 @@ export function MarketTable(): JSX.Element {
 
   // Update reserves array on market changes
   useEffect(() => {
-    const reserves = [];
-    for (const reserve of Object.values(market.reserves)) {
-      reserves.push(reserve);
-    }
-    setReservesArray(reserves);
+    if (pools) {
+      const reserves = [];
+      for (const reserve of Object.values(pools)) {
+        reserves.push(reserve);
+      }
+      setReservesArray(reserves);
 
-    if (!filteredMarketTable.length) {
-      setFilteredMarketTable(reserves);
-    }
+      if (!filteredMarketTable.length) {
+        setFilteredMarketTable(reserves);
+      }
 
-    // Initialize current reserve on first load
-    if (!currentReserve) {
-      setCurrentReserve(market.reserves['SOL']);
+      // Initialize current reserve on first load
+      if (!currentReserve) {
+        setCurrentReserve(market.reserves['SOL']);
+      }
+      // Initialize current pool on first load
+      if (!currentPool) {
+        setCurrentPool(pools.SOL);
+      }
     }
-    // Initialize current pool on first load
-    if (!currentPool && pools) {
-      setCurrentPool(pools.SOL);
-    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [market.reserves, currentPool, pools]);
 
   return (
@@ -128,7 +131,7 @@ export function MarketTable(): JSX.Element {
                 <th className="native-toggle-container">
                   <NativeToggle />
                 </th>
-                <th className="cell-border-right">{dictionary.cockpit.availableLiquidity}</th>
+                <th className="cell-border-right">{dictionary.cockpit.depositedTokens}</th>
                 <th>
                   {dictionary.cockpit.depositRate}
                   <Info term="depositRate" />
@@ -145,9 +148,8 @@ export function MarketTable(): JSX.Element {
               </tr>
             </thead>
             <tbody>
-              {pools &&
-                (Object.keys(pools) as MarginPools[]).map((poolKey, index) => {
-                  const pool: Pool = pools[poolKey];
+              {reservesArray.length ? (
+                reservesArray.map((pool, index) => {
                   const walletBalance =
                     userFetched && pool.symbol !== undefined ? walletBalances[pool.symbol] : undefined;
                   if (
@@ -177,7 +179,7 @@ export function MarketTable(): JSX.Element {
                         className="reserve-detail text-btn bold-text">
                         {pool.symbol} {dictionary.cockpit.detail}
                       </td>
-                      <td className="cell-border-right">{pool.availableLiquidity.uiTokens}</td>
+                      <td className="cell-border-right">{pool.depositedTokens.uiTokens}</td>
                       <td>{`${(pool.depositApy * 100).toFixed(2)}%`}</td>
                       <td>{`${(pool.borrowApr * 100).toFixed(2)}%`}</td>
                       <td className="clickable-icon cell-border-right" onClick={() => setRadarOpen(true)}>
@@ -250,9 +252,7 @@ export function MarketTable(): JSX.Element {
                               setConnecting(true);
                             }
                           }}>
-                          <i
-                            className="clickable-icon gradient-text fas fa-parachute-box"
-                            title={`Airdrop ${pool.symbol}`}></i>
+                          <CloudFilled />
                         </td>
                       ) : (
                         <td>
@@ -261,7 +261,23 @@ export function MarketTable(): JSX.Element {
                       )}
                     </tr>
                   );
-                })}
+                })
+              ) : (
+                <tr className="no-interaction">
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <LoadingOutlined className="green-text" style={{ fontSize: 25 }} />
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

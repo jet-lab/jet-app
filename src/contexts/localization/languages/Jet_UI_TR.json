@@ -23,7 +23,7 @@
     "native": "Özgün",
     "totalValueLocked": "Kilitli Piyasa Değeri",
     "totalBorrowed": "Toplam Ödünç Alınan",
-    "availableLiquidity": "Uygun Likidite",
+    "depositedTokens": "Uygun Likidite",
     "amountDeposited": "Yatırılan",
     "amountBorrowed": "Ödünç alınmış",
     "depositRate": "Yatırma Oranı",
@@ -96,7 +96,7 @@
   },
   "reserveDetail": {
     "reserveSize": "Rezerv Büyüklüğü",
-    "availableLiquidity": "Mevcut Likidite",
+    "depositedTokens": "Mevcut Likidite",
     "utilisationRate": "Kullanım Oranı",
     "viewHistory": "İşlem geçmişini görüntüle",
     "totalBorrowed": "Toplam Borç",

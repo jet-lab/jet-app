@@ -97,7 +97,7 @@ export function MarketContextProvider(props: { children: JSX.Element }): JSX.Ele
         reserveMeta.decimals,
         (amount: any) => {
           if (amount != null) {
-            reserves[reserveMeta.abbrev].availableLiquidity = amount;
+            reserves[reserveMeta.abbrev].depositedTokens = amount;
 
             deriveValues(reserves, reserves[reserveMeta.abbrev]);
             setReserves({ ...reserves });
@@ -137,10 +137,10 @@ export function MarketContextProvider(props: { children: JSX.Element }): JSX.Ele
   // Derive market reserve and user asset values, update global objects
   function deriveValues(reserves: Record<string, Reserve>, reserve: Reserve) {
     // Derive market reserve values
-    reserve.marketSize = reserve.outstandingDebt.add(reserve.availableLiquidity);
+    reserve.marketSize = reserve.borrowedTokens.add(reserve.depositedTokens);
     reserve.utilizationRate = reserve.marketSize.isZero()
       ? 0
-      : reserve.outstandingDebt.tokens / reserve.marketSize.tokens;
+      : reserve.borrowedTokens.tokens / reserve.marketSize.tokens;
     const ccRate = getCcRate(reserve.config, reserve.utilizationRate);
     reserve.borrowRate = getBorrowRate(ccRate, reserve.config.manageFeeRate);
     reserve.depositRate = getDepositRate(ccRate, reserve.utilizationRate);
@@ -150,8 +150,8 @@ export function MarketContextProvider(props: { children: JSX.Element }): JSX.Ele
     const supply = 0;
     const reservesArray: Reserve[] = [];
     for (const r in reserves) {
-      // borrowed += reserves[r].outstandingDebt.muln(reserves[r].price)?.tokens;
-      // supply += reserves[r].marketSize.sub(reserves[r].outstandingDebt).muln(reserves[r].price)?.tokens;
+      // borrowed += reserves[r].borrowedTokens.muln(reserves[r].price)?.tokens;
+      // supply += reserves[r].marketSize.sub(reserves[r].borrowedTokens).muln(reserves[r].price)?.tokens;
       reservesArray.push(reserves[r]);
     }
     setTotalBorrowed(borrowed);
@@ -167,7 +167,7 @@ export function MarketContextProvider(props: { children: JSX.Element }): JSX.Ele
         name: reserveMeta.name,
         abbrev: reserveMeta.abbrev as MarginPools,
         marketSize: TokenAmount.zero(reserveMeta.decimals),
-        outstandingDebt: TokenAmount.zero(reserveMeta.decimals),
+        borrowedTokens: TokenAmount.zero(reserveMeta.decimals),
         utilizationRate: 0,
         depositRate: 0,
         borrowRate: 0,
@@ -199,7 +199,7 @@ export function MarketContextProvider(props: { children: JSX.Element }): JSX.Ele
 
         accountPubkey: reserveMeta.accounts.reserve,
         vaultPubkey: reserveMeta.accounts.vault,
-        availableLiquidity: TokenAmount.zero(reserveMeta.decimals),
+        depositedTokens: TokenAmount.zero(reserveMeta.decimals),
         feeNoteVaultPubkey: reserveMeta.accounts.feeNoteVault,
         tokenMintPubkey: reserveMeta.accounts.tokenMint,
         tokenMint: TokenAmount.zero(reserveMeta.decimals),

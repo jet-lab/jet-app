@@ -23,7 +23,7 @@
     "native": "Nativ",
     "totalValueLocked": "Totaler Marktwert",
     "totalBorrowed": "Total ausgeliehen",
-    "availableLiquidity": "Verfügbare Liquidität",
+    "depositedTokens": "Verfügbare Liquidität",
     "amountDeposited": "Eingezahlt",
     "amountBorrowed": "Ausgeliehen",
     "depositRate": "Habenzins",
@@ -97,7 +97,7 @@
   },
   "reserveDetail": {
     "reserveSize": "Grösse der Reserve",
-    "availableLiquidity": "Verfügbare Liquidität",
+    "depositedTokens": "Verfügbare Liquidität",
     "utilisationRate": "Nutzungsquote",
     "viewHistory": "Verlauf",
     "totalBorrowed": "Total ausgeliehen",

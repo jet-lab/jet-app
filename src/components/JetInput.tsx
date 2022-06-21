@@ -57,7 +57,7 @@ export function JetInput(props: {
             props.submit();
           }
         }}>
-        {props.loading ? <LoadingOutlined /> : <ArrowIcon width={30} />}
+        {props.loading ? <LoadingOutlined /> : <ArrowIcon width={25} />}
       </div>
     </div>
   );

@@ -23,7 +23,7 @@
     "native": "Базовая",
     "totalValueLocked": "Зарезервированная рыночная стоимость активов",
     "totalBorrowed": "Общая сумма займов",
-    "availableLiquidity": "Доступная ликвидность",
+    "depositedTokens": "Доступная ликвидность",
     "amountDeposited": "Депозит",
     "amountBorrowed": "Займ",
     "depositRate": "ГПД депозита",
@@ -97,7 +97,7 @@
   },
   "reserveDetail": {
     "reserveSize": "Размер резерва",
-    "availableLiquidity": "Доступная ликвидность",
+    "depositedTokens": "Доступная ликвидность",
     "utilisationRate": "Коэффициент использования",
     "viewHistory": "Показать историю",
     "totalBorrowed": "Всего занято",
