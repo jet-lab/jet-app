@@ -7,6 +7,7 @@ import { useTradeContext } from '../contexts/tradeContext';
 import { useDarkTheme } from '../contexts/darkTheme';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
+import { useRpcNode } from '../contexts/rpcNode';
 interface RadarResponse {
   [protocol: string]: Record<
     string,
@@ -36,22 +37,28 @@ export const RadarModal: React.FC = () => {
   const [protocolData, setProcolData] = useState<ProtocolData[]>([]);
   const [currentToken, setCurrentToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const { preferredNode } = useRpcNode();
 
   const fetchProtocols = async (token: string) => {
     setLoading(true);
-    const response = await fetch(`https://api.jetprotocol.io/v1/radar?tokenId=${token}`);
+    const searchParams = new URLSearchParams(`tokenId=${token}`);
+    if (preferredNode) {
+      searchParams.append('clusterUrl', preferredNode);
+    }
+    const response = await fetch(`https://api.jetprotocol.io/v1/radar?${searchParams.toString()}`);
     const data: RadarResponse = await response.json();
     const protocols: ProtocolData[] = Object.entries(data).reduce<ProtocolData[]>((acc, protocol) => {
       const [protocolName, tokenList] = protocol;
       const tokenData = tokenList[token];
-      acc.push({
-        protocolName,
-        tokenName: tokenData.name,
-        tokenLogo: tokenData.logo,
-        price: tokenData.price,
-        depositRate: tokenData.depositRate,
-        borrowRate: tokenData.borrowRate
-      });
+      tokenData &&
+        acc.push({
+          protocolName,
+          tokenName: tokenData.name,
+          tokenLogo: tokenData.logo,
+          price: tokenData.price,
+          depositRate: tokenData.depositRate,
+          borrowRate: tokenData.borrowRate
+        });
       return acc;
     }, []);
     setProcolData(protocols);
