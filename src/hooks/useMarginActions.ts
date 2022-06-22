@@ -1,11 +1,10 @@
 import { BN } from '@project-serum/anchor';
-import { TxnResponse } from '../v1/models/JetTypes';
+import { TxnResponse } from '../models/JetTypes';
 import { useMargin } from '../contexts/marginContext';
 import { MarginPools, PoolAmount } from '@jet-lab/margin';
 
 export const useMarginActions = () => {
-  // Jet V2
-  const { config, manager, poolsFetched, pools, marginAccount, walletBalances, userFetched, refresh } = useMargin();
+  const { pools, marginAccount, walletBalances, refresh } = useMargin();
 
   // Deposit
   const deposit = async (abbrev: MarginPools, lamports: BN): Promise<[res: TxnResponse, txid: string[]]> => {

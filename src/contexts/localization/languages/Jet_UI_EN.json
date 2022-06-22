@@ -66,7 +66,7 @@
     "noDepositsForWithdraw": "You have not deposited any {{ASSET}} to withdraw.",
     "noDebtForRepay": "You don't owe any {{ASSET}}.",
     "rejectTrade": "This trade would lower your collateralization ratio to {{NEW-C-RATIO}}%, which would be below our minimum ratio of {{JET MIN C-RATIO}}%.",
-    "insufficientLamports": "You are depositing all your SOL leaving you no lamports for transaction fees! Please try again with a slightly lower input amount.",
+    "insufficientLamports": "You're using all of your SOL, leaving none for transaction fees.",
     "stillUndercollateralized": "Your new C-ratio of {{NEW-C-RATIO}}% is still under Jet's minimum marketplace collateralization ratio of {{JET MIN C-RATIO}}%. Please consider repaying more to avoid liquidation.",
     "txCancelled": "Transaction cancelled.",
     "welcomeAboard": "Welcome Aboard",
@@ -149,10 +149,15 @@
       "refresh": "Refresh",
       "originationFee": "There is a fee of {{ORIGINATION FEE}}% attached to this loan.",
       "headsup": "Heads up!",
-      "disclaimer": "You are about to enter the Jet Protocol Mainnet. Do not proceed if you do not understand and accept the Terms of Service, and potential for financial loss.",
       "accept": "Accept",
       "warning": "WARNING",
-      "acceptDisclaimer": "I understand the Terms of Service, Privacy Policy, Cookie Policy and accept the risks."
+      "acceptDisclaimer": "I understand the Terms of Service, Privacy Policy, Cookie Policy and accept the risks.",
+      "disclaimer": {
+        "title": "Disclaimer",
+        "disclaimerDetail": "You are now entering Jet Protocol Mainnet. Do not proceed if you do not understand and accept the {{TERMS_LINK}}, {{PRIVACY_LINK}}, and the potential for financial loss.",
+        "acceptRisks": "I understand and accept the risks.",
+        "enterMainnet": "Enter Mainnet"
+      }
     },
     "radar": {
       "title": "Radar",

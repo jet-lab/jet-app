@@ -149,10 +149,15 @@
       "refresh": "Actualizar",
       "originationFee": "Este préstamo está adjunto a una tarifa de {{ORIGINATION FEE}}%",
       "headsup": "¡Atención!",
-      "disclaimer": "Se encuentra a punto de entrar en Jet Protocol Mainnet. No proceda si usted no comprende y acepta los Términos de Uso y potenciales perdidas financieras.",
       "accept": "Aceptar",
       "warning": "ALERTA",
-      "acceptDisclaimer": "I understand the Terms of Service, Privacy Policy, Cookie Policy and accept the risks."
+      "acceptDisclaimer": "I understand the Terms of Service, Privacy Policy, Cookie Policy and accept the risks.",
+      "disclaimer": {
+        "title": "Disclaimer",
+        "disclaimerDetail": "You are now entering Jet Protocol Mainnet. Do not proceed if you do not understand and accept the {{TERMS_LINK}}, {{PRIVACY_LINK}}, and the potential for financial loss.",
+        "acceptRisks": "I understand and accept the risks.",
+        "enterMainnet": "Enter Mainnet"
+      }
     },
     "radar": {
       "title": "Radar",

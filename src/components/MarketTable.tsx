@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
+import { NATIVE_MINT } from '@solana/spl-token';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { Pool, MarginPools, TokenAmount, TokenFaucet } from '@jet-lab/margin';
+import { CloudFilled, FilterFilled } from '@ant-design/icons';
 import { currencyFormatter, totalAbbrev } from '../utils/currency';
 import { useLanguage } from '../contexts/localization/localization';
 import { useConnectWalletModal } from '../contexts/connectWalletModal';
@@ -12,35 +15,21 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { NativeToggle } from './NativeToggle';
 import { Info } from './Info';
 import { PoolDetail } from './PoolDetail';
+import { AssetLogo } from './AssetLogo';
 import { ReactComponent as ArrowIcon } from '../styles/icons/arrow_icon.svg';
 import { ReactComponent as RadarIcon } from '../styles/icons/radar_icon.svg';
 
-// Jet V1
-import { NATIVE_MINT } from '@solana/spl-token';
-import { useUser } from '../v1/contexts/user';
-import { useMarket } from '../v1/contexts/market';
-import { Pool, MarginPools, TokenAmount } from '@jet-lab/margin';
-import { CloudFilled, FilterFilled } from '@ant-design/icons';
-import { AssetLogo } from './AssetLogo';
-import { TokenFaucet } from '@jet-lab/margin';
-
 export function MarketTable(): JSX.Element {
   const { dictionary } = useLanguage();
+  const { config, manager, pools, marginAccount, walletBalances, userFetched, refresh } = useMargin();
   const { publicKey } = useWallet();
   const { setConnecting } = useConnectWalletModal();
-  const { currentReserve, setCurrentReserve, currentPool, setCurrentPool, setCurrentAction, setCurrentAmount } =
-    useTradeContext();
+  const { currentPool, setCurrentPool, setCurrentAction, setCurrentAmount } = useTradeContext();
   const { setRadarOpen } = useRadarModal();
   const { nativeValues } = useNativeValues();
-  const [reservesArray, setReservesArray] = useState<Pool[]>([]);
+  const [poolsArray, setPoolsArray] = useState<Pool[]>([]);
   const [filteredMarketTable, setFilteredMarketTable] = useState<Pool[]>([]);
   const [poolDetail, setPoolDetail] = useState<Pool | undefined>();
-  // Jet V1
-  const user = useUser();
-  const market = useMarket();
-
-  // Jet V2
-  const { config, manager, poolsFetched, pools, marginAccount, walletBalances, userFetched, refresh } = useMargin();
   const [filter, setFilter] = useState('');
 
   // If in development, can request airdrop for testing
@@ -83,30 +72,26 @@ export function MarketTable(): JSX.Element {
     }
   };
 
-  // Update reserves array on market changes
+  // Update pools array on market changes
   useEffect(() => {
     if (pools) {
-      const reserves = [];
-      for (const reserve of Object.values(pools)) {
-        reserves.push(reserve);
+      const poolsArray = [];
+      for (const pool of Object.values(pools)) {
+        poolsArray.push(pool);
       }
-      setReservesArray(reserves);
+      setPoolsArray(poolsArray);
 
       if (!filteredMarketTable.length) {
-        setFilteredMarketTable(reserves);
+        setFilteredMarketTable(poolsArray);
       }
 
-      // Initialize current reserve on first load
-      if (!currentReserve) {
-        setCurrentReserve(market.reserves['SOL']);
-      }
       // Initialize current pool on first load
       if (!currentPool) {
         setCurrentPool(pools.SOL);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [market.reserves, currentPool, pools]);
+  }, [currentPool, pools]);
 
   return (
     <>
@@ -147,8 +132,8 @@ export function MarketTable(): JSX.Element {
               </tr>
             </thead>
             <tbody>
-              {reservesArray.length ? (
-                reservesArray.map((pool, index) => {
+              {poolsArray.length ? (
+                poolsArray.map((pool, index) => {
                   const walletBalance =
                     userFetched && pool.symbol !== undefined ? walletBalances[pool.symbol] : undefined;
                   if (
@@ -200,22 +185,29 @@ export function MarketTable(): JSX.Element {
                       </td>
                       <td
                         className={
-                          userFetched && user.collateralBalances[String(pool.symbol)]
+                          userFetched && pool.symbol && marginAccount?.positions?.[pool.symbol]?.depositBalance.tokens
                             ? 'user-collateral-value text-btn semi-bold-text'
                             : ''
                         }
                         onClick={() => {
-                          if (userFetched && user.collateralBalances[String(pool.symbol)]) {
+                          if (
+                            userFetched &&
+                            pool.symbol &&
+                            marginAccount?.positions?.[pool.symbol]?.depositBalance.tokens
+                          ) {
                             setCurrentAction('withdraw');
-                            setCurrentAmount(user.collateralBalances[String(pool.symbol)]);
+                            setCurrentAmount(marginAccount.positions[pool.symbol].depositBalance.tokens);
                           }
                         }}>
-                        {userFetched && pool && pool.tokenPrice !== undefined
-                          ? user.collateralBalances[String(pool.symbol)] > 0 &&
-                            user.collateralBalances[String(pool.symbol)] < 0.0005
+                        {userFetched &&
+                        pool.symbol &&
+                        pool.tokenPrice !== undefined &&
+                        marginAccount?.positions?.[pool.symbol]?.depositBalance.tokens
+                          ? marginAccount.positions[pool.symbol].depositBalance.tokens > 0 &&
+                            marginAccount.positions[pool.symbol].depositBalance.tokens < 0.0005
                             ? '~0'
                             : totalAbbrev(
-                                user.collateralBalances[String(pool.symbol)] ?? 0,
+                                marginAccount.positions[pool.symbol].depositBalance.tokens,
                                 pool.tokenPrice,
                                 nativeValues,
                                 3
@@ -224,21 +216,33 @@ export function MarketTable(): JSX.Element {
                       </td>
                       <td
                         className={
-                          userFetched && user.loanBalances[String(pool.symbol)]
+                          userFetched && pool.symbol && marginAccount?.positions?.[pool.symbol]?.loanBalance.tokens
                             ? 'user-loan-value text-btn semi-bold-text'
                             : ''
                         }
                         onClick={() => {
-                          if (userFetched && user.loanBalances[String(pool.symbol)]) {
+                          if (
+                            userFetched &&
+                            pool.symbol &&
+                            marginAccount?.positions?.[pool.symbol]?.loanBalance.tokens
+                          ) {
                             setCurrentAction('repay');
-                            setCurrentAmount(user.loanBalances[String(pool.symbol)]);
+                            setCurrentAmount(marginAccount.positions[pool.symbol].loanBalance.tokens);
                           }
                         }}>
-                        {userFetched && pool && pool.tokenPrice !== undefined
-                          ? user.loanBalances[String(pool.symbol)] > 0 &&
-                            user.loanBalances[String(pool.symbol)] < 0.0005
+                        {userFetched &&
+                        pool.symbol &&
+                        pool.tokenPrice !== undefined &&
+                        marginAccount?.positions?.[pool.symbol]?.loanBalance.tokens
+                          ? marginAccount.positions[pool.symbol].loanBalance.tokens > 0 &&
+                            marginAccount.positions[pool.symbol].loanBalance.tokens < 0.0005
                             ? '~0'
-                            : totalAbbrev(user.loanBalances[String(pool.symbol)] ?? 0, pool.tokenPrice, nativeValues, 3)
+                            : totalAbbrev(
+                                marginAccount.positions[pool.symbol].loanBalance.tokens,
+                                pool.tokenPrice,
+                                nativeValues,
+                                3
+                              )
                           : '--'}
                       </td>
                       {/* Faucet for testing if in development */}
@@ -268,7 +272,7 @@ export function MarketTable(): JSX.Element {
                   <td></td>
                   <td></td>
                   <td>
-                    <LoadingOutlined className="green-text" style={{ fontSize: 25 }} />
+                    <LoadingOutlined className="green-text" style={{ fontSize: 25, marginRight: -10 }} />
                   </td>
                   <td></td>
                   <td></td>

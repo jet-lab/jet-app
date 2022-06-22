@@ -602,6 +602,10 @@
       }
       .trade-market-tvl {
         margin-right: @spacing-xl;
+
+        .green-text {
+          font-size: 80px;
+        }
       }
       .trade-position-snapshot {
         min-width: 275px;
@@ -620,7 +624,7 @@
           padding-right: 50px;
 
           h1 {
-            font-size: 70px;
+            font-size: 50px;
             margin: 0;
 
             span {
@@ -630,6 +634,9 @@
               top: 10px;
               opacity: 1;
             }
+          }
+          .c-ratio {
+            line-height: 60px;
           }
         }
         .min-c-note {
@@ -810,6 +817,10 @@
               font-size: @lg-font-size;
               padding: @spacing-sm;
               color: @secondary-3;
+
+              &.danger-text {
+                color: @danger;
+              }
             }
           }
         }

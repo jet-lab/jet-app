@@ -1,25 +1,21 @@
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useLanguage } from '../contexts/localization/localization';
+import { useMargin } from '../contexts/marginContext';
 import { useConnectWalletModal } from '../contexts/connectWalletModal';
 import { useTransactionLogs } from '../contexts/transactionLogs';
 import { useBlockExplorer } from '../contexts/blockExplorer';
 import { totalAbbrev } from '../utils/currency';
 import { shortenPubkey } from '../utils/utils';
 import { ReactComponent as ArrowIcon } from '../styles/icons/arrow_icon.svg';
-
-// Jet V1
-import { useUser } from '../v1/contexts/user';
 import { Button, Divider } from 'antd';
 
 export function TransactionLogs(): JSX.Element {
   const { dictionary } = useLanguage();
+  const { userFetched } = useMargin();
   const { connected, publicKey } = useWallet();
   const { setConnecting } = useConnectWalletModal();
   const { getExplorerUrl } = useBlockExplorer();
   const { loadingLogs, logs, noMoreSignatures, searchMoreLogs } = useTransactionLogs();
-
-  // Jet V1
-  const user = useUser();
 
   return (
     <div className="transaction-logs view">
@@ -72,12 +68,12 @@ export function TransactionLogs(): JSX.Element {
                     if (!connected) {
                       setConnecting(true);
                     }
-                    if (user.walletInit && !(loadingLogs || noMoreSignatures)) {
+                    if (userFetched && !(loadingLogs || noMoreSignatures)) {
                       searchMoreLogs();
                     }
                   }}
                   loading={loadingLogs}
-                  disabled={(connected && !user.walletInit) || loadingLogs || noMoreSignatures}>
+                  disabled={(connected && !userFetched) || loadingLogs || noMoreSignatures}>
                   {connected
                     ? loadingLogs
                       ? `${dictionary.loading.loading}..`

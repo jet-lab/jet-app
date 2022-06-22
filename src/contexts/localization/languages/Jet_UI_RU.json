@@ -149,10 +149,15 @@
       "refresh": "Обновить",
       "originationFee": "Этот займ выдается с комиссией {{ORIGINATION FEE}}%",
       "headsup": "Внимание!",
-      "disclaimer": "Вы подключились к Jet Protocol mainnet. Не продолжайте, если Вы не ознакомились или не приняли условия пользования, или не готовы к потенциальным финансовым убыткам.",
       "accept": "Принять",
       "warning": "Внимание",
-      "acceptDisclaimer": "I understand the Terms of Service, Privacy Policy, Cookie Policy and accept the risks."
+      "acceptDisclaimer": "I understand the Terms of Service, Privacy Policy, Cookie Policy and accept the risks.",
+      "disclaimer": {
+        "title": "Disclaimer",
+        "disclaimerDetail": "You are now entering Jet Protocol Mainnet. Do not proceed if you do not understand and accept the {{TERMS_LINK}}, {{PRIVACY_LINK}}, and the potential for financial loss.",
+        "acceptRisks": "I understand and accept the risks.",
+        "enterMainnet": "Enter Mainnet"
+      }
     },
     "radar": {
       "title": "Radar",
