@@ -33,12 +33,10 @@ export function TradePanel(): JSX.Element {
   } = useTradeContext();
   const accountPoolPosition = marginAccount && currentPool?.symbol && marginAccount.positions[currentPool.symbol];
   const accountSummary = marginAccount && marginAccount.summary;
+  const maxInput = accountPoolPosition?.maxTradeAmounts[currentAction].tokens ?? 0;
   const { Option } = Select;
   const tradeActions: TradeAction[] = ['deposit', 'withdraw', 'borrow', 'repay'];
   const { deposit, withdraw, borrow, repay } = useMarginActions();
-
-  // Input values
-  const [maxInput, setMaxInput] = useState<number>(0);
 
   // Disabled components / errors
   const [disabledInput, setDisabledInput] = useState<boolean>(false);
@@ -51,7 +49,6 @@ export function TradePanel(): JSX.Element {
   // Adjust interface
   function adjustInterface() {
     setInputError('');
-    getMaxInput();
     adjustCollateralizationRatio();
     checkDisabledInput();
   }
@@ -69,7 +66,7 @@ export function TradePanel(): JSX.Element {
     // Depositing
     if (currentAction === 'deposit') {
       // No wallet balance to deposit
-      if (walletBalances[currentPool.symbol].amount.isZero()) {
+      if (!walletBalances[currentPool.symbol].amount.tokens) {
         setDisabledMessage(dictionary.cockpit.noBalanceForDeposit.replaceAll('{{ASSET}}', currentPool.symbol));
       } else if (currentPool.symbol === 'ETH') {
         setDisabledMessage('Sollet ETH will be sunset at the end of April. We do not accept Sollet ETH');
@@ -90,14 +87,14 @@ export function TradePanel(): JSX.Element {
       // Borrowing
     } else if (currentAction === 'borrow') {
       // User has not deposited any collateral
-      if (walletBalances[currentPool.symbol].amount.isZero()) {
+      if (!walletBalances[currentPool.symbol].amount.tokens) {
         setDisabledMessage(dictionary.cockpit.noDepositsForBorrow);
 
         // User is below minimum c-ratio
       } else if (accountSummary?.borrowedValue && accountSummary?.cRatio <= currentPool.minCRatio) {
         setDisabledMessage(dictionary.cockpit.belowMinCRatio);
         // No liquidity in market to borrow from
-      } else if (currentPool.depositedTokens.lamports.isZero()) {
+      } else if (!currentPool.depositedTokens.tokens) {
         setDisabledMessage(dictionary.cockpit.noLiquidity);
       } else {
         setDisabledInput(false);
@@ -111,25 +108,6 @@ export function TradePanel(): JSX.Element {
         setDisabledInput(false);
       }
     }
-  }
-
-  // Get max input for current trade action and reserve
-  function getMaxInput() {
-    if (!currentPool || currentPool === undefined || !currentPool.symbol) {
-      return;
-    }
-
-    let max = 0;
-    if (currentAction === 'deposit') {
-      max = accountPoolPosition?.maxTradeAmounts.deposit.tokens ?? 0;
-    } else if (currentAction === 'withdraw') {
-      max = accountPoolPosition?.maxTradeAmounts.withdraw.tokens ?? 0;
-    } else if (currentAction === 'borrow') {
-      max = accountPoolPosition?.maxTradeAmounts.borrow.tokens ?? 0;
-    } else if (currentAction === 'repay') {
-      max = accountPoolPosition?.maxTradeAmounts.repay.tokens ?? 0;
-    }
-    setMaxInput(max);
   }
 
   // Adjust user input and calculate updated c-ratio if
@@ -173,15 +151,7 @@ export function TradePanel(): JSX.Element {
   // Check user input and for Copilot warning
   // Then submit trade RPC call
   async function submitTrade() {
-    if (
-      !currentPool ||
-      currentPool === undefined ||
-      !currentPool.symbol ||
-      !accountPoolPosition ||
-      !accountSummary ||
-      !currentAmount ||
-      inputError
-    ) {
+    if (!currentPool?.symbol || !accountPoolPosition || !accountSummary || !currentAmount || inputError) {
       return;
     }
 

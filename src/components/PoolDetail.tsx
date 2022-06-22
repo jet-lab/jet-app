@@ -1,4 +1,5 @@
 import { useWallet } from '@solana/wallet-adapter-react';
+import { Pool } from '@jet-lab/margin';
 import { useConnectWalletModal } from '../contexts/connectWalletModal';
 import { useLanguage } from '../contexts/localization/localization';
 import { useNativeValues } from '../contexts/nativeValues';
@@ -6,10 +7,7 @@ import { currencyFormatter } from '../utils/currency';
 import { Modal, Button, Divider } from 'antd';
 import { NativeToggle } from './NativeToggle';
 import { PercentageChart } from './PercentageChart';
-
-// Jet V1
 import { AssetLogo } from './AssetLogo';
-import { Pool } from '@jet-lab/margin';
 
 export function PoolDetail({ pool, close }: { pool: Pool | undefined; close: () => void }): JSX.Element {
   const { dictionary } = useLanguage();

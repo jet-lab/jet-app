@@ -1,9 +1,6 @@
 import { Pool } from '@jet-lab/margin';
 import { createContext, useContext, useState } from 'react';
 
-// Jet V1
-import { Reserve } from '../models/JetTypes';
-
 // Current trade info UI context
 export type TradeAction = 'deposit' | 'withdraw' | 'borrow' | 'repay';
 interface TradeInfo {
