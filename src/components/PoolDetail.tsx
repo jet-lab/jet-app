@@ -6,30 +6,21 @@ import { currencyFormatter } from '../utils/currency';
 import { Modal, Button, Divider } from 'antd';
 import { NativeToggle } from './NativeToggle';
 import { PercentageChart } from './PercentageChart';
-import { Info } from './Info';
 
 // Jet V1
 import { AssetLogo } from './AssetLogo';
 import { Pool } from '@jet-lab/margin';
 
-export function ReserveDetail({
-  reserve,
-  pool,
-  close
-}: {
-  reserve: Pool | undefined;
-  pool: Pool | undefined;
-  close: () => void;
-}): JSX.Element {
+export function PoolDetail({ pool, close }: { pool: Pool | undefined; close: () => void }): JSX.Element {
   const { dictionary } = useLanguage();
   const { connecting, setConnecting } = useConnectWalletModal();
   const { connected } = useWallet();
   const { nativeValues } = useNativeValues();
   const price = pool?.tokenPrice !== undefined ? pool.tokenPrice : 0;
   return (
-    <Modal footer={null} className="reserve-detail" visible={reserve && pool && !connecting} onCancel={() => close()}>
+    <Modal footer={null} className="reserve-detail" visible={pool && !connecting} onCancel={() => close()}>
       <div className="reserve-detail-modal modal-content flex-centered column">
-        {reserve && pool && (
+        {pool && (
           <>
             <div className="flex-centered column">
               <div className="flex align-center-justify-center">
@@ -50,7 +41,7 @@ export function ReserveDetail({
               <span className="flex-centered">{dictionary.reserveDetail.reserveSize.toUpperCase()}</span>
               <h1 className="gradient-text">
                 {currencyFormatter(
-                  nativeValues ? reserve.marketSize.tokens : reserve.marketSize.muln(price).tokens,
+                  nativeValues ? pool.marketSize.tokens : pool.marketSize.muln(price).tokens,
                   !nativeValues,
                   2
                 )}
@@ -59,7 +50,7 @@ export function ReserveDetail({
             <Divider />
             <div className="reserve-subdetails flex align-center justify-evenly">
               <PercentageChart
-                percentage={reserve.utilizationRate * 100}
+                percentage={pool.utilizationRate * 100}
                 text={dictionary.reserveDetail.utilisationRate.toUpperCase()}
                 term="utilisationRate"
               />
@@ -73,8 +64,8 @@ export function ReserveDetail({
                       {pool.tokenPrice !== undefined
                         ? currencyFormatter(
                             nativeValues
-                              ? reserve.borrowedTokens.tokens
-                              : reserve.borrowedTokens.muln(pool.tokenPrice).tokens,
+                              ? pool.borrowedTokens.tokens
+                              : pool.borrowedTokens.muln(pool.tokenPrice).tokens,
                             !nativeValues,
                             2
                           )
@@ -86,11 +77,11 @@ export function ReserveDetail({
                 <div className="totals flex align-start justify-center">
                   <div className="asset-info-color liquid"></div>
                   <span>
-                    {dictionary.reserveDetail.depositedTokens.toUpperCase()}
+                    {dictionary.reserveDetail.availableLiquidity.toUpperCase()}
                     <br></br>
                     <p>
                       {currencyFormatter(
-                        nativeValues ? reserve.depositedTokens.tokens : reserve.depositedTokens.muln(price).tokens,
+                        nativeValues ? pool.depositedTokens.tokens : pool.depositedTokens.muln(price).tokens,
                         !nativeValues,
                         2
                       )}
@@ -112,7 +103,7 @@ export function ReserveDetail({
             }
           }}>
           {connected
-            ? dictionary.reserveDetail.tradeAsset.replace('{{ASSET}}', reserve?.symbol)
+            ? dictionary.reserveDetail.tradeAsset.replace('{{ASSET}}', pool?.symbol)
             : dictionary.settings.connect}
         </Button>
       </div>

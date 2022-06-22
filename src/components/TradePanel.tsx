@@ -5,10 +5,11 @@ import { useLanguage } from '../contexts/localization/localization';
 import { useBlockExplorer } from '../contexts/blockExplorer';
 import { useTransactionLogs } from '../contexts/transactionLogs';
 import { currencyFormatter } from '../utils/currency';
+import { shortenPubkey } from '../utils/utils';
 import { notification, Select, Slider } from 'antd';
 import { Info } from './Info';
 import { JetInput } from './JetInput';
-import { shortenPubkey } from '../utils/utils';
+import { ConnectMessage } from './ConnectMessage';
 
 // Jet V1
 import { useUser } from '../v1/contexts/user';
@@ -17,11 +18,13 @@ import { useMarginActions } from '../hooks/useMarginActions';
 import { PoolAmount, TokenAmount } from '@jet-lab/margin';
 import { TxnResponse } from '../v1/models/JetTypes';
 import { useMargin } from '../contexts/marginContext';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 export function TradePanel(): JSX.Element {
   const { dictionary } = useLanguage();
   const { getExplorerUrl } = useBlockExplorer();
   const { addLog } = useTransactionLogs();
+  const { connected } = useWallet();
   const {
     currentReserve,
     currentPool,
@@ -315,7 +318,7 @@ export function TradePanel(): JSX.Element {
   // If user disconnects wallet, reset inputs
   useEffect(() => {
     setCurrentAmount(null);
-  }, [userFetched]);
+  }, [setCurrentAmount, userFetched]);
 
   return (
     <div className="trade-panel flex align-center justify-start">
@@ -350,6 +353,7 @@ export function TradePanel(): JSX.Element {
           </Select>
         </div>
       </div>
+      {!connected ? <ConnectMessage /> : <></>}
       {disabledMessage ? (
         <div className="trade-section trade-section-disabled-message flex-centered column">
           <span className="center-text">{disabledMessage}</span>

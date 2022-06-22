@@ -11,7 +11,7 @@ import { Input, notification } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { NativeToggle } from './NativeToggle';
 import { Info } from './Info';
-import { ReserveDetail } from './ReserveDetail';
+import { PoolDetail } from './PoolDetail';
 import { ReactComponent as ArrowIcon } from '../styles/icons/arrow_icon.svg';
 import { ReactComponent as RadarIcon } from '../styles/icons/radar_icon.svg';
 
@@ -34,7 +34,6 @@ export function MarketTable(): JSX.Element {
   const { nativeValues } = useNativeValues();
   const [reservesArray, setReservesArray] = useState<Pool[]>([]);
   const [filteredMarketTable, setFilteredMarketTable] = useState<Pool[]>([]);
-  const [reserveDetail, setReserveDetail] = useState<Pool | undefined>();
   const [poolDetail, setPoolDetail] = useState<Pool | undefined>();
   // Jet V1
   const user = useUser();
@@ -275,21 +274,13 @@ export function MarketTable(): JSX.Element {
                   <td></td>
                   <td></td>
                   <td></td>
-                  <td></td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
       </div>
-      <ReserveDetail
-        reserve={reserveDetail}
-        pool={poolDetail}
-        close={() => {
-          setReserveDetail(undefined);
-          setPoolDetail(undefined);
-        }}
-      />
+      <PoolDetail pool={poolDetail} close={() => setPoolDetail(undefined)} />
     </>
   );
 }

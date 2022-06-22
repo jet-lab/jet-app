@@ -93,7 +93,7 @@ export const RadarModal: React.FC = () => {
       </div>
       {protocolData.length === 0 && (
         <div className="radar-loader">
-          <LoadingOutlined className="green-text" />
+          <LoadingOutlined style={{ fontSize: 25 }} className="green-text" />
         </div>
       )}
 

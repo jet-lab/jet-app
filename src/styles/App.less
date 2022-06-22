@@ -1,7 +1,7 @@
 /***************************
   Jet-Antd Library
 ***************************/
-@import "~@jet-lab/jet-antd/lib/jet-antd.less";
+@import '~@jet-lab/jet-antd/lib/jet-antd.less';
 
 /***************************
   App Specific Styles
@@ -13,6 +13,18 @@
 .jet-app {
   &.ant-scrolling-effect {
     overflow-y: scroll !important;
+  }
+
+  // Connect Message
+  .connect-message {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    backdrop-filter: blur(2px);
+    background: rgba(var(--primary-3), @subtle-opacity);
+    z-index: 100;
   }
 
   // Modals
@@ -252,8 +264,8 @@
   // Percentage Chart
   .percentage-chart {
     position: relative;
-    width: 140px;
-    height: 140px;
+    width: 130px;
+    height: 130px;
     justify-content: space-around;
     box-shadow: @neu-shadow;
     border-radius: 100px;
@@ -261,20 +273,20 @@
     .chart-info,
     .inset-chart-shadow,
     svg {
-      width: 140px;
+      width: 130px;
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
     }
     .inset-chart-shadow {
-      width: 122px;
-      height: 122px;
+      width: 114px;
+      height: 114px;
       box-shadow: @neu-shadow-inset;
       border-radius: 100px;
     }
     svg {
-      width: 151px;
+      width: 142px;
       stroke: @danger;
 
       path:first-of-type {
@@ -641,7 +653,7 @@
       width: 100%;
       margin: 0 auto;
       border-radius: @border-radius;
-      box-shadow: @neu-shadow-2;
+      box-shadow: @neu-shadow-3;
       overflow: hidden;
 
       // Trade Panel
@@ -982,6 +994,16 @@
   // Transactions View
   .transaction-logs {
     align-items: flex-start;
+    h1 {
+      padding-left: @spacing-md;
+      font-size: @xl-font-size;
+      margin: unset;
+
+      + span {
+        margin: 0 0 -8px 10px;
+        color: @secondary-5;
+      }
+    }
     .jet-icon {
       * {
         fill: @jet-green;
@@ -1048,6 +1070,11 @@
     .loader {
       .outer-circle {
         margin: unset;
+      }
+    }
+    .ant-btn {
+      span {
+        font-size: @xs-font-size !important;
       }
     }
   }

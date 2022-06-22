@@ -23,7 +23,7 @@
     "native": "Native",
     "totalValueLocked": "Locked Market Value",
     "totalBorrowed": "Total Borrowed",
-    "depositedTokens": "Available Liquidity",
+    "availableLiquidity": "Available Liquidity",
     "amountDeposited": "Deposited",
     "amountBorrowed": "Borrowed",
     "depositRate": "Deposit Rate",
@@ -97,7 +97,7 @@
   },
   "reserveDetail": {
     "reserveSize": "Reserve Size",
-    "depositedTokens": "Available Liquidity",
+    "availableLiquidity": "Available Liquidity",
     "utilisationRate": "Utilisation Rate",
     "viewHistory": "View History",
     "totalBorrowed": "Total Borrowed",

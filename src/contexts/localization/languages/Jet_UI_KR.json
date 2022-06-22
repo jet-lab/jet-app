@@ -23,7 +23,7 @@
     "native": "네이티브",
     "totalValueLocked": "Locked Market Value",
     "totalBorrowed": "총 대출량",
-    "depositedTokens": "사용 가능한 유동성",
+    "availableLiquidity": "사용 가능한 유동성",
     "amountDeposited": "예치된 수량",
     "amountBorrowed": "대출된 수량",
     "depositRate": "예치율",
@@ -97,7 +97,7 @@
   },
   "reserveDetail": {
     "reserveSize": "비축 규모",
-    "depositedTokens": "사용가능한 유동성",
+    "availableLiquidity": "사용가능한 유동성",
     "utilisationRate": "이용 비율",
     "viewHistory": "내역 보기",
     "totalBorrowed": "총 대출한 금액",

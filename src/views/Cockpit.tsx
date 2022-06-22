@@ -67,7 +67,7 @@ export function Cockpit(): JSX.Element {
                         ? 'danger-text'
                         : 'warning-text'
                     }`}
-                    style={{ pointerEvents: 'none', fontSize: !userV1.position.borrowedValue ? '125px' : '' }}>
+                    style={{ pointerEvents: 'none', fontSize: !userV1.position.borrowedValue ? '80px' : '' }}>
                     {userV1.position.borrowedValue > 0
                       ? userV1.position.colRatio > 10
                         ? '>1000'
