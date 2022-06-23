@@ -115,7 +115,7 @@ export function MarketTable(): JSX.Element {
                 <th className="native-toggle-container">
                   <NativeToggle />
                 </th>
-                <th className="cell-border-right">{dictionary.cockpit.depositedTokens}</th>
+                <th className="cell-border-right">{dictionary.cockpit.availableLiquidity}</th>
                 <th>
                   {dictionary.cockpit.depositRate}
                   <Info term="depositRate" />
@@ -272,7 +272,7 @@ export function MarketTable(): JSX.Element {
                   <td></td>
                   <td></td>
                   <td>
-                    <LoadingOutlined className="green-text" style={{ fontSize: 25, marginRight: -10 }} />
+                    <LoadingOutlined className="green-text" style={{ fontSize: 25, marginLeft: -35 }} />
                   </td>
                   <td></td>
                   <td></td>

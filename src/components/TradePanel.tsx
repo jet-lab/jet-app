@@ -33,18 +33,14 @@ export function TradePanel(): JSX.Element {
   } = useTradeContext();
   const accountPoolPosition = marginAccount && currentPool?.symbol && marginAccount.positions[currentPool.symbol];
   const accountSummary = marginAccount && marginAccount.summary;
+  const [adjustedRatio, setAdjustedRatio] = useState<number>(0);
   const maxInput = accountPoolPosition?.maxTradeAmounts[currentAction].tokens ?? 0;
-  const { Option } = Select;
-  const tradeActions: TradeAction[] = ['deposit', 'withdraw', 'borrow', 'repay'];
-  const { deposit, withdraw, borrow, repay } = useMarginActions();
-
-  // Disabled components / errors
   const [disabledInput, setDisabledInput] = useState<boolean>(false);
   const [disabledMessage, setDisabledMessage] = useState<string>('');
   const [inputError, setInputError] = useState<string>('');
-
-  // Adjusted c-ratio if trade were to be submitted
-  const [adjustedRatio, setAdjustedRatio] = useState<number>(0);
+  const tradeActions: TradeAction[] = ['deposit', 'withdraw', 'borrow', 'repay'];
+  const { deposit, withdraw, borrow, repay } = useMarginActions();
+  const { Option } = Select;
 
   // Adjust interface
   function adjustInterface() {
