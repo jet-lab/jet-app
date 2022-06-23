@@ -239,7 +239,7 @@ export function TradePanel(): JSX.Element {
             href={getExplorerUrl(lastTxn)}
             target="_blank"
             rel="noopener noreferrer"
-            className="gradient-text flex align-center justify-between"
+            className="flex align-center justify-between"
             style={{ width: '100%' }}>
             {shortenPubkey(lastTxn, 8)}
             <i className="fas fa-external-link-alt"></i>
