@@ -86,7 +86,7 @@ export interface Reserve {
   name: string;
   abbrev: MarginPools;
   marketSize: TokenAmount;
-  outstandingDebt: TokenAmount;
+  borrowedTokens: TokenAmount;
   utilizationRate: number;
   depositRate: number;
   borrowRate: number;
@@ -107,7 +107,7 @@ export interface Reserve {
 
   accountPubkey: PublicKey;
   vaultPubkey: PublicKey;
-  availableLiquidity: TokenAmount;
+  depositedTokens: TokenAmount;
   feeNoteVaultPubkey: PublicKey;
   tokenMintPubkey: PublicKey;
   tokenMint: TokenAmount;
@@ -178,7 +178,7 @@ export interface ReserveConfigStruct {
 }
 export type ReserveStateStruct = CacheStruct & {
   accruedUntil: BN;
-  outstandingDebt: BN;
+  borrowedTokens: BN;
   uncollectedFees: BN;
   totalDeposits: BN;
   totalDepositNotes: BN;

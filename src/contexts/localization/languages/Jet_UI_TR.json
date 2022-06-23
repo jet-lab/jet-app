@@ -23,7 +23,7 @@
     "native": "Özgün",
     "totalValueLocked": "Kilitli Piyasa Değeri",
     "totalBorrowed": "Toplam Ödünç Alınan",
-    "availableLiquidity": "Uygun Likidite",
+    "depositedTokens": "Uygun Likidite",
     "amountDeposited": "Yatırılan",
     "amountBorrowed": "Ödünç alınmış",
     "depositRate": "Yatırma Oranı",
@@ -96,7 +96,7 @@
   },
   "reserveDetail": {
     "reserveSize": "Rezerv Büyüklüğü",
-    "availableLiquidity": "Mevcut Likidite",
+    "depositedTokens": "Mevcut Likidite",
     "utilisationRate": "Kullanım Oranı",
     "viewHistory": "İşlem geçmişini görüntüle",
     "totalBorrowed": "Toplam Borç",
@@ -148,10 +148,15 @@
       "refresh": "Yenile",
       "originationFee": "Bu borca ilişkin {{ORIGINATION FEE}}% kadar oluşturulma komisyonu bulunmaktadır. ",
       "headsup": "Dikkat buraya!",
-      "disclaimer": "JetProtocol mainnet'e erişiyorsunuz. Yeterince bilgiye sahip değilseniz ilerlemeyin, şartları veya olası kayıpları kabul etmeyin.",
       "accept": "Kabul Et",
       "warning": "UYARI",
-      "acceptDisclaimer": "I understand the Terms of Service, Privacy Policy, Cookie Policy and accept the risks."
+      "acceptDisclaimer": "I understand the Terms of Service, Privacy Policy, Cookie Policy and accept the risks.",
+      "disclaimer": {
+        "title": "Disclaimer",
+        "disclaimerDetail": "You are now entering Jet Protocol Mainnet. Do not proceed if you do not understand and accept the {{TERMS_LINK}}, {{PRIVACY_LINK}}, and the potential for financial loss.",
+        "acceptRisks": "I understand and accept the risks.",
+        "enterMainnet": "Enter Mainnet"
+      }
     },
     "radar": {
       "title": "Radar",

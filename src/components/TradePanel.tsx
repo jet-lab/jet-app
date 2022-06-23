@@ -1,33 +1,28 @@
 import { useEffect, useState } from 'react';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { PoolAmount, TokenAmount } from '@jet-lab/margin';
+import { TxnResponse } from '../models/JetTypes';
+import { useMargin } from '../contexts/marginContext';
 import type { TradeAction } from '../contexts/tradeContext';
 import { useTradeContext } from '../contexts/tradeContext';
-import { useDarkTheme } from '../contexts/darkTheme';
 import { useLanguage } from '../contexts/localization/localization';
 import { useBlockExplorer } from '../contexts/blockExplorer';
-import { Alert, useAlert } from '../contexts/copilotModal';
 import { useTransactionLogs } from '../contexts/transactionLogs';
+import { useMarginActions } from '../hooks/useMarginActions';
 import { currencyFormatter } from '../utils/currency';
+import { shortenPubkey } from '../utils/utils';
 import { notification, Select, Slider } from 'antd';
 import { Info } from './Info';
 import { JetInput } from './JetInput';
-import { shortenPubkey } from '../utils/utils';
-
-// Jet V1
-import { useUser } from '../v1/contexts/user';
-import { useMarket } from '../v1/contexts/market';
-import { useMarginActions } from '../hooks/useMarginActions';
-import { PoolAmount, TokenAmount } from '@jet-lab/margin';
-import { TxnResponse } from '../v1/models/JetTypes';
-import { useMargin } from '../contexts/marginContext';
+import { ConnectMessage } from './ConnectMessage';
 
 export function TradePanel(): JSX.Element {
-  const { darkTheme } = useDarkTheme();
   const { dictionary } = useLanguage();
-  const { setAlert } = useAlert();
+  const { pools, marginAccount, walletBalances, userFetched } = useMargin();
   const { getExplorerUrl } = useBlockExplorer();
   const { addLog } = useTransactionLogs();
+  const { connected } = useWallet();
   const {
-    currentReserve,
     currentPool,
     currentAction,
     setCurrentAction,
@@ -36,19 +31,12 @@ export function TradePanel(): JSX.Element {
     sendingTrade,
     setSendingTrade
   } = useTradeContext();
+  const accountPoolPosition = marginAccount && currentPool?.symbol && marginAccount.positions[currentPool.symbol];
+  const accountSummary = marginAccount && marginAccount.summary;
+  const maxInput = accountPoolPosition?.maxTradeAmounts[currentAction].tokens ?? 0;
   const { Option } = Select;
   const tradeActions: TradeAction[] = ['deposit', 'withdraw', 'borrow', 'repay'];
-
-  // Jet V1 Trade Actions
-  const userV1 = useUser();
-  const market = useMarket();
   const { deposit, withdraw, borrow, repay } = useMarginActions();
-
-  // Jet V2
-  const { config, manager, poolsFetched, pools, marginAccount, walletBalances, userFetched } = useMargin();
-
-  // Input values
-  const [maxInput, setMaxInput] = useState<number>(0);
 
   // Disabled components / errors
   const [disabledInput, setDisabledInput] = useState<boolean>(false);
@@ -61,7 +49,6 @@ export function TradePanel(): JSX.Element {
   // Adjust interface
   function adjustInterface() {
     setInputError('');
-    getMaxInput();
     adjustCollateralizationRatio();
     checkDisabledInput();
   }
@@ -72,7 +59,7 @@ export function TradePanel(): JSX.Element {
     // Initially set to true and reset message
     setDisabledMessage('');
     setDisabledInput(true);
-    if (!userV1 || !currentPool || currentPool === undefined || !currentPool.symbol) {
+    if (!currentPool || currentPool === undefined || !currentPool.symbol) {
       return;
     }
 
@@ -89,10 +76,10 @@ export function TradePanel(): JSX.Element {
       // Withdrawing
     } else if (currentAction === 'withdraw') {
       // No collateral to withdraw
-      if (!userV1.collateralBalances[currentPool.symbol]) {
+      if (!accountPoolPosition?.depositBalance.tokens) {
         setDisabledMessage(dictionary.cockpit.noDepositsForWithdraw.replaceAll('{{ASSET}}', currentPool.symbol));
         // User is below PROGRAM minimum c-ratio
-      } else if (userV1.position.borrowedValue && userV1.position.colRatio <= market.minColRatio) {
+      } else if (accountSummary?.borrowedValue && accountSummary.cRatio <= currentPool.minCRatio) {
         setDisabledMessage(dictionary.cockpit.belowMinCRatio);
       } else {
         setDisabledInput(false);
@@ -100,24 +87,22 @@ export function TradePanel(): JSX.Element {
       // Borrowing
     } else if (currentAction === 'borrow') {
       // User has not deposited any collateral
-      if (!walletBalances[currentPool.symbol].amount) {
+      if (!walletBalances[currentPool.symbol].amount.tokens) {
         setDisabledMessage(dictionary.cockpit.noDepositsForBorrow);
 
         // User is below minimum c-ratio
-        // } else if (currentPool.symbol === 'ETH') {
-        //   setDisabledMessage('Sollet ETH will be sunset at the end of April. Borrowing ETH is not available');
-        // } else if (userV1.position.borrowedValue && userV1.position.colRatio <= market.minColRatio) {
-        //   setDisabledMessage(dictionary.cockpit.belowMinCRatio);
-        //   // No liquidity in market to borrow from
-        // } else if (currentPool.availableLiquidity.lamports.isZero()) {
-        //   setDisabledMessage(dictionary.cockpit.noLiquidity);
+      } else if (accountSummary?.borrowedValue && accountSummary?.cRatio <= currentPool.minCRatio) {
+        setDisabledMessage(dictionary.cockpit.belowMinCRatio);
+        // No liquidity in market to borrow from
+      } else if (!currentPool.depositedTokens.tokens) {
+        setDisabledMessage(dictionary.cockpit.noLiquidity);
       } else {
         setDisabledInput(false);
       }
       // Repaying
     } else if (currentAction === 'repay') {
       // User has no loan balance to repay
-      if (!userV1.loanBalances[currentPool.symbol]) {
+      if (!accountPoolPosition?.loanBalance.tokens) {
         setDisabledMessage(dictionary.cockpit.noDebtForRepay.replaceAll('{{ASSET}}', currentPool.symbol));
       } else {
         setDisabledInput(false);
@@ -125,196 +110,48 @@ export function TradePanel(): JSX.Element {
     }
   }
 
-  // Get max input for current trade action and reserve
-  function getMaxInput() {
-    if (!currentPool || currentPool === undefined || !currentPool.symbol) {
-      return;
-    }
-
-    let max = 0;
-    if (userV1.assets?.tokens) {
-      if (currentAction === 'deposit') {
-        max = walletBalances[currentPool.symbol].amount.tokens;
-      } else if (currentAction === 'withdraw') {
-        max = userV1.assets.tokens[currentPool.symbol].maxWithdrawAmount;
-      } else if (currentAction === 'borrow') {
-        max = walletBalances[currentPool.symbol].amount.tokens;
-      } else if (currentAction === 'repay') {
-        max = userV1.assets.tokens[currentPool.symbol].maxRepayAmount;
-      }
-    }
-    setMaxInput(max);
-  }
-
   // Adjust user input and calculate updated c-ratio if
   // they were to submit current trade
   function adjustCollateralizationRatio(currentAmount = 0) {
-    if (!currentReserve || !currentPool || !currentPool.tokenPrice || !userV1.assets) {
+    if (!currentPool || !currentPool.tokenPrice || !accountSummary) {
       return;
     }
 
     // Depositing
     if (currentAction === 'deposit') {
       setAdjustedRatio(
-        (userV1.position.depositedValue + currentAmount * currentPool.tokenPrice) /
-          (userV1.position.borrowedValue > 0 ? userV1.position.borrowedValue : 1)
+        (accountSummary.depositedValue + currentAmount * currentPool.tokenPrice) /
+          (accountSummary.borrowedValue > 0 ? accountSummary.borrowedValue : 1)
       );
       // Withdrawing
     } else if (currentAction === 'withdraw') {
       setAdjustedRatio(
-        (userV1.position.depositedValue - currentAmount * currentPool.tokenPrice) /
-          (userV1.position.borrowedValue > 0 ? userV1.position.borrowedValue : 1)
+        (accountSummary.depositedValue - currentAmount * currentPool.tokenPrice) /
+          (accountSummary.borrowedValue > 0 ? accountSummary.borrowedValue : 1)
       );
       // Borrowing
     } else if (currentAction === 'borrow') {
       setAdjustedRatio(
-        userV1.position.depositedValue /
-          (userV1.position.borrowedValue + currentAmount * currentPool.tokenPrice > 0
-            ? userV1.position.borrowedValue + currentAmount * currentPool.tokenPrice
+        accountSummary.depositedValue /
+          (accountSummary.borrowedValue + currentAmount * currentPool.tokenPrice > 0
+            ? accountSummary.borrowedValue + currentAmount * currentPool.tokenPrice
             : 1)
       );
       // Repaying
     } else if (currentAction === 'repay') {
       setAdjustedRatio(
-        userV1.position.depositedValue /
-          (userV1.position.borrowedValue - currentAmount * currentPool.tokenPrice > 0
-            ? userV1.position.borrowedValue - currentAmount * currentPool.tokenPrice
+        accountSummary.depositedValue /
+          (accountSummary.borrowedValue - currentAmount * currentPool.tokenPrice > 0
+            ? accountSummary.borrowedValue - currentAmount * currentPool.tokenPrice
             : 1)
       );
-    }
-  }
-
-  // Check user's trade and offer Copilot warning
-  // if necessary, otherwise begin trade submit
-  function checkCopilotTradeWarning() {
-    let copilotAlert: Alert | undefined = undefined;
-    if (!currentReserve) {
-      return;
-    }
-
-    if (!currentAmount) {
-      setInputError(dictionary.cockpit.nocurrentAmount);
-      setCurrentAmount(null);
-      return;
-    }
-
-    // Depositing
-    if (currentAction === 'deposit') {
-      // User is opening an account, inform them of rent fee
-      /* TODO add this back in for rent fee
-      if (!user.position.loanNoteMintPubkey) {
-        copilotAlert = {
-          status: 'neutral',
-          overview: dictionary.cockpit.welcomeAboard,
-          detail: <span>dictionary.cockpit.rentFeeDescription</span>,
-          solution: <span>dictionary.cockpit.rentFeeDetail
-            .replace('{{RENT_FEE}}', 0) //TODO: Rent fee here
-            .replace('{{TRADE ACTION}}', dictionary.transactions.withdraw)</span>,
-          action: {
-            text: dictionary.cockpit.confirm,
-            onClick: () => submitTrade()
-          }
-        };
-
-      // Depositing all SOL leaving no lamports for fees, inform and reject
-      } else */ if (
-        currentReserve.abbrev === 'SOL' &&
-        currentAmount <= walletBalances[currentReserve.abbrev].amount.tokens &&
-        currentAmount > walletBalances[currentReserve.abbrev].amount.tokens - 0.02
-      ) {
-        copilotAlert = {
-          status: 'danger',
-          detail: <span>{dictionary.cockpit.insufficientLamports}</span>,
-          closeable: true
-        };
-      }
-      // Withdrawing
-    } else if (currentAction === 'withdraw') {
-      // User is withdrawing between 125% and 130%, allow trade but warn them
-      if (userV1.position.borrowedValue && adjustedRatio > 0 && adjustedRatio <= market.minColRatio + 0.05) {
-        copilotAlert = {
-          status: 'danger',
-          detail: (
-            <span>
-              {dictionary.cockpit.subjectToLiquidation
-                .replaceAll('{{NEW-C-RATIO}}', currencyFormatter(adjustedRatio * 100, false, 1))
-                .replaceAll('{{MIN-C-RATIO}}', currencyFormatter(market.minColRatio * 100, false, 1))
-                .replaceAll('{{TRADE ACTION}}', dictionary.cockpit.withdraw.toLowerCase())}
-            </span>
-          ),
-          closeable: true,
-          action: {
-            text: dictionary.cockpit.confirm,
-            onClick: () => submitTrade()
-          }
-        };
-      }
-      // Borrowing
-    } else if (currentAction === 'borrow') {
-      // User is opening an account, inform them of rent fee
-      /* TODO add this back in for rent fee
-      if (!user.position.loanNoteMintPubkey) {
-        copilotAlert = {
-          status: 'neutral',
-          overview: dictionary.cockpit.welcomeAboard,
-          detail: <span>dictionary.cockpit.rentFeeDescription</span>,
-          solution: <span>dictionary.cockpit.rentFeeDetail
-            .replace('{{RENT_FEE}}', 0) //TODO: Rent fee here
-            .replace('{{TRADE ACTION}}', dictionary.transactions.repay.toLowerCase())</span>,
-          action: {
-            text: dictionary.cockpit.confirm,
-            onClick: () => submitTrade()
-          }
-        };
-      // In danger of liquidation
-      } else */ if (adjustedRatio <= market.minColRatio + 0.2) {
-        // but not below min-ratio, warn and allow trade
-        if (adjustedRatio >= market.minColRatio || !userV1.position.borrowedValue) {
-          copilotAlert = {
-            status: 'danger',
-            detail: (
-              <span>
-                {dictionary.cockpit.subjectToLiquidation
-                  .replaceAll('{{NEW-C-RATIO}}', currencyFormatter(adjustedRatio * 100, false, 1))
-                  .replaceAll('{{MIN-C-RATIO}}', currencyFormatter(market.minColRatio * 100, false, 1))
-                  .replaceAll('{{TRADE ACTION}}', dictionary.cockpit.borrow.toLowerCase())}
-              </span>
-            ),
-            closeable: true,
-            action: {
-              text: dictionary.cockpit.confirm,
-              onClick: () => submitTrade()
-            }
-          };
-          // and below minimum ratio, inform and reject
-        } else if (adjustedRatio < market.minColRatio && adjustedRatio < userV1.position.colRatio) {
-          copilotAlert = {
-            status: 'danger',
-            detail: (
-              <span>
-                {dictionary.cockpit.rejectTrade
-                  .replaceAll('{{NEW-C-RATIO}}', currencyFormatter(adjustedRatio * 100, false, 1))
-                  .replaceAll('{{JET MIN C-RATIO}}', market.minColRatio * 100)}
-              </span>
-            ),
-            closeable: true
-          };
-        }
-      }
-    }
-
-    // If no alert, submit trade
-    if (copilotAlert) {
-      setAlert(copilotAlert);
-    } else {
-      submitTrade();
     }
   }
 
   // Check user input and for Copilot warning
   // Then submit trade RPC call
   async function submitTrade() {
-    if (!currentPool || currentPool === undefined || !currentPool.symbol || !userV1.assets || !currentAmount) {
+    if (!currentPool?.symbol || !accountPoolPosition || !accountSummary || !currentAmount || inputError) {
       return;
     }
 
@@ -322,14 +159,14 @@ export function TradePanel(): JSX.Element {
     const tradeAmount = TokenAmount.tokens(currentAmount.toString(), currentPool.decimals);
     let res: TxnResponse = TxnResponse.Cancelled;
     let txids: string[] = [];
-    let inputError = '';
+    let tradeError = '';
     setSendingTrade(true);
 
     // Depositing
     if (tradeAction === 'deposit') {
       // User is depositing more than they have in their wallet
       if (tradeAmount.tokens > walletBalances[currentPool.symbol].amount.tokens) {
-        inputError = dictionary.cockpit.notEnoughAsset.replaceAll('{{ASSET}}', currentPool.symbol);
+        tradeError = dictionary.cockpit.notEnoughAsset.replaceAll('{{ASSET}}', currentPool.symbol);
         // Otherwise, send deposit
       } else {
         const depositAmount = tradeAmount.lamports;
@@ -338,31 +175,31 @@ export function TradePanel(): JSX.Element {
       // Withdrawing sollet ETH
     } else if (tradeAction === 'withdraw') {
       // User is withdrawing more than liquidity in market
-      if (tradeAmount.gt(currentPool.availableLiquidity)) {
-        inputError = dictionary.cockpit.noLiquidity;
+      if (tradeAmount.gt(currentPool.depositedTokens)) {
+        tradeError = dictionary.cockpit.noLiquidity;
         // User is withdrawing more than they've deposited
-      } else if (tradeAmount.tokens > userV1.collateralBalances[currentPool.symbol]) {
-        inputError = dictionary.cockpit.lessFunds;
+      } else if (tradeAmount.tokens > accountPoolPosition.depositBalance.tokens) {
+        tradeError = dictionary.cockpit.lessFunds;
         // User is below PROGRRAM minimum c-ratio
-      } else if (userV1.position.borrowedValue && userV1.position.colRatio <= 1.25) {
-        inputError = dictionary.cockpit.belowMinCRatio;
+      } else if (accountSummary.borrowedValue && accountSummary.cRatio <= 1.25) {
+        tradeError = dictionary.cockpit.belowMinCRatio;
         // Otherwise, send withdraw
       } else {
         // If user is withdrawing all, use collateral notes
         const withdrawAmount =
-          tradeAmount.tokens === userV1.collateralBalances[currentPool.symbol]
-            ? PoolAmount.notes(userV1.assets.tokens[currentPool.symbol].collateralNoteBalance.lamports)
+          tradeAmount.tokens === accountPoolPosition.depositBalance.tokens
+            ? PoolAmount.notes(accountPoolPosition.depositBalanceNotes)
             : PoolAmount.tokens(tradeAmount.lamports);
         [res, txids] = await withdraw(currentPool.symbol, withdrawAmount);
       }
       // Borrowing
     } else if (tradeAction === 'borrow') {
       // User is borrowing more than liquidity in market
-      if (tradeAmount.gt(currentPool.availableLiquidity)) {
-        inputError = dictionary.cockpit.noLiquidity;
+      if (tradeAmount.gt(currentPool.depositedTokens)) {
+        tradeError = dictionary.cockpit.noLiquidity;
         // User is below the minimum c-ratio
-      } else if (userV1.position.borrowedValue && userV1.position.colRatio <= market.minColRatio) {
-        inputError = dictionary.cockpit.belowMinCRatio;
+      } else if (accountSummary.borrowedValue && accountSummary.cRatio <= currentPool.minCRatio) {
+        tradeError = dictionary.cockpit.belowMinCRatio;
         // Otherwise, send borrow
       } else {
         [res, txids] = await borrow(currentPool.symbol, tradeAmount.lamports);
@@ -370,26 +207,25 @@ export function TradePanel(): JSX.Element {
       // Repaying
     } else if (tradeAction === 'repay') {
       // User is repaying more than they owe
-      if (tradeAmount.tokens > userV1.loanBalances[currentPool.symbol]) {
-        inputError = dictionary.cockpit.oweLess;
+      if (tradeAmount.tokens > accountPoolPosition.loanBalance.tokens) {
+        tradeError = dictionary.cockpit.oweLess;
         // User input amount is larger than wallet balance
       } else if (tradeAmount.tokens > walletBalances[currentPool.symbol].amount.tokens) {
-        inputError = dictionary.cockpit.notEnoughAsset.replaceAll('{{ASSET}}', currentPool.symbol);
+        tradeError = dictionary.cockpit.notEnoughAsset.replaceAll('{{ASSET}}', currentPool.symbol);
         // Otherwise, send repay
       } else {
         // If user is repaying all, use loan notes
         const repayAmount =
-          tradeAmount.tokens === userV1.loanBalances[currentPool.symbol]
-            ? PoolAmount.notes(userV1.assets.tokens[currentPool.symbol].loanNoteBalance.lamports)
+          tradeAmount.tokens === accountPoolPosition.loanBalance.tokens
+            ? PoolAmount.notes(accountPoolPosition.loanBalanceNotes)
             : PoolAmount.tokens(tradeAmount.lamports);
         [res, txids] = await repay(currentPool.symbol, repayAmount);
       }
     }
 
     // If input error, remove trade amount and return
-    if (inputError) {
-      setInputError(inputError);
-      setCurrentAmount(null);
+    if (tradeError) {
+      setInputError(tradeError);
       setSendingTrade(false);
       return;
     }
@@ -443,12 +279,61 @@ export function TradePanel(): JSX.Element {
   // and current reserve change
   useEffect(() => {
     adjustInterface();
-  }, [userV1.assets, currentReserve, currentAction, currentPool]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPool, accountPoolPosition, accountSummary, currentAction]);
 
   // If user disconnects wallet, reset inputs
   useEffect(() => {
     setCurrentAmount(null);
-  }, [userFetched]);
+  }, [setCurrentAmount, userFetched]);
+
+  // On user input, check for error
+  useEffect(() => {
+    if (currentAmount) {
+      if (!currentPool) {
+        return;
+      }
+
+      // Depositing
+      if (currentAction === 'deposit') {
+        if (
+          currentPool.symbol === 'SOL' &&
+          currentAmount <= walletBalances[currentPool.symbol].amount.tokens &&
+          currentAmount > walletBalances[currentPool.symbol].amount.tokens - 0.02
+        ) {
+          setInputError(dictionary.cockpit.insufficientLamports);
+        }
+        // Withdrawing
+      } else if (currentAction === 'withdraw') {
+        // User is withdrawing between 125% and 130%, allow trade but warn them
+        if (accountSummary?.borrowedValue && adjustedRatio > 0 && adjustedRatio <= currentPool.minCRatio + 0.05) {
+          setInputError(
+            dictionary.cockpit.subjectToLiquidation
+              .replaceAll('{{NEW-C-RATIO}}', currencyFormatter(adjustedRatio * 100, false, 1))
+              .replaceAll('{{MIN-C-RATIO}}', currencyFormatter(currentPool.minCRatio * 100, false, 1))
+              .replaceAll('{{TRADE ACTION}}', dictionary.cockpit.withdraw.toLowerCase())
+          );
+        }
+        // Borrowing
+      } else if (currentAction === 'borrow') {
+        if (adjustedRatio <= currentPool.minCRatio + 0.2) {
+          // but not below min-ratio, warn and allow trade
+          if (adjustedRatio >= currentPool.minCRatio || !accountSummary?.borrowedValue) {
+            setInputError(
+              dictionary.cockpit.subjectToLiquidation
+                .replaceAll('{{NEW-C-RATIO}}', currencyFormatter(adjustedRatio * 100, false, 1))
+                .replaceAll('{{MIN-C-RATIO}}', currencyFormatter(currentPool.minCRatio * 100, false, 1))
+                .replaceAll('{{TRADE ACTION}}', dictionary.cockpit.borrow.toLowerCase())
+            );
+            // and below minimum ratio, inform and reject
+          } else if (adjustedRatio < currentPool.minCRatio && adjustedRatio < accountSummary.cRatio) {
+            setInputError(dictionary.cockpit.rejectTrade);
+          }
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentAmount]);
 
   return (
     <div className="trade-panel flex align-center justify-start">
@@ -462,9 +347,7 @@ export function TradePanel(): JSX.Element {
                 adjustInterface();
               }
             }}
-            className={`trade-select flex justify-center align-center ${currentAction === action ? 'active' : ''} ${
-              darkTheme ? 'dark' : ''
-            }`}>
+            className={`trade-select flex justify-center align-center ${currentAction === action ? 'active' : ''}`}>
             <p className="semi-bold-text">{dictionary.cockpit[action].toUpperCase()}</p>
           </div>
         ))}
@@ -485,9 +368,10 @@ export function TradePanel(): JSX.Element {
           </Select>
         </div>
       </div>
-      {disabledMessage ? (
+      {!connected || !pools ? <ConnectMessage /> : <></>}
+      {disabledMessage || inputError ? (
         <div className="trade-section trade-section-disabled-message flex-centered column">
-          <span className="center-text">{disabledMessage}</span>
+          <span className={`center-text ${inputError ? 'danger-text' : ''}`}>{disabledMessage || inputError}</span>
         </div>
       ) : (
         <>
@@ -498,7 +382,7 @@ export function TradePanel(): JSX.Element {
                 : currentAction === 'withdraw'
                 ? dictionary.cockpit.availableFunds.toUpperCase()
                 : currentAction === 'borrow'
-                ? currentPool && maxInput <= currentPool.availableLiquidity.tokens
+                ? currentPool && maxInput <= currentPool.depositedTokens.tokens
                   ? dictionary.cockpit.maxBorrowAmount.toUpperCase()
                   : dictionary.cockpit.availableLiquidity.toUpperCase()
                 : dictionary.cockpit.amountOwed.toUpperCase()}
@@ -520,9 +404,9 @@ export function TradePanel(): JSX.Element {
             </div>
             <p>
               {userFetched
-                ? (userV1.position.borrowedValue || (currentAction === 'borrow' && currentAmount)) && adjustedRatio > 10
+                ? (accountSummary?.borrowedValue || (currentAction === 'borrow' && currentAmount)) && adjustedRatio > 10
                   ? '>1000%'
-                  : (userV1.position.borrowedValue || (currentAction === 'borrow' && currentAmount)) &&
+                  : (accountSummary?.borrowedValue || (currentAction === 'borrow' && currentAmount)) &&
                     adjustedRatio < 10
                   ? currencyFormatter(adjustedRatio * 100, false, 1) + '%'
                   : '∞'
@@ -551,7 +435,7 @@ export function TradePanel(): JSX.Element {
 
             adjustCollateralizationRatio(currentAmount);
           }}
-          submit={() => checkCopilotTradeWarning()}
+          submit={submitTrade}
         />
         <Slider
           dots

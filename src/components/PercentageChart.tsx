@@ -3,7 +3,7 @@ import { useTradeContext } from '../contexts/tradeContext';
 import { Info } from './Info';
 
 export function PercentageChart(props: { percentage: number; text: string; term?: string }): JSX.Element {
-  const { currentReserve } = useTradeContext();
+  const { currentPool } = useTradeContext();
   const [percent, setPercent] = useState(0);
 
   // Animate chart
@@ -19,7 +19,7 @@ export function PercentageChart(props: { percentage: number; text: string; term?
   // Reset on reserve change
   useEffect(() => {
     setPercent(0);
-  }, [currentReserve]);
+  }, [currentPool]);
 
   return (
     <div className="percentage-chart">

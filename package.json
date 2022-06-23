@@ -15,7 +15,8 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.5.0",
-    "@jet-lab/margin": "^0.1.17",
+    "@jet-lab/jet-antd": "^0.4.25",
+    "@jet-lab/margin": "^0.1.18",
     "@project-serum/anchor": "^0.24.2",
     "@pythnetwork/client": "^2.7.0",
     "@solana/buffer-layout": "^4.0.0",
@@ -34,7 +35,8 @@
     "react-error-boundary": "^3.1.4",
     "react-query": "^3.39.0",
     "react-router": "^6.1.1",
-    "react-router-dom": "^6.1.1"
+    "react-router-dom": "^6.1.1",
+    "react-string-replace": "^1.1.0"
   },
   "devDependencies": {
     "@craco/craco": "^6.4.3",

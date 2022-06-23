@@ -23,7 +23,7 @@
     "native": "Nativo",
     "totalValueLocked": "Valore di mercato bloccato",
     "totalBorrowed": "Totale in prestito",
-    "availableLiquidity": "Liquidità disponibile",
+    "depositedTokens": "Liquidità disponibile",
     "amountDeposited": "Depositato",
     "amountBorrowed": "Preso in prestito",
     "depositRate": "Frequenza di deposito",
@@ -97,7 +97,7 @@
   },
   "reserveDetail": {
     "reserveSize": "Dimensione della riserva",
-    "availableLiquidity": "Liquidità disponibile",
+    "depositedTokens": "Liquidità disponibile",
     "utilisationRate": "Rapporto di utilizzo",
     "viewHistory": "Visualizza cronologia",
     "totalBorrowed": "Totale preso in prestito",
@@ -149,10 +149,15 @@
       "refresh": "Ricarica",
       "originationFee": "C'è una commissione di {{ORIGINATION FEE}}% allegato a questo prestito.",
       "headsup": "Dritta!",
-      "disclaimer": "Stai per entrare nella mainnet del protocollo Jet. Non procedere se non si comprendono e si accettano i Termini di utilizzo e il potenziale rischio di perdite finanziarie.",
       "accept": "Accetta",
       "warning": "AVVERTIMENTO",
-      "acceptDisclaimer": "I understand the Terms of Service, Privacy Policy, Cookie Policy and accept the risks."
+      "acceptDisclaimer": "I understand the Terms of Service, Privacy Policy, Cookie Policy and accept the risks.",
+      "disclaimer": {
+        "title": "Disclaimer",
+        "disclaimerDetail": "You are now entering Jet Protocol Mainnet. Do not proceed if you do not understand and accept the {{TERMS_LINK}}, {{PRIVACY_LINK}}, and the potential for financial loss.",
+        "acceptRisks": "I understand and accept the risks.",
+        "enterMainnet": "Enter Mainnet"
+      }
     },
     "radar": {
       "title": "Radar",

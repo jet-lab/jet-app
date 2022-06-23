@@ -93,12 +93,14 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
     ['user', endpoint, publicKey?.toBase58()],
     async () => {
       if (!publicKey) return;
-      const { map: walletBalances } = await MarginAccount.loadTokens(manager.programs, publicKey);
+      const walletTokens = await MarginAccount.loadTokens(manager.programs, publicKey);
+      const walletBalances = walletTokens.map;
       let marginAccount: MarginAccount | undefined;
       try {
         marginAccount = await MarginAccount.load({
           programs: manager.programs,
           provider: manager.provider,
+          walletTokens,
           owner: publicKey,
           seed: 0
         });

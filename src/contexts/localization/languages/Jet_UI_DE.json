@@ -23,7 +23,7 @@
     "native": "Nativ",
     "totalValueLocked": "Totaler Marktwert",
     "totalBorrowed": "Total ausgeliehen",
-    "availableLiquidity": "Verfügbare Liquidität",
+    "depositedTokens": "Verfügbare Liquidität",
     "amountDeposited": "Eingezahlt",
     "amountBorrowed": "Ausgeliehen",
     "depositRate": "Habenzins",
@@ -97,7 +97,7 @@
   },
   "reserveDetail": {
     "reserveSize": "Grösse der Reserve",
-    "availableLiquidity": "Verfügbare Liquidität",
+    "depositedTokens": "Verfügbare Liquidität",
     "utilisationRate": "Nutzungsquote",
     "viewHistory": "Verlauf",
     "totalBorrowed": "Total ausgeliehen",
@@ -149,10 +149,15 @@
       "refresh": "Aktualisieren",
       "originationFee": "Eine Gebühr von {{ORIGINATION FEE}}% ist mit diesem Kredit verknüpft.",
       "headsup": "Achtung!",
-      "disclaimer": "Sie sind im Begriff, das Jet Protocol Mainnet zu betreten. Fahren Sie nicht fort, wenn Sie die Nutzungsbedindungen sowie das Potential für finanzielle Verluste nicht verstehen und akzeptieren.",
       "accept": "Akzeptieren",
       "warning": "WARNUNG",
-      "acceptDisclaimer": "I understand the Terms of Service, Privacy Policy, Cookie Policy and accept the risks."
+      "acceptDisclaimer": "I understand the Terms of Service, Privacy Policy, Cookie Policy and accept the risks.",
+      "disclaimer": {
+        "title": "Disclaimer",
+        "disclaimerDetail": "You are now entering Jet Protocol Mainnet. Do not proceed if you do not understand and accept the {{TERMS_LINK}}, {{PRIVACY_LINK}}, and the potential for financial loss.",
+        "acceptRisks": "I understand and accept the risks.",
+        "enterMainnet": "Enter Mainnet"
+      }
     },
     "radar": {
       "title": "Radar",

@@ -214,6 +214,7 @@ export function TransactionsProvider(props: { children: JSX.Element }): JSX.Elem
     } else {
       setLoadingLogs(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connected, publicKey, preferredNode]);
 
   return (

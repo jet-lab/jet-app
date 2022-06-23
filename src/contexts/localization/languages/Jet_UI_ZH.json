@@ -23,7 +23,7 @@
     "native": "原生",
     "totalValueLocked": "总锁仓量",
     "totalBorrowed": "借贷总额",
-    "availableLiquidity": "可用流动性",
+    "depositedTokens": "可用流动性",
     "amountDeposited": "存款金额",
     "amountBorrowed": "借贷金额",
     "depositRate": "存款率",
@@ -97,7 +97,7 @@
   },
   "reserveDetail": {
     "reserveSize": "储备规模",
-    "availableLiquidity": "可用流动性",
+    "depositedTokens": "可用流动性",
     "utilisationRate": "使用率",
     "viewHistory": "查看历史",
     "totalBorrowed": "总借贷金额",
@@ -149,10 +149,15 @@
       "refresh": "更新网页",
       "originationFee": "这笔贷款会收取 {{ORIGINATION FEE}}% 发起费用.",
       "headsup": "小心!",
-      "disclaimer": "You are about to enter the Jet Protocol Mainnet. Do not proceed if you do not understand and accept the Terms of Service, and potential for financial loss.",
       "accept": "Accept",
       "warning": "WARNING",
-      "acceptDisclaimer": "I understand the Terms of Service, Privacy Policy, Cookie Policy and accept the risks."
+      "acceptDisclaimer": "I understand the Terms of Service, Privacy Policy, Cookie Policy and accept the risks.",
+      "disclaimer": {
+        "title": "Disclaimer",
+        "disclaimerDetail": "You are now entering Jet Protocol Mainnet. Do not proceed if you do not understand and accept the {{TERMS_LINK}}, {{PRIVACY_LINK}}, and the potential for financial loss.",
+        "acceptRisks": "I understand and accept the risks.",
+        "enterMainnet": "Enter Mainnet"
+      }
     },
     "radar": {
       "title": "Radar",

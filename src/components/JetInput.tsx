@@ -27,7 +27,7 @@ export function JetInput(props: {
           type={props.type}
           disabled={props.disabled}
           value={props.value || ''}
-          placeholder={props.error || props.placeholder}
+          placeholder={props.placeholder}
           className={props.error ? 'error' : ''}
           onClick={() => (props.onClick ? props.onClick() : null)}
           onChange={e => props.onChange(e.target.value)}
@@ -53,11 +53,11 @@ export function JetInput(props: {
       <div
         className={`input-btn flex-centered ${props.loading ? 'loading' : ''}`}
         onClick={() => {
-          if (!props.disabled) {
+          if (!props.disabled && props.value) {
             props.submit();
           }
         }}>
-        {props.loading ? <LoadingOutlined /> : <ArrowIcon width={30} />}
+        {props.loading ? <LoadingOutlined /> : <ArrowIcon width={25} />}
       </div>
     </div>
   );

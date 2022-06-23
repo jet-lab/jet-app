@@ -1,7 +1,7 @@
 /***************************
   Jet-Antd Library
 ***************************/
-@import '../../lib/jet-antd/lib/jet-antd.less';
+@import '~@jet-lab/jet-antd/lib/jet-antd.less';
 
 /***************************
   App Specific Styles
@@ -11,6 +11,22 @@
 @health-gradient: linear-gradient(90deg, @danger 0%, @warning 25%, @success 75%);
 // App
 .jet-app {
+  &.ant-scrolling-effect {
+    overflow-y: scroll !important;
+  }
+
+  // Connect Message
+  .connect-message {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    backdrop-filter: blur(2px);
+    background: rgba(var(--primary-3), @subtle-opacity);
+    z-index: 100;
+  }
+
   // Modals
   .modal-content {
     &-detail {
@@ -42,7 +58,7 @@
   // Jet Inputs
   .jet-input {
     input {
-      border-radius: @round-radius;
+      border-radius: @border-radius;
       border-top-right-radius: 0px;
       border-bottom-right-radius: 0px;
       height: 45px;
@@ -52,8 +68,8 @@
       height: 45px;
       margin-left: -5px;
       background: @gradient;
-      border-top-right-radius: @round-radius;
-      border-bottom-right-radius: @round-radius;
+      border-top-right-radius: @border-radius;
+      border-bottom-right-radius: @border-radius;
       padding: 0 @spacing-sm;
       cursor: pointer;
       z-index: 10;
@@ -62,7 +78,6 @@
       }
       .anticon {
         font-size: 25px !important;
-        margin-right: 5px;
         margin-bottom: -2px;
       }
 
@@ -249,8 +264,8 @@
   // Percentage Chart
   .percentage-chart {
     position: relative;
-    width: 140px;
-    height: 140px;
+    width: 130px;
+    height: 130px;
     justify-content: space-around;
     box-shadow: @neu-shadow;
     border-radius: 100px;
@@ -258,20 +273,20 @@
     .chart-info,
     .inset-chart-shadow,
     svg {
-      width: 140px;
+      width: 130px;
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
     }
     .inset-chart-shadow {
-      width: 122px;
-      height: 122px;
+      width: 114px;
+      height: 114px;
       box-shadow: @neu-shadow-inset;
       border-radius: 100px;
     }
     svg {
-      width: 151px;
+      width: 142px;
       stroke: @danger;
 
       path:first-of-type {
@@ -341,11 +356,11 @@
 
         &.borrowed {
           background: @danger;
-          box-shadow: @neu-shadow-inset-danger;
+          box-shadow: @neu-shadow-inset-color;
         }
         &.liquid {
           background: @success;
-          box-shadow: @neu-shadow-inset-success;
+          box-shadow: @neu-shadow-inset-color;
         }
       }
       .reserve-subdetails {
@@ -449,6 +464,11 @@
                     background: rgba(200, 200, 200, 0.25);
                   }
                 }
+                &:hover {
+                  td {
+                    background: rgba(0, 0, 0, 0.25) !important;
+                  }
+                }
               }
             }
           }
@@ -460,7 +480,7 @@
     }
 
     .radar-loader {
-      padding: 16px;
+      padding: 0 @spacing-md @spacing-xl @spacing-md;
       min-width: 240px;
       display: flex;
       justify-content: center;
@@ -578,10 +598,15 @@
 
       .ant-skeleton {
         width: 250px;
-        margin: 40px 0;
+        margin: 20px 0;
       }
       .trade-market-tvl {
         margin-right: @spacing-xl;
+
+        .green-text {
+          font-size: 80px;
+          line-height: 60px;
+        }
       }
       .trade-position-snapshot {
         min-width: 275px;
@@ -600,7 +625,7 @@
           padding-right: 50px;
 
           h1 {
-            font-size: 70px;
+            font-size: 50px;
             margin: 0;
 
             span {
@@ -610,6 +635,9 @@
               top: 10px;
               opacity: 1;
             }
+          }
+          .c-ratio {
+            line-height: 60px;
           }
         }
         .min-c-note {
@@ -633,7 +661,7 @@
       width: 100%;
       margin: 0 auto;
       border-radius: @border-radius;
-      box-shadow: @neu-shadow-2;
+      box-shadow: @neu-shadow-3;
       overflow: hidden;
 
       // Trade Panel
@@ -657,7 +685,6 @@
             box-shadow: inset 0px -5px 8px -5px rgba(0, 0, 0, 0.3);
             padding: @spacing-xs 0;
             background: @primary;
-            opacity: @subtle-opacity;
             cursor: pointer;
             transition: opacity @transition-duration ease-in-out;
             p {
@@ -668,35 +695,11 @@
               line-height: 17px;
               opacity: @disabled-opacity;
               color: @secondary-3;
-
-              &::after {
-                content: '';
-                position: absolute;
-                left: 0;
-                bottom: 0;
-                height: 1px;
-                width: 100%;
-                background: @secondary-3;
-                opacity: 0;
-              }
-            }
-            // Dark theme select
-            &.dark {
-              background: @primary;
-              opacity: 1;
-
-              &:hover {
-                opacity: 0.95;
-              }
             }
 
             &:hover,
             &.active {
-              opacity: 1;
-
-              p::after {
-                opacity: inherit;
-              }
+              opacity: 0.7;
             }
             &.active {
               background: unset;
@@ -812,8 +815,13 @@
             width: calc(50% - (@spacing-sm * 2));
 
             span {
-              font-size: @base-font-size;
+              font-size: @lg-font-size;
               padding: @spacing-sm;
+              color: @secondary-3;
+
+              &.danger-text {
+                color: @danger;
+              }
             }
           }
         }
@@ -857,9 +865,8 @@
           }
           tbody {
             tr {
-              border-bottom: 2px solid @primary;
               &:last-of-type {
-                border-bottom-width: 10px;
+                border-bottom: 10px solid @primary;
               }
             }
           }
@@ -878,17 +885,26 @@
             }
           }
           tr {
+            border-radius: @border-radius;
             &.active {
-              box-shadow: @neu-shadow-inset-2;
+              box-shadow: @neu-shadow-inset-sm;
               background: @primary-2;
 
               &:active {
-                box-shadow: @neu-shadow-inset;
+                box-shadow: @neu-shadow-inset-3;
               }
             }
 
             td {
               padding: @spacing-md 0;
+              &:first-of-type {
+                border-top-left-radius: @border-radius;
+                border-bottom-left-radius: @border-radius;
+              }
+              &:last-of-type {
+                border-top-right-radius: @border-radius;
+                border-bottom-right-radius: @border-radius;
+              }
               &.gradient-text {
                 padding-bottom: calc(@spacing-md - 4px);
               }
@@ -927,6 +943,9 @@
               &:last-of-type {
                 opacity: 0;
 
+                .anticon {
+                  font-size: 22px;
+                }
                 svg path {
                   fill: @jet-green;
                 }
@@ -987,6 +1006,16 @@
   // Transactions View
   .transaction-logs {
     align-items: flex-start;
+    h1 {
+      padding-left: @spacing-md;
+      font-size: @xl-font-size;
+      margin: unset;
+
+      + span {
+        margin: 0 0 -8px 10px;
+        color: @secondary-5;
+      }
+    }
     .jet-icon {
       * {
         fill: @jet-green;
@@ -1053,6 +1082,11 @@
     .loader {
       .outer-circle {
         margin: unset;
+      }
+    }
+    .ant-btn {
+      span {
+        font-size: @xs-font-size !important;
       }
     }
   }
@@ -1134,6 +1168,10 @@
           fill: @secondary;
         }
       }
+    }
+
+    .ant-select-selector {
+      padding-right: 35px;
     }
   }
 
