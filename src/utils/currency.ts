@@ -41,6 +41,8 @@ export function totalAbbrev(total: number, price?: number, native?: boolean, dig
     return `${native ? '' : '$'}${(t / 1000000000).toFixed(1)}B`;
   } else if (t > 1000000) {
     return `${native ? '' : '$'}${(t / 1000000).toFixed(1)}M`;
+  } else if (t > 1000) {
+    return `${native ? '' : '$'}${(t / 1000).toFixed(1)}K`;
   } else {
     return currencyFormatter(t, !native, native ? digits : 2);
   }

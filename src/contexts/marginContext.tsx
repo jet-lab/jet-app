@@ -100,6 +100,7 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
         marginAccount = await MarginAccount.load({
           programs: manager.programs,
           provider: manager.provider,
+          pools,
           walletTokens,
           owner: publicKey,
           seed: 0
