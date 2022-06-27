@@ -79,6 +79,7 @@ export const useMarginActions = () => {
       }
       const txid = await pool.marginBorrow({
         marginAccount,
+        pools: Object.values(pools),
         amount
       });
       txids.push(txid);
@@ -107,6 +108,7 @@ export const useMarginActions = () => {
       }
       const txid = await pool.marginRepay({
         marginAccount,
+        pools: Object.values(pools),
         amount
       });
       txids.push(txid);
