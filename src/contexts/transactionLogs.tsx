@@ -2,9 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { TokenAmount } from '@jet-lab/margin';
 import { ConfirmedSignatureInfo, TransactionResponse } from '@solana/web3.js';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { BN } from '@project-serum/anchor';
-import bs58 from 'bs58';
-import { idl, useMargin } from './marginContext';
+import { useMargin } from './marginContext';
 import { useRpcNode } from './rpcNode';
 import { useLanguage } from './localization/localization';
 import { timeout } from '../utils/utils';
@@ -69,63 +67,63 @@ export function TransactionsProvider(props: { children: JSX.Element }): JSX.Elem
 
     // Use log messages to only surface transactions that utilize Jet
     for (const msg of log.meta.logMessages) {
-      if (msg.indexOf(idl.metadata.address) !== -1) {
-        for (const progInst in instructionBytes) {
-          for (const inst of log.transaction.message.instructions) {
-            // Get first 8 bytes from data
-            const txInstBytes = [];
-            for (let i = 0; i < 8; i++) {
-              txInstBytes.push(bs58.decode(inst.data)[i]);
-            }
-            const jetLog = {} as TransactionLog;
-            // If those bytes match any of our instructions label trade action
-            if (JSON.stringify(instructionBytes[progInst]) === JSON.stringify(txInstBytes)) {
-              jetLog.tradeAction = dictionary.transactions[progInst];
-              // Determine asset and trade amount
-              for (const pre of log.meta.preTokenBalances as any[]) {
-                for (const post of log.meta.postTokenBalances as any[]) {
-                  if (pre.mint === post.mint && pre.uiTokenAmount.amount !== post.uiTokenAmount.amount) {
-                    for (const reserve of idl.metadata.reserves) {
-                      if (reserve.accounts.tokenMint === pre.mint) {
-                        // For withdraw and borrow SOL,
-                        // Skip last account (pre-token balance is 0)
-                        if (
-                          reserve.abbrev === 'SOL' &&
-                          (progInst === 'withdraw' || progInst === 'borrow') &&
-                          pre.uiTokenAmount.amount === '0'
-                        ) {
-                          break;
-                        }
-                        jetLog.tokenAbbrev = reserve.abbrev;
-                        jetLog.tokenDecimals = reserve.decimals;
-                        jetLog.tokenPrice = reserve.price;
-                        jetLog.tradeAmount = new TokenAmount(
-                          new BN(post.uiTokenAmount.amount - pre.uiTokenAmount.amount),
-                          reserve.decimals
-                        );
-                      }
-                    }
-                  }
-                }
-              }
-              // Signature
-              jetLog.signature = signature;
-
-              const dateTime = new Date(log.blockTime * 1000);
-              // UI date
-              jetLog.blockDate = dateTime.toLocaleDateString();
-              //UI time
-              jetLog.time = dateTime.toLocaleTimeString('en-US', { hour12: false });
-              //add signature index that we have iterated over
-              jetLog.sigIndex = sigIndex ? sigIndex : 0;
-              // If we found mint match, add tx to logs
-              if (jetLog.tokenAbbrev) {
-                return jetLog;
-              }
-            }
-          }
-        }
-      }
+      // FIXME: No more metadata in v2 idl
+      // if (msg.indexOf(idl.metadata.address) !== -1) {
+      //   for (const progInst in instructionBytes) {
+      //     for (const inst of log.transaction.message.instructions) {
+      //       // Get first 8 bytes from data
+      //       const txInstBytes = [];
+      //       for (let i = 0; i < 8; i++) {
+      //         txInstBytes.push(bs58.decode(inst.data)[i]);
+      //       }
+      //       const jetLog = {} as TransactionLog;
+      //       // If those bytes match any of our instructions label trade action
+      //       if (JSON.stringify(instructionBytes[progInst]) === JSON.stringify(txInstBytes)) {
+      //         jetLog.tradeAction = dictionary.transactions[progInst];
+      //         // Determine asset and trade amount
+      //         for (const pre of log.meta.preTokenBalances as any[]) {
+      //           for (const post of log.meta.postTokenBalances as any[]) {
+      //             if (pre.mint === post.mint && pre.uiTokenAmount.amount !== post.uiTokenAmount.amount) {
+      //               for (const reserve of idl.metadata.reserves) {
+      //                 if (reserve.accounts.tokenMint === pre.mint) {
+      //                   // For withdraw and borrow SOL,
+      //                   // Skip last account (pre-token balance is 0)
+      //                   if (
+      //                     reserve.abbrev === 'SOL' &&
+      //                     (progInst === 'withdraw' || progInst === 'borrow') &&
+      //                     pre.uiTokenAmount.amount === '0'
+      //                   ) {
+      //                     break;
+      //                   }
+      //                   jetLog.tokenAbbrev = reserve.abbrev;
+      //                   jetLog.tokenDecimals = reserve.decimals;
+      //                   jetLog.tokenPrice = reserve.price;
+      //                   jetLog.tradeAmount = new TokenAmount(
+      //                     new BN(post.uiTokenAmount.amount - pre.uiTokenAmount.amount),
+      //                     reserve.decimals
+      //                   );
+      //                 }
+      //               }
+      //             }
+      //           }
+      //         }
+      //         // Signature
+      //         jetLog.signature = signature;
+      //         const dateTime = new Date(log.blockTime * 1000);
+      //         // UI date
+      //         jetLog.blockDate = dateTime.toLocaleDateString();
+      //         //UI time
+      //         jetLog.time = dateTime.toLocaleTimeString('en-US', { hour12: false });
+      //         //add signature index that we have iterated over
+      //         jetLog.sigIndex = sigIndex ? sigIndex : 0;
+      //         // If we found mint match, add tx to logs
+      //         if (jetLog.tokenAbbrev) {
+      //           return jetLog;
+      //         }
+      //       }
+      //     }
+      //   }
+      // }
     }
     return;
   }

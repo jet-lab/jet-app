@@ -16,7 +16,7 @@
   "dependencies": {
     "@ant-design/icons": "^4.5.0",
     "@jet-lab/jet-antd": "^0.4.26",
-    "@jet-lab/margin": "^0.1.19",
+    "@jet-lab/margin": "^0.1.20",
     "@project-serum/anchor": "^0.24.2",
     "@pythnetwork/client": "^2.7.0",
     "@solana/buffer-layout": "^4.0.0",

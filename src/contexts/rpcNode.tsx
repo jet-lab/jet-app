@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Connection } from '@solana/web3.js';
-import { cluster, idl, useMargin } from './marginContext';
+import { cluster, useMargin } from './marginContext';
 
 // RPC node context
 interface RpcNode {
@@ -36,7 +36,11 @@ export function RpcNodeContextProvider(props: { children: JSX.Element }): JSX.El
     };
 
     const checkNetworkPerformance = async () => {
-      const connection = new Connection(idl.metadata.cluster);
+      if (preferredNode === null) {
+        setDegradedNetworkPerformance(false);
+        return;
+      }
+      const connection = new Connection(preferredNode);
       const samples = await connection.getRecentPerformanceSamples(15);
       const totalTps = samples.reduce((acc, val) => {
         return acc + val.numTransactions / val.samplePeriodSecs;

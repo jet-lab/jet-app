@@ -64,8 +64,6 @@ export function TradePanel(): JSX.Element {
       // No wallet balance to deposit
       if (!walletBalances[currentPool.symbol].amount.tokens) {
         setDisabledMessage(dictionary.cockpit.noBalanceForDeposit.replaceAll('{{ASSET}}', currentPool.symbol));
-      } else if (currentPool.symbol === 'ETH') {
-        setDisabledMessage('Sollet ETH will be sunset at the end of April. We do not accept Sollet ETH');
       } else {
         setDisabledInput(false);
       }

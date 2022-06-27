@@ -11,23 +11,13 @@ import {
 import { useWallet } from '@solana/wallet-adapter-react';
 import { createContext, useContext, useMemo } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
-import localnetIdl from '../hooks/jet-client/idl/localnet/jet.json';
-import devnetIdl from '../hooks/jet-client/idl/devnet/jet.json';
-import mainnetBetaIdl from '../hooks/jet-client/idl/mainnet-beta/jet.json';
 import { AnchorProvider } from '@project-serum/anchor';
 import { ConfirmOptions, Connection, PublicKey } from '@solana/web3.js';
 import { useRpcNode } from './rpcNode';
 
-export let idl: any;
 export const cluster = (process.env.REACT_APP_CLUSTER ?? 'devnet') as MarginCluster;
 const config = MarginClient.getConfig(cluster);
-if (cluster === 'localnet') {
-  idl = localnetIdl;
-} else if (cluster === 'mainnet-beta') {
-  idl = mainnetBetaIdl;
-} else {
-  idl = devnetIdl;
-}
+
 const DEFAULT_WALLET_BALANCES = Object.fromEntries(
   Object.values(config.tokens).map(token => [token.symbol, AssociatedToken.zeroAux(PublicKey.default, token.decimals)])
 ) as Record<MarginPools, AssociatedToken>;
@@ -67,8 +57,8 @@ function useProvider() {
   );
   (provider as any).wallet = wallet;
 
-  const programs = MarginClient.getPrograms(provider, config);
-  const manager = new PoolManager(programs, provider);
+  const programs = useMemo(() => MarginClient.getPrograms(provider, config), [provider, config]);
+  const manager = useMemo(() => new PoolManager(programs, provider), [programs, provider]);
   return { manager };
 }
 
