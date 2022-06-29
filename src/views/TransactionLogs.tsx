@@ -7,6 +7,7 @@ import { useBlockExplorer } from '../contexts/blockExplorer';
 import { shortenPubkey } from '../utils/utils';
 import { ReactComponent as ArrowIcon } from '../styles/icons/arrow_icon.svg';
 import { Button, Divider } from 'antd';
+import { totalAbbrev } from '../utils/currency';
 
 export function TransactionLogs(): JSX.Element {
   const { dictionary } = useLanguage();
@@ -43,8 +44,8 @@ export function TransactionLogs(): JSX.Element {
                 <td style={{ color: 'var(--success)' }}>{shortenPubkey(log.signature, 4)}</td>
                 <td className="reserve-detail">{log.tradeAction}</td>
                 <td className="asset">
-                  {/* {totalAbbrev(Math.abs(log.tradeAmount.tokens), log.tokenPrice, true, log.tokenDecimals)}
-                  &nbsp; */}
+                  {totalAbbrev(Math.abs(log.tradeAmount.tokens), undefined, true, log.tokenDecimals)}
+                  &nbsp;
                   {log.tokenAbbrev}
                 </td>
                 <td>
