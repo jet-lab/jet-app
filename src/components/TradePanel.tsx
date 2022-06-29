@@ -20,7 +20,7 @@ export function TradePanel(): JSX.Element {
   const { dictionary } = useLanguage();
   const { pools, marginAccount, walletBalances, userFetched } = useMargin();
   const { getExplorerUrl } = useBlockExplorer();
-  const { addLog } = useTransactionLogs();
+  const { refreshLogs } = useTransactionLogs();
   const { connected } = useWallet();
   const {
     currentPool,
@@ -247,7 +247,7 @@ export function TradePanel(): JSX.Element {
       });
 
       // Add Tx Log
-      addLog(lastTxn);
+      refreshLogs();
       setCurrentAmount(null);
     } else if (res === TxnResponse.Failed) {
       notification.error({

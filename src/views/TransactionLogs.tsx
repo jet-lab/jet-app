@@ -4,7 +4,6 @@ import { useMargin } from '../contexts/marginContext';
 import { useConnectWalletModal } from '../contexts/connectWalletModal';
 import { useTransactionLogs } from '../contexts/transactionLogs';
 import { useBlockExplorer } from '../contexts/blockExplorer';
-import { totalAbbrev } from '../utils/currency';
 import { shortenPubkey } from '../utils/utils';
 import { ReactComponent as ArrowIcon } from '../styles/icons/arrow_icon.svg';
 import { Button, Divider } from 'antd';
@@ -15,7 +14,7 @@ export function TransactionLogs(): JSX.Element {
   const { connected, publicKey } = useWallet();
   const { setConnecting } = useConnectWalletModal();
   const { getExplorerUrl } = useBlockExplorer();
-  const { loadingLogs, logs, noMoreSignatures, searchMoreLogs } = useTransactionLogs();
+  const { loadingLogs, logs } = useTransactionLogs();
 
   return (
     <div className="transaction-logs view">
@@ -44,8 +43,8 @@ export function TransactionLogs(): JSX.Element {
                 <td style={{ color: 'var(--success)' }}>{shortenPubkey(log.signature, 4)}</td>
                 <td className="reserve-detail">{log.tradeAction}</td>
                 <td className="asset">
-                  {totalAbbrev(Math.abs(log.tradeAmount.tokens), log.tokenPrice, true, log.tokenDecimals)}
-                  &nbsp;
+                  {/* {totalAbbrev(Math.abs(log.tradeAmount.tokens), log.tokenPrice, true, log.tokenDecimals)}
+                  &nbsp; */}
                   {log.tokenAbbrev}
                 </td>
                 <td>
@@ -62,24 +61,21 @@ export function TransactionLogs(): JSX.Element {
             </tr>
             <tr className="no-interaction">
               <td>
-                <Button
-                  type="dashed"
-                  onClick={() => {
-                    if (!connected) {
-                      setConnecting(true);
-                    }
-                    if (userFetched && !(loadingLogs || noMoreSignatures)) {
-                      searchMoreLogs();
-                    }
-                  }}
-                  loading={loadingLogs}
-                  disabled={(connected && !userFetched) || loadingLogs || noMoreSignatures}>
-                  {connected
-                    ? loadingLogs
+                {(!connected || loadingLogs) && (
+                  <Button
+                    type="dashed"
+                    onClick={() => {
+                      if (!connected) {
+                        setConnecting(true);
+                      }
+                    }}
+                    loading={loadingLogs}
+                    disabled={(connected && !userFetched) || loadingLogs}>
+                    {connected
                       ? `${dictionary.loading.loading}..`
-                      : dictionary.loading.loadMore
-                    : dictionary.settings.connect + ' ' + dictionary.settings.wallet}
-                </Button>
+                      : dictionary.settings.connect + ' ' + dictionary.settings.wallet}
+                  </Button>
+                )}
               </td>
               <td></td>
               <td></td>
