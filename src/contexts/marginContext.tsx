@@ -31,6 +31,7 @@ interface MarginContextState {
   userFetched: boolean;
   marginAccount: MarginAccount | undefined;
   walletBalances: Record<MarginPools, AssociatedToken>;
+  cluster: MarginCluster;
   refresh: () => void;
 }
 
@@ -57,7 +58,7 @@ function useProvider() {
   );
   (provider as any).wallet = wallet;
 
-  const programs = useMemo(() => MarginClient.getPrograms(provider, config), [provider, config]);
+  const programs = useMemo(() => MarginClient.getPrograms(provider, config), [provider]);
   const manager = useMemo(() => new PoolManager(programs, provider), [programs, provider]);
   return { manager };
 }
@@ -121,6 +122,7 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
         userFetched,
         marginAccount: user?.marginAccount,
         walletBalances: user?.walletBalances ?? DEFAULT_WALLET_BALANCES,
+        cluster,
         refresh
       }}>
       {props.children}
