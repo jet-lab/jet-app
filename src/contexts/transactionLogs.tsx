@@ -50,7 +50,7 @@ export function TransactionsProvider(props: { children: JSX.Element }): JSX.Elem
       }, {} as Record<string, { tokenMint: PublicKey; depositNoteMint: PublicKey; loanNoteMint: PublicKey }>);
       MarginClient.getFlightLogs(manager.provider, publicKey, mints, cluster).then(logs => {
         setLoadingLogs(false);
-        setLogs(logs);
+        setLogs(logs.filter(tx => tx.status !== 'error'));
       });
     }
   };
