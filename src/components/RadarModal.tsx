@@ -78,7 +78,6 @@ export const RadarModal: React.FC = () => {
   }, [currentToken, currentPool]);
 
   if (!currentPool?.symbol) {
-    console.error('No pool selected');
     return null;
   }
   return (
