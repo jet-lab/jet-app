@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import LogRocket from 'logrocket';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useConnectWalletModal } from '../contexts/connectWalletModal';
 import { useLanguage } from '../contexts/localization/localization';
@@ -7,13 +8,20 @@ import { ReactComponent as ArrowIcon } from '../styles/icons/arrow_icon.svg';
 
 export function ConnectWalletModal(): JSX.Element {
   const { dictionary } = useLanguage();
-  const { wallets, select, connected, wallet } = useWallet();
+  const { wallets, select, connected, wallet, publicKey } = useWallet();
   const { connecting, setConnecting } = useConnectWalletModal();
+
   useEffect(() => {
     if (connected) {
       setConnecting(false);
+
+      const project = process.env.REACT_APP_LOGROCKET_PROJECT;
+      if (project && publicKey) {
+        LogRocket.init(project);
+        LogRocket.identify(publicKey.toBase58());
+      }
     }
-  }, [connected, setConnecting]);
+  }, [connected, setConnecting, publicKey]);
 
   return (
     <Modal
@@ -29,7 +37,7 @@ export function ConnectWalletModal(): JSX.Element {
           {wallets.map(w => (
             <div
               key={w.name}
-              className={`wallet flex align-center justify-between 
+              className={`wallet flex align-center justify-between
                 ${wallet?.name === w.name ? 'active' : ''}`}
               onClick={() => {
                 select(w.name);
