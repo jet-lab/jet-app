@@ -16,7 +16,6 @@ export function Cockpit(): JSX.Element {
   const isGeobanned = useGeoban();
   const { dictionary } = useLanguage();
   const { initFailed } = useInitFailed();
-  const { currentPool } = useTradeContext();
   const { poolsFetched, pools, marginAccount, userFetched } = useMargin();
   const accountSummary = marginAccount?.summary;
   const [totalSupply, setTotalSupply] = useState(0);
@@ -67,14 +66,14 @@ export function Cockpit(): JSX.Element {
                 <h2 className="view-subheader">{dictionary.cockpit.yourRatio}</h2>
                 <Info term="collateralizationRatio" />
               </div>
-              {userFetched && accountSummary && currentPool ? (
+              {userFetched && accountSummary ? (
                 <>
                   <h1
                     className={`c-ratio
                     ${
-                      !accountSummary.borrowedValue || accountSummary.cRatio >= currentPool.minCRatio + 0.25
+                      !accountSummary.borrowedValue || accountSummary.cRatio >= accountSummary.minCRatio + 0.25
                         ? 'success-text'
-                        : accountSummary.cRatio <= currentPool.minCRatio + 0.1
+                        : accountSummary.cRatio <= accountSummary.minCRatio + 0.1
                         ? 'danger-text'
                         : 'warning-text'
                     }`}
@@ -111,11 +110,11 @@ export function Cockpit(): JSX.Element {
                   <p>--</p>
                 )}
               </div>
-              {userFetched && currentPool && (
+              {userFetched && accountSummary && (
                 <div className="trade-position-value min-c-note flex align-start justify-center">
                   <WarningFilled style={{ margin: '2px 5px 0 0' }} />
                   <span>
-                    {dictionary.cockpit.minColRatioNote.replace('{{MIN_COL_RATIO}}', currentPool.minCRatio * 100)}
+                    {dictionary.cockpit.minColRatioNote.replace('{{MIN_COL_RATIO}}', accountSummary.minCRatio * 100)}
                   </span>
                 </div>
               )}

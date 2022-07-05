@@ -6,7 +6,9 @@ import {
   PoolManager,
   AssociatedToken,
   MarginClient,
-  MarginPools
+  MarginPools,
+  bnToNumber,
+  Number128
 } from '@jet-lab/margin';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { createContext, useContext, useMemo } from 'react';
@@ -83,7 +85,9 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
   const { data: user, isFetched: userFetched } = useQuery(
     ['user', endpoint, publicKey?.toBase58()],
     async () => {
-      if (!publicKey) return;
+      if (!publicKey) {
+        return;
+      }
       const walletTokens = await MarginAccount.loadTokens(manager.programs, publicKey);
       const walletBalances = walletTokens.map;
       let marginAccount: MarginAccount | undefined;
@@ -96,8 +100,8 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
           owner: publicKey,
           seed: 0
         });
-      } catch {
-        // nothing
+      } catch (err) {
+        console.log(err);
       }
       return { marginAccount, walletBalances };
     },
