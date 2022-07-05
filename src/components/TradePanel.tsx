@@ -288,17 +288,8 @@ export function TradePanel(): JSX.Element {
         return;
       }
 
-      // Depositing
-      if (currentAction === 'deposit') {
-        if (
-          currentPool.symbol === 'SOL' &&
-          currentAmount <= walletBalances[currentPool.symbol].amount.tokens &&
-          currentAmount > walletBalances[currentPool.symbol].amount.tokens - 0.02
-        ) {
-          setInputError(dictionary.cockpit.insufficientLamports);
-        }
-        // Withdrawing
-      } else if (currentAction === 'withdraw') {
+      // Withdrawing
+      if (currentAction === 'withdraw') {
         // User is withdrawing between 125% and 130%, allow trade but warn them
         if (accountSummary?.borrowedValue && adjustedRatio > 0 && adjustedRatio <= currentPool.minCRatio + 0.05) {
           setInputError(
