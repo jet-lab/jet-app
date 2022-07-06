@@ -22,7 +22,7 @@ export const useMarginActions = () => {
         const txid = await marginAccount.createAccount();
         txid && txids.push(txid);
       }
-      const txid = await marginAccount.deposit(pool, source.address, lamports);
+      const txid = await pool.deposit({ marginAccount, amount: lamports, source: source.address });
       txids.push(txid);
       refresh();
       return [TxnResponse.Success, txids];
@@ -50,6 +50,7 @@ export const useMarginActions = () => {
       }
       const txid = await pool.marginWithdraw({
         marginAccount,
+        pools: Object.values(pools),
         destination: destination.address,
         amount
       });
