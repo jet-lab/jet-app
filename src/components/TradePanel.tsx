@@ -373,7 +373,7 @@ export function TradePanel(): JSX.Element {
                 : dictionary.cockpit.amountOwed.toUpperCase()}
             </span>
             <div className="flex-centered">
-              <p className="center-text">
+              <p className="center-text max-amount" onClick={() => setCurrentAmount(maxInput)}>
                 {userFetched && currentPool
                   ? currencyFormatter(maxInput, false, currentPool.decimals) + ' ' + currentPool.symbol
                   : '--'}
