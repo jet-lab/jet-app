@@ -185,7 +185,9 @@ export function MarketTable(): JSX.Element {
                       </td>
                       <td
                         className={
-                          userFetched && pool.symbol && marginAccount?.positions?.[pool.symbol]?.depositBalance.tokens
+                          userFetched &&
+                          pool.symbol &&
+                          marginAccount?.poolPositions?.[pool.symbol]?.depositBalance.tokens
                             ? 'user-collateral-value text-btn semi-bold-text'
                             : ''
                         }
@@ -193,21 +195,21 @@ export function MarketTable(): JSX.Element {
                           if (
                             userFetched &&
                             pool.symbol &&
-                            marginAccount?.positions?.[pool.symbol]?.depositBalance.tokens
+                            marginAccount?.poolPositions?.[pool.symbol]?.depositBalance.tokens
                           ) {
                             setCurrentAction('withdraw');
-                            setCurrentAmount(marginAccount.positions[pool.symbol].depositBalance.tokens);
+                            setCurrentAmount(marginAccount.poolPositions[pool.symbol].depositBalance.tokens);
                           }
                         }}>
                         {userFetched &&
                         pool.symbol &&
                         pool.tokenPrice !== undefined &&
-                        marginAccount?.positions?.[pool.symbol]?.depositBalance.tokens
-                          ? marginAccount.positions[pool.symbol].depositBalance.tokens > 0 &&
-                            marginAccount.positions[pool.symbol].depositBalance.tokens < 0.0005
+                        marginAccount?.poolPositions?.[pool.symbol]?.depositBalance.tokens
+                          ? marginAccount.poolPositions[pool.symbol].depositBalance.tokens > 0 &&
+                            marginAccount.poolPositions[pool.symbol].depositBalance.tokens < 0.0005
                             ? '~0'
                             : totalAbbrev(
-                                marginAccount.positions[pool.symbol].depositBalance.tokens,
+                                marginAccount.poolPositions[pool.symbol].depositBalance.tokens,
                                 pool.tokenPrice,
                                 nativeValues,
                                 3
@@ -216,7 +218,7 @@ export function MarketTable(): JSX.Element {
                       </td>
                       <td
                         className={
-                          userFetched && pool.symbol && marginAccount?.positions?.[pool.symbol]?.loanBalance.tokens
+                          userFetched && pool.symbol && marginAccount?.poolPositions?.[pool.symbol]?.loanBalance.tokens
                             ? 'user-loan-value text-btn semi-bold-text'
                             : ''
                         }
@@ -224,21 +226,21 @@ export function MarketTable(): JSX.Element {
                           if (
                             userFetched &&
                             pool.symbol &&
-                            marginAccount?.positions?.[pool.symbol]?.loanBalance.tokens
+                            marginAccount?.poolPositions?.[pool.symbol]?.loanBalance.tokens
                           ) {
                             setCurrentAction('repay');
-                            setCurrentAmount(marginAccount.positions[pool.symbol].loanBalance.tokens);
+                            setCurrentAmount(marginAccount.poolPositions[pool.symbol].loanBalance.tokens);
                           }
                         }}>
                         {userFetched &&
                         pool.symbol &&
                         pool.tokenPrice !== undefined &&
-                        marginAccount?.positions?.[pool.symbol]?.loanBalance.tokens
-                          ? marginAccount.positions[pool.symbol].loanBalance.tokens > 0 &&
-                            marginAccount.positions[pool.symbol].loanBalance.tokens < 0.0005
+                        marginAccount?.poolPositions?.[pool.symbol]?.loanBalance.tokens
+                          ? marginAccount.poolPositions[pool.symbol].loanBalance.tokens > 0 &&
+                            marginAccount.poolPositions[pool.symbol].loanBalance.tokens < 0.0005
                             ? '~0'
                             : totalAbbrev(
-                                marginAccount.positions[pool.symbol].loanBalance.tokens,
+                                marginAccount.poolPositions[pool.symbol].loanBalance.tokens,
                                 pool.tokenPrice,
                                 nativeValues,
                                 3

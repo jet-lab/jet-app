@@ -5,7 +5,6 @@ import { useTradeContext } from '../contexts/tradeContext';
 
 export function HealthBar(props: { fullDetail?: boolean }): JSX.Element {
   const { dictionary } = useLanguage();
-  const { currentPool } = useTradeContext();
   const { marginAccount } = useMargin();
   const [healthGauge, setHealthGauge] = useState<Record<string, number | string>>({
     percentage: 0,
@@ -14,16 +13,18 @@ export function HealthBar(props: { fullDetail?: boolean }): JSX.Element {
 
   // Range of health meter is liquidation (125%) to 200%
   useEffect(() => {
-    if (!marginAccount?.summary.cRatio || !currentPool) {
+    if (!marginAccount) {
       return;
     }
 
-    if (marginAccount?.summary.cRatio <= currentPool.minCRatio + 0.1) {
+    const { cRatio, minCRatio } = marginAccount.summary;
+
+    if (cRatio <= minCRatio + 0.1) {
       setHealthGauge({
         percentage: 0,
         standing: 'critical'
       });
-    } else if (marginAccount?.summary.cRatio >= currentPool.minCRatio + 0.6) {
+    } else if (cRatio >= minCRatio + 0.6) {
       // Use 95 instead of 100 here for styling reasons
       setHealthGauge({
         percentage: 95,
@@ -31,11 +32,11 @@ export function HealthBar(props: { fullDetail?: boolean }): JSX.Element {
       });
     } else {
       setHealthGauge({
-        percentage: marginAccount?.summary.cRatio * 100 - 100,
-        standing: marginAccount?.summary.cRatio >= currentPool.minCRatio + 0.25 ? 'moderate' : 'low'
+        percentage: cRatio * 100 - 100,
+        standing: cRatio >= minCRatio + 0.25 ? 'moderate' : 'low'
       });
     }
-  }, [marginAccount?.summary.cRatio, currentPool]);
+  }, [marginAccount]);
 
   return (
     <div className="healthbar flex-centered column">
@@ -52,7 +53,7 @@ export function HealthBar(props: { fullDetail?: boolean }): JSX.Element {
         ) : (
           <></>
         )}
-        <span className="healthbar-bar-range-value">≥{(currentPool?.minCRatio ?? 0) * 100}%</span>
+        <span className="healthbar-bar-range-value">≥{(marginAccount?.summary.minCRatio ?? 0) * 100}%</span>
       </div>
       {props.fullDetail && (
         <div className="healthbar-full-detail flex justify-evenly align-start">

@@ -39,7 +39,7 @@ export function PoolDetail({ pool, close }: { pool: Pool | undefined; close: () 
               <span className="flex-centered">{dictionary.reserveDetail.reserveSize.toUpperCase()}</span>
               <h1 className="gradient-text">
                 {currencyFormatter(
-                  nativeValues ? pool.marketSize.tokens : pool.marketSize.muln(price).tokens,
+                  nativeValues ? pool.totalValue.tokens : pool.totalValue.muln(price).tokens,
                   !nativeValues,
                   2
                 )}

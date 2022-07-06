@@ -31,7 +31,7 @@ export function TradePanel(): JSX.Element {
     sendingTrade,
     setSendingTrade
   } = useTradeContext();
-  const accountPoolPosition = marginAccount && currentPool?.symbol && marginAccount.positions[currentPool.symbol];
+  const accountPoolPosition = marginAccount && currentPool?.symbol && marginAccount.poolPositions[currentPool.symbol];
   const accountSummary = marginAccount && marginAccount.summary;
   const [adjustedRatio, setAdjustedRatio] = useState<number>(0);
   const maxInput = accountPoolPosition?.maxTradeAmounts[currentAction].tokens ?? 0;
@@ -73,7 +73,7 @@ export function TradePanel(): JSX.Element {
       if (!accountPoolPosition?.depositBalance.tokens) {
         setDisabledMessage(dictionary.cockpit.noDepositsForWithdraw.replaceAll('{{ASSET}}', currentPool.symbol));
         // User is below PROGRAM minimum c-ratio
-      } else if (accountSummary?.borrowedValue && accountSummary.cRatio <= currentPool.minCRatio) {
+      } else if (accountSummary && accountSummary.cRatio <= accountSummary.minCRatio) {
         setDisabledMessage(dictionary.cockpit.belowMinCRatio);
       } else {
         setDisabledInput(false);
@@ -85,7 +85,7 @@ export function TradePanel(): JSX.Element {
         setDisabledMessage(dictionary.cockpit.noDepositsForBorrow);
 
         // User is below minimum c-ratio
-      } else if (accountSummary?.borrowedValue && accountSummary?.cRatio <= currentPool.minCRatio) {
+      } else if (accountSummary && accountSummary.cRatio <= accountSummary.minCRatio) {
         setDisabledMessage(dictionary.cockpit.belowMinCRatio);
         // No liquidity in market to borrow from
       } else if (!currentPool.depositedTokens.tokens) {
@@ -192,7 +192,7 @@ export function TradePanel(): JSX.Element {
       if (tradeAmount.gt(currentPool.depositedTokens)) {
         tradeError = dictionary.cockpit.noLiquidity;
         // User is below the minimum c-ratio
-      } else if (accountSummary.borrowedValue && accountSummary.cRatio <= currentPool.minCRatio) {
+      } else if (accountSummary.cRatio <= accountSummary.minCRatio) {
         tradeError = dictionary.cockpit.belowMinCRatio;
         // Otherwise, send borrow
       } else {
@@ -291,27 +291,27 @@ export function TradePanel(): JSX.Element {
       // Withdrawing
       if (currentAction === 'withdraw') {
         // User is withdrawing between 125% and 130%, allow trade but warn them
-        if (accountSummary?.borrowedValue && adjustedRatio > 0 && adjustedRatio <= currentPool.minCRatio + 0.05) {
+        if (accountSummary && adjustedRatio > 0 && adjustedRatio <= accountSummary.minCRatio + 0.05) {
           setInputError(
             dictionary.cockpit.subjectToLiquidation
               .replaceAll('{{NEW-C-RATIO}}', currencyFormatter(adjustedRatio * 100, false, 1))
-              .replaceAll('{{MIN-C-RATIO}}', currencyFormatter(currentPool.minCRatio * 100, false, 1))
+              .replaceAll('{{MIN-C-RATIO}}', currencyFormatter(accountSummary.minCRatio * 100, false, 1))
               .replaceAll('{{TRADE ACTION}}', dictionary.cockpit.withdraw.toLowerCase())
           );
         }
         // Borrowing
       } else if (currentAction === 'borrow') {
-        if (adjustedRatio <= currentPool.minCRatio + 0.2) {
+        if (accountSummary && adjustedRatio <= accountSummary.minCRatio + 0.2) {
           // but not below min-ratio, warn and allow trade
-          if (adjustedRatio >= currentPool.minCRatio || !accountSummary?.borrowedValue) {
+          if (adjustedRatio >= accountSummary.minCRatio || !accountSummary?.borrowedValue) {
             setInputError(
               dictionary.cockpit.subjectToLiquidation
                 .replaceAll('{{NEW-C-RATIO}}', currencyFormatter(adjustedRatio * 100, false, 1))
-                .replaceAll('{{MIN-C-RATIO}}', currencyFormatter(currentPool.minCRatio * 100, false, 1))
+                .replaceAll('{{MIN-C-RATIO}}', currencyFormatter(accountSummary.minCRatio * 100, false, 1))
                 .replaceAll('{{TRADE ACTION}}', dictionary.cockpit.borrow.toLowerCase())
             );
             // and below minimum ratio, inform and reject
-          } else if (adjustedRatio < currentPool.minCRatio && adjustedRatio < accountSummary.cRatio) {
+          } else if (adjustedRatio < accountSummary.minCRatio && adjustedRatio < accountSummary.cRatio) {
             setInputError(dictionary.cockpit.rejectTrade);
           }
         }
