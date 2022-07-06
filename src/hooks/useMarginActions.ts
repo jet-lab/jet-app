@@ -7,7 +7,7 @@ export const useMarginActions = () => {
   const { pools, marginAccount, walletBalances, refresh } = useMargin();
 
   // Deposit
-  const deposit = async (abbrev: MarginPools, lamports: BN): Promise<[res: TxnResponse, txid: string[]]> => {
+  const deposit = async (abbrev: MarginPools, amount: BN): Promise<[res: TxnResponse, txid: string[]]> => {
     if (!marginAccount || !pools) {
       console.log('Accounts not loaded', marginAccount, pools);
       throw new Error();
@@ -22,7 +22,7 @@ export const useMarginActions = () => {
         const txid = await marginAccount.createAccount();
         txid && txids.push(txid);
       }
-      const txid = await pool.deposit({ marginAccount, amount: lamports, source: source.address });
+      const txid = await pool.deposit({ marginAccount, amount });
       txids.push(txid);
       refresh();
       return [TxnResponse.Success, txids];
@@ -51,7 +51,6 @@ export const useMarginActions = () => {
       const txid = await pool.marginWithdraw({
         marginAccount,
         pools: Object.values(pools),
-        destination: destination.address,
         amount
       });
       txids.push(txid);
