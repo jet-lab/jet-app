@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLanguage } from '../contexts/localization/localization';
 import { useMargin } from '../contexts/marginContext';
-import { useTradeContext } from '../contexts/tradeContext';
 
 export function HealthBar(props: { fullDetail?: boolean }): JSX.Element {
   const { dictionary } = useLanguage();
