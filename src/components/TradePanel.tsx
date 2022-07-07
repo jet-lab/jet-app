@@ -81,7 +81,7 @@ export function TradePanel(): JSX.Element {
       // Borrowing
     } else if (currentAction === 'borrow') {
       // User has not deposited any collateral
-      if (!walletBalances[currentPool.symbol].amount.tokens) {
+      if (!accountPoolPosition?.maxTradeAmounts['borrow'].tokens) {
         setDisabledMessage(dictionary.cockpit.noDepositsForBorrow);
 
         // User is below minimum c-ratio
