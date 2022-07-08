@@ -73,7 +73,6 @@ export function TradePanel(): JSX.Element {
       // User has not deposited any collateral
       if (!accountSummary?.depositedValue) {
         setDisabledMessage(dictionary.cockpit.noDepositsForBorrow);
-
         // User is below minimum c-ratio
       } else if (accountSummary && accountSummary.cRatio <= accountSummary.minCRatio) {
         setDisabledMessage(dictionary.cockpit.belowMinCRatio);
