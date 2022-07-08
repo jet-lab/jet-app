@@ -8,7 +8,7 @@
 ***************************/
 // Variables
 @neu-table-shadow: -4px 0px 10px @light-shadow, 2px 4px 8px @dark-shadow;
-@health-gradient: linear-gradient(90deg, @danger 0%, @warning 25%, @success 75%);
+@health-gradient: linear-gradient(90deg, @success 0%, @warning 65%, @danger 90%);
 // App
 .jet-app {
   &.ant-scrolling-effect {
@@ -301,7 +301,7 @@
     }
 
     span {
-      font-size: @xs-font-size;
+      font-size: @sm-font-size;
     }
   }
 
@@ -532,10 +532,15 @@
 
       &-range-value {
         position: absolute;
-        bottom: -22px;
+        bottom: -20px;
         margin: @spacing-xs;
         font-size: @sm-font-size;
-        color: @secondary-5;
+        color: @success;
+
+        &:last-of-type {
+          right: 0;
+          color: @danger;
+        }
       }
 
       &-indicator {
@@ -545,9 +550,18 @@
         &-arrow {
           width: 0;
           height: 0;
-          border-left: 5px solid transparent;
-          border-right: 5px solid transparent;
+          border-left: 4px solid transparent;
+          border-right: 4px solid transparent;
           border-top: 8px solid @primary;
+          &-good {
+            border-top-color: @success;
+          }
+          &-moderate {
+            border-top-color: @warning;
+          }
+          &-critical {
+            border-top-color: @danger;
+          }
         }
         &-label {
           position: absolute;
@@ -645,7 +659,7 @@
           padding: unset;
 
           span {
-            font-size: @xs-font-size;
+            font-size: @sm-font-size;
             color: @secondary-5;
           }
           i {
@@ -774,7 +788,7 @@
           }
           span {
             color: @secondary-2;
-            font-size: @xs-font-size;
+            font-size: @sm-font-size;
             opacity: @subtle-opacity;
             letter-spacing: 0.5px;
           }
@@ -824,6 +838,7 @@
 
               &.danger-text {
                 color: @danger;
+                max-width: 375px;
               }
             }
           }
@@ -929,7 +944,7 @@
                   }
                   &:last-of-type {
                     opacity: @disabled-opacity;
-                    font-size: @xs-font-size;
+                    font-size: @sm-font-size;
                     top: 30px;
                   }
                 }
@@ -1257,9 +1272,6 @@
     .reserve-detail-modal {
       .ant-modal-content {
         max-width: unset;
-      }
-      span {
-        font-size: @xs-font-size;
       }
       .asset-logo {
         width: 25px;

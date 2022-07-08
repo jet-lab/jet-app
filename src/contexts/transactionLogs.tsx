@@ -1,25 +1,13 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { TokenAmount, MarginClient } from '@jet-lab/margin';
+import { MarginClient, AccountTransaction } from '@jet-lab/margin';
 import { PublicKey } from '@solana/web3.js';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useMargin } from './marginContext';
 import { useRpcNode } from './rpcNode';
 
-// Transaction logs context
-interface TransactionLog {
-  blockDate: string;
-  time: string;
-  signature: string;
-  sigIndex: number; //signature index that we used to find this transaction
-  tradeAction: string;
-  tradeAmount: TokenAmount;
-  tokenAbbrev: string;
-  tokenDecimals: number;
-}
-
 interface TransactionLogs {
   loadingLogs: boolean;
-  logs: TransactionLog[];
+  logs: AccountTransaction[];
   refreshLogs: () => void;
 }
 
@@ -35,7 +23,7 @@ export function TransactionsProvider(props: { children: JSX.Element }): JSX.Elem
   const { connected, publicKey } = useWallet();
   const { preferredNode } = useRpcNode();
   const [loadingLogs, setLoadingLogs] = useState(false);
-  const [logs, setLogs] = useState<TransactionLog[]>([]);
+  const [logs, setLogs] = useState<AccountTransaction[]>([]);
 
   const loadLogs = () => {
     if (pools && publicKey) {
@@ -48,7 +36,7 @@ export function TransactionsProvider(props: { children: JSX.Element }): JSX.Elem
         };
         return acc;
       }, {} as Record<string, { tokenMint: PublicKey; depositNoteMint: PublicKey; loanNoteMint: PublicKey }>);
-      MarginClient.getFlightLogs(manager.provider, publicKey, mints, cluster).then(logs => {
+      MarginClient.getTransactionHistory(manager.provider, publicKey, mints, cluster).then(logs => {
         setLoadingLogs(false);
         setLogs(logs.filter(tx => tx.status !== 'error'));
       });
@@ -64,6 +52,7 @@ export function TransactionsProvider(props: { children: JSX.Element }): JSX.Elem
     } else {
       setLoadingLogs(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connected, publicKey, preferredNode, poolsFetched, userFetched]);
 
   return (

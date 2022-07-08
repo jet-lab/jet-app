@@ -27,7 +27,7 @@ export function ConnectWalletModal(): JSX.Element {
     <Modal
       footer={null}
       visible={connecting && !connected}
-      className="connect-wallet-modal"
+      className="connect-modal"
       onCancel={() => setConnecting(false)}>
       <div className="flex-centered column">
         <img src="img/jet/jet_logo.png" width="120px" height="auto" alt="Jet Protocol" />
