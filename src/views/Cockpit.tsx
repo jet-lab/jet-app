@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useInitFailed } from '../contexts/init';
 import { useGeoban, useLanguage } from '../contexts/localization/localization';
-import { useTradeContext } from '../contexts/tradeContext';
 import { useMargin } from '../contexts/marginContext';
 import { currencyFormatter, totalAbbrev } from '../utils/currency';
 import { InitFailed } from '../components/InitFailed';
