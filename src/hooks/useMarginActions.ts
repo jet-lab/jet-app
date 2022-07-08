@@ -4,7 +4,7 @@ import { useMargin } from '../contexts/marginContext';
 import { MarginPools, PoolAmount } from '@jet-lab/margin';
 
 export const useMarginActions = () => {
-  const { pools, marginAccount, walletBalances, refresh } = useMargin();
+  const { pools, marginAccount, refresh } = useMargin();
 
   // Deposit
   const deposit = async (abbrev: MarginPools, amount: BN): Promise<TxnResponse> => {
@@ -14,13 +14,9 @@ export const useMarginActions = () => {
     }
 
     const pool = pools[abbrev];
-    const source = walletBalances[abbrev];
 
     try {
-      if (!(await marginAccount.exists())) {
-        await marginAccount.createAccount();
-      }
-      await pool.deposit({ marginAccount, amount, source: source.address });
+      await pool.deposit({ marginAccount, amount });
       refresh();
       return TxnResponse.Success;
     } catch (err: any) {
@@ -37,17 +33,12 @@ export const useMarginActions = () => {
     }
 
     const pool = pools[abbrev];
-    const destination = walletBalances[abbrev];
 
     try {
-      if (!(await marginAccount.exists())) {
-        await marginAccount.createAccount();
-      }
-      await pool.marginWithdraw({
+      await pool.withdraw({
         marginAccount,
         pools: Object.values(pools),
-        amount,
-        destination: destination.address
+        amount
       });
       refresh();
       return TxnResponse.Success;
@@ -65,11 +56,7 @@ export const useMarginActions = () => {
     }
 
     const pool = pools[abbrev];
-
     try {
-      if (!(await marginAccount.exists())) {
-        await marginAccount.createAccount();
-      }
       await pool.marginBorrow({
         marginAccount,
         pools: Object.values(pools),
@@ -93,9 +80,6 @@ export const useMarginActions = () => {
     const pool = pools[abbrev];
 
     try {
-      if (!(await marginAccount.exists())) {
-        await marginAccount.createAccount();
-      }
       await pool.marginRepay({
         marginAccount,
         pools: Object.values(pools),
