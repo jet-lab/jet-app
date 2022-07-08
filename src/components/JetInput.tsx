@@ -13,6 +13,7 @@ export function JetInput(props: {
   maxInput?: number | null;
   error?: string | null;
   disabled?: boolean;
+  disabledButton?: boolean;
   loading?: boolean;
   onClick?: () => unknown;
   onChange: (value: any) => unknown;
@@ -51,9 +52,11 @@ export function JetInput(props: {
         )}
       </div>
       <div
-        className={`input-btn flex-centered ${props.loading ? 'loading' : ''}`}
+        className={`input-btn flex-centered ${props.loading ? 'loading' : ''} ${
+          props.disabledButton ? 'disabled' : ''
+        }`}
         onClick={() => {
-          if (!props.disabled && props.value) {
+          if (!props.disabled && !props.disabledButton && props.value) {
             props.submit();
           }
         }}>

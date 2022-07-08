@@ -7,7 +7,7 @@ export const useMarginActions = () => {
   const { pools, marginAccount, walletBalances, refresh } = useMargin();
 
   // Deposit
-  const deposit = async (abbrev: MarginPools, amount: BN): Promise<[res: TxnResponse, txid: string[]]> => {
+  const deposit = async (abbrev: MarginPools, amount: BN): Promise<TxnResponse> => {
     if (!marginAccount || !pools) {
       console.log('Accounts not loaded', marginAccount, pools);
       throw new Error();
@@ -15,109 +15,98 @@ export const useMarginActions = () => {
 
     const pool = pools[abbrev];
     const source = walletBalances[abbrev];
-    const txids: string[] = [];
 
     try {
       if (!(await marginAccount.exists())) {
-        const txid = await marginAccount.createAccount();
-        txid && txids.push(txid);
+        await marginAccount.createAccount();
       }
-      const txid = await pool.deposit({ marginAccount, amount });
-      txids.push(txid);
+      await pool.deposit({ marginAccount, amount, source: source.address });
       refresh();
-      return [TxnResponse.Success, txids];
+      return TxnResponse.Success;
     } catch (err: any) {
       console.log(err);
       refresh();
-      return [TxnResponse.Failed, []];
+      return TxnResponse.Failed;
     }
   };
 
   // Withdraw
-  const withdraw = async (abbrev: MarginPools, amount: PoolAmount): Promise<[res: TxnResponse, txid: string[]]> => {
+  const withdraw = async (abbrev: MarginPools, amount: PoolAmount): Promise<TxnResponse> => {
     if (!marginAccount || !pools) {
       throw new Error();
     }
 
     const pool = pools[abbrev];
     const destination = walletBalances[abbrev];
-    const txids: string[] = [];
 
     try {
       if (!(await marginAccount.exists())) {
-        const txid = await marginAccount.createAccount();
-        txid && txids.push(txid);
+        await marginAccount.createAccount();
       }
-      const txid = await pool.marginWithdraw({
+      await pool.marginWithdraw({
         marginAccount,
         pools: Object.values(pools),
-        amount
+        amount,
+        destination: destination.address
       });
-      txids.push(txid);
       refresh();
-      return [TxnResponse.Success, txids];
+      return TxnResponse.Success;
     } catch (err: any) {
       console.log(err);
       refresh();
-      return [TxnResponse.Failed, []];
+      return TxnResponse.Failed;
     }
   };
 
   // Borrow
-  const borrow = async (abbrev: MarginPools, amount: BN): Promise<[res: TxnResponse, txid: string[]]> => {
+  const borrow = async (abbrev: MarginPools, amount: BN): Promise<TxnResponse> => {
     if (!marginAccount || !pools) {
       throw new Error();
     }
 
     const pool = pools[abbrev];
-    const txids: string[] = [];
 
     try {
       if (!(await marginAccount.exists())) {
-        const txid = await marginAccount.createAccount();
-        txid && txids.push(txid);
+        await marginAccount.createAccount();
       }
-      const txid = await pool.marginBorrow({
+      await pool.marginBorrow({
         marginAccount,
         pools: Object.values(pools),
         amount
       });
-      txids.push(txid);
       refresh();
-      return [TxnResponse.Success, txids];
+      return TxnResponse.Success;
     } catch (err: any) {
       console.log(err);
       refresh();
-      return [TxnResponse.Failed, []];
+      return TxnResponse.Failed;
     }
   };
 
   // Repay
-  const repay = async (abbrev: MarginPools, amount: PoolAmount): Promise<[res: TxnResponse, txid: string[]]> => {
+  const repay = async (abbrev: MarginPools, amount: PoolAmount): Promise<TxnResponse> => {
     if (!marginAccount || !pools) {
       throw new Error();
     }
 
     const pool = pools[abbrev];
-    const txids: string[] = [];
 
     try {
       if (!(await marginAccount.exists())) {
-        const txid = await marginAccount.createAccount();
-        txid && txids.push(txid);
+        await marginAccount.createAccount();
       }
-      const txid = await pool.marginRepay({
+      await pool.marginRepay({
         marginAccount,
         pools: Object.values(pools),
         amount
       });
-      txids.push(txid);
       refresh();
-      return [TxnResponse.Success, txids];
+      return TxnResponse.Success;
     } catch (err: any) {
       console.log(err);
       refresh();
-      return [TxnResponse.Failed, []];
+      return TxnResponse.Failed;
     }
   };
 

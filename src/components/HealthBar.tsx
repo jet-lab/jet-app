@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { MarginAccount } from '@jet-lab/margin';
 import { useLanguage } from '../contexts/localization/localization';
 import { useMargin } from '../contexts/marginContext';
 
@@ -16,23 +17,22 @@ export function HealthBar(props: { fullDetail?: boolean }): JSX.Element {
       return;
     }
 
-    const { cRatio, minCRatio } = marginAccount.summary;
+    const { riskIndicator } = marginAccount;
 
-    if (cRatio <= minCRatio + 0.1) {
+    if (riskIndicator >= MarginAccount.RISK_LIQUIDATION_LEVEL) {
       setHealthGauge({
         percentage: 0,
         standing: 'critical'
       });
-    } else if (cRatio >= minCRatio + 0.6) {
-      // Use 95 instead of 100 here for styling reasons
+    } else if (riskIndicator >= MarginAccount.RISK_WARNING_LEVEL) {
       setHealthGauge({
-        percentage: 95,
-        standing: 'good'
+        percentage: riskIndicator * 100 - 100,
+        standing: 'moderate'
       });
     } else {
       setHealthGauge({
-        percentage: cRatio * 100 - 100,
-        standing: cRatio >= minCRatio + 0.25 ? 'moderate' : 'low'
+        percentage: 95,
+        standing: 'good'
       });
     }
   }, [marginAccount]);
@@ -41,18 +41,15 @@ export function HealthBar(props: { fullDetail?: boolean }): JSX.Element {
     <div className="healthbar flex-centered column">
       <div className="healthbar-bar">
         {marginAccount?.summary.borrowedValue ? (
-          <div className="healthbar-bar-indicator flex-centered column" style={{ left: `${healthGauge.percentage}%` }}>
-            <div className="healthbar-bar-indicator-arrow"></div>
-            <span
-              className="healthbar-bar-indicator-label"
-              style={healthGauge.standing === 'critical' ? { left: 0 } : {}}>
-              {dictionary.healthbar[healthGauge.standing]?.toUpperCase()}
-            </span>
+          <div className="healthbar-bar-indicator flex-centered column" style={{ right: `${healthGauge.percentage}%` }}>
+            <div
+              className={`healthbar-bar-indicator-arrow healthbar-bar-indicator-arrow-${healthGauge.standing}`}></div>
           </div>
         ) : (
           <></>
         )}
-        <span className="healthbar-bar-range-value">≥{(marginAccount?.summary.minCRatio ?? 0) * 100}%</span>
+        <span className="healthbar-bar-range-value">0</span>
+        <span className="healthbar-bar-range-value">1</span>
       </div>
       {props.fullDetail && (
         <div className="healthbar-full-detail flex justify-evenly align-start">

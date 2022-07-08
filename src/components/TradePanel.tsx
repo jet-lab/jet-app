@@ -6,20 +6,16 @@ import { useMargin } from '../contexts/marginContext';
 import type { TradeAction } from '../contexts/tradeContext';
 import { useTradeContext } from '../contexts/tradeContext';
 import { useLanguage } from '../contexts/localization/localization';
-import { useBlockExplorer } from '../contexts/blockExplorer';
 import { useTransactionLogs } from '../contexts/transactionLogs';
 import { useMarginActions } from '../hooks/useMarginActions';
 import { currencyFormatter } from '../utils/currency';
-import { shortenPubkey } from '../utils/utils';
 import { notification, Select, Slider } from 'antd';
-import { Info } from './Info';
 import { JetInput } from './JetInput';
 import { ConnectMessage } from './ConnectMessage';
 
 export function TradePanel(): JSX.Element {
   const { dictionary } = useLanguage();
   const { pools, marginAccount, walletBalances, userFetched } = useMargin();
-  const { getExplorerUrl } = useBlockExplorer();
   const { refreshLogs } = useTransactionLogs();
   const { connected } = useWallet();
   const {
@@ -37,17 +33,11 @@ export function TradePanel(): JSX.Element {
   const maxInput = accountPoolPosition?.maxTradeAmounts[currentAction].tokens ?? 0;
   const [disabledInput, setDisabledInput] = useState<boolean>(false);
   const [disabledMessage, setDisabledMessage] = useState<string>('');
+  const [disabledButton, setDisabledButton] = useState<boolean>(false);
   const [inputError, setInputError] = useState<string>('');
   const tradeActions: TradeAction[] = ['deposit', 'withdraw', 'borrow', 'repay'];
   const { deposit, withdraw, borrow, repay } = useMarginActions();
   const { Option } = Select;
-
-  // Adjust interface
-  function adjustInterface() {
-    setInputError('');
-    adjustCollateralizationRatio();
-    checkDisabledInput();
-  }
 
   // Check if user input should be disabled
   // depending on wallet balance and position
@@ -152,7 +142,6 @@ export function TradePanel(): JSX.Element {
     const tradeAction = currentAction;
     const tradeAmount = TokenAmount.tokens(currentAmount.toString(), currentPool.decimals);
     let res: TxnResponse = TxnResponse.Cancelled;
-    let txids: string[] = [];
     let tradeError = '';
     setSendingTrade(true);
 
@@ -164,7 +153,7 @@ export function TradePanel(): JSX.Element {
         // Otherwise, send deposit
       } else {
         const depositAmount = tradeAmount.lamports;
-        [res, txids] = await deposit(currentPool.symbol, depositAmount);
+        res = await deposit(currentPool.symbol, depositAmount);
       }
       // Withdrawing sollet ETH
     } else if (tradeAction === 'withdraw') {
@@ -184,7 +173,7 @@ export function TradePanel(): JSX.Element {
           tradeAmount.tokens === accountPoolPosition.depositBalance.tokens
             ? PoolAmount.notes(accountPoolPosition.depositBalanceNotes)
             : PoolAmount.tokens(tradeAmount.lamports);
-        [res, txids] = await withdraw(currentPool.symbol, withdrawAmount);
+        res = await withdraw(currentPool.symbol, withdrawAmount);
       }
       // Borrowing
     } else if (tradeAction === 'borrow') {
@@ -196,7 +185,7 @@ export function TradePanel(): JSX.Element {
         tradeError = dictionary.cockpit.belowMinCRatio;
         // Otherwise, send borrow
       } else {
-        [res, txids] = await borrow(currentPool.symbol, tradeAmount.lamports);
+        res = await borrow(currentPool.symbol, tradeAmount.lamports);
       }
       // Repaying
     } else if (tradeAction === 'repay') {
@@ -213,7 +202,7 @@ export function TradePanel(): JSX.Element {
           tradeAmount.tokens === accountPoolPosition.loanBalance.tokens
             ? PoolAmount.notes(accountPoolPosition.loanBalanceNotes)
             : PoolAmount.tokens(tradeAmount.lamports);
-        [res, txids] = await repay(currentPool.symbol, repayAmount);
+        res = await repay(currentPool.symbol, repayAmount);
       }
     }
 
@@ -225,23 +214,11 @@ export function TradePanel(): JSX.Element {
     }
 
     // Notify user of successful/unsuccessful trade
-    const lastTxn = txids[txids.length - 1];
     if (res === TxnResponse.Success) {
       notification.success({
         message: dictionary.cockpit.txSuccessShort.replaceAll(
           '{{TRADE ACTION}}',
           tradeAction[0].toUpperCase() + tradeAction.substring(1)
-        ),
-        description: (
-          <a
-            href={getExplorerUrl(lastTxn)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex align-center justify-between"
-            style={{ width: '100%' }}>
-            {shortenPubkey(lastTxn, 8)}
-            <i className="fas fa-external-link-alt"></i>
-          </a>
         ),
         placement: 'bottomLeft'
       });
@@ -264,7 +241,8 @@ export function TradePanel(): JSX.Element {
     }
 
     // Readjust interface
-    adjustInterface();
+    adjustCollateralizationRatio();
+    checkDisabledInput();
     // End trade submit
     setSendingTrade(false);
   }
@@ -272,7 +250,8 @@ export function TradePanel(): JSX.Element {
   // Readjust interface onmount
   // and current reserve change
   useEffect(() => {
-    adjustInterface();
+    adjustCollateralizationRatio();
+    checkDisabledInput();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPool, accountPoolPosition, accountSummary, currentAction]);
 
@@ -283,42 +262,47 @@ export function TradePanel(): JSX.Element {
 
   // On user input, check for error
   useEffect(() => {
-    if (currentAmount) {
-      if (!currentPool) {
-        return;
-      }
+    setDisabledButton(false);
+    setInputError('');
+    if (!currentPool || !currentAmount) {
+      return;
+    }
 
-      // Withdrawing
-      if (currentAction === 'withdraw') {
-        // User is withdrawing between 125% and 130%, allow trade but warn them
-        if (accountSummary && adjustedRatio > 0 && adjustedRatio <= accountSummary.minCRatio + 0.05) {
-          setInputError(
-            dictionary.cockpit.subjectToLiquidation
-              .replaceAll('{{NEW-C-RATIO}}', currencyFormatter(adjustedRatio * 100, false, 1))
-              .replaceAll('{{MIN-C-RATIO}}', currencyFormatter(accountSummary.minCRatio * 100, false, 1))
-              .replaceAll('{{TRADE ACTION}}', dictionary.cockpit.withdraw.toLowerCase())
-          );
-        }
-        // Borrowing
-      } else if (currentAction === 'borrow') {
-        if (accountSummary && adjustedRatio <= accountSummary.minCRatio + 0.2) {
-          // but not below min-ratio, warn and allow trade
-          if (adjustedRatio >= accountSummary.minCRatio || !accountSummary?.borrowedValue) {
-            setInputError(
-              dictionary.cockpit.subjectToLiquidation
-                .replaceAll('{{NEW-C-RATIO}}', currencyFormatter(adjustedRatio * 100, false, 1))
-                .replaceAll('{{MIN-C-RATIO}}', currencyFormatter(accountSummary.minCRatio * 100, false, 1))
-                .replaceAll('{{TRADE ACTION}}', dictionary.cockpit.borrow.toLowerCase())
-            );
-            // and below minimum ratio, inform and reject
-          } else if (adjustedRatio < accountSummary.minCRatio && adjustedRatio < accountSummary.cRatio) {
-            setInputError(dictionary.cockpit.rejectTrade);
-          }
-        }
+    // Withdrawing
+    if (currentAction === 'withdraw') {
+      // User is withdrawing between 125% and 130%, allow trade but warn them
+      if (accountSummary && adjustedRatio > 0 && adjustedRatio <= accountSummary.minCRatio + 0.5) {
+        setInputError(
+          dictionary.cockpit.subjectToLiquidation.replaceAll(
+            '{{NEW-LEVERAGE}}',
+            currencyFormatter(1 / adjustedRatio, false, 1)
+          )
+        );
+      }
+      // Borrowing
+    } else if (currentAction === 'borrow') {
+      if (
+        accountSummary &&
+        adjustedRatio >= accountSummary.minCRatio &&
+        adjustedRatio <= accountSummary.minCRatio + 0.5
+      ) {
+        setInputError(
+          dictionary.cockpit.subjectToLiquidation.replaceAll(
+            '{{NEW-LEVERAGE}}',
+            currencyFormatter(1 / adjustedRatio, false, 1)
+          )
+        );
+      } else if (accountSummary && adjustedRatio < accountSummary.minCRatio) {
+        setInputError(
+          dictionary.cockpit.rejectTrade
+            .replaceAll('{{NEW_LEVERAGE}}', currencyFormatter(1 / adjustedRatio, false, 1))
+            .replaceAll('{{MAX_LEVERAGE}}', currencyFormatter(1 / accountSummary.minCRatio, false, 1))
+        );
+        setDisabledButton(true);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentAmount]);
+  }, [currentAmount, currentAction]);
 
   return (
     <div className="trade-panel flex align-center justify-start">
@@ -329,7 +313,8 @@ export function TradePanel(): JSX.Element {
             onClick={() => {
               if (!sendingTrade) {
                 setCurrentAction(action);
-                adjustInterface();
+                adjustCollateralizationRatio();
+                checkDisabledInput();
               }
             }}
             className={`trade-select flex justify-center align-center ${currentAction === action ? 'active' : ''}`}>
@@ -342,7 +327,8 @@ export function TradePanel(): JSX.Element {
             onChange={action => {
               if (!sendingTrade) {
                 setCurrentAction(action);
-                adjustInterface();
+                adjustCollateralizationRatio();
+                checkDisabledInput();
               }
             }}>
             {tradeActions.map(action => (
@@ -354,7 +340,7 @@ export function TradePanel(): JSX.Element {
         </div>
       </div>
       {!connected || !pools ? <ConnectMessage /> : <></>}
-      {disabledMessage || inputError ? (
+      {disabledMessage.length || inputError.length ? (
         <div className="trade-section trade-section-disabled-message flex-centered column">
           <span className={`center-text ${inputError ? 'danger-text' : ''}`}>{disabledMessage || inputError}</span>
         </div>
@@ -382,19 +368,13 @@ export function TradePanel(): JSX.Element {
           </div>
           <div className={`trade-section flex-centered column ${disabledInput ? 'disabled' : ''}`}>
             <div className="flex-centered">
-              <span className="center-text bold-text">
-                {dictionary.cockpit.adjustedCollateralization.toUpperCase()}
-              </span>
-              <Info term="adjustedCollateralizationRatio" />
+              <span className="center-text bold-text">{dictionary.cockpit.adjustedLeverage.toUpperCase()}</span>
             </div>
             <p>
-              {userFetched
-                ? (accountSummary?.borrowedValue || (currentAction === 'borrow' && currentAmount)) && adjustedRatio > 10
-                  ? '>1000%'
-                  : (accountSummary?.borrowedValue || (currentAction === 'borrow' && currentAmount)) &&
-                    adjustedRatio < 10
-                  ? currencyFormatter(adjustedRatio * 100, false, 1) + '%'
-                  : '∞'
+              {userFetched && currentAmount
+                ? accountSummary?.borrowedValue
+                  ? currencyFormatter(1 / adjustedRatio, false, 1) + 'x'
+                  : '0x'
                 : '--'}
             </p>
           </div>
@@ -407,18 +387,18 @@ export function TradePanel(): JSX.Element {
           value={currentAmount}
           maxInput={maxInput}
           disabled={!userFetched || disabledInput}
+          disabledButton={disabledButton}
           loading={sendingTrade}
           error={inputError}
-          onClick={() => setInputError('')}
           onChange={(value: number) => {
-            const currentAmount = value;
-            if (currentAmount < 0) {
+            const newAmount = value;
+            if (newAmount < 0) {
               setCurrentAmount(0);
             } else {
-              setCurrentAmount(currentAmount);
+              setCurrentAmount(newAmount);
             }
 
-            adjustCollateralizationRatio(currentAmount);
+            adjustCollateralizationRatio(newAmount);
           }}
           submit={submitTrade}
         />
@@ -430,9 +410,9 @@ export function TradePanel(): JSX.Element {
           step={1}
           disabled={!userFetched || disabledInput}
           onChange={percent => {
-            const currentAmount = maxInput * (percent / 100);
-            setCurrentAmount(currentAmount);
-            adjustCollateralizationRatio(currentAmount);
+            const newAmount = maxInput * ((percent ?? 0) / 100);
+            setCurrentAmount(newAmount);
+            adjustCollateralizationRatio(newAmount);
           }}
           tipFormatter={value => value + '%'}
           tooltipPlacement="bottom"

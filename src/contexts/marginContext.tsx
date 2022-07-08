@@ -6,9 +6,7 @@ import {
   PoolManager,
   AssociatedToken,
   MarginClient,
-  MarginPools,
-  bnToNumber,
-  Number128
+  MarginPools
 } from '@jet-lab/margin';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { createContext, useContext, useMemo } from 'react';

@@ -11,6 +11,7 @@ import { TradePanel } from '../components/TradePanel';
 import { MarketTable } from '../components/MarketTable';
 import { Skeleton } from 'antd';
 import { WarningFilled } from '@ant-design/icons';
+import { MarginAccount } from '@jet-lab/margin';
 
 export function Cockpit(): JSX.Element {
   const isGeobanned = useGeoban();
@@ -63,29 +64,23 @@ export function Cockpit(): JSX.Element {
           <div className="trade-position-snapshot flex-centered">
             <div className="trade-position-ratio flex align-start justify-center column">
               <div className="flex-centered">
-                <h2 className="view-subheader">{dictionary.cockpit.yourRatio}</h2>
-                <Info term="collateralizationRatio" />
+                <h2 className="view-subheader">{dictionary.cockpit.yourRisk}</h2>
               </div>
               {userFetched && accountSummary ? (
                 <>
                   <h1
                     className={`c-ratio
                     ${
-                      !accountSummary.borrowedValue || accountSummary.cRatio >= accountSummary.minCRatio + 0.25
+                      !accountSummary.borrowedValue || marginAccount.riskIndicator < MarginAccount.RISK_WARNING_LEVEL
                         ? 'success-text'
-                        : accountSummary.cRatio <= accountSummary.minCRatio + 0.1
+                        : marginAccount.riskIndicator > MarginAccount.RISK_LIQUIDATION_LEVEL
                         ? 'danger-text'
                         : 'warning-text'
                     }`}
-                    style={{ pointerEvents: 'none', fontSize: !accountSummary.borrowedValue ? '80px' : '' }}>
-                    {accountSummary.borrowedValue > 0
-                      ? accountSummary.cRatio > 10
-                        ? '>1000'
-                        : currencyFormatter(accountSummary.cRatio * 100, false, 1)
-                      : '∞'}
-                    {accountSummary.borrowedValue > 0 && (
-                      <span style={{ color: 'inherit', paddingLeft: '2px' }}>%</span>
-                    )}
+                    style={{ pointerEvents: 'none' }}>
+                    {marginAccount.riskIndicator > 1
+                      ? 1
+                      : currencyFormatter(marginAccount.riskIndicator, false, 1) ?? 0}
                   </h1>
                   <HealthBar />
                 </>
@@ -114,7 +109,7 @@ export function Cockpit(): JSX.Element {
                 <div className="trade-position-value min-c-note flex align-start justify-center">
                   <WarningFilled style={{ margin: '2px 5px 0 0' }} />
                   <span>
-                    {dictionary.cockpit.minColRatioNote.replace('{{MIN_COL_RATIO}}', accountSummary.minCRatio * 100)}
+                    {dictionary.cockpit.maxRiskNote.replace('{{MAX_RISK}}', MarginAccount.RISK_LIQUIDATION_LEVEL)}
                   </span>
                 </div>
               )}
