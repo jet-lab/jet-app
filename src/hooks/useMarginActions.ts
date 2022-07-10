@@ -1,7 +1,7 @@
 import { BN } from '@project-serum/anchor';
 import { TxnResponse } from '../models/JetTypes';
 import { useMargin } from '../contexts/marginContext';
-import { MarginPools, PoolAmount } from '@jet-lab/margin';
+import { MarginPools, PoolAmount, TokenFormat } from '@jet-lab/margin';
 
 export const useMarginActions = () => {
   const { pools, marginAccount, refresh } = useMargin();
@@ -60,7 +60,8 @@ export const useMarginActions = () => {
       await pool.marginBorrow({
         marginAccount,
         pools: Object.values(pools),
-        amount
+        amount,
+        destination: TokenFormat.unwrappedSol
       });
       refresh();
       return TxnResponse.Success;
@@ -72,7 +73,7 @@ export const useMarginActions = () => {
   };
 
   // Repay
-  const repay = async (abbrev: MarginPools, amount: PoolAmount): Promise<TxnResponse> => {
+  const repay = async (abbrev: MarginPools, amount: BN): Promise<TxnResponse> => {
     if (!marginAccount || !pools) {
       throw new Error();
     }
@@ -83,7 +84,8 @@ export const useMarginActions = () => {
       await pool.marginRepay({
         marginAccount,
         pools: Object.values(pools),
-        amount
+        amount,
+        source: TokenFormat.unwrappedSol
       });
       refresh();
       return TxnResponse.Success;

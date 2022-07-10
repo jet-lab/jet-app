@@ -33,7 +33,6 @@ export function TradePanel(): JSX.Element {
   const maxInput = accountPoolPosition?.maxTradeAmounts[currentAction].tokens ?? 0;
   const [disabledInput, setDisabledInput] = useState<boolean>(false);
   const [disabledMessage, setDisabledMessage] = useState<string>('');
-  const [disabledButton, setDisabledButton] = useState<boolean>(false);
   const [inputError, setInputError] = useState<string>('');
   const tradeActions: TradeAction[] = ['deposit', 'withdraw', 'borrow', 'repay'];
   const { deposit, withdraw, borrow, repay } = useMarginActions();
@@ -134,7 +133,7 @@ export function TradePanel(): JSX.Element {
   // Check user input and for Copilot warning
   // Then submit trade RPC call
   async function submitTrade() {
-    if (!currentPool?.symbol || !accountPoolPosition || !accountSummary || !currentAmount || inputError) {
+    if (!currentPool?.symbol || !accountPoolPosition || !accountSummary || !currentAmount) {
       return;
     }
 
@@ -197,11 +196,12 @@ export function TradePanel(): JSX.Element {
         // Otherwise, send repay
       } else {
         // If user is repaying all, use loan notes
-        const repayAmount =
-          tradeAmount.tokens === accountPoolPosition.loanBalance.tokens
-            ? PoolAmount.notes(accountPoolPosition.loanBalanceNotes)
-            : PoolAmount.tokens(tradeAmount.lamports);
-        res = await repay(currentPool.symbol, repayAmount);
+        // FIXME! Bring back repay all
+        // const repayAmount =
+        //   tradeAmount.tokens === accountPoolPosition.loanBalance.tokens
+        //     ? PoolAmount.notes(accountPoolPosition.loanBalanceNotes)
+        //     : PoolAmount.tokens(tradeAmount.lamports);
+        res = await repay(currentPool.symbol, tradeAmount.lamports);
       }
     }
 
@@ -261,7 +261,6 @@ export function TradePanel(): JSX.Element {
 
   // On user input, check for error
   useEffect(() => {
-    setDisabledButton(false);
     setInputError('');
     if (!currentPool || !currentAmount) {
       return;
@@ -297,7 +296,6 @@ export function TradePanel(): JSX.Element {
             .replaceAll('{{NEW_LEVERAGE}}', currencyFormatter(1 / adjustedRatio, false, 1))
             .replaceAll('{{MAX_LEVERAGE}}', currencyFormatter(1 / accountSummary.minCRatio, false, 1))
         );
-        setDisabledButton(true);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -386,7 +384,6 @@ export function TradePanel(): JSX.Element {
           value={currentAmount}
           maxInput={maxInput}
           disabled={!userFetched || disabledInput}
-          disabledButton={disabledButton}
           loading={sendingTrade}
           error={inputError}
           onChange={(value: number) => {
