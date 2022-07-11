@@ -12,7 +12,6 @@ import { currencyFormatter } from '../utils/currency';
 import { notification, Select, Slider } from 'antd';
 import { JetInput } from './JetInput';
 import { ConnectMessage } from './ConnectMessage';
-import { Info } from './Info';
 
 export function TradePanel(): JSX.Element {
   const { dictionary } = useLanguage();
@@ -124,9 +123,6 @@ export function TradePanel(): JSX.Element {
         // User is withdrawing more than they've deposited
       } else if (tradeAmount.tokens > accountPoolPosition.depositBalance.tokens) {
         tradeError = dictionary.cockpit.lessFunds;
-        // User is above max risk and not decreasing their risk
-      } else if (marginAccount && marginAccount.riskIndicator >= MarginAccount.RISK_LIQUIDATION_LEVEL) {
-        tradeError = dictionary.cockpit.aboveMaxRiskLevel;
         // Otherwise, send withdraw
       } else {
         // If user is withdrawing all, use collateral notes
