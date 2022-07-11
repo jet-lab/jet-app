@@ -14,6 +14,7 @@ import { useQuery, useQueryClient } from 'react-query';
 import { AnchorProvider } from '@project-serum/anchor';
 import { ConfirmOptions, Connection, PublicKey } from '@solana/web3.js';
 import { useRpcNode } from './rpcNode';
+import { timeout } from '../utils/utils';
 
 export const cluster = (process.env.REACT_APP_CLUSTER ?? 'devnet') as MarginCluster;
 const config = MarginClient.getConfig(cluster);
@@ -32,7 +33,7 @@ interface MarginContextState {
   marginAccount: MarginAccount | undefined;
   walletBalances: Record<MarginPools, AssociatedToken>;
   cluster: MarginCluster;
-  refresh: () => void;
+  refresh: () => Promise<void>;
 }
 
 const MarginContext = createContext<MarginContextState>({
@@ -106,11 +107,10 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
     { enabled: !!manager.programs && !!pools && !!publicKey }
   );
 
-  function refresh() {
-    setTimeout(() => {
-      queryClient.invalidateQueries('user');
-      queryClient.invalidateQueries('pools');
-    }, 2000);
+  async function refresh() {
+    await timeout(4000);
+    queryClient.invalidateQueries('user');
+    queryClient.invalidateQueries('pools');
   }
 
   return (

@@ -9,10 +9,27 @@
 // Variables
 @neu-table-shadow: -4px 0px 10px @light-shadow, 2px 4px 8px @dark-shadow;
 @health-gradient: linear-gradient(90deg, @success 0%, @warning 65%, @danger 90%);
+// Override brand colors for V1.5
+@jet-green: #B8B8FE;
+@jet-blue: #B9DE9B; 
+@success: @jet-blue;
+
 // App
 .jet-app {
   &.ant-scrolling-effect {
     overflow-y: scroll !important;
+  }
+
+  // Nav logo
+  .nav-logo {
+    img {
+      opacity: 0.8;
+    }
+    span {
+      margin: 0 -50px -5px 4px;
+      white-space: nowrap;
+      font-weight: bold;
+    }
   }
 
   // Connect Message
@@ -972,7 +989,7 @@
                 color: @secondary;
               }
               &.user-collateral-value {
-                color: @jet-green;
+                color: @success;
               }
               &.user-loan-value {
                 color: @danger;
@@ -1212,6 +1229,12 @@
 // Mobile styling
 @media screen and (max-width: 600px) {
   .jet-app {
+    //Nav logo
+    .nav-logo {
+      span {
+        margin-right: unset;
+      }
+    }
     // Views
     .view-header {
       font-size: @xl-font-size;

@@ -38,5 +38,13 @@
   "liquidationPremium": {
     "term": "清算溢价",
     "definition": "清算溢价是向清算人提供额外的抵押物，清算人偿还低于最低抵押率的账户债务。此额外抵押物的美元价值等于清算溢价乘以已偿还债务的美元价值。 额外的抵押物从被清算用户的账户中支付。"
+  },
+  "accountLeverage": {
+    "term": "Account Leverage",
+    "definition": "TODO: Norman definition here"
+  },
+  "riskLevel": {
+    "term": "Risk Level",
+    "definition": "TODO: Norman definition here"
   }
 }

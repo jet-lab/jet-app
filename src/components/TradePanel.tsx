@@ -12,6 +12,7 @@ import { currencyFormatter } from '../utils/currency';
 import { notification, Select, Slider } from 'antd';
 import { JetInput } from './JetInput';
 import { ConnectMessage } from './ConnectMessage';
+import { Info } from './Info';
 
 export function TradePanel(): JSX.Element {
   const { dictionary } = useLanguage();
@@ -365,7 +366,7 @@ export function TradePanel(): JSX.Element {
           </div>
           <div className={`trade-section flex-centered column ${disabledInput ? 'disabled' : ''}`}>
             <div className="flex-centered">
-              <span className="center-text bold-text">{dictionary.cockpit.adjustedLeverage.toUpperCase()}</span>
+              <span className="center-text bold-text">{dictionary.cockpit.adjustedRiskLevel.toUpperCase()}</span>
             </div>
             <p>
               {userFetched && currentAmount
