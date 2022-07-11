@@ -108,7 +108,7 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
   );
 
   async function refresh() {
-    await timeout(4000);
+    await timeout(3000);
     queryClient.invalidateQueries('user');
     queryClient.invalidateQueries('pools');
   }
