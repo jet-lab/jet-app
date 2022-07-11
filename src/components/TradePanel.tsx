@@ -125,11 +125,7 @@ export function TradePanel(): JSX.Element {
       } else if (tradeAmount.tokens > accountPoolPosition.depositBalance.tokens) {
         tradeError = dictionary.cockpit.lessFunds;
         // User is above max risk and not decreasing their risk
-      } else if (
-        marginAccount &&
-        marginAccount.riskIndicator >= MarginAccount.RISK_LIQUIDATION_LEVEL &&
-        adjustedRiskIndicator >= marginAccount.riskIndicator
-      ) {
+      } else if (marginAccount && marginAccount.riskIndicator >= MarginAccount.RISK_LIQUIDATION_LEVEL) {
         tradeError = dictionary.cockpit.aboveMaxRiskLevel;
         // Otherwise, send withdraw
       } else {
@@ -172,7 +168,7 @@ export function TradePanel(): JSX.Element {
       }
     }
 
-    // If input error, remove trade amount and return
+    // If input error, remove trade amount and return`
     if (tradeError) {
       setInputError(tradeError);
       setSendingTrade(false);
