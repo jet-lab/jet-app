@@ -64,6 +64,7 @@ export function Cockpit(): JSX.Element {
             <div className="trade-position-ratio flex align-start justify-center column">
               <div className="flex-centered">
                 <h2 className="view-subheader">{dictionary.cockpit.yourRisk}</h2>
+                <Info term="riskLevel" />
               </div>
               {userFetched && accountSummary ? (
                 <>
@@ -91,7 +92,7 @@ export function Cockpit(): JSX.Element {
               <div className="trade-position-value flex-centered column">
                 <h2 className="view-subheader">{dictionary.cockpit.totalDepositedValue}</h2>
                 {userFetched && accountSummary ? (
-                  <p className="gradient-text">{currencyFormatter(accountSummary.depositedValue, true)}</p>
+                  <p className="success-text">{currencyFormatter(accountSummary.depositedValue, true)}</p>
                 ) : (
                   <p>--</p>
                 )}
@@ -99,7 +100,7 @@ export function Cockpit(): JSX.Element {
               <div className="trade-position-value flex-centered column">
                 <h2 className="view-subheader">{dictionary.cockpit.totalBorrowedValue}</h2>
                 {userFetched && accountSummary ? (
-                  <p className="gradient-text">{currencyFormatter(accountSummary.borrowedValue, true)}</p>
+                  <p className="danger-text">{currencyFormatter(accountSummary.borrowedValue, true)}</p>
                 ) : (
                   <p>--</p>
                 )}
