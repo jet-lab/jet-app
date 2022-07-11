@@ -33,6 +33,7 @@ export function TradePanel(): JSX.Element {
   const maxInput = accountPoolPosition?.maxTradeAmounts[currentAction].tokens ?? 0;
   const [disabledInput, setDisabledInput] = useState<boolean>(false);
   const [disabledMessage, setDisabledMessage] = useState<string>('');
+  const [disabledButton, setDisabledButton] = useState<boolean>(false);
   const [inputError, setInputError] = useState<string>('');
   const tradeActions: TradeAction[] = ['deposit', 'withdraw', 'borrow', 'repay'];
   const { deposit, withdraw, borrow, repay } = useMarginActions();
@@ -221,6 +222,7 @@ export function TradePanel(): JSX.Element {
 
   // On user input, check for error
   useEffect(() => {
+    setDisabledButton(false);
     setInputError('');
     if (!currentPool || !currentAmount) {
       return;
@@ -257,6 +259,7 @@ export function TradePanel(): JSX.Element {
             .replaceAll('{{NEW_RISK}}', currencyFormatter(adjustedRiskIndicator, false, 1))
             .replaceAll('{{MAX_RISK}}', currencyFormatter(1 / MarginAccount.RISK_LIQUIDATION_LEVEL, false, 1))
         );
+        setDisabledButton(true);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -337,6 +340,7 @@ export function TradePanel(): JSX.Element {
           value={currentAmount}
           maxInput={maxInput}
           disabled={!userFetched || disabledInput}
+          disabledButton={disabledButton}
           loading={sendingTrade}
           error={inputError}
           onChange={(value: number) => {
