@@ -17,11 +17,11 @@ export const useMarginActions = () => {
 
     try {
       await pool.deposit({ marginAccount, amount });
-      refresh();
+      await refresh();
       return TxnResponse.Success;
     } catch (err: any) {
       console.log(err);
-      refresh();
+      await refresh();
       return TxnResponse.Failed;
     }
   };
@@ -40,11 +40,11 @@ export const useMarginActions = () => {
         pools: Object.values(pools),
         amount
       });
-      refresh();
+      await refresh();
       return TxnResponse.Success;
     } catch (err: any) {
       console.log(err);
-      refresh();
+      await refresh();
       return TxnResponse.Failed;
     }
   };
@@ -63,11 +63,11 @@ export const useMarginActions = () => {
         amount,
         destination: TokenFormat.unwrappedSol
       });
-      refresh();
+      await refresh();
       return TxnResponse.Success;
     } catch (err: any) {
       console.log(err);
-      refresh();
+      await refresh();
       return TxnResponse.Failed;
     }
   };
@@ -87,11 +87,11 @@ export const useMarginActions = () => {
         amount,
         source: TokenFormat.unwrappedSol
       });
-      refresh();
+      await refresh();
       return TxnResponse.Success;
     } catch (err: any) {
       console.log(err);
-      refresh();
+      await refresh();
       return TxnResponse.Failed;
     }
   };

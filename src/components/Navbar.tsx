@@ -30,7 +30,8 @@ export function Navbar(): JSX.Element {
       {/* Desktop Nav */}
       <nav className="desktop flex align-center justify-between">
         <Link className="nav-logo flex-centered" to="/">
-          <img className="logo" src="img/jet/jet_logo.png" width="100%" height="auto" alt="Jet Protocol" />
+          <img className="logo" src="img/jet/jet_logo_white.png" width="100%" height="auto" alt="Jet Protocol" />
+          <span className="green-text">V2 BETA</span>
         </Link>
         <div className="nav-links flex-centered">
           {navLinks.map(link => (
@@ -55,7 +56,8 @@ export function Navbar(): JSX.Element {
       <nav className="mobile flex align-center justify-between">
         <SettingFilled className="icon-btn" onClick={() => setOpen(true)} />
         <Link className="nav-logo flex-centered" to="/">
-          <img src="img/jet/jet_logo.png" width="100%" height="auto" alt="Jet Protocol" />
+          <img src="img/jet/jet_logo_white.png" width="100%" height="auto" alt="Jet Protocol" />
+          <span className="green-text">V2 BETA</span>
         </Link>
         <div
           className={`hamburger flex align-center justify-between column ${drawerOpened ? 'close' : ''}`}

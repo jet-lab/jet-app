@@ -38,5 +38,13 @@
   "liquidationPremium": {
     "term": "Liquidationszuschlag",
     "definition": "Zusätzliche Sicherheiten werden den Liquidatoren, welche die Schulden von Accounts unterhalb des minimalen Besicherungsgrads zurückzahlen, gutgeschrieben. Der Dollar-Wert dieser zusätzlichen Sicherheiten wird aus dem Produkt des Liquidationszuschlags und dem Dollar-Wert der rückbezahlten Schulden berechnet. Die zusätzlichen Sicherheiten werden aus dem Account des liquidierten Nutzers bezahlt."
+  },
+  "accountLeverage": {
+    "term": "Account Leverage",
+    "definition": "TODO: Norman definition here"
+  },
+  "riskLevel": {
+    "term": "Risk Level",
+    "definition": "TODO: Norman definition here"
   }
 }

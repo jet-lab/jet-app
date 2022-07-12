@@ -26,7 +26,7 @@ export function HealthBar(props: { fullDetail?: boolean }): JSX.Element {
       });
     } else if (riskIndicator >= MarginAccount.RISK_WARNING_LEVEL) {
       setHealthGauge({
-        percentage: riskIndicator * 100 - 100,
+        percentage: riskIndicator * 100,
         standing: 'moderate'
       });
     } else {
@@ -41,15 +41,13 @@ export function HealthBar(props: { fullDetail?: boolean }): JSX.Element {
     <div className="healthbar flex-centered column">
       <div className="healthbar-bar">
         {marginAccount?.summary.borrowedValue ? (
-          <div className="healthbar-bar-indicator flex-centered column" style={{ right: `${healthGauge.percentage}%` }}>
+          <div className="healthbar-bar-indicator flex-centered column" style={{ left: `${healthGauge.percentage}%` }}>
             <div
               className={`healthbar-bar-indicator-arrow healthbar-bar-indicator-arrow-${healthGauge.standing}`}></div>
           </div>
         ) : (
           <></>
         )}
-        <span className="healthbar-bar-range-value">0</span>
-        <span className="healthbar-bar-range-value">1</span>
       </div>
       {props.fullDetail && (
         <div className="healthbar-full-detail flex justify-evenly align-start">
