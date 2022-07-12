@@ -5,12 +5,12 @@ import { HashRouter, Route, Routes } from 'react-router-dom';
 import { LocalizationProvider } from './contexts/localization/localization';
 import { WalletProvider } from '@solana/wallet-adapter-react';
 import {
-  getMathWallet,
-  getPhantomWallet,
-  getSolflareWallet,
-  getSolletWallet,
-  getSolongWallet,
-  getSlopeWallet
+  PhantomWalletAdapter,
+  MathWalletAdapter,
+  SolflareWalletAdapter,
+  SolongWalletAdapter,
+  SolletWalletAdapter,
+  SlopeWalletAdapter
 } from '@solana/wallet-adapter-wallets';
 import { MarginContextProvider } from './contexts/marginContext';
 import { RpcNodeContextProvider } from './contexts/rpcNode';
@@ -35,12 +35,12 @@ const queryClient = new QueryClient();
 export function App(): JSX.Element {
   const wallets = useMemo(
     () => [
-      getPhantomWallet(),
-      getSolflareWallet(),
-      getSolongWallet(),
-      getMathWallet(),
-      getSolletWallet(),
-      getSlopeWallet()
+      new PhantomWalletAdapter(),
+      new MathWalletAdapter(),
+      new SolflareWalletAdapter(),
+      new SolongWalletAdapter(),
+      new SolletWalletAdapter(),
+      new SlopeWalletAdapter()
     ],
     []
   );
