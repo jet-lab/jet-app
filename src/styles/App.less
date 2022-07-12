@@ -410,9 +410,8 @@
       margin: @spacing-xs 0;
     }
     span {
-      opacity: @disabled-opacity;
+      opacity: @half-opacity;
       margin-left: @spacing-xs;
-      font-size: @xs-font-size;
     }
     .ant-modal-content {
       width: auto;
@@ -434,7 +433,6 @@
           thead {
             th {
               padding: @spacing-xs 0;
-              font-size: @sm-font-size;
               width: 140px;
               text-align: center;
             }
@@ -1147,6 +1145,7 @@
       &-title {
         margin: @spacing-sm 0 0 0;
         color: @secondary-5;
+        font-size: @sm-font-size;
       }
 
       input {
@@ -1318,11 +1317,6 @@
         width: 90%;
         .table-container {
           table {
-            thead {
-              th {
-                font-size: @xs-font-size;
-              }
-            }
             tbody {
               td {
                 padding: @spacing-sm;
