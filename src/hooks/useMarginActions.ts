@@ -21,8 +21,8 @@ export const useMarginActions = () => {
     } catch (err: any) {
       console.log(err);
       await refresh();
-      if(err.toString().search('User rejected the request') > -1) {
-        return TxnResponse.Cancelled
+      if (err.toString().search('User rejected the request') > -1) {
+        return TxnResponse.Cancelled;
       } else {
         return TxnResponse.Failed;
       }
@@ -48,8 +48,8 @@ export const useMarginActions = () => {
     } catch (err: any) {
       console.log(err);
       await refresh();
-      if(err.toString().search('User rejected the request') > -1) {
-        return TxnResponse.Cancelled
+      if (err.toString().search('User rejected the request') > -1) {
+        return TxnResponse.Cancelled;
       } else {
         return TxnResponse.Failed;
       }
@@ -75,8 +75,8 @@ export const useMarginActions = () => {
     } catch (err: any) {
       console.log(err);
       await refresh();
-      if(err.toString().search('User rejected the request') > -1) {
-        return TxnResponse.Cancelled
+      if (err.toString().search('User rejected the request') > -1) {
+        return TxnResponse.Cancelled;
       } else {
         return TxnResponse.Failed;
       }
@@ -103,8 +103,8 @@ export const useMarginActions = () => {
     } catch (err: any) {
       console.log(err);
       await refresh();
-      if(err.toString().search('User rejected the request') > -1) {
-        return TxnResponse.Cancelled
+      if (err.toString().search('User rejected the request') > -1) {
+        return TxnResponse.Cancelled;
       } else {
         return TxnResponse.Failed;
       }
