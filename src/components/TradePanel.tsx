@@ -361,8 +361,13 @@ export function TradePanel(): JSX.Element {
           step={1}
           disabled={!userFetched || disabledInput}
           onChange={percent => {
-            const newAmount = maxInput * ((percent ?? 0) / 100);
-            setCurrentAmount(newAmount);
+            if (!currentPool) {
+              return;
+            }
+
+            const value = maxInput * ((percent ?? 0) / 100);
+            const newAmount = (value * 10 ** currentPool.decimals) / 10 ** currentPool.decimals;
+            setCurrentAmount(parseFloat(newAmount.toFixed(currentPool.decimals)));
           }}
           tipFormatter={value => value + '%'}
           tooltipPlacement="bottom"
