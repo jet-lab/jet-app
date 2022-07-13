@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { NATIVE_MINT } from '@solana/spl-token';
+import { NATIVE_MINT } from '@solana/spl-token-latest';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { Pool, MarginPools, TokenAmount, TokenFaucet } from '@jet-lab/margin';
 import { CloudFilled, FilterFilled } from '@ant-design/icons';
