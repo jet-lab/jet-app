@@ -19,14 +19,14 @@ export function HealthBar(props: { fullDetail?: boolean }): JSX.Element {
 
     const { riskIndicator } = marginAccount;
 
-    if (riskIndicator >= MarginAccount.RISK_LIQUIDATION_LEVEL) {
+    if (riskIndicator >= MarginAccount.RISK_CRITICAL_LEVEL) {
       setHealthGauge({
         percentage: 95,
         standing: 'critical'
       });
     } else if (
       riskIndicator >= MarginAccount.RISK_WARNING_LEVEL &&
-      riskIndicator <= MarginAccount.RISK_LIQUIDATION_LEVEL
+      riskIndicator <= MarginAccount.RISK_CRITICAL_LEVEL
     ) {
       setHealthGauge({
         percentage: riskIndicator * 100,
