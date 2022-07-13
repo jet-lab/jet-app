@@ -35,7 +35,7 @@
     "collateralizationRatio": "Rapporto di Collateralizzazione",
     "noInputAmount": "Inserisci quantità.",
     "accountLeverage": "Account Leverage",
-    "adjustedRiskLevel": "Adjusted Risk Level",
+    "predictedRiskLevel": "Predicted Risk Level",
     "deposit": "Deposito",
     "walletBalance": "Bilancio Wallet",
     "noDepositAmount": "Inserisci quantità",

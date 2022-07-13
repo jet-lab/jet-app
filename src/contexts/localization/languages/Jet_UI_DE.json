@@ -35,7 +35,7 @@
     "collateralizationRatio": "Besicherungsgrad",
     "noInputAmount": "Betrag eingeben.",
     "accountLeverage": "Account Leverage",
-    "adjustedRiskLevel": "Adjusted Risk Level",
+    "predictedRiskLevel": "Predicted Risk Level",
     "deposit": "Einzahlen",
     "walletBalance": "Wallet-Guthaben",
     "noDepositAmount": "Betrag eingeben.",

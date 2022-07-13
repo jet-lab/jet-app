@@ -35,7 +35,7 @@
     "collateralizationRatio": "Indice de Colateralización",
     "noInputAmount": "Ingresar Monto",
     "accountLeverage": "Account Leverage",
-    "adjustedRiskLevel": "Adjusted Risk Level",
+    "predictedRiskLevel": "Predicted Risk Level",
     "deposit": "Depositar",
     "walletBalance": "Balance",
     "noDepositAmount": "Ingresar Monto",

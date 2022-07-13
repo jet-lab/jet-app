@@ -35,7 +35,7 @@
     "collateralizationRatio": "质押率",
     "noInputAmount": "输入金额",
     "accountLeverage": "Account Leverage",
-    "adjustedRiskLevel": "Adjusted Risk Level",
+    "predictedRiskLevel": "Predicted Risk Level",
     "deposit": "存款",
     "walletBalance": "你的钱包余额",
     "noDepositAmount": "输入金额",

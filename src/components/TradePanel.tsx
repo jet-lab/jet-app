@@ -333,7 +333,7 @@ export function TradePanel(): JSX.Element {
           </div>
           <div className={`trade-section flex-centered column ${disabledInput ? 'disabled' : ''}`}>
             <div className="flex-centered">
-              <span className="center-text bold-text">{dictionary.cockpit.adjustedRiskLevel.toUpperCase()}</span>
+              <span className="center-text bold-text">{dictionary.cockpit.predictedRiskLevel.toUpperCase()}</span>
             </div>
             <p>{userFetched && currentAmount ? adjustedRiskIndicator : '--'}</p>
           </div>

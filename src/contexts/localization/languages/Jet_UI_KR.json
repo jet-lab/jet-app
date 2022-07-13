@@ -35,7 +35,7 @@
     "collateralizationRatio": "담보율",
     "noInputAmount": "금액 입력.",
     "accountLeverage": "Account Leverage",
-    "adjustedRiskLevel": "Adjusted Risk Level",
+    "predictedRiskLevel": "Predicted Risk Level",
     "deposit": "예치",
     "walletBalance": "지갑 잔액",
     "noDepositAmount": "금액 입력",
