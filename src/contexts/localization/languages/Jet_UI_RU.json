@@ -69,7 +69,7 @@
     "noDebtForRepay": "Вы не дожны {{ASSET}}.",
     "rejectTrade": "This trade would increase your Risk Level to {{NEW_RISK}}, which is too high. (Max is {{MAX_RISK}})",
     "stillUndercollateralized": "Ваш новый К-рейтинг {{NEW-C-RATIO}}% ниже минимального уровня на Jet's протоколе-  {{JET MIN C-RATIO}}%. Пожалуйста, оплатите больше, чтобы избежать ликвидации.",
-    "txCancelled": "Transaction cancelled.",
+    "txCancelled": "The user cancelled the transaction.",
     "welcomeAboard": "Welcome Aboard",
     "rentFeeDescription": "I see this is your first time flying with Jet. Please note that to open your account, this transaction will include a refundable one-time rent fee. This is necessary for the Solana blockchain to store ongoing data related to your account. This fee is not collected by Jet Protocol.",
     "rentFeeDetail": "The rent fee for your transaction is {{RENT_FEE}} SOL. This amount will be returned to when you {{TRADE ACTION}} your full balance.",

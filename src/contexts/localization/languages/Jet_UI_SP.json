@@ -70,7 +70,7 @@
     "rejectTrade": "This trade would increase your Risk Level to {{NEW_RISK}}, which is too high. (Max is {{MAX_RISK}})",
     "insufficientLamports": "¡Usted está depositando todos sus SOL sin dejar Lamports en su billetera para pagar los fees de las transacciones! Vuelva a intentarlo con una cantidad ligeramente inferior.",
     "stillUndercollateralized": "Su nuevo C-ratio de {{NEW-C-RATIO}}% todavía está por debajo del ratio mínimo de colateralización del mercado de Jet de {{JET MIN C-RATIO}}%. Por favor, considere pagar más para evitar la liquidación.\n",
-    "txCancelled": "Transacción Cancelada.",
+    "txCancelled": "The user cancelled the transaction.",
     "welcomeAboard": "Bienvenido A Bordo",
     "rentFeeDescription": "Esta es su primera vez volando con Jet. Por favor, tenga en cuenta que al abrir su cuenta, se incluirá una tarifa única y reembolsable. Esto es necesario para que la blockchain de Solana almacene datos relacionados a tu cuenta. Esta tarifa no es cobrada por Jet Protocol.",
     "rentFeeDetail": "La tarifa de su transacción es de {{RENT_FEE}} SOL. El monto será reembolsado cuando su {{TRADE ACTION}} sea saldado.",

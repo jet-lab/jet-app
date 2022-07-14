@@ -187,7 +187,7 @@ export function TradePanel(): JSX.Element {
         ),
         description: dictionary.cockpit.txSuccess
           .replaceAll('{{TRADE ACTION}}', currentAction)
-          .replaceAll('{{AMOUNT AND ASSET}}', `${currentAmount}${currentPool.symbol}`),
+          .replaceAll('{{AMOUNT AND ASSET}}', `${currentAmount} ${currentPool.symbol}`),
         placement: 'bottomLeft'
       });
 
