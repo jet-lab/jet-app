@@ -35,7 +35,7 @@
     "collateralizationRatio": "Teminat Oranı",
     "noInputAmount": "Miktar girin",
     "accountLeverage": "Account Leverage",
-    "adjustedRiskLevel": "Adjusted Risk Level",
+    "predictedRiskLevel": "Predicted Risk Level",
     "deposit": "Yatırma",
     "walletBalance": "Cüzdan Bakiyesi",
     "noDepositAmount": "Miktar girin",

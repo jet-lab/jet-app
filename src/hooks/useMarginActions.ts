@@ -1,13 +1,12 @@
-import { BN } from '@project-serum/anchor';
 import { TxnResponse } from '../models/JetTypes';
 import { useMargin } from '../contexts/marginContext';
-import { MarginPools, PoolAmount, TokenFormat } from '@jet-lab/margin';
+import { MarginPools, PoolTokenChange, TokenFormat } from '@jet-lab/margin';
 
 export const useMarginActions = () => {
   const { pools, marginAccount, refresh } = useMargin();
 
   // Deposit
-  const deposit = async (abbrev: MarginPools, amount: BN): Promise<TxnResponse> => {
+  const deposit = async (abbrev: MarginPools, change: PoolTokenChange): Promise<TxnResponse> => {
     if (!marginAccount || !pools) {
       console.log('Accounts not loaded', marginAccount, pools);
       throw new Error();
@@ -16,7 +15,7 @@ export const useMarginActions = () => {
     const pool = pools[abbrev];
 
     try {
-      await pool.deposit({ marginAccount, amount });
+      await pool.deposit({ marginAccount, change });
       await refresh();
       return TxnResponse.Success;
     } catch (err: any) {
@@ -27,7 +26,7 @@ export const useMarginActions = () => {
   };
 
   // Withdraw
-  const withdraw = async (abbrev: MarginPools, amount: PoolAmount): Promise<TxnResponse> => {
+  const withdraw = async (abbrev: MarginPools, change: PoolTokenChange): Promise<TxnResponse> => {
     if (!marginAccount || !pools) {
       throw new Error();
     }
@@ -38,7 +37,7 @@ export const useMarginActions = () => {
       await pool.withdraw({
         marginAccount,
         pools: Object.values(pools),
-        amount
+        change
       });
       await refresh();
       return TxnResponse.Success;
@@ -50,7 +49,7 @@ export const useMarginActions = () => {
   };
 
   // Borrow
-  const borrow = async (abbrev: MarginPools, amount: BN): Promise<TxnResponse> => {
+  const borrow = async (abbrev: MarginPools, change: PoolTokenChange): Promise<TxnResponse> => {
     if (!marginAccount || !pools) {
       throw new Error();
     }
@@ -60,7 +59,7 @@ export const useMarginActions = () => {
       await pool.marginBorrow({
         marginAccount,
         pools: Object.values(pools),
-        amount,
+        change,
         destination: TokenFormat.unwrappedSol
       });
       await refresh();
@@ -73,7 +72,7 @@ export const useMarginActions = () => {
   };
 
   // Repay
-  const repay = async (abbrev: MarginPools, amount: BN): Promise<TxnResponse> => {
+  const repay = async (abbrev: MarginPools, change: PoolTokenChange): Promise<TxnResponse> => {
     if (!marginAccount || !pools) {
       throw new Error();
     }
@@ -84,7 +83,7 @@ export const useMarginActions = () => {
       await pool.marginRepay({
         marginAccount,
         pools: Object.values(pools),
-        amount,
+        change,
         source: TokenFormat.unwrappedSol
       });
       await refresh();

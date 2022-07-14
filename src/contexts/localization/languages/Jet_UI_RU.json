@@ -35,7 +35,7 @@
     "collateralizationRatio": "Коэффициент обеспечения",
     "noInputAmount": "Введите сумму.",
     "accountLeverage": "Account Leverage",
-    "adjustedRiskLevel": "Adjusted Risk Level",
+    "predictedRiskLevel": "Predicted Risk Level",
     "deposit": "Пополнить",
     "walletBalance": "Баланс кошелька",
     "noDepositAmount": "Введите сумму",

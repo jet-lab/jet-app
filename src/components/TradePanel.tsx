@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { MarginAccount, PoolAmount, TokenAmount } from '@jet-lab/margin';
+import { MarginAccount, PoolTokenChange, TokenAmount } from '@jet-lab/margin';
 import { TxnResponse } from '../models/JetTypes';
 import { useMargin } from '../contexts/marginContext';
 import type { TradeAction } from '../contexts/tradeContext';
@@ -12,6 +12,7 @@ import { currencyFormatter } from '../utils/currency';
 import { notification, Select, Slider } from 'antd';
 import { JetInput } from './JetInput';
 import { ConnectMessage } from './ConnectMessage';
+import { BN } from 'bn.js';
 
 export function TradePanel(): JSX.Element {
   const { dictionary } = useLanguage();
@@ -113,7 +114,12 @@ export function TradePanel(): JSX.Element {
         tradeError = dictionary.cockpit.notEnoughAsset.replaceAll('{{ASSET}}', currentPool.symbol);
         // Otherwise, send deposit
       } else {
-        const depositAmount = tradeAmount.lamports;
+        console.log(
+          accountPoolPosition.depositBalance.tokens,
+          tradeAmount.tokens,
+          accountPoolPosition.depositBalance.add(tradeAmount).tokens
+        );
+        const depositAmount = PoolTokenChange.setTo(accountPoolPosition.depositBalance.add(tradeAmount));
         res = await deposit(currentPool.symbol, depositAmount);
       }
       // Withdrawing sollet ETH
@@ -126,11 +132,11 @@ export function TradePanel(): JSX.Element {
         tradeError = dictionary.cockpit.lessFunds;
         // Otherwise, send withdraw
       } else {
-        // If user is withdrawing all, use collateral notes
+        // If user is withdrawing all, set to 0
         const withdrawAmount =
           tradeAmount.tokens === accountPoolPosition.depositBalance.tokens
-            ? PoolAmount.notes(accountPoolPosition.depositBalanceNotes)
-            : PoolAmount.tokens(tradeAmount.lamports);
+            ? PoolTokenChange.setTo(0)
+            : PoolTokenChange.setTo(accountPoolPosition.depositBalance.sub(tradeAmount));
         res = await withdraw(currentPool.symbol, withdrawAmount);
       }
       // Borrowing
@@ -143,7 +149,8 @@ export function TradePanel(): JSX.Element {
         tradeError = dictionary.cockpit.aboveMaxRiskLevel;
         // Otherwise, send borrow
       } else {
-        res = await borrow(currentPool.symbol, tradeAmount.lamports);
+        const borrowAmount = PoolTokenChange.setTo(accountPoolPosition.loanBalance.add(tradeAmount));
+        res = await borrow(currentPool.symbol, borrowAmount);
       }
       // Repaying
     } else if (tradeAction === 'repay') {
@@ -156,12 +163,11 @@ export function TradePanel(): JSX.Element {
         // Otherwise, send repay
       } else {
         // If user is repaying all, use loan notes
-        // FIXME! Bring back repay all
-        // const repayAmount =
-        //   tradeAmount.tokens === accountPoolPosition.loanBalance.tokens
-        //     ? PoolAmount.notes(accountPoolPosition.loanBalanceNotes)
-        //     : PoolAmount.tokens(tradeAmount.lamports);
-        res = await repay(currentPool.symbol, tradeAmount.lamports);
+        const repayAmount =
+          tradeAmount.tokens === accountPoolPosition.loanBalance.tokens
+            ? PoolTokenChange.setTo(0)
+            : PoolTokenChange.setTo(accountPoolPosition.loanBalance.sub(tradeAmount));
+        res = await repay(currentPool.symbol, repayAmount);
       }
     }
 
@@ -327,7 +333,7 @@ export function TradePanel(): JSX.Element {
           </div>
           <div className={`trade-section flex-centered column ${disabledInput ? 'disabled' : ''}`}>
             <div className="flex-centered">
-              <span className="center-text bold-text">{dictionary.cockpit.adjustedRiskLevel.toUpperCase()}</span>
+              <span className="center-text bold-text">{dictionary.cockpit.predictedRiskLevel.toUpperCase()}</span>
             </div>
             <p>{userFetched && currentAmount ? adjustedRiskIndicator : '--'}</p>
           </div>
@@ -361,8 +367,13 @@ export function TradePanel(): JSX.Element {
           step={1}
           disabled={!userFetched || disabledInput}
           onChange={percent => {
-            const newAmount = maxInput * ((percent ?? 0) / 100);
-            setCurrentAmount(newAmount);
+            if (!currentPool) {
+              return;
+            }
+
+            const value = maxInput * ((percent ?? 0) / 100);
+            const newAmount = (value * 10 ** currentPool.decimals) / 10 ** currentPool.decimals;
+            setCurrentAmount(parseFloat(newAmount.toFixed(currentPool.decimals)));
           }}
           tipFormatter={value => value + '%'}
           tooltipPlacement="bottom"
