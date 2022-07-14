@@ -12,7 +12,6 @@ import { currencyFormatter } from '../utils/currency';
 import { notification, Select, Slider } from 'antd';
 import { JetInput } from './JetInput';
 import { ConnectMessage } from './ConnectMessage';
-import { BN } from 'bn.js';
 
 export function TradePanel(): JSX.Element {
   const { dictionary } = useLanguage();
