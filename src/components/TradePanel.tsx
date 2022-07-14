@@ -77,7 +77,7 @@ export function TradePanel(): JSX.Element {
       } else if (marginAccount && marginAccount.riskIndicator >= MarginAccount.RISK_LIQUIDATION_LEVEL) {
         setDisabledMessage(dictionary.cockpit.aboveMaxRiskLevel);
         // No liquidity in market to borrow from
-      } else if (!currentPool.depositedTokens.tokens) {
+      } else if (!currentPool.vaultTokens.tokens) {
         setDisabledMessage(dictionary.cockpit.noLiquidity);
       } else {
         setDisabledInput(false);
@@ -113,18 +113,13 @@ export function TradePanel(): JSX.Element {
         tradeError = dictionary.cockpit.notEnoughAsset.replaceAll('{{ASSET}}', currentPool.symbol);
         // Otherwise, send deposit
       } else {
-        console.log(
-          accountPoolPosition.depositBalance.tokens,
-          tradeAmount.tokens,
-          accountPoolPosition.depositBalance.add(tradeAmount).tokens
-        );
         const depositAmount = PoolTokenChange.setTo(accountPoolPosition.depositBalance.add(tradeAmount));
         res = await deposit(currentPool.symbol, depositAmount);
       }
       // Withdrawing sollet ETH
     } else if (tradeAction === 'withdraw') {
       // User is withdrawing more than liquidity in market
-      if (tradeAmount.gt(currentPool.depositedTokens)) {
+      if (tradeAmount.gt(currentPool.vaultTokens)) {
         tradeError = dictionary.cockpit.noLiquidity;
         // User is withdrawing more than they've deposited
       } else if (tradeAmount.tokens > accountPoolPosition.depositBalance.tokens) {
@@ -141,7 +136,7 @@ export function TradePanel(): JSX.Element {
       // Borrowing
     } else if (tradeAction === 'borrow') {
       // User is borrowing more than liquidity in market
-      if (tradeAmount.gt(currentPool.depositedTokens)) {
+      if (tradeAmount.gt(currentPool.vaultTokens)) {
         tradeError = dictionary.cockpit.noLiquidity;
         // User is above max risk
       } else if (marginAccount && marginAccount.riskIndicator >= MarginAccount.RISK_LIQUIDATION_LEVEL) {
@@ -317,7 +312,7 @@ export function TradePanel(): JSX.Element {
                 : currentAction === 'withdraw'
                 ? dictionary.cockpit.availableFunds.toUpperCase()
                 : currentAction === 'borrow'
-                ? currentPool && maxInput <= currentPool.depositedTokens.tokens
+                ? currentPool && maxInput <= currentPool.vaultTokens.tokens
                   ? dictionary.cockpit.maxBorrowAmount.toUpperCase()
                   : dictionary.cockpit.availableLiquidity.toUpperCase()
                 : dictionary.cockpit.amountOwed.toUpperCase()}

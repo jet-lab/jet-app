@@ -163,7 +163,7 @@ export function MarketTable(): JSX.Element {
                         className="reserve-detail text-btn bold-text">
                         {pool.symbol} {dictionary.cockpit.detail}
                       </td>
-                      <td className="cell-border-right">{pool.depositedTokens.uiTokens}</td>
+                      <td className="cell-border-right">{pool.vaultTokens.uiTokens}</td>
                       <td>{`${(pool.depositApy * 100).toFixed(2)}%`}</td>
                       <td>{`${(pool.borrowApr * 100).toFixed(2)}%`}</td>
                       <td className="clickable-icon cell-border-right" onClick={() => setRadarOpen(true)}>

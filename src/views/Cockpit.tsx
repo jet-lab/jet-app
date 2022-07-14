@@ -31,7 +31,7 @@ export function Cockpit(): JSX.Element {
         }
 
         const tokenPrice = pools[token.symbol].tokenPrice;
-        const depositedTokens = pools[token.symbol].depositedTokens.tokens;
+        const depositedTokens = pools[token.symbol].vaultTokens.tokens;
         const borrowedTokens = pools[token.symbol].borrowedTokens.tokens;
 
         totalSupply += depositedTokens * tokenPrice;
@@ -80,7 +80,7 @@ export function Cockpit(): JSX.Element {
                     style={{ pointerEvents: 'none' }}>
                     {marginAccount.riskIndicator > 1
                       ? 1
-                      : currencyFormatter(marginAccount.riskIndicator, false, 1) ?? 0}
+                      : currencyFormatter(marginAccount.riskIndicator, false, 2) ?? 0}
                   </h1>
                   <HealthBar />
                 </>
