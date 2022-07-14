@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { PublicKey } from '@solana/web3.js';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { defaultVariables, IncomingThemeVariables, NotificationsButton } from '@dialectlabs/react-ui';
 import { useConnectWalletModal } from '../contexts/connectWalletModal';
 import { useSettingsModal } from '../contexts/settingsModal';
 import { useLanguage } from '../contexts/localization/localization';
@@ -8,7 +10,6 @@ import { shortenPubkey } from '../utils/utils';
 import { Button } from 'antd';
 import { ReactComponent as WalletIcon } from '../styles/icons/wallet_icon.svg';
 import { SettingFilled } from '@ant-design/icons';
-import { defaultVariables, IncomingThemeVariables, NotificationsButton } from '@dialectlabs/react-ui';
 import { useRpcNode } from '../contexts/rpcNode';
 export function Navbar(): JSX.Element {
   const { dictionary } = useLanguage();
@@ -16,8 +17,10 @@ export function Navbar(): JSX.Element {
   const { connected, disconnect, publicKey } = useWallet();
   const { setConnecting } = useConnectWalletModal();
   const { setOpen } = useSettingsModal();
+  const wallet = useWallet();
   const [drawerOpened, setDrawerOpened] = useState(false);
-  // const { preferredNode } = useRpcNode();
+  const { preferredNode } = useRpcNode();
+  const [theme, setTheme] = useState<'light' | 'dark' | undefined>('light');
   const navLinks = [
     { title: dictionary.cockpit.title, route: '/' },
     { title: dictionary.transactions.title, route: '/transactions' }
@@ -27,8 +30,8 @@ export function Navbar(): JSX.Element {
     { title: dictionary.termsPrivacy.privacyPolicy, url: 'https://www.jetprotocol.io/legal/privacy-policy' },
     { title: dictionary.termsPrivacy.glossary, url: 'https://docs.jetprotocol.io/jet-protocol/terms-and-definitions' }
   ];
-  // const dialectNode = preferredNode ? preferredNode : 'https://solana-api.projectserum.com';
-  // const DIALECT_PUBLIC_KEY = new anchor.web3.PublicKey('AainXWecQt5TjGQgw5R6oLNu9zvvQcS1kkVbG9UQqaP8');
+  const dialectNode = preferredNode ? preferredNode : 'https://solana-api.projectserum.com';
+  const DIALECT_PUBLIC_KEY = new PublicKey('AainXWecQt5TjGQgw5R6oLNu9zvvQcS1kkVbG9UQqaP8');
   const dialectThemeVariables: IncomingThemeVariables = {
     light: {
       bellButton: `w-10 h-10 border border-neutral-600 bg-white text-black jet-transparent jet-shadow-none jet-text-primary jet-nav-icon`,
@@ -85,6 +88,26 @@ export function Navbar(): JSX.Element {
               {link.title}
             </Link>
           ))}
+          <div className="modal-container">
+            <div style={{ position: 'relative' }}>
+              {/* Dialect notification button is a wrapper of dialect notification modal */}
+              {/* <NotificationsButton
+                wallet={wallet}
+                network={'mainnet'}
+                publicKey={DIALECT_PUBLIC_KEY}
+                theme={theme}
+                variables={dialectThemeVariables}
+                notifications={[
+                  {
+                    name: 'LOW Collateral-RATIO',
+                    detail: 'You will get notified when your COLLATERALIZATION RATIO falls to dangerous levels'
+                  }
+                ]}
+                channels={['web3', 'email', 'telegram']}
+                rpcUrl={dialectNode}
+              /> */}
+            </div>
+          </div>
           <SettingFilled className="icon-btn" onClick={() => setOpen(true)} />
           <Button
             className="flex-centered"

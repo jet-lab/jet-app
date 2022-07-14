@@ -1,4 +1,5 @@
 import './styles/App.less';
+import '@dialectlabs/react-ui/index.css';
 import { useMemo } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { HashRouter, Route, Routes } from 'react-router-dom';
