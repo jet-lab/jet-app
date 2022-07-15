@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { MarginAccount, PoolTokenChange, TokenAmount } from '@jet-lab/margin';
+import { MarginAccount, PoolAction, PoolProjection, PoolTokenChange, TokenAmount } from '@jet-lab/margin';
 import { TxnResponse } from '../models/JetTypes';
 import { useMargin } from '../contexts/marginContext';
-import type { TradeAction } from '../contexts/tradeContext';
 import { useTradeContext } from '../contexts/tradeContext';
 import { useLanguage } from '../contexts/localization/localization';
 import { useTransactionLogs } from '../contexts/transactionLogs';
@@ -29,15 +28,21 @@ export function TradePanel(): JSX.Element {
   } = useTradeContext();
   const accountPoolPosition = marginAccount && currentPool?.symbol && marginAccount.poolPositions[currentPool.symbol];
   const accountSummary = marginAccount && marginAccount.summary;
-  const adjustedRiskIndicator = 0; /* TODO: getadjustedRiskIndicator() from lib */
   const maxInput = accountPoolPosition?.maxTradeAmounts[currentAction].tokens ?? 0;
   const [disabledInput, setDisabledInput] = useState<boolean>(false);
   const [disabledMessage, setDisabledMessage] = useState<string>('');
   const [disabledButton, setDisabledButton] = useState<boolean>(false);
   const [inputError, setInputError] = useState<string>('');
-  const tradeActions: TradeAction[] = ['deposit', 'withdraw', 'borrow', 'repay'];
+  const tradeActions: PoolAction[] = ['deposit', 'withdraw', 'borrow', 'repay'];
   const { deposit, withdraw, borrow, repay } = useMarginActions();
   const { Option } = Select;
+
+  let poolProjection: PoolProjection | undefined;
+  if (currentPool && marginAccount) {
+    const amount = TokenAmount.tokens(currentAmount ?? 0, currentPool.decimals);
+    poolProjection = currentPool.projectAfterAction(marginAccount, amount, currentAction);
+  }
+  const predictedRiskIndicator = poolProjection?.riskIndicator ?? 0;
 
   // Check if user input should be disabled
   // depending on wallet balance and position
@@ -231,32 +236,32 @@ export function TradePanel(): JSX.Element {
     // Withdrawing
     if (currentAction === 'withdraw') {
       if (
-        adjustedRiskIndicator >= MarginAccount.RISK_WARNING_LEVEL &&
-        adjustedRiskIndicator <= MarginAccount.RISK_LIQUIDATION_LEVEL
+        predictedRiskIndicator >= MarginAccount.RISK_WARNING_LEVEL &&
+        predictedRiskIndicator <= MarginAccount.RISK_LIQUIDATION_LEVEL
       ) {
         setInputError(
           dictionary.cockpit.subjectToLiquidation.replaceAll(
             '{{NEW-RISK}}',
-            currencyFormatter(adjustedRiskIndicator, false, 1)
+            currencyFormatter(predictedRiskIndicator, false, 2)
           )
         );
       }
       // Borrowing
     } else if (currentAction === 'borrow') {
       if (
-        adjustedRiskIndicator >= MarginAccount.RISK_WARNING_LEVEL &&
-        adjustedRiskIndicator <= MarginAccount.RISK_LIQUIDATION_LEVEL
+        predictedRiskIndicator >= MarginAccount.RISK_WARNING_LEVEL &&
+        predictedRiskIndicator <= MarginAccount.RISK_LIQUIDATION_LEVEL
       ) {
         setInputError(
           dictionary.cockpit.subjectToLiquidation.replaceAll(
             '{{NEW-RISK}}',
-            currencyFormatter(adjustedRiskIndicator, false, 1)
+            currencyFormatter(predictedRiskIndicator, false, 2)
           )
         );
-      } else if (adjustedRiskIndicator >= MarginAccount.RISK_LIQUIDATION_LEVEL) {
+      } else if (predictedRiskIndicator >= MarginAccount.RISK_LIQUIDATION_LEVEL) {
         setInputError(
           dictionary.cockpit.rejectTrade
-            .replaceAll('{{NEW_RISK}}', currencyFormatter(adjustedRiskIndicator, false, 1))
+            .replaceAll('{{NEW_RISK}}', currencyFormatter(predictedRiskIndicator, false, 2))
             .replaceAll('{{MAX_RISK}}', currencyFormatter(1 / MarginAccount.RISK_LIQUIDATION_LEVEL, false, 1))
         );
         setDisabledButton(true);
@@ -329,7 +334,7 @@ export function TradePanel(): JSX.Element {
             <div className="flex-centered">
               <span className="center-text bold-text">{dictionary.cockpit.predictedRiskLevel.toUpperCase()}</span>
             </div>
-            <p>{userFetched && currentAmount ? adjustedRiskIndicator : '--'}</p>
+            <p>{userFetched && currentAmount ? currencyFormatter(predictedRiskIndicator, false, 2) : '--'}</p>
           </div>
         </>
       )}
