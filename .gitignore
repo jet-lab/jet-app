@@ -22,4 +22,6 @@ yarn-error.log*
 
 /test-ledger
 
+/.vscode
+
 .env
