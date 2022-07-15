@@ -17,7 +17,7 @@ import { useRpcNode } from './rpcNode';
 import { timeout } from '../utils/utils';
 
 export const cluster = (process.env.REACT_APP_CLUSTER ?? 'devnet') as MarginCluster;
-const config = MarginClient.getConfig(cluster);
+const config: MarginConfig = MarginClient.getConfig(cluster);
 
 const DEFAULT_WALLET_BALANCES = Object.fromEntries(
   Object.values(config.tokens).map(token => [token.symbol, AssociatedToken.zeroAux(PublicKey.default, token.decimals)])
