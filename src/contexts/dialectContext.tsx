@@ -60,49 +60,41 @@ export const DialectProviders: FC = ({ children }) => {
   const wallet = useWallet();
 
   //Function to convert WalletContextState to DialectWalletAdapter
-  const convertWalletToDialectWallet = (
-    wallet: WalletContextState
-  ): DialectWalletAdapter => ({
+  const convertWalletToDialectWallet = (wallet: WalletContextState): DialectWalletAdapter => ({
     publicKey: wallet.publicKey!,
-    connected:
-      wallet.connected &&
-      !wallet.connecting &&
-      !wallet.disconnecting &&
-      Boolean(wallet.publicKey),
+    connected: wallet.connected && !wallet.connecting && !wallet.disconnecting && Boolean(wallet.publicKey),
     signMessage: wallet.signMessage,
     signTransaction: wallet.signTransaction,
     signAllTransactions: wallet.signAllTransactions,
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
     diffieHellman: wallet.wallet?.adapter?._wallet?.diffieHellman
-      ? async (pubKey) => {
+      ? async pubKey => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           //@ts-ignore
           return wallet.wallet?.adapter?._wallet?.diffieHellman(pubKey);
         }
-      : undefined,
+      : undefined
   });
 
   //Convert WalletContextState to DialectWalletAdapter
   const dialectWallet = useMemo(() => {
-      return convertWalletToDialectWallet(wallet)
+    return convertWalletToDialectWallet(wallet);
   }, [wallet]);
 
   // Basic configuration for dialect. Target mainnet-beta and dialect cloud production environment
   const dialectConfig = useMemo(
     (): Config => ({
       backends: [Backend.DialectCloud, Backend.Solana],
-      environment: 'development',
+      environment: 'development'
     }),
     []
   );
   return (
     <DialectContextProvider config={dialectConfig} wallet={dialectWallet} dapp={DIALECT_PUBLIC_KEY}>
-      <DialectThemeProvider theme="dark" variables={dialectThemeVariables} >
-        <DialectUiManagementProvider>
-          {children}
-        </DialectUiManagementProvider>
+      <DialectThemeProvider theme="dark" variables={dialectThemeVariables}>
+        <DialectUiManagementProvider>{children}</DialectUiManagementProvider>
       </DialectThemeProvider>
     </DialectContextProvider>
   );
-}
+};

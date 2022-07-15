@@ -56,7 +56,7 @@ export function App(): JSX.Element {
               <SettingsModalProvider>
                 <RpcNodeContextProvider>
                   <ConnectWalletModalProvider>
-                  <DialectProviders>
+                    <DialectProviders>
                       <BlockExplorerProvider>
                         <TransactionsProvider>
                           <TradeContextProvider>

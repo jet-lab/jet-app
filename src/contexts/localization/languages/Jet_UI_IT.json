@@ -70,7 +70,7 @@
     "rejectTrade": "This trade would increase your Risk Level to {{NEW_RISK}}, which is too high. (Max is {{MAX_RISK}})",
     "insufficientLamports": "Stai depositando tutti i tuoi SOL lasciandoti senza fondi per le fee di transazione! Riprova con una quantità in input leggermente inferiore.",
     "stillUndercollateralized": "Il nuovo C-ratio di {{NEW-C-RATIO}}% è ancora sotto il rapporto minimo di garanzia del mercato di Jet di {{JET MIN C-RATIO}}%. Si prega di considerare di rimborsare di più per evitare la liquidazione.",
-    "txCancelled": "Transazione cancellata.",
+    "txCancelled": "TThe user cancelled the transaction.",
     "welcomeAboard": "Benvenuto a Bordo",
     "rentFeeDescription": "Vedo che è la prima volta che voli con Jet.",
     "rentFeeDetail": "The rent fee for your transaction is {{RENT_FEE}} SOL. This amount will be returned to when you {{TRADE ACTION}} your full balance.",

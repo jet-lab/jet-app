@@ -70,7 +70,7 @@
     "rejectTrade": "This trade would increase your Risk Level to {{NEW_RISK}}, which is too high. (Max is {{MAX_RISK}})",
     "insufficientLamports": "您这交易会存进您全部的SOL 您的交易费会不够! 请您输入低一点的金额",
     "stillUndercollateralized": "您的新 {{NEW-C-RATIO}}% C-Ratio 仍低于 Jet 的最低市场抵押比率 {{JET MIN C-RATIO}}% 。 请考虑偿还更多，以避免清算。",
-    "txCancelled": "Transaction cancelled.",
+    "txCancelled": "The user cancelled the transaction.",
     "welcomeAboard": "Welcome Aboard",
     "rentFeeDescription": "I see this is your first time flying with Jet. Please note that to open your account, this transaction will include a refundable one-time rent fee. This is necessary for the Solana blockchain to store ongoing data related to your account. This fee is not collected by Jet Protocol.",
     "rentFeeDetail": "The rent fee for your transaction is {{RENT_FEE}} SOL. This amount will be returned to when you {{TRADE ACTION}} your full balance.",
