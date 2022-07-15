@@ -10,7 +10,8 @@ import {
   SolflareWalletAdapter,
   SolongWalletAdapter,
   SolletWalletAdapter,
-  SlopeWalletAdapter
+  SlopeWalletAdapter,
+  BraveWalletAdapter
 } from '@solana/wallet-adapter-wallets';
 import { MarginContextProvider } from './contexts/marginContext';
 import { RpcNodeContextProvider } from './contexts/rpcNode';
@@ -36,6 +37,7 @@ export function App(): JSX.Element {
   const wallets = useMemo(
     () => [
       new PhantomWalletAdapter(),
+      new BraveWalletAdapter(),
       new MathWalletAdapter(),
       new SolflareWalletAdapter(),
       new SolongWalletAdapter(),
