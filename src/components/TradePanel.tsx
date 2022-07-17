@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { MarginAccount, PoolAction, PoolProjection, PoolTokenChange, TokenAmount } from '@jet-lab/margin';
-import { TxnResponse } from '../models/JetTypes';
 import { useMargin } from '../contexts/marginContext';
 import { useTradeContext } from '../contexts/tradeContext';
 import { useLanguage } from '../contexts/localization/localization';
 import { useTransactionLogs } from '../contexts/transactionLogs';
-import { useMarginActions } from '../hooks/useMarginActions';
+import { TxnResponse, useMarginActions } from '../hooks/useMarginActions';
 import { currencyFormatter } from '../utils/currency';
 import { notification, Select, Slider } from 'antd';
 import { JetInput } from './JetInput';
@@ -82,7 +81,7 @@ export function TradePanel(): JSX.Element {
       } else if (marginAccount && marginAccount.riskIndicator >= MarginAccount.RISK_LIQUIDATION_LEVEL) {
         setDisabledMessage(dictionary.cockpit.aboveMaxRiskLevel);
         // No liquidity in market to borrow from
-      } else if (!currentPool.vaultTokens.tokens) {
+      } else if (!currentPool.vault.tokens) {
         setDisabledMessage(dictionary.cockpit.noLiquidity);
       } else {
         setDisabledInput(false);
@@ -124,7 +123,7 @@ export function TradePanel(): JSX.Element {
       // Withdrawing sollet ETH
     } else if (tradeAction === 'withdraw') {
       // User is withdrawing more than liquidity in market
-      if (tradeAmount.gt(currentPool.vaultTokens)) {
+      if (tradeAmount.gt(currentPool.vault)) {
         tradeError = dictionary.cockpit.noLiquidity;
         // User is withdrawing more than they've deposited
       } else if (tradeAmount.tokens > accountPoolPosition.depositBalance.tokens) {
@@ -141,7 +140,7 @@ export function TradePanel(): JSX.Element {
       // Borrowing
     } else if (tradeAction === 'borrow') {
       // User is borrowing more than liquidity in market
-      if (tradeAmount.gt(currentPool.vaultTokens)) {
+      if (tradeAmount.gt(currentPool.vault)) {
         tradeError = dictionary.cockpit.noLiquidity;
         // User is above max risk
       } else if (marginAccount && marginAccount.riskIndicator >= MarginAccount.RISK_LIQUIDATION_LEVEL) {
@@ -317,7 +316,7 @@ export function TradePanel(): JSX.Element {
                 : currentAction === 'withdraw'
                 ? dictionary.cockpit.availableFunds.toUpperCase()
                 : currentAction === 'borrow'
-                ? currentPool && maxInput <= currentPool.vaultTokens.tokens
+                ? currentPool && maxInput <= currentPool.vault.tokens
                   ? dictionary.cockpit.maxBorrowAmount.toUpperCase()
                   : dictionary.cockpit.availableLiquidity.toUpperCase()
                 : dictionary.cockpit.amountOwed.toUpperCase()}

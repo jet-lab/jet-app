@@ -31,10 +31,10 @@ export function Cockpit(): JSX.Element {
         }
 
         const tokenPrice = pools[token.symbol].tokenPrice;
-        const depositedTokens = pools[token.symbol].vaultTokens.tokens;
+        const vaultTokens = pools[token.symbol].vault.tokens;
         const borrowedTokens = pools[token.symbol].borrowedTokens.tokens;
 
-        totalSupply += depositedTokens * tokenPrice;
+        totalSupply += vaultTokens * tokenPrice;
         totalBorrowed += borrowedTokens * tokenPrice;
       }
       setTotalSupply(totalSupply);
