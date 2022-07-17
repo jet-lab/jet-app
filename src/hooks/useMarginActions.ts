@@ -1,6 +1,11 @@
-import { TxnResponse } from '../models/JetTypes';
 import { useMargin } from '../contexts/marginContext';
 import { MarginPools, PoolTokenChange, TokenFormat } from '@jet-lab/margin';
+
+export enum TxnResponse {
+  Success = 'SUCCESS',
+  Failed = 'FAILED',
+  Cancelled = 'CANCELLED'
+}
 
 export const useMarginActions = () => {
   const { pools, marginAccount, refresh } = useMargin();
