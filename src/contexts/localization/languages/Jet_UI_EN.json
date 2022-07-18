@@ -37,6 +37,7 @@
     "accountLeverage": "Account Leverage",
     "predictedRiskLevel": "Predicted Risk Level",
     "deposit": "Deposit",
+    "maxDeposit": "Max Deposit",
     "walletBalance": "Wallet Balance",
     "noDepositAmount": "Enter amount",
     "notEnoughAsset": "Not enough {{ASSET}}.",

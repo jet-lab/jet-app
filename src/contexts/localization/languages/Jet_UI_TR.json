@@ -37,6 +37,7 @@
     "accountLeverage": "Account Leverage",
     "predictedRiskLevel": "Predicted Risk Level",
     "deposit": "Yatırma",
+    "maxDeposit": "Max Deposit",
     "walletBalance": "Cüzdan Bakiyesi",
     "noDepositAmount": "Miktar girin",
     "notEnoughAsset": "Yeterli {{ASSET}} yok.",

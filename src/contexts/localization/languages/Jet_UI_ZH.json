@@ -37,6 +37,7 @@
     "accountLeverage": "Account Leverage",
     "predictedRiskLevel": "Predicted Risk Level",
     "deposit": "存款",
+    "maxDeposit": "Max Deposit",
     "walletBalance": "你的钱包余额",
     "noDepositAmount": "输入金额",
     "notEnoughAsset": "{{ASSET}} 不够",

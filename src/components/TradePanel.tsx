@@ -269,6 +269,26 @@ export function TradePanel(): JSX.Element {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentAmount, currentAction]);
 
+  const availBalance = () => {
+    if (currentAction === 'deposit') {
+      if (currentPool?.symbol === "SOL") {
+        return "Max deposit".toUpperCase()
+      } else {
+        return dictionary.cockpit.walletBalance.toUpperCase()
+      }
+    } else if (currentAction === 'withdraw') {
+      return dictionary.cockpit.availableFunds.toUpperCase()
+    } else if (currentAction === 'borrow') {
+      if (currentPool && maxInput <= currentPool.vault.tokens) {
+        return dictionary.cockpit.maxBorrowAmount.toUpperCase()
+      } else {
+        return dictionary.cockpit.availableLiquidity.toUpperCase()
+      }
+    } else {
+      return dictionary.cockpit.amountOwed.toUpperCase()
+    }
+  }
+
   return (
     <div className="trade-panel flex align-center justify-start">
       <div className="trade-select-container flex align-center justify-between">
@@ -311,15 +331,7 @@ export function TradePanel(): JSX.Element {
         <>
           <div className={`trade-section flex-centered column ${disabledInput ? 'disabled' : ''}`}>
             <span className="center-text bold-text">
-              {currentAction === 'deposit'
-                ? dictionary.cockpit.walletBalance.toUpperCase()
-                : currentAction === 'withdraw'
-                ? dictionary.cockpit.availableFunds.toUpperCase()
-                : currentAction === 'borrow'
-                ? currentPool && maxInput <= currentPool.vault.tokens
-                  ? dictionary.cockpit.maxBorrowAmount.toUpperCase()
-                  : dictionary.cockpit.availableLiquidity.toUpperCase()
-                : dictionary.cockpit.amountOwed.toUpperCase()}
+              {availBalance()}
             </span>
             <div className="flex-centered">
               <p className="center-text max-amount" onClick={() => setCurrentAmount(maxInput)}>

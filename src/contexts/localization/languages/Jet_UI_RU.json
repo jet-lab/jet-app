@@ -37,6 +37,7 @@
     "accountLeverage": "Account Leverage",
     "predictedRiskLevel": "Predicted Risk Level",
     "deposit": "Пополнить",
+    "maxDeposit": "Max Deposit",
     "walletBalance": "Баланс кошелька",
     "noDepositAmount": "Введите сумму",
     "notEnoughAsset": "Недостаточно {{ASSET}}.",
