@@ -12,7 +12,7 @@ export function LiquidationModal(): JSX.Element {
   const { marginAccount } = useMargin();
   const { setCurrentAction } = useTradeContext();
   const { open, setOpen, setClosed } = useLiquidationModal();
-  const requiredFunds = 0; // TODO: use liquidationEndingCollateral from lib
+  const requiredFunds = marginAccount?.poolPositions.USDC.liquidationEndingCollateral.tokens ?? 0;
   const { Title, Paragraph } = Typography;
 
   if (marginAccount?.isBeingLiquidated && open) {
@@ -34,7 +34,7 @@ export function LiquidationModal(): JSX.Element {
           </div>
           <div className="flex align-center justify-between">
             <Paragraph type="secondary">{dictionary.copilot.alert.liquidation.fundsRequired}</Paragraph>
-            <Paragraph type="secondary">{currencyFormatter(requiredFunds ?? 0, true)}</Paragraph>
+            <Paragraph type="secondary">{`~${currencyFormatter(requiredFunds, true)}`}</Paragraph>
           </div>
         </div>
         <div className="liquidation-modal-actions flex-centered">
