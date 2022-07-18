@@ -37,6 +37,8 @@
     "accountLeverage": "Account Leverage",
     "predictedRiskLevel": "Predicted Risk Level",
     "deposit": "Пополнить",
+    "maxDeposit": "Max Deposit",
+    "minSol": "We reserve 0.07 SOL in the wallet for transaction fees.",
     "walletBalance": "Баланс кошелька",
     "noDepositAmount": "Введите сумму",
     "notEnoughAsset": "Недостаточно {{ASSET}}.",

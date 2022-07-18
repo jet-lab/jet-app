@@ -7,9 +7,10 @@ import { useLanguage } from '../contexts/localization/localization';
 import { useTransactionLogs } from '../contexts/transactionLogs';
 import { TxnResponse, useMarginActions } from '../hooks/useMarginActions';
 import { currencyFormatter } from '../utils/currency';
-import { notification, Select, Slider } from 'antd';
+import { notification, Select, Slider, Tooltip } from 'antd';
 import { JetInput } from './JetInput';
 import { ConnectMessage } from './ConnectMessage';
+import { InfoCircleOutlined } from '@ant-design/icons';
 
 export function TradePanel(): JSX.Element {
   const { dictionary } = useLanguage();
@@ -269,6 +270,26 @@ export function TradePanel(): JSX.Element {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentAmount, currentAction]);
 
+  const availBalance = () => {
+    if (currentAction === 'deposit') {
+      if (currentPool?.symbol === 'SOL') {
+        return 'Max deposit'.toUpperCase();
+      } else {
+        return dictionary.cockpit.walletBalance.toUpperCase();
+      }
+    } else if (currentAction === 'withdraw') {
+      return dictionary.cockpit.availableFunds.toUpperCase();
+    } else if (currentAction === 'borrow') {
+      if (currentPool && maxInput <= currentPool.vault.tokens) {
+        return dictionary.cockpit.maxBorrowAmount.toUpperCase();
+      } else {
+        return dictionary.cockpit.availableLiquidity.toUpperCase();
+      }
+    } else {
+      return dictionary.cockpit.amountOwed.toUpperCase();
+    }
+  };
+
   return (
     <div className="trade-panel flex align-center justify-start">
       <div className="trade-select-container flex align-center justify-between">
@@ -311,15 +332,12 @@ export function TradePanel(): JSX.Element {
         <>
           <div className={`trade-section flex-centered column ${disabledInput ? 'disabled' : ''}`}>
             <span className="center-text bold-text">
-              {currentAction === 'deposit'
-                ? dictionary.cockpit.walletBalance.toUpperCase()
-                : currentAction === 'withdraw'
-                ? dictionary.cockpit.availableFunds.toUpperCase()
-                : currentAction === 'borrow'
-                ? currentPool && maxInput <= currentPool.vault.tokens
-                  ? dictionary.cockpit.maxBorrowAmount.toUpperCase()
-                  : dictionary.cockpit.availableLiquidity.toUpperCase()
-                : dictionary.cockpit.amountOwed.toUpperCase()}
+              {availBalance()}{' '}
+              {currentAction === 'deposit' && currentPool?.symbol === 'SOL' && (
+                <Tooltip title={dictionary.cockpit.minSol}>
+                  <InfoCircleOutlined />
+                </Tooltip>
+              )}
             </span>
             <div className="flex-centered">
               <p className="center-text max-amount" onClick={() => setCurrentAmount(maxInput)}>
