@@ -15,7 +15,7 @@ export function LiquidationModal(): JSX.Element {
   const requiredFunds = 0; // TODO: use liquidationEndingCollateral from lib
   const { Title, Paragraph } = Typography;
 
-  if (marginAccount && open) {
+  if (marginAccount?.isBeingLiquidated && open) {
     return (
       <Modal visible className="liquidation-modal" footer={null} closable={false}>
         <Title type="danger">
