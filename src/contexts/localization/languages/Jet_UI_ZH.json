@@ -38,6 +38,7 @@
     "predictedRiskLevel": "Predicted Risk Level",
     "deposit": "存款",
     "maxDeposit": "Max Deposit",
+    "minSol": "We reserve 0.07 SOL in the wallet for transaction fees.",
     "walletBalance": "你的钱包余额",
     "noDepositAmount": "输入金额",
     "notEnoughAsset": "{{ASSET}} 不够",

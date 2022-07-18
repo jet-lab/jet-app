@@ -7,9 +7,10 @@ import { useLanguage } from '../contexts/localization/localization';
 import { useTransactionLogs } from '../contexts/transactionLogs';
 import { TxnResponse, useMarginActions } from '../hooks/useMarginActions';
 import { currencyFormatter } from '../utils/currency';
-import { notification, Select, Slider } from 'antd';
+import { notification, Select, Slider, Tooltip } from 'antd';
 import { JetInput } from './JetInput';
 import { ConnectMessage } from './ConnectMessage';
+import { InfoCircleOutlined } from '@ant-design/icons';
 
 export function TradePanel(): JSX.Element {
   const { dictionary } = useLanguage();
@@ -330,7 +331,14 @@ export function TradePanel(): JSX.Element {
       ) : (
         <>
           <div className={`trade-section flex-centered column ${disabledInput ? 'disabled' : ''}`}>
-            <span className="center-text bold-text">{availBalance()}</span>
+            <span className="center-text bold-text">
+              {availBalance()}{' '}
+              {currentAction === 'deposit' && currentPool?.symbol === 'SOL' && (
+                <Tooltip title={dictionary.cockpit.minSol}>
+                  <InfoCircleOutlined />
+                </Tooltip>
+              )}
+            </span>
             <div className="flex-centered">
               <p className="center-text max-amount" onClick={() => setCurrentAmount(maxInput)}>
                 {userFetched && currentPool
