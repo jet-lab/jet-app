@@ -271,23 +271,23 @@ export function TradePanel(): JSX.Element {
 
   const availBalance = () => {
     if (currentAction === 'deposit') {
-      if (currentPool?.symbol === "SOL") {
-        return "Max deposit".toUpperCase()
+      if (currentPool?.symbol === 'SOL') {
+        return 'Max deposit'.toUpperCase();
       } else {
-        return dictionary.cockpit.walletBalance.toUpperCase()
+        return dictionary.cockpit.walletBalance.toUpperCase();
       }
     } else if (currentAction === 'withdraw') {
-      return dictionary.cockpit.availableFunds.toUpperCase()
+      return dictionary.cockpit.availableFunds.toUpperCase();
     } else if (currentAction === 'borrow') {
       if (currentPool && maxInput <= currentPool.vault.tokens) {
-        return dictionary.cockpit.maxBorrowAmount.toUpperCase()
+        return dictionary.cockpit.maxBorrowAmount.toUpperCase();
       } else {
-        return dictionary.cockpit.availableLiquidity.toUpperCase()
+        return dictionary.cockpit.availableLiquidity.toUpperCase();
       }
     } else {
-      return dictionary.cockpit.amountOwed.toUpperCase()
+      return dictionary.cockpit.amountOwed.toUpperCase();
     }
-  }
+  };
 
   return (
     <div className="trade-panel flex align-center justify-start">
@@ -330,9 +330,7 @@ export function TradePanel(): JSX.Element {
       ) : (
         <>
           <div className={`trade-section flex-centered column ${disabledInput ? 'disabled' : ''}`}>
-            <span className="center-text bold-text">
-              {availBalance()}
-            </span>
+            <span className="center-text bold-text">{availBalance()}</span>
             <div className="flex-centered">
               <p className="center-text max-amount" onClick={() => setCurrentAmount(maxInput)}>
                 {userFetched && currentPool
