@@ -905,6 +905,18 @@
               }
             }
           }
+          .transaction-fee-note span {
+            color: rgb(var(--secondary-5));
+          }
+        }
+      }
+
+      // Transaction Fee Note
+      .transaction-fee-note {
+        width: calc(50% - (calc(var(--spacing-base) - 5px) * 2));
+        span {
+          font-size: calc(var(--base-font-size) * 0.71428571);
+          color: rgb(var(--secondary-5));
         }
       }
 
@@ -1483,6 +1495,17 @@
             }
           }
         }
+        .justify-end {
+          justify-content: center;
+          .transaction-fee-note {
+            width: calc(50% - (calc(var(--spacing-base) - 5px) * 2));
+            span {
+              font-size: calc(var(--base-font-size) * 0.71428571);
+              color: rgb(var(--secondary-5));
+            }
+          }
+        }
+
         // Market Table
         .market-table {
           padding: @spacing-sm;

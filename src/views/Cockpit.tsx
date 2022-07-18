@@ -11,12 +11,14 @@ import { MarketTable } from '../components/MarketTable';
 import { Skeleton } from 'antd';
 import { WarningFilled } from '@ant-design/icons';
 import { MarginAccount } from '@jet-lab/margin';
+import { useTradeContext } from '../contexts/tradeContext';
 
 export function Cockpit(): JSX.Element {
   const isGeobanned = useGeoban();
   const { dictionary } = useLanguage();
   const { initFailed } = useInitFailed();
   const { poolsFetched, pools, marginAccount, userFetched } = useMargin();
+  const { currentPool, currentAction } = useTradeContext();
   const accountSummary = marginAccount?.summary;
   const [totalSupply, setTotalSupply] = useState(0);
   const [totalBorrowed, setTotalBorrowed] = useState(0);
@@ -118,6 +120,20 @@ export function Cockpit(): JSX.Element {
         </div>
         <div className="trade-table-container">
           <TradePanel />
+
+          {currentPool?.symbol === 'SOL' && currentAction === 'deposit' && (
+            <div className="flex align-center justify-end">
+              <div className="transaction-fee-note flex-centered column ">
+                <span>
+                  <WarningFilled style={{ margin: '2px 5px 0 0' }} />
+                  {/* TODO: Replace with dictionary */}
+                  {/* {dictionary.cockpit.maxRiskNote.replace('{{MAX_RISK}}', MarginAccount.RISK_LIQUIDATION_LEVEL)} */}
+                  Note: This transaction includes a fee of 0.07 SOL or less.
+                </span>
+              </div>
+            </div>
+          )}
+
           <MarketTable />
         </div>
       </div>
