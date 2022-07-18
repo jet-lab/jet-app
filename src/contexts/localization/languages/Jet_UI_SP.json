@@ -160,6 +160,11 @@
         "disclaimerDetail": "You are now entering Jet Protocol Mainnet. Do not proceed if you do not understand and accept the {{TERMS_LINK}}, {{PRIVACY_LINK}}, and the potential for financial loss.",
         "acceptRisks": "I understand and accept the risks.",
         "enterMainnet": "Enter Mainnet"
+      },
+      "liquidation": {
+        "title": "Liquidation in Progress",
+        "liquidationDetail": "Liquidation has now begun on your account. To cease liquidation, you must deposit funds to bring your Risk Level below 1.0 immediately.",
+        "fundsRequired": "Funds Required"
       }
     },
     "radar": {

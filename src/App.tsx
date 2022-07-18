@@ -19,6 +19,7 @@ import { TransactionsProvider } from './contexts/transactionLogs';
 import { TradeContextProvider } from './contexts/tradeContext';
 import { NativeValuesProvider } from './contexts/nativeValues';
 import { ConnectWalletModalProvider } from './contexts/connectWalletModal';
+import { LiquidationModalProvider } from './contexts/LiquidationModal';
 import { SettingsModalProvider } from './contexts/settingsModal';
 import { RadarModalProvider } from './contexts/radarModal';
 import { ConnectWalletModal } from './components/ConnectWalletModal';
@@ -30,6 +31,7 @@ import { Navbar } from './components/Navbar';
 import { NetworkWarningBanner } from './components/NetworkWarningBanner';
 import { Cockpit } from './views/Cockpit';
 import { TransactionLogs } from './views/TransactionLogs';
+import { LiquidationModal } from './components/LiquidationModal';
 
 const queryClient = new QueryClient();
 export function App(): JSX.Element {
@@ -54,27 +56,30 @@ export function App(): JSX.Element {
               <SettingsModalProvider>
                 <RpcNodeContextProvider>
                   <ConnectWalletModalProvider>
-                    <BlockExplorerProvider>
-                      <TransactionsProvider>
-                        <TradeContextProvider>
-                          <NativeValuesProvider>
-                            <RadarModalProvider>
-                              <NetworkWarningBanner />
-                              <Navbar />
-                              <Routes>
-                                <Route path="/" element={<Cockpit />} />
-                                <Route path="/transactions" element={<TransactionLogs />} />
-                              </Routes>
-                              <ConnectWalletModal />
-                              <Settings />
-                              <RadarModal />
-                              <DisclaimerModal />
-                              <TermsPrivacy />
-                            </RadarModalProvider>
-                          </NativeValuesProvider>
-                        </TradeContextProvider>
-                      </TransactionsProvider>
-                    </BlockExplorerProvider>
+                    <LiquidationModalProvider>
+                      <BlockExplorerProvider>
+                        <TransactionsProvider>
+                          <TradeContextProvider>
+                            <NativeValuesProvider>
+                              <RadarModalProvider>
+                                <NetworkWarningBanner />
+                                <Navbar />
+                                <Routes>
+                                  <Route path="/" element={<Cockpit />} />
+                                  <Route path="/transactions" element={<TransactionLogs />} />
+                                </Routes>
+                                <ConnectWalletModal />
+                                <Settings />
+                                <RadarModal />
+                                <DisclaimerModal />
+                                <LiquidationModal />
+                                <TermsPrivacy />
+                              </RadarModalProvider>
+                            </NativeValuesProvider>
+                          </TradeContextProvider>
+                        </TransactionsProvider>
+                      </BlockExplorerProvider>
+                    </LiquidationModalProvider>
                   </ConnectWalletModalProvider>
                 </RpcNodeContextProvider>
               </SettingsModalProvider>

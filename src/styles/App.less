@@ -58,6 +58,54 @@
     }
   }
 
+  // Liquidation Modal
+  .liquidation-modal {
+    .ant-modal-content {
+      max-width: 300px;
+      padding-top: unset;
+      padding-bottom: unset;
+      border-radius: @border-radius;
+      h1 {
+        font-size: @xl-font-size;
+        text-align: center;
+        .anticon {
+          font-size: @lg-font-size;
+          color: @danger;
+          margin-right: @spacing-xs;
+        }
+      }
+      .healthbar {
+        width: 100%;
+      }
+    }
+    &-detail {
+      max-width: 280px;
+      margin: @spacing-xs auto @spacing-base auto;
+    }
+    span {
+      font-size: @sm-font-size;
+    }
+    &-stats {
+      width: calc(100% - (@spacing-sm * 2));
+      padding: @spacing-xs @spacing-sm;
+      border-radius: @border-radius;
+      border: 1px solid @danger;
+      margin-top: @spacing-xs;
+      div {
+        width: 100%;
+        .ant-typography {
+          margin: 2px 0;
+          &:last-of-type {
+            text-align: right;
+          }
+        }
+      }
+    }
+    &-actions {
+      margin: @spacing-sm 0 @spacing-base 0;
+    }
+  }
+
   // Info Icon
   .info {
     color: @secondary-3;
