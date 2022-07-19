@@ -15,7 +15,7 @@ export function LiquidationModal(): JSX.Element {
   const requiredFunds = marginAccount?.poolPositions.USDC.liquidationEndingCollateral.tokens ?? 0;
   const { Title, Paragraph } = Typography;
 
-  if (marginAccount?.isBeingLiquidated && open) {
+  if (open) {
     return (
       <Modal visible className="liquidation-modal" footer={null} closable={false}>
         <Title type="danger">
