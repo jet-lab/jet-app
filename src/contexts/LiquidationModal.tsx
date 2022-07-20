@@ -3,36 +3,29 @@ import { useMargin } from './marginContext';
 
 // Liquidation modal context
 interface LiquidationModal {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  closed: boolean;
-  setClosed: (closed: boolean) => void;
+  isDisplayed: boolean;
+  setIsDisplayed: (open: boolean) => void;
 }
 const LiquidationModalContext = createContext<LiquidationModal>({
-  open: false,
-  setOpen: () => null,
-  closed: false,
-  setClosed: () => null
+  isDisplayed: false,
+  setIsDisplayed: () => null
 });
 
 // Liquidation modal context provider
 export function LiquidationModalProvider(props: { children: any }): JSX.Element {
-  const [open, setOpen] = useState(false);
-  const [closed, setClosed] = useState(false);
+  const [isDisplayed, setIsDisplayed] = useState(false);
   const { marginAccount } = useMargin();
   useEffect(() => {
-    if (marginAccount?.isBeingLiquidated && !closed) {
-      setOpen(true);
+    if (marginAccount?.isBeingLiquidated && !isDisplayed) {
+      setIsDisplayed(true);
     }
-  }, [closed, marginAccount?.isBeingLiquidated]);
+  }, [isDisplayed, marginAccount?.isBeingLiquidated]);
 
   return (
     <LiquidationModalContext.Provider
       value={{
-        open,
-        setOpen,
-        closed,
-        setClosed
+        isDisplayed,
+        setIsDisplayed
       }}>
       {props.children}
     </LiquidationModalContext.Provider>

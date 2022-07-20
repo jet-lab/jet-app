@@ -11,11 +11,11 @@ export function LiquidationModal(): JSX.Element {
   const { dictionary } = useLanguage();
   const { marginAccount } = useMargin();
   const { setCurrentAction } = useTradeContext();
-  const { open, setOpen, setClosed } = useLiquidationModal();
+  const { isDisplayed, setIsDisplayed } = useLiquidationModal();
   const requiredFunds = marginAccount?.poolPositions.USDC.liquidationEndingCollateral.tokens ?? 0;
   const { Title, Paragraph } = Typography;
 
-  if (marginAccount?.isBeingLiquidated && open) {
+  if (marginAccount?.isBeingLiquidated && isDisplayed) {
     return (
       <Modal visible className="liquidation-modal" footer={null} closable={false}>
         <Title type="danger">
@@ -43,8 +43,7 @@ export function LiquidationModal(): JSX.Element {
             size="small"
             onClick={() => {
               setCurrentAction('deposit');
-              setOpen(false);
-              setClosed(true);
+              setIsDisplayed(false);
             }}>
             {dictionary.cockpit.deposit}
           </Button>

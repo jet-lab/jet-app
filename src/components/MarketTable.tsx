@@ -172,8 +172,8 @@ export function MarketTable(): JSX.Element {
                       </td>
                       <td>{`${(pool.depositApy * 100).toFixed(2)}%`}</td>
                       <td>{`${(pool.borrowApr * 100).toFixed(2)}%`}</td>
-                      <td className="clickable-icon cell-border-right" onClick={() => setRadarOpen(true)}>
-                        <RadarIcon width="18px" />
+                      <td className="clickable-icon cell-border-right">
+                        <RadarIcon width="18px" onClick={() => setRadarOpen(true)} />
                       </td>
                       <td
                         className={walletBalance ? 'user-wallet-value text-btn semi-bold-text' : ''}
