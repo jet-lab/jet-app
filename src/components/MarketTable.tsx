@@ -93,6 +93,10 @@ export function MarketTable(): JSX.Element {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPool, pools]);
 
+  // Get max input for SOL only to account for 0.07 reserve
+  const accountPoolPosition = marginAccount && currentPool?.symbol && marginAccount.poolPositions[currentPool.symbol];
+  const maxSolInput = accountPoolPosition?.maxTradeAmounts['deposit'].tokens ?? 0;
+
   return (
     <>
       <div className="market-table">
@@ -180,7 +184,10 @@ export function MarketTable(): JSX.Element {
                           <p
                             className={walletBalance ? 'user-wallet-value text-btn semi-bold-text' : ''}
                             onClick={() => {
-                              if (walletBalance) {
+                              if (walletBalance && currentPool?.tokenMint.equals(NATIVE_MINT)) {
+                                setCurrentAction('deposit');
+                                setCurrentAmount(maxSolInput);
+                              } else if (walletBalance) {
                                 setCurrentAction('deposit');
                                 setCurrentAmount(walletBalance.amount.tokens);
                               }
