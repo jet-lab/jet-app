@@ -69,6 +69,7 @@
     "noDepositsForBorrow": "Sie müssen Sicherheiten einzahlen, um ausleihen zu konnen.",
     "noDepositsForWithdraw": "Sie haben keine {{ASSET}} eingezahlt, welche ausgezahlt werden können.",
     "noDebtForRepay": "Sie schulden keine {{ASSET}}.",
+    "moreThanMaxBorrow": "The maximum amount you can borrow right now is {{AMOUNT}} {{ASSET}}",
     "rejectTrade": "This trade would increase your Risk Level to {{NEW_RISK}}, which is too high. (Max is {{MAX_RISK}})",
     "insufficientLamports": "Sie zahlen alle Ihre SOL ein, ohne Lamports für Transaktionsgebühren übrig zu lassen! Bitte erneut versuchen mit einem wenig kleineren Betrag.",
     "stillUndercollateralized": "Ihr neuer Besicherungsgrad von {{NEW-C-RATIO}}% ist immer noch unter Jet's minimalen Besicherungsgrad von {{JET MIN C-RATIO}}%. Bitte erwägen Sie eine weitere Rückzahlung, um eine Liquidation zu vermeiden.",

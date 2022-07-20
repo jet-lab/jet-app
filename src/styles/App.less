@@ -855,6 +855,9 @@
             opacity: @subtle-opacity;
             letter-spacing: 0.5px;
           }
+          .warning-text {
+            color: @warning;
+          }
           .bold-text {
             color: @secondary-3;
           }
@@ -945,6 +948,9 @@
             cursor: unset;
           }
           tbody {
+            p {
+              margin: unset;
+            }
             tr {
               &:last-of-type {
                 border-bottom: 10px solid @primary;
@@ -1031,13 +1037,13 @@
                   fill: @jet-green;
                 }
               }
-              &.user-wallet-value {
+              .user-wallet-value {
                 color: @secondary;
               }
-              &.user-collateral-value {
+              .user-collateral-value {
                 color: @success;
               }
-              &.user-loan-value {
+              .user-loan-value {
                 color: @danger;
               }
               svg {

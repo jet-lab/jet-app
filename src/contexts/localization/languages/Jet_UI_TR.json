@@ -69,6 +69,7 @@
     "noDepositsForBorrow": "Ödünç almak için teminat yatırmanız gerekiyor.",
     "noDepositsForWithdraw": "Çekme istediğiniz herhangi bir {{ASSET}} yatırımınız yok. ",
     "noDebtForRepay": "Hiç {{ASSET}} borcunuz yok.",
+    "moreThanMaxBorrow": "The maximum amount you can borrow right now is {{AMOUNT}} {{ASSET}}",
     "rejectTrade": "This trade would increase your Risk Level to {{NEW_RISK}}, which is too high. (Max is {{MAX_RISK}})",
     "insufficientLamports": "İşlem ücretlerini dahi karşılamayacak kadar çok SOL yatırıyorsunuz. Şu ankinden daha az bir miktar kullanarak yeniden deneyin. ",
     "stillUndercollateralized": "Yeni C-oranınız {{NEW-C-RATIO}}% hala Jet Protocol'ün minimum piyasa teminat oranı",

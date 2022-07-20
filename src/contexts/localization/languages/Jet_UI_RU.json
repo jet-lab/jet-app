@@ -69,6 +69,7 @@
     "noDepositsForBorrow": "Вы должны предоставить залог, чтобы вы могли занять.",
     "noDepositsForWithdraw": "Вы не внесли на депозит {{ASSET}} чтобы вывести",
     "noDebtForRepay": "Вы не дожны {{ASSET}}.",
+    "moreThanMaxBorrow": "The maximum amount you can borrow right now is {{AMOUNT}} {{ASSET}}",
     "rejectTrade": "This trade would increase your Risk Level to {{NEW_RISK}}, which is too high. (Max is {{MAX_RISK}})",
     "stillUndercollateralized": "Ваш новый К-рейтинг {{NEW-C-RATIO}}% ниже минимального уровня на Jet's протоколе-  {{JET MIN C-RATIO}}%. Пожалуйста, оплатите больше, чтобы избежать ликвидации.",
     "txCancelled": "The user cancelled the transaction.",

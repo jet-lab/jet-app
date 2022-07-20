@@ -69,6 +69,7 @@
     "noDepositsForBorrow": "È necessario depositare garanzie per prendere in prestito.",
     "noDepositsForWithdraw": "Non hai depositato nessun {{ASSET}} da ritirare.",
     "noDebtForRepay": "Non possiedi nessun {{ASSET}}.",
+    "moreThanMaxBorrow": "The maximum amount you can borrow right now is {{AMOUNT}} {{ASSET}}",
     "rejectTrade": "This trade would increase your Risk Level to {{NEW_RISK}}, which is too high. (Max is {{MAX_RISK}})",
     "insufficientLamports": "Stai depositando tutti i tuoi SOL lasciandoti senza fondi per le fee di transazione! Riprova con una quantità in input leggermente inferiore.",
     "stillUndercollateralized": "Il nuovo C-ratio di {{NEW-C-RATIO}}% è ancora sotto il rapporto minimo di garanzia del mercato di Jet di {{JET MIN C-RATIO}}%. Si prega di considerare di rimborsare di più per evitare la liquidazione.",

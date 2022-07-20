@@ -69,6 +69,7 @@
     "noDepositsForBorrow": "Debe depositar colateral para tomar prestado.",
     "noDepositsForWithdraw": "No cuenta con {{ASSET}} depositado para retirar.",
     "noDebtForRepay": "No debe {{ASSET}}.\n",
+    "moreThanMaxBorrow": "The maximum amount you can borrow right now is {{AMOUNT}} {{ASSET}}",
     "rejectTrade": "This trade would increase your Risk Level to {{NEW_RISK}}, which is too high. (Max is {{MAX_RISK}})",
     "insufficientLamports": "¡Usted está depositando todos sus SOL sin dejar Lamports en su billetera para pagar los fees de las transacciones! Vuelva a intentarlo con una cantidad ligeramente inferior.",
     "stillUndercollateralized": "Su nuevo C-ratio de {{NEW-C-RATIO}}% todavía está por debajo del ratio mínimo de colateralización del mercado de Jet de {{JET MIN C-RATIO}}%. Por favor, considere pagar más para evitar la liquidación.\n",

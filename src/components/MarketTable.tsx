@@ -172,86 +172,100 @@ export function MarketTable(): JSX.Element {
                       </td>
                       <td>{`${(pool.depositApy * 100).toFixed(2)}%`}</td>
                       <td>{`${(pool.borrowApr * 100).toFixed(2)}%`}</td>
-                      <td className="clickable-icon cell-border-right" onClick={() => setRadarOpen(true)}>
-                        <RadarIcon width="18px" />
+                      <td className="clickable-icon cell-border-right">
+                        <RadarIcon width="18px" onClick={() => setRadarOpen(true)} />
                       </td>
-                      <td
-                        className={walletBalance ? 'user-wallet-value text-btn semi-bold-text' : ''}
-                        onClick={() => {
-                          if (walletBalance) {
-                            setCurrentAction('deposit');
-                            setCurrentAmount(walletBalance.amount.tokens);
-                          }
-                        }}>
-                        {pool && walletBalance
-                          ? walletBalance.amount.tokens > 0 && walletBalance.amount.tokens < 0.0005
-                            ? '~0'
-                            : totalAbbrev(walletBalance.amount.tokens ?? 0, pool.tokenPrice, nativeValues, 3)
-                          : '--'}
+                      <td>
+                        {pool && walletBalance ? (
+                          <p
+                            className={walletBalance ? 'user-wallet-value text-btn semi-bold-text' : ''}
+                            onClick={() => {
+                              if (walletBalance) {
+                                setCurrentAction('deposit');
+                                setCurrentAmount(walletBalance.amount.tokens);
+                              }
+                            }}>
+                            {walletBalance.amount.tokens > 0 && walletBalance.amount.tokens < 0.0005
+                              ? '~0'
+                              : totalAbbrev(walletBalance.amount.tokens ?? 0, pool.tokenPrice, nativeValues, 3)}
+                          </p>
+                        ) : (
+                          '--'
+                        )}
                       </td>
-                      <td
-                        className={
-                          userFetched &&
-                          pool.symbol &&
-                          marginAccount?.poolPositions?.[pool.symbol]?.depositBalance.tokens
-                            ? 'user-collateral-value text-btn semi-bold-text'
-                            : ''
-                        }
-                        onClick={() => {
-                          if (
-                            userFetched &&
-                            pool.symbol &&
-                            marginAccount?.poolPositions?.[pool.symbol]?.depositBalance.tokens
-                          ) {
-                            setCurrentAction('withdraw');
-                            setCurrentAmount(marginAccount.poolPositions[pool.symbol].depositBalance.tokens);
-                          }
-                        }}>
+                      <td>
                         {userFetched &&
                         pool.symbol &&
                         pool.tokenPrice !== undefined &&
-                        marginAccount?.poolPositions?.[pool.symbol]?.depositBalance.tokens
-                          ? marginAccount.poolPositions[pool.symbol].depositBalance.tokens > 0 &&
+                        marginAccount?.poolPositions?.[pool.symbol]?.depositBalance.tokens ? (
+                          <p
+                            className={
+                              userFetched &&
+                              pool.symbol &&
+                              marginAccount?.poolPositions?.[pool.symbol]?.depositBalance.tokens
+                                ? 'user-collateral-value text-btn semi-bold-text'
+                                : ''
+                            }
+                            onClick={() => {
+                              if (
+                                userFetched &&
+                                pool.symbol &&
+                                marginAccount?.poolPositions?.[pool.symbol]?.depositBalance.tokens
+                              ) {
+                                setCurrentAction('withdraw');
+                                setCurrentAmount(marginAccount.poolPositions[pool.symbol].depositBalance.tokens);
+                              }
+                            }}>
+                            {marginAccount.poolPositions[pool.symbol].depositBalance.tokens > 0 &&
                             marginAccount.poolPositions[pool.symbol].depositBalance.tokens < 0.0005
-                            ? '~0'
-                            : totalAbbrev(
-                                marginAccount.poolPositions[pool.symbol].depositBalance.tokens,
-                                pool.tokenPrice,
-                                nativeValues,
-                                3
-                              )
-                          : '--'}
+                              ? '~0'
+                              : totalAbbrev(
+                                  marginAccount.poolPositions[pool.symbol].depositBalance.tokens,
+                                  pool.tokenPrice,
+                                  nativeValues,
+                                  3
+                                )}
+                          </p>
+                        ) : (
+                          '--'
+                        )}
                       </td>
-                      <td
-                        className={
-                          userFetched && pool.symbol && marginAccount?.poolPositions?.[pool.symbol]?.loanBalance.tokens
-                            ? 'user-loan-value text-btn semi-bold-text'
-                            : ''
-                        }
-                        onClick={() => {
-                          if (
-                            userFetched &&
-                            pool.symbol &&
-                            marginAccount?.poolPositions?.[pool.symbol]?.loanBalance.tokens
-                          ) {
-                            setCurrentAction('repay');
-                            setCurrentAmount(marginAccount.poolPositions[pool.symbol].loanBalance.tokens);
-                          }
-                        }}>
+                      <td>
                         {userFetched &&
                         pool.symbol &&
                         pool.tokenPrice !== undefined &&
-                        marginAccount?.poolPositions?.[pool.symbol]?.loanBalance.tokens
-                          ? marginAccount.poolPositions[pool.symbol].loanBalance.tokens > 0 &&
+                        marginAccount?.poolPositions?.[pool.symbol]?.loanBalance.tokens ? (
+                          <p
+                            className={
+                              userFetched &&
+                              pool.symbol &&
+                              marginAccount?.poolPositions?.[pool.symbol]?.loanBalance.tokens
+                                ? 'user-loan-value text-btn semi-bold-text'
+                                : ''
+                            }
+                            onClick={() => {
+                              if (
+                                userFetched &&
+                                pool.symbol &&
+                                marginAccount?.poolPositions?.[pool.symbol]?.loanBalance.tokens
+                              ) {
+                                setCurrentAction('repay');
+                                setCurrentAmount(marginAccount.poolPositions[pool.symbol].loanBalance.tokens);
+                              }
+                            }}>
+                            {marginAccount.poolPositions[pool.symbol].loanBalance.tokens > 0 &&
                             marginAccount.poolPositions[pool.symbol].loanBalance.tokens < 0.0005
-                            ? '~0'
-                            : totalAbbrev(
-                                marginAccount.poolPositions[pool.symbol].loanBalance.tokens,
-                                pool.tokenPrice,
-                                nativeValues,
-                                3
-                              )
-                          : '--'}
+                              ? '~0'
+                              : totalAbbrev(
+                                  marginAccount.poolPositions[pool.symbol].loanBalance.tokens,
+                                  pool.tokenPrice,
+                                  nativeValues,
+                                  3
+                                )}
+                          </p>
+                        ) : (
+                          '--'
+                        )}
                       </td>
                       {/* Faucet for testing if in development */}
                       {cluster === 'devnet' ? (

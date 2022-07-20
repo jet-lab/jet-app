@@ -69,6 +69,7 @@
     "noDepositsForBorrow": "대출을 받기 위해서는 담보를 예치해야 합니다.",
     "noDepositsForWithdraw": "출금할 {{ASSET}}을 예치하지 않았습니다.",
     "noDebtForRepay": "귀하는 {{ASSET}}의 빚이 없습니다.",
+    "moreThanMaxBorrow": "The maximum amount you can borrow right now is {{AMOUNT}} {{ASSET}}",
     "rejectTrade": "This trade would increase your Risk Level to {{NEW_RISK}}, which is too high. (Max is {{MAX_RISK}})",
     "insufficientLamports": "거래 수수료에 대한 부담 없이 모든 SOL을 예치하고 있습니다! 약간 낮은 양으로 다시 시도하십시오.",
     "stillUndercollateralized": "{NEW-C-RATIO}}%의 새 C-비율은 여전히 ​​Jet의 최소 시장 담보 비율인 {{JET MIN C-RATIO}}% 미만입니다. 청산을 피하기 위해 더 많은 상환을 고려하십시오.",

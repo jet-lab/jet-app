@@ -69,6 +69,7 @@
     "noDepositsForBorrow": "You must deposit collateral in order to borrow.",
     "noDepositsForWithdraw": "You have not deposited any {{ASSET}} to withdraw.",
     "noDebtForRepay": "You don't owe any {{ASSET}}.",
+    "moreThanMaxBorrow": "The maximum amount you can borrow right now is {{AMOUNT}} {{ASSET}}",
     "rejectTrade": "This trade would increase your Risk Level to {{NEW_RISK}}, which is too high. (Max is {{MAX_RISK}})",
     "insufficientLamports": "You're using all of your SOL, leaving none for transaction fees.",
     "stillUndercollateralized": "Your new C-ratio of {{NEW-C-RATIO}}% is still under Jet's minimum marketplace collateralization ratio of {{JET MIN C-RATIO}}%. Please consider repaying more to avoid liquidation.",
