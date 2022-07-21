@@ -73,14 +73,12 @@ export function Cockpit(): JSX.Element {
                     ${
                       !accountSummary.borrowedValue || marginAccount.riskIndicator < MarginAccount.RISK_WARNING_LEVEL
                         ? 'success-text'
-                        : marginAccount.riskIndicator > MarginAccount.RISK_LIQUIDATION_LEVEL
-                        ? 'danger-text'
-                        : 'warning-text'
+                        : marginAccount.riskIndicator < MarginAccount.RISK_CRITICAL_LEVEL
+                        ? 'warning-text'
+                        : 'danger-text'
                     }`}
                     style={{ pointerEvents: 'none' }}>
-                    {marginAccount.riskIndicator > 1
-                      ? 1
-                      : currencyFormatter(marginAccount.riskIndicator, false, 2) ?? 0}
+                    {currencyFormatter(marginAccount.riskIndicator, false, 2)}
                   </h1>
                   <HealthBar />
                 </>
