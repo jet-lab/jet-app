@@ -8,7 +8,7 @@
     "lint": "eslint . --ext ts,tsx",
     "start": "craco start",
     "start:legacy": "NODE_OPTIONS=--openssl-legacy-provider craco start",
-    "debug": "cd ../jet-v2/libraries/ts && yarn build && npm link && cd ../../../jet-app && npm link @jet-lab/margin && npm run start",
+    "debug": "cd ../jet-v2/libraries/ts && yarn compile && npm link && cd ../../../jet-app && npm link @jet-lab/margin && npm run start",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "prepare": "husky install",

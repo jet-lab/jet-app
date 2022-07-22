@@ -168,8 +168,9 @@ export function MarketTable(): JSX.Element {
                         {pool.symbol} {dictionary.cockpit.detail}
                       </td>
                       <td className="cell-border-right">
-                        {currencyFormatter(
+                        {totalAbbrev(
                           nativeValues ? pool.vault.tokens : pool.vault.muln(pool.tokenPrice).tokens,
+                          undefined,
                           !nativeValues,
                           2
                         )}
