@@ -22,7 +22,7 @@ export function LiquidationModalProvider(props: { children: any }): JSX.Element 
   const { marginAccount } = useMargin();
   useEffect(() => {
     marginAccount?.exists().then(exists => {
-      if (exists && !closed) {
+      if (exists && marginAccount?.isBeingLiquidated && !closed) {
         setOpen(true);
       }
     });
