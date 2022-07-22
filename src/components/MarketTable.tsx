@@ -170,8 +170,8 @@ export function MarketTable(): JSX.Element {
                       <td className="cell-border-right">
                         {totalAbbrev(
                           nativeValues ? pool.vault.tokens : pool.vault.muln(pool.tokenPrice).tokens,
-                          undefined,
-                          !nativeValues,
+                          pool.tokenPrice,
+                          nativeValues,
                           2
                         )}
                       </td>
