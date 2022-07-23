@@ -12,6 +12,7 @@ import {
   SolletWalletAdapter,
   SlopeWalletAdapter
 } from '@solana/wallet-adapter-wallets';
+import { E2EWalletAdapter } from 'e2e-react-adapter';
 import { MarginContextProvider } from './contexts/marginContext';
 import { RpcNodeContextProvider } from './contexts/rpcNode';
 import { BlockExplorerProvider } from './contexts/blockExplorer';
@@ -32,9 +33,12 @@ import { NetworkWarningBanner } from './components/NetworkWarningBanner';
 import { Cockpit } from './views/Cockpit';
 import { TransactionLogs } from './views/TransactionLogs';
 import { LiquidationModal } from './components/LiquidationModal';
+import { Keypair } from '@solana/web3.js';
+import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 
 const queryClient = new QueryClient();
 export function App(): JSX.Element {
+  const urlParams = new URLSearchParams(window.location.search);
   const wallets = useMemo(
     () => [
       new PhantomWalletAdapter(),
@@ -42,7 +46,14 @@ export function App(): JSX.Element {
       new SolflareWalletAdapter(),
       new SolongWalletAdapter(),
       new SolletWalletAdapter(),
-      new SlopeWalletAdapter()
+      new SlopeWalletAdapter(),
+      new E2EWalletAdapter(
+        typeof urlParams.get('debug-wallet-secret-key') === 'string'
+          ? {
+              keypair: Keypair.fromSecretKey(bs58.decode(urlParams.get('debug-wallet-secret-key') as string))
+            }
+          : undefined
+      )
     ],
     []
   );
