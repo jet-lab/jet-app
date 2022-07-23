@@ -36,27 +36,40 @@ import { LiquidationModal } from './components/LiquidationModal';
 import { Keypair } from '@solana/web3.js';
 import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 
+const walletArray: (
+  | PhantomWalletAdapter
+  | MathWalletAdapter
+  | SolflareWalletAdapter
+  | SolongWalletAdapter
+  | SolletWalletAdapter
+  | SlopeWalletAdapter
+  | E2EWalletAdapter
+)[] = [
+  new PhantomWalletAdapter(),
+  new MathWalletAdapter(),
+  new SolflareWalletAdapter(),
+  new SolongWalletAdapter(),
+  new SolletWalletAdapter(),
+  new SlopeWalletAdapter()
+];
+
 const queryClient = new QueryClient();
 export function App(): JSX.Element {
   const urlParams = new URLSearchParams(window.location.search);
-  const wallets = useMemo(
-    () => [
-      new PhantomWalletAdapter(),
-      new MathWalletAdapter(),
-      new SolflareWalletAdapter(),
-      new SolongWalletAdapter(),
-      new SolletWalletAdapter(),
-      new SlopeWalletAdapter(),
+  const debugWallet: string = urlParams.get('debug-wallet-secret-key') as string;
+  const isDevnet = window.location.href.includes('devnet');
+  if (isDevnet) {
+    walletArray.push(
       new E2EWalletAdapter(
-        typeof urlParams.get('debug-wallet-secret-key') === 'string'
+        debugWallet.length > 0
           ? {
-              keypair: Keypair.fromSecretKey(bs58.decode(urlParams.get('debug-wallet-secret-key') as string))
+              keypair: Keypair.fromSecretKey(bs58.decode(debugWallet))
             }
           : undefined
       )
-    ],
-    []
-  );
+    );
+  }
+  const wallets = useMemo(() => walletArray, []);
 
   return (
     <HashRouter basename={'/'}>
