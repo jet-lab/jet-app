@@ -5,8 +5,7 @@ import {
   Pool,
   PoolManager,
   AssociatedToken,
-  MarginClient,
-  MarginPools
+  MarginClient
 } from '@jet-lab/margin';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { createContext, useContext, useMemo } from 'react';
@@ -21,17 +20,17 @@ const config = MarginClient.getConfig(cluster);
 
 const DEFAULT_WALLET_BALANCES = Object.fromEntries(
   Object.values(config.tokens).map(token => [token.symbol, AssociatedToken.zeroAux(PublicKey.default, token.decimals)])
-) as Record<MarginPools, AssociatedToken>;
+) as Record<string, AssociatedToken>;
 
 interface MarginContextState {
   connection: Connection;
   manager: PoolManager;
   config: MarginConfig;
   poolsFetched: boolean;
-  pools: Record<MarginPools, Pool> | undefined;
+  pools: Record<string, Pool> | undefined;
   userFetched: boolean;
   marginAccount: MarginAccount | undefined;
-  walletBalances: Record<MarginPools, AssociatedToken>;
+  walletBalances: Record<string, AssociatedToken>;
   cluster: MarginCluster;
   refresh: () => Promise<void>;
 }

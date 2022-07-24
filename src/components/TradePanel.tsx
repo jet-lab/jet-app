@@ -26,7 +26,8 @@ export function TradePanel(): JSX.Element {
     sendingTrade,
     setSendingTrade
   } = useTradeContext();
-  const accountPoolPosition = marginAccount && currentPool?.symbol && marginAccount.poolPositions[currentPool.symbol];
+  const accountPoolPosition =
+    marginAccount && currentPool?.symbol ? marginAccount.poolPositions[currentPool.symbol] : undefined;
   const accountSummary = marginAccount && marginAccount.summary;
   const maxInput = accountPoolPosition?.maxTradeAmounts[currentAction].tokens ?? 0;
   const [disabledInput, setDisabledInput] = useState<boolean>(false);

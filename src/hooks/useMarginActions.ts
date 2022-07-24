@@ -1,5 +1,5 @@
 import { useMargin } from '../contexts/marginContext';
-import { MarginPools, PoolTokenChange, TokenFormat } from '@jet-lab/margin';
+import { PoolTokenChange, TokenFormat } from '@jet-lab/margin';
 
 export enum TxnResponse {
   Success = 'SUCCESS',
@@ -11,7 +11,7 @@ export const useMarginActions = () => {
   const { pools, marginAccount, refresh } = useMargin();
 
   // Deposit
-  const deposit = async (abbrev: MarginPools, change: PoolTokenChange): Promise<TxnResponse> => {
+  const deposit = async (abbrev: string, change: PoolTokenChange): Promise<TxnResponse> => {
     if (!marginAccount || !pools) {
       console.log('Accounts not loaded', marginAccount, pools);
       throw new Error();
@@ -35,7 +35,7 @@ export const useMarginActions = () => {
   };
 
   // Withdraw
-  const withdraw = async (abbrev: MarginPools, change: PoolTokenChange): Promise<TxnResponse> => {
+  const withdraw = async (abbrev: string, change: PoolTokenChange): Promise<TxnResponse> => {
     if (!marginAccount || !pools) {
       throw new Error();
     }
@@ -62,7 +62,7 @@ export const useMarginActions = () => {
   };
 
   // Borrow
-  const borrow = async (abbrev: MarginPools, change: PoolTokenChange): Promise<TxnResponse> => {
+  const borrow = async (abbrev: string, change: PoolTokenChange): Promise<TxnResponse> => {
     if (!marginAccount || !pools) {
       throw new Error();
     }
@@ -89,7 +89,7 @@ export const useMarginActions = () => {
   };
 
   // Repay
-  const repay = async (abbrev: MarginPools, change: PoolTokenChange): Promise<TxnResponse> => {
+  const repay = async (abbrev: string, change: PoolTokenChange): Promise<TxnResponse> => {
     if (!marginAccount || !pools) {
       throw new Error();
     }
