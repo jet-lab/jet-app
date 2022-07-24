@@ -48,6 +48,7 @@ export function ConnectWalletModal(): JSX.Element {
         <div className="wallets flex-centered column">
           {wallets.map(w => (
             <div
+              data-testid={`connect-wallet-${w.adapter.name}`}
               key={w.adapter.name}
               className={`wallet flex align-center justify-between
                 ${wallet?.adapter.name === w.adapter.name ? 'active' : ''}`}

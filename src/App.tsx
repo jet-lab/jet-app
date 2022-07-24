@@ -36,40 +36,41 @@ import { LiquidationModal } from './components/LiquidationModal';
 import { Keypair } from '@solana/web3.js';
 import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 
-const walletArray: (
-  | PhantomWalletAdapter
-  | MathWalletAdapter
-  | SolflareWalletAdapter
-  | SolongWalletAdapter
-  | SolletWalletAdapter
-  | SlopeWalletAdapter
-  | E2EWalletAdapter
-)[] = [
-  new PhantomWalletAdapter(),
-  new MathWalletAdapter(),
-  new SolflareWalletAdapter(),
-  new SolongWalletAdapter(),
-  new SolletWalletAdapter(),
-  new SlopeWalletAdapter()
-];
-
 const queryClient = new QueryClient();
 export function App(): JSX.Element {
   const urlParams = new URLSearchParams(window.location.search);
   const debugWallet: string = urlParams.get('debug-wallet-secret-key') as string;
-  const isDevnet = window.location.href.includes('devnet');
-  if (isDevnet) {
-    walletArray.push(
-      new E2EWalletAdapter(
-        debugWallet.length > 0
-          ? {
-              keypair: Keypair.fromSecretKey(bs58.decode(debugWallet))
-            }
-          : undefined
-      )
-    );
-  }
-  const wallets = useMemo(() => walletArray, []);
+  const isDevnet = window.location.href.includes('devnet') || window.location.href.includes('localhost');
+  const wallets = useMemo(() => {
+    const walletArray: (
+      | PhantomWalletAdapter
+      | MathWalletAdapter
+      | SolflareWalletAdapter
+      | SolongWalletAdapter
+      | SolletWalletAdapter
+      | SlopeWalletAdapter
+      | E2EWalletAdapter
+    )[] = [
+      new PhantomWalletAdapter(),
+      new MathWalletAdapter(),
+      new SolflareWalletAdapter(),
+      new SolongWalletAdapter(),
+      new SolletWalletAdapter(),
+      new SlopeWalletAdapter()
+    ];
+    if (isDevnet) {
+      walletArray.push(
+        new E2EWalletAdapter(
+          debugWallet && debugWallet.length > 0
+            ? {
+                keypair: Keypair.fromSecretKey(bs58.decode(debugWallet))
+              }
+            : undefined
+        )
+      );
+    }
+    return walletArray;
+  }, [debugWallet, isDevnet]);
 
   return (
     <HashRouter basename={'/'}>

@@ -26,6 +26,7 @@ export function JetInput(props: {
     <div className={`jet-input flex-centered ${props.disabled ? 'disabled' : ''}`}>
       <div className={`flex-centered ${props.currency ? 'currency-input' : ''}`}>
         <Input
+          data-testid="jet-trade-input"
           type={props.type}
           disabled={props.disabled}
           value={props.value || ''}
@@ -53,6 +54,7 @@ export function JetInput(props: {
         )}
       </div>
       <div
+        data-testid="jet-trade-button"
         className={`input-btn flex-centered ${props.loading ? 'loading' : ''} ${
           props.disabledButton ? 'disabled' : ''
         }`}
