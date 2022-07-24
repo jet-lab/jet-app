@@ -14,7 +14,9 @@
     "prepare": "husky install",
     "compile": "npx tsc --noEmit",
     "precommit": "npm run fmt:fix",
-    "checkall": "npm run compile && npm run fmt:fix && npm run lint && npm run test"
+    "checkall": "npm run compile && npm run fmt:fix && npm run lint && npm run test",
+    "e2e": "npx cypress run",
+    "e2e:gui": "npx cypress open"
   },
   "dependencies": {
     "@ant-design/icons": "^4.5.0",

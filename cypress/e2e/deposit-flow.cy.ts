@@ -7,7 +7,9 @@ describe('deposit-flow', () => {
     cy.get('[data-testid=connect-wallet-E2E]').click();
     cy.contains('[title=Disconnect]', 'CONNECTED', { timeout: 30000 });
     cy.get('[data-testid=Solana-deposit]').click();
+    cy.wait(1000);
     cy.get('[data-testid=airdrop-Solana]').click();
+    cy.wait(1000);
     cy.contains('[data-testid=Solana-balance]', '1', { timeout: 30000 });
     cy.get('[data-testid=jet-trade-input]').click();
     cy.get('[data-testid=jet-trade-input]').type('0.5');

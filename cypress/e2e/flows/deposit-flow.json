@@ -24,26 +24,14 @@
     {
       "type": "click",
       "target": "main",
-      "selectors": [
-        [
-          "aria/CONNECT WALLET",
-          "aria/[role=\"generic\"]"
-        ],
-        [
-          "[data-testid=connect-wallet-btn] > span"
-        ]
-      ],
+      "selectors": [["aria/CONNECT WALLET", "aria/[role=\"generic\"]"], ["[data-testid=connect-wallet-btn] > span"]],
       "offsetY": 4.25,
       "offsetX": 77.375
     },
     {
       "type": "click",
       "target": "main",
-      "selectors": [
-        [
-          "[data-testid=connect-wallet-E2E]"
-        ]
-      ],
+      "selectors": [["[data-testid=connect-wallet-E2E]"]],
       "offsetY": 20.2890625,
       "offsetX": 128
     },
@@ -53,11 +41,7 @@
     },
     {
       "type": "click",
-      "selectors": [
-        [
-          "[data-testid=Solana-deposit]"
-        ]
-      ],
+      "selectors": [["[data-testid=Solana-deposit]"]],
       "offsetX": 0,
       "offsetY": 0,
       "frame": [],
@@ -67,11 +51,7 @@
       "type": "click",
       "target": "main",
       "frame": [],
-      "selectors": [
-        [
-          "[data-testid=airdrop-Solana]"
-        ]
-      ],
+      "selectors": [["[data-testid=airdrop-Solana]"]],
       "offsetX": 0,
       "offsetY": 0,
       "duration": 50
@@ -85,32 +65,20 @@
       "type": "click",
       "target": "main",
       "frame": [],
-      "selectors": [
-        [
-          "[data-testid=jet-trade-input]"
-        ]
-      ],
+      "selectors": [["[data-testid=jet-trade-input]"]],
       "offsetX": 142,
       "offsetY": 37.5
     },
     {
       "type": "change",
       "target": "main",
-      "selectors": [
-        [
-          "[data-testid=jet-trade-input]"
-        ]
-      ],
+      "selectors": [["[data-testid=jet-trade-input]"]],
       "value": "0.5"
     },
     {
       "type": "click",
       "target": "main",
-      "selectors": [
-        [
-          "[data-testid=jet-trade-button]"
-        ]
-      ],
+      "selectors": [["[data-testid=jet-trade-button]"]],
       "offsetX": 18.2247314453125,
       "offsetY": 13.009857177734375
     },
