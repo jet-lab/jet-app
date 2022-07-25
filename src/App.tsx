@@ -12,6 +12,7 @@ import {
   SolletWalletAdapter,
   SlopeWalletAdapter
 } from '@solana/wallet-adapter-wallets';
+import { E2EWalletAdapter } from 'e2e-react-adapter';
 import { MarginContextProvider } from './contexts/marginContext';
 import { RpcNodeContextProvider } from './contexts/rpcNode';
 import { BlockExplorerProvider } from './contexts/blockExplorer';
@@ -32,20 +33,44 @@ import { NetworkWarningBanner } from './components/NetworkWarningBanner';
 import { Cockpit } from './views/Cockpit';
 import { TransactionLogs } from './views/TransactionLogs';
 import { LiquidationModal } from './components/LiquidationModal';
+import { Keypair } from '@solana/web3.js';
+import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 
 const queryClient = new QueryClient();
 export function App(): JSX.Element {
-  const wallets = useMemo(
-    () => [
+  const urlParams = new URLSearchParams(window.location.search);
+  const debugWallet: string = urlParams.get('debug-wallet-secret-key') as string;
+  const isDevnet = window.location.href.includes('devnet') || window.location.href.includes('localhost');
+  const wallets = useMemo(() => {
+    const walletArray: (
+      | PhantomWalletAdapter
+      | MathWalletAdapter
+      | SolflareWalletAdapter
+      | SolongWalletAdapter
+      | SolletWalletAdapter
+      | SlopeWalletAdapter
+      | E2EWalletAdapter
+    )[] = [
       new PhantomWalletAdapter(),
       new MathWalletAdapter(),
       new SolflareWalletAdapter(),
       new SolongWalletAdapter(),
       new SolletWalletAdapter(),
       new SlopeWalletAdapter()
-    ],
-    []
-  );
+    ];
+    if (isDevnet) {
+      walletArray.push(
+        new E2EWalletAdapter(
+          debugWallet && debugWallet.length > 0
+            ? {
+                keypair: Keypair.fromSecretKey(bs58.decode(debugWallet))
+              }
+            : undefined
+        )
+      );
+    }
+    return walletArray;
+  }, [debugWallet, isDevnet]);
 
   return (
     <HashRouter basename={'/'}>

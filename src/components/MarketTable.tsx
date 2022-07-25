@@ -180,7 +180,7 @@ export function MarketTable(): JSX.Element {
                       <td className="clickable-icon cell-border-right">
                         <RadarIcon width="18px" onClick={() => setRadarOpen(true)} />
                       </td>
-                      <td>
+                      <td data-testid={`${pool.name}-balance`}>
                         {pool && walletBalance ? (
                           <p
                             className={walletBalance ? 'user-wallet-value text-btn semi-bold-text' : ''}
@@ -201,7 +201,7 @@ export function MarketTable(): JSX.Element {
                           '--'
                         )}
                       </td>
-                      <td>
+                      <td data-testid={`${pool.name}-deposit`}>
                         {userFetched &&
                         pool.symbol &&
                         pool.tokenPrice !== undefined &&
@@ -238,7 +238,7 @@ export function MarketTable(): JSX.Element {
                           '--'
                         )}
                       </td>
-                      <td>
+                      <td data-testid={`${pool.name}-borrow`}>
                         {userFetched &&
                         pool.symbol &&
                         pool.tokenPrice !== undefined &&
@@ -278,6 +278,7 @@ export function MarketTable(): JSX.Element {
                       {/* Faucet for testing if in development */}
                       {cluster === 'devnet' ? (
                         <td
+                          data-testid={`airdrop-${pool.name}`}
                           onClick={async () => {
                             if (userFetched && publicKey) {
                               doAirdrop(pool);

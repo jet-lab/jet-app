@@ -14,7 +14,9 @@
     "prepare": "husky install",
     "compile": "npx tsc --noEmit",
     "precommit": "npm run fmt:fix",
-    "checkall": "npm run compile && npm run fmt:fix && npm run lint && npm run test"
+    "checkall": "npm run compile && npm run fmt:fix && npm run lint && npm run test",
+    "e2e": "npx cypress run",
+    "e2e:gui": "npx cypress open"
   },
   "dependencies": {
     "@ant-design/icons": "^4.5.0",
@@ -36,6 +38,7 @@
     "antd": "^4.17.2",
     "bs58": "^4.0.1",
     "chai": "^4.3.6",
+    "e2e-react-adapter": "^0.1.1",
     "logrocket": "^3.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -59,6 +62,8 @@
     "@types/react-router": "^5.1.17",
     "@types/react-router-dom": "^5.3.2",
     "craco-less": "^1.20.0",
+    "cypress": "^10.3.1",
+    "cypress-wait-until": "^1.7.2",
     "eslint-config-react-app": "6.0.0",
     "husky": "^8.0.1",
     "prettier": "^2.5.1",
