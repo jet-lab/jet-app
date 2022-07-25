@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { PublicKey } from '@solana/web3.js';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { defaultVariables, IncomingThemeVariables, NotificationsButton } from '@dialectlabs/react-ui';
 import { useConnectWalletModal } from '../contexts/connectWalletModal';
@@ -41,6 +40,7 @@ export function Navbar(): JSX.Element {
               {link.title}
             </Link>
           ))}
+          <SettingFilled className="icon-btn" onClick={() => setOpen(true)} />
           <div className="modal-container">
             <div style={{ position: 'relative' }}>
               {/* Dialect notification button is a wrapper of dialect notification modal */}
@@ -49,15 +49,14 @@ export function Navbar(): JSX.Element {
                 pollingInterval={15000}
                 notifications={[
                   {
-                    name: 'LOW Collateral-RATIO',
-                    detail: 'You will get notified when your COLLATERALIZATION RATIO falls to dangerous levels'
+                    name: 'Low Risk level',
+                    detail: 'You will get notified when your RISK LEVEL rises to dangerous levels'
                   }
                 ]}
                 channels={['web3', 'email', 'telegram']}
               />
             </div>
           </div>
-          <SettingFilled className="icon-btn" onClick={() => setOpen(true)} />
           <Button
             className="flex-centered"
             style={{ textTransform: 'unset' }}
