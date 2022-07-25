@@ -37,6 +37,8 @@
     "accountLeverage": "Account Leverage",
     "predictedRiskLevel": "Predicted Risk Level",
     "deposit": "Yatırma",
+    "maxDeposit": "Max Deposit",
+    "minSol": "We reserve 0.07 SOL in the wallet for transaction fees.",
     "walletBalance": "Cüzdan Bakiyesi",
     "noDepositAmount": "Miktar girin",
     "notEnoughAsset": "Yeterli {{ASSET}} yok.",
@@ -67,6 +69,7 @@
     "noDepositsForBorrow": "Ödünç almak için teminat yatırmanız gerekiyor.",
     "noDepositsForWithdraw": "Çekme istediğiniz herhangi bir {{ASSET}} yatırımınız yok. ",
     "noDebtForRepay": "Hiç {{ASSET}} borcunuz yok.",
+    "moreThanMaxBorrow": "The maximum amount you can borrow right now is {{AMOUNT}} {{ASSET}}",
     "rejectTrade": "This trade would increase your Risk Level to {{NEW_RISK}}, which is too high. (Max is {{MAX_RISK}})",
     "insufficientLamports": "İşlem ücretlerini dahi karşılamayacak kadar çok SOL yatırıyorsunuz. Şu ankinden daha az bir miktar kullanarak yeniden deneyin. ",
     "stillUndercollateralized": "Yeni C-oranınız {{NEW-C-RATIO}}% hala Jet Protocol'ün minimum piyasa teminat oranı",
@@ -160,6 +163,11 @@
         "disclaimerDetail": "You are now entering Jet Protocol Mainnet. Do not proceed if you do not understand and accept the {{TERMS_LINK}}, {{PRIVACY_LINK}}, and the potential for financial loss.",
         "acceptRisks": "I understand and accept the risks.",
         "enterMainnet": "Enter Mainnet"
+      },
+      "liquidation": {
+        "title": "Liquidation in Progress",
+        "liquidationDetail": "Liquidation has now begun on your account. To cease liquidation, you must deposit funds to bring your Risk Level below 1.0 immediately.",
+        "fundsRequired": "Funds Required"
       }
     },
     "radar": {

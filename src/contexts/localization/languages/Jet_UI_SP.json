@@ -37,6 +37,8 @@
     "accountLeverage": "Account Leverage",
     "predictedRiskLevel": "Predicted Risk Level",
     "deposit": "Depositar",
+    "maxDeposit": "Max Deposit",
+    "minSol": "We reserve 0.07 SOL in the wallet for transaction fees.",
     "walletBalance": "Balance",
     "noDepositAmount": "Ingresar Monto",
     "notEnoughAsset": "{{ASSET}} insuficiente.",
@@ -67,6 +69,7 @@
     "noDepositsForBorrow": "Debe depositar colateral para tomar prestado.",
     "noDepositsForWithdraw": "No cuenta con {{ASSET}} depositado para retirar.",
     "noDebtForRepay": "No debe {{ASSET}}.\n",
+    "moreThanMaxBorrow": "The maximum amount you can borrow right now is {{AMOUNT}} {{ASSET}}",
     "rejectTrade": "This trade would increase your Risk Level to {{NEW_RISK}}, which is too high. (Max is {{MAX_RISK}})",
     "insufficientLamports": "¡Usted está depositando todos sus SOL sin dejar Lamports en su billetera para pagar los fees de las transacciones! Vuelva a intentarlo con una cantidad ligeramente inferior.",
     "stillUndercollateralized": "Su nuevo C-ratio de {{NEW-C-RATIO}}% todavía está por debajo del ratio mínimo de colateralización del mercado de Jet de {{JET MIN C-RATIO}}%. Por favor, considere pagar más para evitar la liquidación.\n",
@@ -160,6 +163,11 @@
         "disclaimerDetail": "You are now entering Jet Protocol Mainnet. Do not proceed if you do not understand and accept the {{TERMS_LINK}}, {{PRIVACY_LINK}}, and the potential for financial loss.",
         "acceptRisks": "I understand and accept the risks.",
         "enterMainnet": "Enter Mainnet"
+      },
+      "liquidation": {
+        "title": "Liquidation in Progress",
+        "liquidationDetail": "Liquidation has now begun on your account. To cease liquidation, you must deposit funds to bring your Risk Level below 1.0 immediately.",
+        "fundsRequired": "Funds Required"
       }
     },
     "radar": {

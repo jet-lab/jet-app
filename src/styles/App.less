@@ -8,7 +8,7 @@
 ***************************/
 // Variables
 @neu-table-shadow: -4px 0px 10px @light-shadow, 2px 4px 8px @dark-shadow;
-@health-gradient: linear-gradient(90deg, @success 0%, @warning 65%, @danger 90%);
+@health-gradient: linear-gradient(90deg, @success 75%, @warning 80%, @danger 95%);
 // Override brand colors for V1.5
 @jet-green: #b8b8fe;
 @jet-blue: #b9de9b;
@@ -55,6 +55,54 @@
     }
     &-subheader {
       font-size: 38px;
+    }
+  }
+
+  // Liquidation Modal
+  .liquidation-modal {
+    .ant-modal-content {
+      max-width: 300px;
+      padding-top: unset;
+      padding-bottom: unset;
+      border-radius: @border-radius;
+      h1 {
+        font-size: @xl-font-size;
+        text-align: center;
+        .anticon {
+          font-size: @lg-font-size;
+          color: @danger;
+          margin-right: @spacing-xs;
+        }
+      }
+      .healthbar {
+        width: 100%;
+      }
+    }
+    &-detail {
+      max-width: 280px;
+      margin: @spacing-xs auto @spacing-base auto;
+    }
+    span {
+      font-size: @sm-font-size;
+    }
+    &-stats {
+      width: calc(100% - (@spacing-sm * 2));
+      padding: @spacing-xs @spacing-sm;
+      border-radius: @border-radius;
+      border: 1px solid @danger;
+      margin-top: @spacing-xs;
+      div {
+        width: 100%;
+        .ant-typography {
+          margin: 2px 0;
+          &:last-of-type {
+            text-align: right;
+          }
+        }
+      }
+    }
+    &-actions {
+      margin: @spacing-sm 0 @spacing-base 0;
     }
   }
 
@@ -807,6 +855,9 @@
             opacity: @subtle-opacity;
             letter-spacing: 0.5px;
           }
+          .warning-text {
+            color: @warning;
+          }
           .bold-text {
             color: @secondary-3;
           }
@@ -897,6 +948,9 @@
             cursor: unset;
           }
           tbody {
+            p {
+              margin: unset;
+            }
             tr {
               &:last-of-type {
                 border-bottom: 10px solid @primary;
@@ -983,13 +1037,13 @@
                   fill: @jet-green;
                 }
               }
-              &.user-wallet-value {
+              .user-wallet-value {
                 color: @secondary;
               }
-              &.user-collateral-value {
+              .user-collateral-value {
                 color: @success;
               }
-              &.user-loan-value {
+              .user-loan-value {
                 color: @danger;
               }
               svg {

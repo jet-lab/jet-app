@@ -79,7 +79,7 @@ export function PoolDetail({ pool, close }: { pool: Pool | undefined; close: () 
                     <br></br>
                     <p>
                       {currencyFormatter(
-                        nativeValues ? pool.vaultTokens.tokens : pool.vaultTokens.muln(price).tokens,
+                        nativeValues ? pool.vault.tokens : pool.vault.muln(price).tokens,
                         !nativeValues,
                         2
                       )}

@@ -12,6 +12,7 @@ export function JetInput(props: {
   currency?: boolean;
   maxInput?: number | null;
   error?: string | null;
+  warning?: string | null;
   disabled?: boolean;
   disabledButton?: boolean;
   loading?: boolean;
@@ -29,10 +30,10 @@ export function JetInput(props: {
           disabled={props.disabled}
           value={props.value || ''}
           placeholder={props.placeholder}
-          className={props.error ? 'error' : ''}
+          className={props.error ? 'error' : props.warning ? 'warning' : ''}
           onClick={() => (props.onClick ? props.onClick() : null)}
           onChange={e => props.onChange(e.target.value)}
-          onPressEnter={() => props.submit()}
+          onPressEnter={() => (props.disabled || props.error ? null : props.submit())}
         />
         {props.currency && currentPool && (
           <>
@@ -56,7 +57,7 @@ export function JetInput(props: {
           props.disabledButton ? 'disabled' : ''
         }`}
         onClick={() => {
-          if (!props.disabled && !props.disabledButton && props.value) {
+          if (!props.disabled && !props.disabledButton && !props.error && props.value) {
             props.submit();
           }
         }}>
