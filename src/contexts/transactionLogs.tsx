@@ -26,7 +26,7 @@ export function TransactionsProvider(props: { children: JSX.Element }): JSX.Elem
   const [logs, setLogs] = useState<AccountTransaction[]>([]);
 
   const loadLogs = () => {
-    if (pools && publicKey) {
+    if (pools && publicKey && manager) {
       setLoadingLogs(true);
       const mints = Object.entries(pools).reduce((acc, [pool, poolInfo]) => {
         acc[pool] = {

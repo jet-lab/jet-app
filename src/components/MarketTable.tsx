@@ -39,6 +39,10 @@ export function MarketTable(): JSX.Element {
       amount = TokenAmount.tokens('1', pool.decimals);
     }
 
+    if (!config || !manager) {
+      return;
+    }
+
     const token = config.tokens[pool.symbol as string];
 
     try {
@@ -140,7 +144,9 @@ export function MarketTable(): JSX.Element {
               {poolsArray.length ? (
                 poolsArray.map((pool, index) => {
                   const walletBalance =
-                    userFetched && pool.symbol !== undefined ? walletBalances[pool.symbol] : undefined;
+                    userFetched && pool.symbol !== undefined && walletBalances
+                      ? walletBalances[pool.symbol]
+                      : undefined;
                   if (
                     !pool.name?.toLocaleLowerCase().includes(filter) &&
                     !pool.symbol?.toLocaleLowerCase().includes(filter)

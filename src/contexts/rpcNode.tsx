@@ -28,6 +28,10 @@ export function RpcNodeContextProvider(props: { children: JSX.Element }): JSX.El
   // whenever user's connection changes
   const { connection } = useMargin();
   useEffect(() => {
+    if (!connection) {
+      return;
+    }
+
     const getPing = async () => {
       const startTime = Date.now();
       await connection.getVersion();
