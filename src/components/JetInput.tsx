@@ -34,7 +34,7 @@ export function JetInput(props: {
           className={props.error ? 'error' : props.warning ? 'warning' : ''}
           onClick={() => (props.onClick ? props.onClick() : null)}
           onChange={e => {
-            if (currentPool && props.maxInput && currentPool?.vault.tokens < e.target.valueAsNumber) {
+            if (currentPool && props.maxInput && props.maxInput < e.target.valueAsNumber) {
               e.target.value = props.maxInput.toString();
               props.onChange(props.maxInput);
             } else {
