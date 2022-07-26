@@ -19,6 +19,7 @@ import { AssetLogo } from './AssetLogo';
 import { ReactComponent as ArrowIcon } from '../styles/icons/arrow_icon.svg';
 import { ReactComponent as RadarIcon } from '../styles/icons/radar_icon.svg';
 import { useClusterSetting } from '../contexts/clusterSetting';
+import { useBlockExplorer } from '../contexts/blockExplorer';
 
 export function MarketTable(): JSX.Element {
   const { clusterSetting } = useClusterSetting();
@@ -29,6 +30,7 @@ export function MarketTable(): JSX.Element {
   const { currentPool, setCurrentPool, setCurrentAction, setCurrentAmount } = useTradeContext();
   const { setRadarOpen } = useRadarModal();
   const { nativeValues } = useNativeValues();
+  const { getExplorerUrl } = useBlockExplorer();
   const [poolsArray, setPoolsArray] = useState<Pool[]>([]);
   const [filteredMarketTable, setFilteredMarketTable] = useState<Pool[]>([]);
   const [poolDetail, setPoolDetail] = useState<Pool | undefined>();
@@ -51,7 +53,7 @@ export function MarketTable(): JSX.Element {
       if (!publicKey) {
         throw new Error('Wallet not connected');
       }
-      await TokenFaucet.airdrop(
+      const transaction = await TokenFaucet.airdrop(
         manager.programs,
         manager.provider,
         amount.lamports,
@@ -64,7 +66,10 @@ export function MarketTable(): JSX.Element {
         description: dictionary.copilot.alert.airdropSuccess
           .replaceAll('{{UI AMOUNT}}', amount.uiTokens)
           .replaceAll('{{RESERVE ABBREV}}', pool.symbol),
-        placement: 'bottomLeft'
+        placement: 'bottomLeft',
+        onClick: () => {
+          window.open(getExplorerUrl(transaction), '_blank');
+        }
       });
     } catch (err: any) {
       console.log(err);
