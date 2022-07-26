@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { NATIVE_MINT } from '@solana/spl-token-latest';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { Pool, MarginPools, TokenAmount, TokenFaucet } from '@jet-lab/margin';
+import { Pool, TokenAmount, TokenFaucet } from '@jet-lab/margin';
 import { CloudFilled, FilterFilled } from '@ant-design/icons';
 import { currencyFormatter, totalAbbrev } from '../utils/currency';
 import { useLanguage } from '../contexts/localization/localization';
@@ -39,7 +39,11 @@ export function MarketTable(): JSX.Element {
       amount = TokenAmount.tokens('1', pool.decimals);
     }
 
-    const token = config.tokens[pool.symbol as MarginPools];
+    if (!config || !manager) {
+      return;
+    }
+
+    const token = config.tokens[pool.symbol as string];
 
     try {
       if (!publicKey) {
@@ -94,7 +98,8 @@ export function MarketTable(): JSX.Element {
   }, [currentPool, pools]);
 
   // Get max input for SOL only to account for 0.07 reserve
-  const accountPoolPosition = marginAccount && currentPool?.symbol && marginAccount.poolPositions[currentPool.symbol];
+  const accountPoolPosition =
+    marginAccount && currentPool?.symbol ? marginAccount.poolPositions[currentPool.symbol] : undefined;
   const maxSolInput = accountPoolPosition?.maxTradeAmounts['deposit'].tokens ?? 0;
 
   return (
@@ -139,7 +144,9 @@ export function MarketTable(): JSX.Element {
               {poolsArray.length ? (
                 poolsArray.map((pool, index) => {
                   const walletBalance =
-                    userFetched && pool.symbol !== undefined ? walletBalances[pool.symbol] : undefined;
+                    userFetched && pool.symbol !== undefined && walletBalances
+                      ? walletBalances[pool.symbol]
+                      : undefined;
                   if (
                     !pool.name?.toLocaleLowerCase().includes(filter) &&
                     !pool.symbol?.toLocaleLowerCase().includes(filter)
