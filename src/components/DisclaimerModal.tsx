@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import reactStringReplace from 'react-string-replace';
-import { cluster } from '../contexts/marginContext';
 import { useLanguage } from '../contexts/localization/localization';
 import { Button, Checkbox, Modal, Typography } from 'antd';
+import { useClusterSetting } from '../contexts/clusterSetting';
 
 export function DisclaimerModal(): JSX.Element {
+  const { clusterSetting } = useClusterSetting();
   const { dictionary } = useLanguage();
   const [disclaimerAccepted, setDisclaimerAccepted] = useState(
     localStorage.getItem('jetV1DisclaimerAccepted') === 'true'
@@ -39,7 +40,7 @@ export function DisclaimerModal(): JSX.Element {
       className="disclaimer-modal"
       footer={null}
       closable={false}
-      visible={cluster === 'mainnet-beta' && !disclaimerAccepted}>
+      visible={clusterSetting === 'mainnet-beta' && !disclaimerAccepted}>
       <div className="modal-content flex-centered column">
         <img src="img/jet/jet_logo.png" width="100px" height="auto" alt="Jet Protocol" />
         <br></br>

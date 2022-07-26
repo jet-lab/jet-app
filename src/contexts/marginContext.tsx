@@ -13,8 +13,7 @@ import { useQuery, useQueryClient } from 'react-query';
 import { AnchorProvider } from '@project-serum/anchor';
 import { ConfirmOptions, Connection, PublicKey } from '@solana/web3.js';
 import { useRpcNode } from './rpcNode';
-
-export const cluster = (process.env.REACT_APP_CLUSTER ?? 'mainnet-beta') as MarginCluster;
+import { Cluster, useClusterSetting } from './clusterSetting';
 
 interface MarginContextState {
   connection?: Connection;
@@ -40,39 +39,46 @@ const confirmOptions = {
   preflightCommitment: 'recent'
 } as ConfirmOptions;
 
-function useProvider(config?: MarginConfig): { manager?: PoolManager } {
+const endpoints: Record<Cluster, string> = {
+  'mainnet-beta': `https://jetprot-main-0d7b.mainnet.rpcpool.com/${process.env.REACT_APP_RPC_TOKEN ?? ''}`,
+  devnet: `https://jetprot-develope-26c4.devnet.rpcpool.com/${process.env.REACT_APP_RPC_DEV_TOKEN ?? ''}`
+};
+
+function useProvider(): { manager?: PoolManager } {
+  const config = useConfig();
+  const { clusterSetting } = useClusterSetting();
   const { preferredNode } = useRpcNode();
   const wallet = useWallet();
   const manager = useMemo(() => {
     if (!config) {
       return;
     }
-
-    const connection = new Connection(preferredNode ?? config.url, 'recent');
+    const connection = new Connection(preferredNode ?? endpoints[clusterSetting], 'recent');
     const provider = new AnchorProvider(connection, wallet as any, confirmOptions);
     const programs = MarginClient.getPrograms(provider, config);
     return new PoolManager(programs, provider);
-  }, [preferredNode, config, wallet]);
+  }, [config, clusterSetting, preferredNode, wallet]);
   return { manager };
+}
+
+function useConfig() {
+  const { clusterSetting } = useClusterSetting();
+  const [config, setConfig] = useState<MarginConfig | undefined>(undefined);
+  useEffect(() => {
+    MarginClient.getConfig(clusterSetting).then(config => setConfig(config));
+  }, [clusterSetting]);
+
+  return config;
 }
 
 // Trade info context provider
 export function MarginContextProvider(props: { children: JSX.Element }): JSX.Element {
-  const [config, setConfig] = useState<MarginConfig | undefined>(undefined);
-  const getConfig = async () => {
-    setConfig(await MarginClient.getConfig(cluster));
-  };
-
-  useEffect(() => {
-    if (!config) {
-      getConfig();
-    }
-  }, [config]);
-
+  const config = useConfig();
+  const { clusterSetting } = useClusterSetting();
   const queryClient = useQueryClient();
   const { publicKey } = useWallet();
 
-  const { manager } = useProvider(config);
+  const { manager } = useProvider();
   const { connection } = manager ? manager.provider : { connection: undefined };
   const endpoint = connection?.rpcEndpoint;
 
@@ -139,7 +145,7 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
         userFetched,
         marginAccount: user?.marginAccount,
         walletBalances: user?.walletBalances ?? DEFAULT_WALLET_BALANCES,
-        cluster,
+        cluster: clusterSetting,
         refresh
       }}>
       {props.children}

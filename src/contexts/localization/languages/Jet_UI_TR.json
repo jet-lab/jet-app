@@ -99,7 +99,10 @@
     "disconnect": "Cüzdan Bağlantısını Sonlandır",
     "connected": "Bağlandı",
     "explorer": "",
-    "degradedNetworkPerformance": "NOTICE: The Solana blockchain is currently experiencing difficulties due to network congestion:"
+    "degradedNetworkPerformance": "NOTICE: The Solana blockchain is currently experiencing difficulties due to network congestion:",
+    "network": "Network",
+    "mainnet": "Mainnet-Beta",
+    "devnet": "Devnet"
   },
   "reserveDetail": {
     "reserveSize": "Rezerv Büyüklüğü",

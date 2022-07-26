@@ -12,7 +12,7 @@ export function LiquidationModal(): JSX.Element {
   const { marginAccount } = useMargin();
   const { setCurrentAction } = useTradeContext();
   const { open, setOpen, setClosed } = useLiquidationModal();
-  const requiredFunds = marginAccount?.poolPositions.USDC.liquidationEndingCollateral.tokens ?? 0;
+  const requiredFunds = marginAccount?.poolPositions?.USDC?.liquidationEndingCollateral.tokens ?? 0;
   const { Title, Paragraph } = Typography;
 
   if (open) {

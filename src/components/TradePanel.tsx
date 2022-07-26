@@ -45,7 +45,9 @@ export function TradePanel(): JSX.Element {
     if (amount.tokens > currentPool.vault.tokens) {
       poolProjection = undefined;
     } else {
-      poolProjection = currentPool.projectAfterAction(marginAccount, amount, currentAction);
+      poolProjection = currentPool.info
+        ? currentPool.projectAfterAction(marginAccount, amount, currentAction)
+        : undefined;
     }
   }
   const predictedRiskIndicator = poolProjection?.riskIndicator ?? 0;

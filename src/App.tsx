@@ -35,6 +35,7 @@ import { TransactionLogs } from './views/TransactionLogs';
 import { LiquidationModal } from './components/LiquidationModal';
 import { Keypair } from '@solana/web3.js';
 import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
+import { ClusterSettingProvider } from './contexts/clusterSetting';
 
 const queryClient = new QueryClient();
 export function App(): JSX.Element {
@@ -76,40 +77,42 @@ export function App(): JSX.Element {
     <HashRouter basename={'/'}>
       <QueryClientProvider client={queryClient}>
         <LocalizationProvider>
-          <WalletProvider wallets={wallets} autoConnect>
-            <MarginContextProvider>
-              <SettingsModalProvider>
-                <RpcNodeContextProvider>
-                  <ConnectWalletModalProvider>
-                    <LiquidationModalProvider>
-                      <BlockExplorerProvider>
-                        <TransactionsProvider>
-                          <TradeContextProvider>
-                            <NativeValuesProvider>
-                              <RadarModalProvider>
-                                <NetworkWarningBanner />
-                                <Navbar />
-                                <Routes>
-                                  <Route path="/" element={<Cockpit />} />
-                                  <Route path="/transactions" element={<TransactionLogs />} />
-                                </Routes>
-                                <ConnectWalletModal />
-                                <Settings />
-                                <RadarModal />
-                                <DisclaimerModal />
-                                <LiquidationModal />
-                                <TermsPrivacy />
-                              </RadarModalProvider>
-                            </NativeValuesProvider>
-                          </TradeContextProvider>
-                        </TransactionsProvider>
-                      </BlockExplorerProvider>
-                    </LiquidationModalProvider>
-                  </ConnectWalletModalProvider>
-                </RpcNodeContextProvider>
-              </SettingsModalProvider>
-            </MarginContextProvider>
-          </WalletProvider>
+          <ClusterSettingProvider>
+            <WalletProvider wallets={wallets} autoConnect>
+              <MarginContextProvider>
+                <SettingsModalProvider>
+                  <RpcNodeContextProvider>
+                    <ConnectWalletModalProvider>
+                      <LiquidationModalProvider>
+                        <BlockExplorerProvider>
+                          <TransactionsProvider>
+                            <TradeContextProvider>
+                              <NativeValuesProvider>
+                                <RadarModalProvider>
+                                  <NetworkWarningBanner />
+                                  <Navbar />
+                                  <Routes>
+                                    <Route path="/" element={<Cockpit />} />
+                                    <Route path="/transactions" element={<TransactionLogs />} />
+                                  </Routes>
+                                  <ConnectWalletModal />
+                                  <Settings />
+                                  <RadarModal />
+                                  <DisclaimerModal />
+                                  <LiquidationModal />
+                                  <TermsPrivacy />
+                                </RadarModalProvider>
+                              </NativeValuesProvider>
+                            </TradeContextProvider>
+                          </TransactionsProvider>
+                        </BlockExplorerProvider>
+                      </LiquidationModalProvider>
+                    </ConnectWalletModalProvider>
+                  </RpcNodeContextProvider>
+                </SettingsModalProvider>
+              </MarginContextProvider>
+            </WalletProvider>
+          </ClusterSettingProvider>
         </LocalizationProvider>
       </QueryClientProvider>
     </HashRouter>

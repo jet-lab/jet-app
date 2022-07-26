@@ -4,12 +4,14 @@ import { useSettingsModal } from '../contexts/settingsModal';
 import { useRpcNode } from '../contexts/rpcNode';
 import { useBlockExplorer } from '../contexts/blockExplorer';
 import { isValidHttpUrl } from '../utils/utils';
-import { Select, Divider, Modal } from 'antd';
+import { Select, Divider, Modal, Radio } from 'antd';
 import { JetInput } from '../components/JetInput';
 import { GithubFilled, TwitterCircleFilled } from '@ant-design/icons';
+import { useClusterSetting } from '../contexts/clusterSetting';
 
 export function Settings(): JSX.Element {
   const { dictionary, language, changeLanguage } = useLanguage();
+  const { clusterSetting, setClusterSetting } = useClusterSetting();
   const { open, setOpen } = useSettingsModal();
   const { preferredNode, ping, updateRpcNode } = useRpcNode();
   const { blockExplorers, preferredExplorer, changePreferredExplorer } = useBlockExplorer();
@@ -63,6 +65,14 @@ export function Settings(): JSX.Element {
             onChange={(value: string) => setRpcNodeInput(value.toString())}
             submit={checkRPC}
           />
+        </div>
+        <Divider />
+        <div className="setting flex align-start justify-center column">
+          <span className="setting-title bold-text">{dictionary.settings.network.toUpperCase()}</span>
+          <Radio.Group value={clusterSetting} onChange={(e: any) => setClusterSetting(e.target.value)}>
+            <Radio value="mainnet-beta">{dictionary.settings.mainnet}</Radio>
+            <Radio value="devnet">{dictionary.settings.devnet}</Radio>
+          </Radio.Group>
         </div>
         <Divider />
         <div className="setting flex align-start justify-center column">

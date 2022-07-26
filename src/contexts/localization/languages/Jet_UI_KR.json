@@ -99,7 +99,10 @@
     "disconnect": "지갑 연결 해제\n",
     "connected": "연결됨",
     "explorer": "",
-    "degradedNetworkPerformance": "NOTICE: The Solana blockchain is currently experiencing difficulties due to network congestion:"
+    "degradedNetworkPerformance": "NOTICE: The Solana blockchain is currently experiencing difficulties due to network congestion:",
+    "network": "Network",
+    "mainnet": "Mainnet-Beta",
+    "devnet": "Devnet"
   },
   "reserveDetail": {
     "reserveSize": "비축 규모",
