@@ -13,10 +13,8 @@ import { useQuery, useQueryClient } from 'react-query';
 import { AnchorProvider } from '@project-serum/anchor';
 import { ConfirmOptions, Connection, PublicKey } from '@solana/web3.js';
 import { useRpcNode } from './rpcNode';
-import { timeout } from '../utils/utils';
-import { NavLink } from 'react-router-dom';
 
-export const cluster = (process.env.REACT_APP_CLUSTER ?? 'devnet') as MarginCluster;
+export const cluster = (process.env.REACT_APP_CLUSTER ?? 'mainnet-beta') as MarginCluster;
 
 interface MarginContextState {
   connection?: Connection;
@@ -50,13 +48,11 @@ function useProvider(config?: MarginConfig): { manager?: PoolManager } {
       return;
     }
 
-    console.log(wallet);
-
     const connection = new Connection(preferredNode ?? config.url, 'recent');
     const provider = new AnchorProvider(connection, wallet as any, confirmOptions);
     const programs = MarginClient.getPrograms(provider, config);
     return new PoolManager(programs, provider);
-  }, [preferredNode, config, wallet, confirmOptions]);
+  }, [preferredNode, config, wallet]);
   return { manager };
 }
 
@@ -71,7 +67,7 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
     if (!config) {
       getConfig();
     }
-  }, []);
+  }, [config]);
 
   const queryClient = useQueryClient();
   const { publicKey } = useWallet();
