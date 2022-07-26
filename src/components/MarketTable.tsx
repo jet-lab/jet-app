@@ -9,7 +9,7 @@ import { useConnectWalletModal } from '../contexts/connectWalletModal';
 import { useTradeContext } from '../contexts/tradeContext';
 import { useNativeValues } from '../contexts/nativeValues';
 import { useRadarModal } from '../contexts/radarModal';
-import { cluster, useMargin } from '../contexts/marginContext';
+import { useMargin } from '../contexts/marginContext';
 import { Input, notification } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { NativeToggle } from './NativeToggle';
@@ -18,9 +18,11 @@ import { PoolDetail } from './PoolDetail';
 import { AssetLogo } from './AssetLogo';
 import { ReactComponent as ArrowIcon } from '../styles/icons/arrow_icon.svg';
 import { ReactComponent as RadarIcon } from '../styles/icons/radar_icon.svg';
+import { useClusterSetting } from '../contexts/clusterSetting';
 import { useBlockExplorer } from '../contexts/blockExplorer';
 
 export function MarketTable(): JSX.Element {
+  const { clusterSetting } = useClusterSetting();
   const { dictionary } = useLanguage();
   const { config, manager, pools, marginAccount, walletBalances, userFetched, refresh } = useMargin();
   const { publicKey } = useWallet();
@@ -288,7 +290,7 @@ export function MarketTable(): JSX.Element {
                         )}
                       </td>
                       {/* Faucet for testing if in development */}
-                      {cluster === 'devnet' ? (
+                      {clusterSetting === 'devnet' ? (
                         <td
                           data-testid={`airdrop-${pool.name}`}
                           onClick={async () => {

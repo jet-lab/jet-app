@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from 'react';
-import { cluster } from './marginContext';
+import { useClusterSetting } from './clusterSetting';
 
 // Block explorers
 const blockExplorers: Record<string, Record<string, string>> = {
@@ -49,9 +49,10 @@ export function BlockExplorerProvider(props: { children: JSX.Element }): JSX.Ele
 
 // Block explorer hook
 export const useBlockExplorer = () => {
+  const { clusterSetting } = useClusterSetting();
   const { preferredExplorer, setPreferredExplorer } = useContext(BlockExplorerContext);
   const baseUrl = blockExplorers[preferredExplorer].url;
-  const clusterParam = cluster === 'devnet' ? '?cluster=devnet' : '';
+  const clusterParam = clusterSetting === 'devnet' ? '?cluster=devnet' : '';
   return {
     blockExplorers,
     preferredExplorer,
