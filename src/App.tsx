@@ -12,7 +12,7 @@ import {
   SolletWalletAdapter,
   SlopeWalletAdapter
 } from '@solana/wallet-adapter-wallets';
-import { E2EWalletAdapter } from 'e2e-react-adapter';
+import { E2EWalletAdapter } from '@jet-lab/e2e-react-adapter';
 import { MarginContextProvider } from './contexts/marginContext';
 import { RpcNodeContextProvider } from './contexts/rpcNode';
 import { BlockExplorerProvider } from './contexts/blockExplorer';
