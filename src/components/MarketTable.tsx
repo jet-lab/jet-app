@@ -28,6 +28,8 @@ export function MarketTable(): JSX.Element {
   const { publicKey } = useWallet();
   const { setConnecting } = useConnectWalletModal();
   const { currentPool, setCurrentPool, setCurrentAction, setCurrentAmount } = useTradeContext();
+  const poolPosition =
+    marginAccount && currentPool?.symbol ? marginAccount.poolPositions[currentPool.symbol] : undefined;
   const { setRadarOpen } = useRadarModal();
   const { nativeValues } = useNativeValues();
   const { getExplorerUrl } = useBlockExplorer();
@@ -103,11 +105,6 @@ export function MarketTable(): JSX.Element {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPool, pools]);
-
-  // Get max input for SOL only to account for 0.07 reserve
-  const accountPoolPosition =
-    marginAccount && currentPool?.symbol ? marginAccount.poolPositions[currentPool.symbol] : undefined;
-  const maxSolInput = accountPoolPosition?.maxTradeAmounts['deposit'].tokens ?? 0;
 
   return (
     <>
@@ -199,12 +196,9 @@ export function MarketTable(): JSX.Element {
                           <p
                             className={walletBalance ? 'user-wallet-value text-btn semi-bold-text' : ''}
                             onClick={() => {
-                              if (walletBalance && currentPool?.tokenMint.equals(NATIVE_MINT)) {
+                              if (poolPosition) {
                                 setCurrentAction('deposit');
-                                setCurrentAmount(maxSolInput);
-                              } else if (walletBalance) {
-                                setCurrentAction('deposit');
-                                setCurrentAmount(walletBalance.amount.tokens);
+                                setCurrentAmount(poolPosition.maxTradeAmounts.deposit.tokens);
                               }
                             }}>
                             {walletBalance.amount.tokens > 0 && walletBalance.amount.tokens < 0.0005
@@ -230,12 +224,12 @@ export function MarketTable(): JSX.Element {
                             }
                             onClick={() => {
                               if (
-                                userFetched &&
+                                poolPosition &&
                                 pool.symbol &&
                                 marginAccount?.poolPositions?.[pool.symbol]?.depositBalance.tokens
                               ) {
                                 setCurrentAction('withdraw');
-                                setCurrentAmount(marginAccount.poolPositions[pool.symbol].depositBalance.tokens);
+                                setCurrentAmount(poolPosition.maxTradeAmounts.withdraw.tokens);
                               }
                             }}>
                             {marginAccount.poolPositions[pool.symbol].depositBalance.tokens > 0 &&
@@ -267,12 +261,12 @@ export function MarketTable(): JSX.Element {
                             }
                             onClick={() => {
                               if (
-                                userFetched &&
+                                poolPosition &&
                                 pool.symbol &&
                                 marginAccount?.poolPositions?.[pool.symbol]?.loanBalance.tokens
                               ) {
                                 setCurrentAction('repay');
-                                setCurrentAmount(marginAccount.poolPositions[pool.symbol].loanBalance.tokens);
+                                setCurrentAmount(poolPosition.maxTradeAmounts.repay.tokens);
                               }
                             }}>
                             {marginAccount.poolPositions[pool.symbol].loanBalance.tokens > 0 &&
