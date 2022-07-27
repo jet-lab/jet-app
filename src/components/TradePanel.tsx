@@ -238,6 +238,7 @@ export function TradePanel(): JSX.Element {
   useEffect(() => {
     setDisabledButton(false);
     setInputError('');
+    setInputWarning('');
     if (!currentPool || !currentAmount || !walletBalances) {
       return;
     }
@@ -289,7 +290,7 @@ export function TradePanel(): JSX.Element {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentAmount, currentAction]);
+  }, [currentAmount, predictedRiskIndicator, currentAction]);
 
   const availBalance = () => {
     if (currentAction === 'deposit') {
