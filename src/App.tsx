@@ -46,6 +46,7 @@ export function App(): JSX.Element {
   const wallets = useMemo(() => {
     const walletArray: (
       | PhantomWalletAdapter
+      | BraveWalletAdapter
       | MathWalletAdapter
       | SolflareWalletAdapter
       | SolongWalletAdapter
