@@ -41,7 +41,9 @@
     left: 0;
     backdrop-filter: blur(2px);
     background: rgba(var(--primary-3), @subtle-opacity);
-    z-index: 100;
+    border-top-right-radius: @border-radius;
+    border-top-left-radius: @border-radius;
+    z-index: 99;
   }
 
   // Modals
@@ -1421,7 +1423,6 @@
         }
         .trade-market-tvl {
           padding: 0 @spacing-base;
-          align-items: flex-end;
 
           &:first-of-type {
             align-items: flex-start;
@@ -1432,6 +1433,7 @@
           .trade-position-ratio {
             h1 {
               font-size: @xl-font-size;
+              line-height: unset !important;
 
               span {
                 padding: unset;

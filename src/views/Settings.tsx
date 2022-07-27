@@ -69,7 +69,12 @@ export function Settings(): JSX.Element {
         <Divider />
         <div className="setting flex align-start justify-center column">
           <span className="setting-title bold-text">{dictionary.settings.network.toUpperCase()}</span>
-          <Radio.Group value={clusterSetting} onChange={(e: any) => setClusterSetting(e.target.value)}>
+          <Radio.Group
+            value={clusterSetting}
+            onChange={(e: any) => {
+              setClusterSetting(e.target.value);
+              localStorage.setItem('jetCluster', e.target.value);
+            }}>
             <Radio value="mainnet-beta">{dictionary.settings.mainnet}</Radio>
             <Radio value="devnet">{dictionary.settings.devnet}</Radio>
           </Radio.Group>

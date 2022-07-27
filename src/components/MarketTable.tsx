@@ -323,6 +323,7 @@ export function MarketTable(): JSX.Element {
                   <td></td>
                   <td></td>
                   <td></td>
+                  <td></td>
                 </tr>
               )}
             </tbody>
