@@ -45,6 +45,6 @@
   },
   "riskLevel": {
     "term": "Risk Level",
-    "definition": "TODO: Norman definition here"
+    "definition": "The ratio of the collateral required to support your debt, to the weight-adjusted value of your deposits."
   }
 }
