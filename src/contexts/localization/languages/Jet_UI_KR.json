@@ -51,7 +51,7 @@
     "noLiquidity": "유동성이 충분하지 않습니다",
     "minCRatio": "이것은 귀하의 포지션을 Jet Protocol의 최소 담보 비율로 설정하여, 귀하의 계정을 청산 영역에 놓이게 할 것입니다. 확실하십니까?",
     "belowMinRatio": "귀하의 담보가 부족합니다. 청산을 피하기 위해 예치하거나 빚을 상환하십시오.",
-    "subjectToLiquidation": "This trade increases your Risk Level to {{NEW-RISK}}, which puts you in range of liquidation.",
+    "subjectToLiquidation": "This trade increases your Risk Level to {{NEW-RISK}}, which puts you dangerously close to liquidation.",
     "confirm": "확인",
     "repay": "상환",
     "amountOwed": "빚진 금액",
