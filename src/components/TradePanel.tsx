@@ -257,6 +257,13 @@ export function TradePanel(): JSX.Element {
             currencyFormatter(predictedRiskIndicator, false, 2)
           )
         );
+      } else if (predictedRiskIndicator > MarginAccount.RISK_LIQUIDATION_LEVEL) {
+        setInputError(
+          dictionary.cockpit.subjectToLiquidation.replaceAll(
+            '{{NEW-RISK}}',
+            currencyFormatter(predictedRiskIndicator, false, 2)
+          )
+        );
       }
       // Borrowing
     } else if (currentAction === 'borrow') {
