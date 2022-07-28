@@ -264,6 +264,7 @@ export function TradePanel(): JSX.Element {
             currencyFormatter(predictedRiskIndicator, false, 2)
           )
         );
+        setSendingTrade(false);
       }
       // Borrowing
     } else if (currentAction === 'borrow') {
