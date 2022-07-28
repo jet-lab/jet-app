@@ -66,7 +66,9 @@ export function JetInput(props: {
           props.disabledButton ? 'disabled' : ''
         }`}
         onClick={() => {
-          if (!props.disabled && !props.disabledButton && !props.error && props.value) {
+          if (props.loading) {
+            return;
+          } else if (!props.disabled && !props.disabledButton && !props.error && props.value) {
             props.submit();
           }
         }}>
