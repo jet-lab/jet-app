@@ -46,7 +46,7 @@ export function TradePanel(): JSX.Element {
       poolProjection = currentPool.projectAfterAction(marginAccount, amount, currentAction);
     }
   }
-  const predictedRiskIndicator = poolProjection?.riskIndicator ?? 0;
+  const predictedRiskIndicator = poolProjection?.riskIndicator ?? marginAccount?.riskIndicator.valueOf() ?? 0;
 
   // Check if user input should be disabled
   // depending on wallet balance and position
@@ -375,7 +375,7 @@ export function TradePanel(): JSX.Element {
             <div className="flex-centered">
               <span className="center-text bold-text">{dictionary.cockpit.predictedRiskLevel.toUpperCase()}</span>
             </div>
-            <p>{userFetched && currentAmount ? currencyFormatter(predictedRiskIndicator, false, 2) : '--'}</p>
+            <p>{userFetched && marginAccount ? currencyFormatter(predictedRiskIndicator, false, 2) : '--'}</p>
           </div>
         </>
       )}
