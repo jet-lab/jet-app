@@ -276,7 +276,7 @@ export function TradePanel(): JSX.Element {
         );
       } else if (
         predictedRiskIndicator >= MarginAccount.RISK_WARNING_LEVEL &&
-        predictedRiskIndicator <= MarginAccount.RISK_LIQUIDATION_LEVEL
+        predictedRiskIndicator < MarginAccount.RISK_LIQUIDATION_LEVEL
       ) {
         setInputWarning(
           dictionary.cockpit.subjectToLiquidation.replaceAll(
