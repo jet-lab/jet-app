@@ -172,7 +172,7 @@ export function TradePanel(): JSX.Element {
         const repayAmount =
           tradeAmount.tokens === accountPoolPosition.loanBalance.tokens
             ? PoolTokenChange.setTo(0)
-            : PoolTokenChange.setTo(accountPoolPosition.loanBalance.sub(tradeAmount));
+            : PoolTokenChange.shiftBy(accountPoolPosition.loanBalance.sub(tradeAmount));
         res = await repay(currentPool.symbol, repayAmount);
       }
     }
