@@ -169,8 +169,8 @@ export function TradePanel(): JSX.Element {
         // Otherwise, send repay
       } else if (tradeAmount.eq(walletBalances[currentPool.symbol].amount)) {
         // If wallet balance equals trade amount,
-        // set repayAmount to be  tokens to shiftBy 0 
-        const repayAmount = PoolTokenChange.shiftBy(walletBalances[currentPool.symbol].amount)
+        // set repayAmount to be  tokens to shiftBy 0
+        const repayAmount = PoolTokenChange.shiftBy(walletBalances[currentPool.symbol].amount);
         res = await repay(currentPool.symbol, repayAmount);
       } else {
         // If user is repaying all, use loan notes
