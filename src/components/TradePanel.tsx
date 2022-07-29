@@ -167,12 +167,17 @@ export function TradePanel(): JSX.Element {
       } else if (tradeAmount.gt(walletBalances[currentPool.symbol].amount)) {
         tradeError = dictionary.cockpit.notEnoughAsset.replaceAll('{{ASSET}}', currentPool.symbol);
         // Otherwise, send repay
+      } else if (tradeAmount.eq(walletBalances[currentPool.symbol].amount)) {
+        // If wallet balance equals trade amount,
+        // set repayAmount to be  tokens to shiftBy 0 
+        const repayAmount = PoolTokenChange.shiftBy(walletBalances[currentPool.symbol].amount)
+        res = await repay(currentPool.symbol, repayAmount);
       } else {
         // If user is repaying all, use loan notes
         const repayAmount =
           tradeAmount.tokens === accountPoolPosition.loanBalance.tokens
             ? PoolTokenChange.setTo(0)
-            : PoolTokenChange.shiftBy(accountPoolPosition.loanBalance.sub(tradeAmount));
+            : PoolTokenChange.setTo(accountPoolPosition.loanBalance.sub(tradeAmount));
         res = await repay(currentPool.symbol, repayAmount);
       }
     }
