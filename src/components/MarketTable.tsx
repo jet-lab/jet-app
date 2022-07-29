@@ -179,12 +179,7 @@ export function MarketTable(): JSX.Element {
                         {pool.symbol} {dictionary.cockpit.detail}
                       </td>
                       <td className="cell-border-right">
-                        {totalAbbrev(
-                          nativeValues ? pool.vault.tokens : pool.vault.muln(pool.tokenPrice).tokens,
-                          pool.tokenPrice,
-                          nativeValues,
-                          2
-                        )}
+                        {totalAbbrev(pool.vault.tokens, pool.tokenPrice, nativeValues, 2)}
                       </td>
                       <td>{`${(pool.depositApy * 100).toFixed(2)}%`}</td>
                       <td>{`${(pool.borrowApr * 100).toFixed(2)}%`}</td>
