@@ -41,10 +41,8 @@ export function TradePanel(): JSX.Element {
 
   let poolProjection: PoolProjection | undefined;
   if (currentPool && marginAccount) {
-    const amount = TokenAmount.tokens(currentAmount ?? 0, currentPool.decimals);
-    if (!amount.isZero() && amount.tokens <= currentPool.vault.tokens) {
-      poolProjection = currentPool.projectAfterAction(marginAccount, amount, currentAction);
-    }
+    const projectWith = Math.min(currentAmount ?? 0, maxInput);
+    poolProjection = currentPool.projectAfterAction(marginAccount, projectWith, currentAction);
   }
   const predictedRiskIndicator = poolProjection?.riskIndicator ?? marginAccount?.riskIndicator.valueOf() ?? 0;
 
