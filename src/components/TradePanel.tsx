@@ -120,7 +120,7 @@ export function TradePanel(): JSX.Element {
         tradeError = dictionary.cockpit.notEnoughAsset.replaceAll('{{ASSET}}', currentPool.symbol);
         // Otherwise, send deposit
       } else {
-        const depositAmount = PoolTokenChange.setTo(accountPoolPosition.depositBalance.add(tradeAmount));
+        const depositAmount = PoolTokenChange.shiftBy(tradeAmount);
         res = await deposit(currentPool.symbol, depositAmount);
       }
       // Withdrawing sollet ETH
@@ -137,7 +137,7 @@ export function TradePanel(): JSX.Element {
         const withdrawAmount =
           tradeAmount.tokens === accountPoolPosition.depositBalance.tokens
             ? PoolTokenChange.setTo(0)
-            : PoolTokenChange.setTo(accountPoolPosition.depositBalance.sub(tradeAmount));
+            : PoolTokenChange.shiftBy(tradeAmount);
         res = await withdraw(currentPool.symbol, withdrawAmount);
       }
       // Borrowing
@@ -155,7 +155,7 @@ export function TradePanel(): JSX.Element {
           .replaceAll('{{ASSET}}', currentPool.symbol);
         // Otherwise, send borrow
       } else {
-        const borrowAmount = PoolTokenChange.setTo(accountPoolPosition.loanBalance.add(tradeAmount));
+        const borrowAmount = PoolTokenChange.shiftBy(tradeAmount);
         res = await borrow(currentPool.symbol, borrowAmount);
       }
       // Repaying
@@ -177,7 +177,7 @@ export function TradePanel(): JSX.Element {
         const repayAmount =
           tradeAmount.tokens === accountPoolPosition.loanBalance.tokens
             ? PoolTokenChange.setTo(0)
-            : PoolTokenChange.setTo(accountPoolPosition.loanBalance.sub(tradeAmount));
+            : PoolTokenChange.shiftBy(tradeAmount);
         res = await repay(currentPool.symbol, repayAmount);
       }
     }
