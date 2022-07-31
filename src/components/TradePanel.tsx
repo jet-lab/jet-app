@@ -133,7 +133,7 @@ export function TradePanel(): JSX.Element {
         tradeError = dictionary.cockpit.lessFunds;
         // Otherwise, send withdraw
       } else {
-        // If user is withdrawing all, set to 0
+        // If user is withdrawing all, set to 0 to withdraw dust
         const withdrawAmount =
           tradeAmount.tokens === accountPoolPosition.depositBalance.tokens
             ? PoolTokenChange.setTo(0)
@@ -167,13 +167,8 @@ export function TradePanel(): JSX.Element {
       } else if (tradeAmount.gt(walletBalances[currentPool.symbol].amount)) {
         tradeError = dictionary.cockpit.notEnoughAsset.replaceAll('{{ASSET}}', currentPool.symbol);
         // Otherwise, send repay
-      } else if (tradeAmount.eq(walletBalances[currentPool.symbol].amount)) {
-        // If wallet balance equals trade amount,
-        // set repayAmount to be  tokens to shiftBy 0
-        const repayAmount = PoolTokenChange.shiftBy(walletBalances[currentPool.symbol].amount);
-        res = await repay(currentPool.symbol, repayAmount);
       } else {
-        // If user is repaying all, use loan notes
+        // If user is repaying all, set to 0 to repay dust
         const repayAmount =
           tradeAmount.tokens === accountPoolPosition.loanBalance.tokens
             ? PoolTokenChange.setTo(0)
