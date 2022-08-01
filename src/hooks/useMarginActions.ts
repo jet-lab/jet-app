@@ -8,7 +8,7 @@ export enum TxResponseType {
 }
 
 export interface TransactionResponse {
-  txid: string;
+  txid: string | undefined;
   response: TxResponseType;
 }
 
@@ -32,9 +32,9 @@ export const useMarginActions = () => {
       console.log(err);
       await refresh();
       if (err.toString().search('User rejected the request') > -1) {
-        return { txid: '', response: TxResponseType.Cancelled };
+        return { txid: undefined, response: TxResponseType.Cancelled };
       } else {
-        return { txid: '', response: TxResponseType.Failed };
+        return { txid: undefined, response: TxResponseType.Failed };
       }
     }
   };
@@ -59,9 +59,9 @@ export const useMarginActions = () => {
       console.log(err);
       await refresh();
       if (err.toString().search('User rejected the request') > -1) {
-        return { txid: '', response: TxResponseType.Cancelled };
+        return { txid: undefined, response: TxResponseType.Cancelled };
       } else {
-        return { txid: '', response: TxResponseType.Failed };
+        return { txid: undefined, response: TxResponseType.Failed };
       }
     }
   };
@@ -86,9 +86,9 @@ export const useMarginActions = () => {
       console.log(err);
       await refresh();
       if (err.toString().search('User rejected the request') > -1) {
-        return { txid: '', response: TxResponseType.Cancelled };
+        return { txid: undefined, response: TxResponseType.Cancelled };
       } else {
-        return { txid: '', response: TxResponseType.Failed };
+        return { txid: undefined, response: TxResponseType.Failed };
       }
     }
   };
@@ -114,9 +114,9 @@ export const useMarginActions = () => {
       console.log(err);
       await refresh();
       if (err.toString().search('User rejected the request') > -1) {
-        return { txid: '', response: TxResponseType.Cancelled };
+        return { txid: undefined, response: TxResponseType.Cancelled };
       } else {
-        return { txid: '', response: TxResponseType.Failed };
+        return { txid: undefined, response: TxResponseType.Failed };
       }
     }
   };
