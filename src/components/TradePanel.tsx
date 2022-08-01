@@ -198,7 +198,7 @@ export function TradePanel(): JSX.Element {
           .replaceAll('{{AMOUNT AND ASSET}}', `${currentAmount} ${currentPool.symbol}`),
         placement: 'bottomLeft',
         onClick: () => {
-          window.open(getExplorerUrl(res.txid), '_blank');
+          res.txid && window.open(getExplorerUrl(res.txid), '_blank');
         }
       });
 
@@ -209,7 +209,7 @@ export function TradePanel(): JSX.Element {
         description: dictionary.cockpit.txFailed,
         placement: 'bottomLeft',
         onClick: () => {
-          window.open(getExplorerUrl(res.txid), '_blank');
+          res.txid && window.open(getExplorerUrl(res.txid), '_blank');
         }
       });
     } else if (res.response === TxResponseType.Cancelled) {
