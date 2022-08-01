@@ -5,18 +5,20 @@ import { useMargin } from '../contexts/marginContext';
 import { useTradeContext } from '../contexts/tradeContext';
 import { useLanguage } from '../contexts/localization/localization';
 import { useTransactionLogs } from '../contexts/transactionLogs';
-import { TxnResponse, useMarginActions } from '../hooks/useMarginActions';
+import { TransactionResponse, TxResponseType, useMarginActions } from '../hooks/useMarginActions';
 import { currencyFormatter } from '../utils/currency';
 import { notification, Select, Slider, Tooltip } from 'antd';
 import { JetInput } from './JetInput';
 import { ConnectMessage } from './ConnectMessage';
 import { InfoCircleOutlined } from '@ant-design/icons';
+import { useBlockExplorer } from '../contexts/blockExplorer';
 
 export function TradePanel(): JSX.Element {
   const { dictionary } = useLanguage();
   const { pools, marginAccount, walletBalances, userFetched } = useMargin();
   const { refreshLogs } = useTransactionLogs();
   const { connected } = useWallet();
+  const { getExplorerUrl } = useBlockExplorer();
   const {
     currentPool,
     currentAction,
@@ -109,7 +111,7 @@ export function TradePanel(): JSX.Element {
 
     const tradeAction = currentAction;
     const tradeAmount = TokenAmount.tokens(currentAmount.toString(), currentPool.decimals);
-    let res: TxnResponse = TxnResponse.Cancelled;
+    let res: TransactionResponse = { txid: '', response: TxResponseType.Cancelled };
     let tradeError = '';
     setSendingTrade(true);
 
@@ -185,7 +187,7 @@ export function TradePanel(): JSX.Element {
     }
 
     // Notify user of successful/unsuccessful trade
-    if (res === TxnResponse.Success) {
+    if (res.response === TxResponseType.Success) {
       notification.success({
         message: dictionary.cockpit.txSuccessShort.replaceAll(
           '{{TRADE ACTION}}',
@@ -194,17 +196,23 @@ export function TradePanel(): JSX.Element {
         description: dictionary.cockpit.txSuccess
           .replaceAll('{{TRADE ACTION}}', currentAction)
           .replaceAll('{{AMOUNT AND ASSET}}', `${currentAmount} ${currentPool.symbol}`),
-        placement: 'bottomLeft'
+        placement: 'bottomLeft',
+        onClick: () => {
+          res.txid && window.open(getExplorerUrl(res.txid), '_blank');
+        }
       });
 
       setCurrentAmount(null);
-    } else if (res === TxnResponse.Failed) {
+    } else if (res.response === TxResponseType.Failed) {
       notification.error({
         message: dictionary.cockpit.txFailedShort,
         description: dictionary.cockpit.txFailed,
-        placement: 'bottomLeft'
+        placement: 'bottomLeft',
+        onClick: () => {
+          res.txid && window.open(getExplorerUrl(res.txid), '_blank');
+        }
       });
-    } else if (res === TxnResponse.Cancelled) {
+    } else if (res.response === TxResponseType.Cancelled) {
       notification.error({
         message: dictionary.cockpit.txFailedShort,
         description: dictionary.cockpit.txCancelled,
