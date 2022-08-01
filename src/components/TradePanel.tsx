@@ -197,8 +197,6 @@ export function TradePanel(): JSX.Element {
         placement: 'bottomLeft'
       });
 
-      // Add Tx Log
-      refreshLogs();
       setCurrentAmount(null);
     } else if (res === TxnResponse.Failed) {
       notification.error({
@@ -218,6 +216,8 @@ export function TradePanel(): JSX.Element {
     checkDisabledInput();
     // End trade submit
     setSendingTrade(false);
+    // Add Tx Log
+    refreshLogs();
   }
 
   // Readjust interface onmount
