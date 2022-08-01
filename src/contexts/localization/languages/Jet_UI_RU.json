@@ -51,7 +51,7 @@
     "noLiquidity": "Недостаточно ликвидности.",
     "minCRatio": "Это действие приведёт к тому, что ваша позиция достигнет минимума коэффициента обеспечения, и ваш счёт может быть подвергнут ликвидации. Вы уверены?",
     "belowMinRatio": "У вас недостаточно средств в залоге. Пополните залог или верните долг чтобы избежать ликвидации.",
-    "subjectToLiquidation": "This trade increases your Risk Level to {{NEW-RISK}}, which puts you in range of liquidation.",
+    "subjectToLiquidation": "This trade increases your Risk Level to {{NEW-RISK}}, which puts you dangerously close to liquidation.",
     "confirm": "Подтвердить",
     "repay": "Вернуть",
     "amountOwed": "Сумма долга",

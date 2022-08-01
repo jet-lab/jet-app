@@ -10,7 +10,8 @@ import {
   SolflareWalletAdapter,
   SolongWalletAdapter,
   SolletWalletAdapter,
-  SlopeWalletAdapter
+  SlopeWalletAdapter,
+  BraveWalletAdapter
 } from '@solana/wallet-adapter-wallets';
 import { E2EWalletAdapter } from '@jet-lab/e2e-react-adapter';
 import { MarginContextProvider } from './contexts/marginContext';
@@ -45,6 +46,7 @@ export function App(): JSX.Element {
   const wallets = useMemo(() => {
     const walletArray: (
       | PhantomWalletAdapter
+      | BraveWalletAdapter
       | MathWalletAdapter
       | SolflareWalletAdapter
       | SolongWalletAdapter
@@ -53,6 +55,7 @@ export function App(): JSX.Element {
       | E2EWalletAdapter
     )[] = [
       new PhantomWalletAdapter(),
+      new BraveWalletAdapter(),
       new MathWalletAdapter(),
       new SolflareWalletAdapter(),
       new SolongWalletAdapter(),

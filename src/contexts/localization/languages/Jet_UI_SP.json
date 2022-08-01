@@ -51,7 +51,7 @@
     "noLiquidity": "Liquidez Insuficiente",
     "minCRatio": "Esta decisión lo ubicará en el ratio mínimo de colateralización, colocando su cuenta en el área de liquidación. ¿Desea continuar?",
     "belowMinRatio": "Usted se encuentra por debajo de la colateralización óptima. Deposite liquidez o cancele su deuda para evitar la liquidación.",
-    "subjectToLiquidation": "This trade increases your Risk Level to {{NEW-RISK}}, which puts you in range of liquidation.",
+    "subjectToLiquidation": "This trade increases your Risk Level to {{NEW-RISK}}, which puts you dangerously close to liquidation.",
     "confirm": "Confirmar",
     "repay": "Cancelar Deuda",
     "amountOwed": "Disponible Para Saldar",

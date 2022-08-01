@@ -51,7 +51,7 @@
     "noLiquidity": "Non hai abbastanza liquidità.",
     "minCRatio": "Questo metterà la tua posizione al nostro rapporto minimo di garanzia, ponendo quindi il tuo conto in un territorio di liquidazione. Sei sicuro?",
     "belowMinRatio": "Sei sottocollateralizzato. Deposita o rimborsa il tuo debito per evitare la liquidazione.",
-    "subjectToLiquidation": "This trade increases your Risk Level to {{NEW-RISK}}, which puts you in range of liquidation.",
+    "subjectToLiquidation": "This trade increases your Risk Level to {{NEW-RISK}}, which puts you dangerously close to liquidation.",
     "confirm": "Conferma",
     "repay": "Rimborsa",
     "amountOwed": "Importo dovuto",

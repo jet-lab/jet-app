@@ -52,7 +52,7 @@
     "minCRatio": "This will put your position at our minimum collateralization ratio, therefore placing your account in liquidation territory. Are you sure?",
     "belowMinRatio": "You are undercollateralized. Deposit or repay your debt to avoid liquidation.",
     "aboveMaxRiskLevel": "You are above the maximum Risk Level. Deposit or repay your debt to avoid liquidation.",
-    "subjectToLiquidation": "This trade increases your Risk Level to {{NEW-RISK}}, which puts you in range of liquidation.",
+    "subjectToLiquidation": "This trade increases your Risk Level to {{NEW-RISK}}, which puts you dangerously close to liquidation.",
     "confirm": "Confirm",
     "repay": "Repay",
     "amountOwed": "Available To Repay",

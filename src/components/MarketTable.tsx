@@ -28,8 +28,10 @@ export function MarketTable(): JSX.Element {
   const { publicKey } = useWallet();
   const { setConnecting } = useConnectWalletModal();
   const { currentPool, setCurrentPool, setCurrentAction, setCurrentAmount } = useTradeContext();
-  const poolPosition =
-    marginAccount && currentPool?.symbol ? marginAccount.poolPositions[currentPool.symbol] : undefined;
+  const getPoolPosition = (pool?: Pool) =>
+    marginAccount && pool?.symbol ? marginAccount.poolPositions[pool.symbol] : undefined;
+  const poolPosition = getPoolPosition(currentPool);
+
   const { setRadarOpen } = useRadarModal();
   const { nativeValues } = useNativeValues();
   const { getExplorerUrl } = useBlockExplorer();
@@ -179,12 +181,7 @@ export function MarketTable(): JSX.Element {
                         {pool.symbol} {dictionary.cockpit.detail}
                       </td>
                       <td className="cell-border-right">
-                        {totalAbbrev(
-                          nativeValues ? pool.vault.tokens : pool.vault.muln(pool.tokenPrice).tokens,
-                          pool.tokenPrice,
-                          nativeValues,
-                          2
-                        )}
+                        {totalAbbrev(pool.vault.tokens, pool.tokenPrice, nativeValues, 2)}
                       </td>
                       <td>{`${(pool.depositApy * 100).toFixed(2)}%`}</td>
                       <td>{`${(pool.borrowApr * 100).toFixed(2)}%`}</td>
@@ -196,10 +193,9 @@ export function MarketTable(): JSX.Element {
                           <p
                             className={walletBalance ? 'user-wallet-value text-btn semi-bold-text' : ''}
                             onClick={() => {
-                              if (poolPosition) {
-                                setCurrentAction('deposit');
-                                setCurrentAmount(poolPosition.maxTradeAmounts.deposit.tokens);
-                              }
+                              const position = getPoolPosition(pool);
+                              setCurrentAction('deposit');
+                              setCurrentAmount(position?.maxTradeAmounts.deposit.tokens || 0);
                             }}>
                             {walletBalance.amount.tokens > 0 && walletBalance.amount.tokens < 0.0005
                               ? '~0'
@@ -223,13 +219,10 @@ export function MarketTable(): JSX.Element {
                                 : ''
                             }
                             onClick={() => {
-                              if (
-                                poolPosition &&
-                                pool.symbol &&
-                                marginAccount?.poolPositions?.[pool.symbol]?.depositBalance.tokens
-                              ) {
+                              if (pool.symbol && marginAccount?.poolPositions?.[pool.symbol]?.depositBalance.tokens) {
+                                const position = getPoolPosition(pool);
                                 setCurrentAction('withdraw');
-                                setCurrentAmount(poolPosition.maxTradeAmounts.withdraw.tokens);
+                                setCurrentAmount(position?.maxTradeAmounts.withdraw.tokens || 0);
                               }
                             }}>
                             {marginAccount.poolPositions[pool.symbol].depositBalance.tokens > 0 &&
@@ -260,13 +253,10 @@ export function MarketTable(): JSX.Element {
                                 : ''
                             }
                             onClick={() => {
-                              if (
-                                poolPosition &&
-                                pool.symbol &&
-                                marginAccount?.poolPositions?.[pool.symbol]?.loanBalance.tokens
-                              ) {
+                              if (pool.symbol && marginAccount?.poolPositions?.[pool.symbol]?.loanBalance.tokens) {
+                                const position = getPoolPosition(pool);
                                 setCurrentAction('repay');
-                                setCurrentAmount(poolPosition.maxTradeAmounts.repay.tokens);
+                                setCurrentAmount(position?.maxTradeAmounts.repay.tokens || 0);
                               }
                             }}>
                             {marginAccount.poolPositions[pool.symbol].loanBalance.tokens > 0 &&
