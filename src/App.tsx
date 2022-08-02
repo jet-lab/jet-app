@@ -88,32 +88,32 @@ export function App(): JSX.Element {
                 <SettingsModalProvider>
                   <RpcNodeContextProvider>
                     <ConnectWalletModalProvider>
-                        <DialectProviders>
-                      <LiquidationModalProvider>
-                        <BlockExplorerProvider>
-                          <TransactionsProvider>
-                            <TradeContextProvider>
-                              <NativeValuesProvider>
-                                <RadarModalProvider>
-                                  <NetworkWarningBanner />
-                                  <Navbar />
-                                  <Routes>
-                                    <Route path="/" element={<Cockpit />} />
-                                    <Route path="/transactions" element={<TransactionLogs />} />
-                                  </Routes>
-                                  <ConnectWalletModal />
-                                  <Settings />
-                                  <RadarModal />
-                                  <DisclaimerModal />
-                                  <LiquidationModal />
-                                  <TermsPrivacy />
-                                </RadarModalProvider>
-                              </NativeValuesProvider>
-                            </TradeContextProvider>
-                          </TransactionsProvider>
-                        </BlockExplorerProvider>
-                      </LiquidationModalProvider>
-                        </DialectProviders>
+                      <DialectProviders>
+                        <LiquidationModalProvider>
+                          <BlockExplorerProvider>
+                            <TransactionsProvider>
+                              <TradeContextProvider>
+                                <NativeValuesProvider>
+                                  <RadarModalProvider>
+                                    <NetworkWarningBanner />
+                                    <Navbar />
+                                    <Routes>
+                                      <Route path="/" element={<Cockpit />} />
+                                      <Route path="/transactions" element={<TransactionLogs />} />
+                                    </Routes>
+                                    <ConnectWalletModal />
+                                    <Settings />
+                                    <RadarModal />
+                                    <DisclaimerModal />
+                                    <LiquidationModal />
+                                    <TermsPrivacy />
+                                  </RadarModalProvider>
+                                </NativeValuesProvider>
+                              </TradeContextProvider>
+                            </TransactionsProvider>
+                          </BlockExplorerProvider>
+                        </LiquidationModalProvider>
+                      </DialectProviders>
                     </ConnectWalletModalProvider>
                   </RpcNodeContextProvider>
                 </SettingsModalProvider>
