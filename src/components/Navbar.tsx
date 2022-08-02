@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { defaultVariables, IncomingThemeVariables, NotificationsButton } from '@dialectlabs/react-ui';
 import { useConnectWalletModal } from '../contexts/connectWalletModal';
 import { useSettingsModal } from '../contexts/settingsModal';
 import { useLanguage } from '../contexts/localization/localization';
@@ -40,6 +41,22 @@ export function Navbar(): JSX.Element {
             </Link>
           ))}
           <SettingFilled className="icon-btn" onClick={() => setOpen(true)} />
+          <div className="modal-container">
+            <div style={{ position: 'relative' }}>
+              {/* Dialect notification button is a wrapper of dialect notification modal */}
+              <NotificationsButton
+                dialectId={'RI-notification'}
+                pollingInterval={15000}
+                notifications={[
+                  {
+                    name: 'Low Risk level',
+                    detail: 'You will get notified when your RISK LEVEL rises to dangerous levels'
+                  }
+                ]}
+                channels={['web3', 'email', 'telegram']}
+              />
+            </div>
+          </div>
           <Button
             className="flex-centered"
             style={{ textTransform: 'unset' }}
