@@ -7,13 +7,18 @@ import { shortenPubkey } from '../utils/utils';
 import { ReactComponent as ArrowIcon } from '../styles/icons/arrow_icon.svg';
 import { Button, Divider } from 'antd';
 import { totalAbbrev } from '../utils/currency';
+import { useEffect } from 'react';
 
 export function TransactionLogs(): JSX.Element {
   const { dictionary } = useLanguage();
   const { connected, publicKey } = useWallet();
   const { setConnecting } = useConnectWalletModal();
   const { getExplorerUrl } = useBlockExplorer();
-  const { logs } = useTransactionLogs();
+  const { logs, refreshLogs } = useTransactionLogs();
+
+  useEffect(() => {
+    refreshLogs();
+  }, []);
 
   return (
     <div className="transaction-logs view">
