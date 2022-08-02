@@ -12,7 +12,7 @@ export function ConnectMessage(): JSX.Element {
   return (
     <div className="connect-message flex-centered" onClick={() => setConnecting(true)}>
       {!connected ? (
-        <Button type="dashed">
+        <Button data-testid="connect-wallet-btn" type="dashed">
           {dictionary.settings.connect}&nbsp;{dictionary.settings.wallet}
         </Button>
       ) : (

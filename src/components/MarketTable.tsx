@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { NATIVE_MINT } from '@solana/spl-token-latest';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { Pool, MarginPools, TokenAmount, TokenFaucet } from '@jet-lab/margin';
+import { Pool, TokenAmount, TokenFaucet } from '@jet-lab/margin';
 import { CloudFilled, FilterFilled } from '@ant-design/icons';
 import { currencyFormatter, totalAbbrev } from '../utils/currency';
 import { useLanguage } from '../contexts/localization/localization';
@@ -9,7 +9,7 @@ import { useConnectWalletModal } from '../contexts/connectWalletModal';
 import { useTradeContext } from '../contexts/tradeContext';
 import { useNativeValues } from '../contexts/nativeValues';
 import { useRadarModal } from '../contexts/radarModal';
-import { cluster, useMargin } from '../contexts/marginContext';
+import { useMargin } from '../contexts/marginContext';
 import { Input, notification } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { NativeToggle } from './NativeToggle';
@@ -18,15 +18,23 @@ import { PoolDetail } from './PoolDetail';
 import { AssetLogo } from './AssetLogo';
 import { ReactComponent as ArrowIcon } from '../styles/icons/arrow_icon.svg';
 import { ReactComponent as RadarIcon } from '../styles/icons/radar_icon.svg';
+import { useClusterSetting } from '../contexts/clusterSetting';
+import { useBlockExplorer } from '../contexts/blockExplorer';
 
 export function MarketTable(): JSX.Element {
+  const { clusterSetting } = useClusterSetting();
   const { dictionary } = useLanguage();
   const { config, manager, pools, marginAccount, walletBalances, userFetched, refresh } = useMargin();
   const { publicKey } = useWallet();
   const { setConnecting } = useConnectWalletModal();
   const { currentPool, setCurrentPool, setCurrentAction, setCurrentAmount } = useTradeContext();
+  const getPoolPosition = (pool?: Pool) =>
+    marginAccount && pool?.symbol ? marginAccount.poolPositions[pool.symbol] : undefined;
+  const poolPosition = getPoolPosition(currentPool);
+
   const { setRadarOpen } = useRadarModal();
   const { nativeValues } = useNativeValues();
+  const { getExplorerUrl } = useBlockExplorer();
   const [poolsArray, setPoolsArray] = useState<Pool[]>([]);
   const [filteredMarketTable, setFilteredMarketTable] = useState<Pool[]>([]);
   const [poolDetail, setPoolDetail] = useState<Pool | undefined>();
@@ -39,13 +47,17 @@ export function MarketTable(): JSX.Element {
       amount = TokenAmount.tokens('1', pool.decimals);
     }
 
-    const token = config.tokens[pool.symbol as MarginPools];
+    if (!config || !manager) {
+      return;
+    }
+
+    const token = config.tokens[pool.symbol as string];
 
     try {
       if (!publicKey) {
         throw new Error('Wallet not connected');
       }
-      await TokenFaucet.airdrop(
+      const transaction = await TokenFaucet.airdrop(
         manager.programs,
         manager.provider,
         amount.lamports,
@@ -58,7 +70,10 @@ export function MarketTable(): JSX.Element {
         description: dictionary.copilot.alert.airdropSuccess
           .replaceAll('{{UI AMOUNT}}', amount.uiTokens)
           .replaceAll('{{RESERVE ABBREV}}', pool.symbol),
-        placement: 'bottomLeft'
+        placement: 'bottomLeft',
+        onClick: () => {
+          window.open(getExplorerUrl(transaction), '_blank');
+        }
       });
     } catch (err: any) {
       console.log(err);
@@ -92,10 +107,6 @@ export function MarketTable(): JSX.Element {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPool, pools]);
-
-  // Get max input for SOL only to account for 0.07 reserve
-  const accountPoolPosition = marginAccount && currentPool?.symbol && marginAccount.poolPositions[currentPool.symbol];
-  const maxSolInput = accountPoolPosition?.maxTradeAmounts['deposit'].tokens ?? 0;
 
   return (
     <>
@@ -139,7 +150,9 @@ export function MarketTable(): JSX.Element {
               {poolsArray.length ? (
                 poolsArray.map((pool, index) => {
                   const walletBalance =
-                    userFetched && pool.symbol !== undefined ? walletBalances[pool.symbol] : undefined;
+                    userFetched && pool.symbol !== undefined && walletBalances
+                      ? walletBalances[pool.symbol]
+                      : undefined;
                   if (
                     !pool.name?.toLocaleLowerCase().includes(filter) &&
                     !pool.symbol?.toLocaleLowerCase().includes(filter)
@@ -168,30 +181,21 @@ export function MarketTable(): JSX.Element {
                         {pool.symbol} {dictionary.cockpit.detail}
                       </td>
                       <td className="cell-border-right">
-                        {totalAbbrev(
-                          nativeValues ? pool.vault.tokens : pool.vault.muln(pool.tokenPrice).tokens,
-                          pool.tokenPrice,
-                          nativeValues,
-                          2
-                        )}
+                        {totalAbbrev(pool.vault.tokens, pool.tokenPrice, nativeValues, 2)}
                       </td>
                       <td>{`${(pool.depositApy * 100).toFixed(2)}%`}</td>
                       <td>{`${(pool.borrowApr * 100).toFixed(2)}%`}</td>
                       <td className="clickable-icon cell-border-right">
                         <RadarIcon width="18px" onClick={() => setRadarOpen(true)} />
                       </td>
-                      <td>
+                      <td data-testid={`${pool.name}-balance`}>
                         {pool && walletBalance ? (
                           <p
                             className={walletBalance ? 'user-wallet-value text-btn semi-bold-text' : ''}
                             onClick={() => {
-                              if (walletBalance && currentPool?.tokenMint.equals(NATIVE_MINT)) {
-                                setCurrentAction('deposit');
-                                setCurrentAmount(maxSolInput);
-                              } else if (walletBalance) {
-                                setCurrentAction('deposit');
-                                setCurrentAmount(walletBalance.amount.tokens);
-                              }
+                              const position = getPoolPosition(pool);
+                              setCurrentAction('deposit');
+                              setCurrentAmount(position?.maxTradeAmounts.deposit.tokens || 0);
                             }}>
                             {walletBalance.amount.tokens > 0 && walletBalance.amount.tokens < 0.0005
                               ? '~0'
@@ -201,7 +205,7 @@ export function MarketTable(): JSX.Element {
                           '--'
                         )}
                       </td>
-                      <td>
+                      <td data-testid={`${pool.name}-deposit`}>
                         {userFetched &&
                         pool.symbol &&
                         pool.tokenPrice !== undefined &&
@@ -215,13 +219,10 @@ export function MarketTable(): JSX.Element {
                                 : ''
                             }
                             onClick={() => {
-                              if (
-                                userFetched &&
-                                pool.symbol &&
-                                marginAccount?.poolPositions?.[pool.symbol]?.depositBalance.tokens
-                              ) {
+                              if (pool.symbol && marginAccount?.poolPositions?.[pool.symbol]?.depositBalance.tokens) {
+                                const position = getPoolPosition(pool);
                                 setCurrentAction('withdraw');
-                                setCurrentAmount(marginAccount.poolPositions[pool.symbol].depositBalance.tokens);
+                                setCurrentAmount(position?.maxTradeAmounts.withdraw.tokens || 0);
                               }
                             }}>
                             {marginAccount.poolPositions[pool.symbol].depositBalance.tokens > 0 &&
@@ -238,7 +239,7 @@ export function MarketTable(): JSX.Element {
                           '--'
                         )}
                       </td>
-                      <td>
+                      <td data-testid={`${pool.name}-borrow`}>
                         {userFetched &&
                         pool.symbol &&
                         pool.tokenPrice !== undefined &&
@@ -252,13 +253,10 @@ export function MarketTable(): JSX.Element {
                                 : ''
                             }
                             onClick={() => {
-                              if (
-                                userFetched &&
-                                pool.symbol &&
-                                marginAccount?.poolPositions?.[pool.symbol]?.loanBalance.tokens
-                              ) {
+                              if (pool.symbol && marginAccount?.poolPositions?.[pool.symbol]?.loanBalance.tokens) {
+                                const position = getPoolPosition(pool);
                                 setCurrentAction('repay');
-                                setCurrentAmount(marginAccount.poolPositions[pool.symbol].loanBalance.tokens);
+                                setCurrentAmount(position?.maxTradeAmounts.repay.tokens || 0);
                               }
                             }}>
                             {marginAccount.poolPositions[pool.symbol].loanBalance.tokens > 0 &&
@@ -276,8 +274,9 @@ export function MarketTable(): JSX.Element {
                         )}
                       </td>
                       {/* Faucet for testing if in development */}
-                      {cluster === 'devnet' ? (
+                      {clusterSetting === 'devnet' ? (
                         <td
+                          data-testid={`airdrop-${pool.name}`}
                           onClick={async () => {
                             if (userFetched && publicKey) {
                               doAirdrop(pool);
@@ -304,6 +303,7 @@ export function MarketTable(): JSX.Element {
                   <td>
                     <LoadingOutlined className="green-text" style={{ fontSize: 25, marginLeft: -35 }} />
                   </td>
+                  <td></td>
                   <td></td>
                   <td></td>
                   <td></td>

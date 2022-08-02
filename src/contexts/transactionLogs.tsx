@@ -25,8 +25,8 @@ export function TransactionsProvider(props: { children: JSX.Element }): JSX.Elem
   const [loadingLogs, setLoadingLogs] = useState(false);
   const [logs, setLogs] = useState<AccountTransaction[]>([]);
 
-  const loadLogs = () => {
-    if (pools && publicKey) {
+  const loadLogs = async () => {
+    if (pools && publicKey && manager) {
       setLoadingLogs(true);
       const mints = Object.entries(pools).reduce((acc, [pool, poolInfo]) => {
         acc[pool] = {
@@ -36,10 +36,9 @@ export function TransactionsProvider(props: { children: JSX.Element }): JSX.Elem
         };
         return acc;
       }, {} as Record<string, { tokenMint: PublicKey; depositNoteMint: PublicKey; loanNoteMint: PublicKey }>);
-      MarginClient.getTransactionHistory(manager.provider, publicKey, mints, cluster).then(logs => {
-        setLoadingLogs(false);
-        setLogs(logs.filter(tx => tx.status !== 'error'));
-      });
+      const logs = await MarginClient.getTransactionHistory(manager.provider, publicKey, mints, cluster);
+      setLoadingLogs(false);
+      setLogs(logs.filter(tx => tx.status !== 'error'));
     }
   };
 

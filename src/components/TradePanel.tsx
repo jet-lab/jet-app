@@ -5,18 +5,20 @@ import { useMargin } from '../contexts/marginContext';
 import { useTradeContext } from '../contexts/tradeContext';
 import { useLanguage } from '../contexts/localization/localization';
 import { useTransactionLogs } from '../contexts/transactionLogs';
-import { TxnResponse, useMarginActions } from '../hooks/useMarginActions';
+import { TransactionResponse, TxResponseType, useMarginActions } from '../hooks/useMarginActions';
 import { currencyFormatter } from '../utils/currency';
 import { notification, Select, Slider, Tooltip } from 'antd';
 import { JetInput } from './JetInput';
 import { ConnectMessage } from './ConnectMessage';
 import { InfoCircleOutlined } from '@ant-design/icons';
+import { useBlockExplorer } from '../contexts/blockExplorer';
 
 export function TradePanel(): JSX.Element {
   const { dictionary } = useLanguage();
   const { pools, marginAccount, walletBalances, userFetched } = useMargin();
   const { refreshLogs } = useTransactionLogs();
   const { connected } = useWallet();
+  const { getExplorerUrl } = useBlockExplorer();
   const {
     currentPool,
     currentAction,
@@ -26,7 +28,8 @@ export function TradePanel(): JSX.Element {
     sendingTrade,
     setSendingTrade
   } = useTradeContext();
-  const accountPoolPosition = marginAccount && currentPool?.symbol && marginAccount.poolPositions[currentPool.symbol];
+  const accountPoolPosition =
+    marginAccount && currentPool?.symbol ? marginAccount.poolPositions[currentPool.symbol] : undefined;
   const accountSummary = marginAccount && marginAccount.summary;
   const maxInput = accountPoolPosition?.maxTradeAmounts[currentAction].tokens ?? 0;
   const [disabledInput, setDisabledInput] = useState<boolean>(false);
@@ -40,10 +43,10 @@ export function TradePanel(): JSX.Element {
 
   let poolProjection: PoolProjection | undefined;
   if (currentPool && marginAccount) {
-    const amount = TokenAmount.tokens(currentAmount ?? 0, currentPool.decimals);
-    poolProjection = currentPool.projectAfterAction(marginAccount, amount, currentAction);
+    const projectWith = Math.min(currentAmount ?? 0, maxInput);
+    poolProjection = currentPool.projectAfterAction(marginAccount, projectWith, currentAction);
   }
-  const predictedRiskIndicator = poolProjection?.riskIndicator ?? 0;
+  const predictedRiskIndicator = poolProjection?.riskIndicator ?? marginAccount?.riskIndicator.valueOf() ?? 0;
 
   // Check if user input should be disabled
   // depending on wallet balance and position
@@ -51,7 +54,7 @@ export function TradePanel(): JSX.Element {
     // Initially set to true and reset message
     setDisabledMessage('');
     setDisabledInput(true);
-    if (!currentPool || currentPool === undefined || !currentPool.symbol) {
+    if (!currentPool || currentPool === undefined || !currentPool.symbol || !walletBalances) {
       return;
     }
 
@@ -102,13 +105,13 @@ export function TradePanel(): JSX.Element {
   // Check user input and for Copilot warning
   // Then submit trade RPC call
   async function submitTrade() {
-    if (!currentPool?.symbol || !accountPoolPosition || !accountSummary || !currentAmount) {
+    if (!currentPool?.symbol || !accountPoolPosition || !accountSummary || !currentAmount || !walletBalances) {
       return;
     }
 
     const tradeAction = currentAction;
     const tradeAmount = TokenAmount.tokens(currentAmount.toString(), currentPool.decimals);
-    let res: TxnResponse = TxnResponse.Cancelled;
+    let res: TransactionResponse = { txid: '', response: TxResponseType.Cancelled };
     let tradeError = '';
     setSendingTrade(true);
 
@@ -119,7 +122,7 @@ export function TradePanel(): JSX.Element {
         tradeError = dictionary.cockpit.notEnoughAsset.replaceAll('{{ASSET}}', currentPool.symbol);
         // Otherwise, send deposit
       } else {
-        const depositAmount = PoolTokenChange.setTo(accountPoolPosition.depositBalance.add(tradeAmount));
+        const depositAmount = PoolTokenChange.shiftBy(tradeAmount);
         res = await deposit(currentPool.symbol, depositAmount);
       }
       // Withdrawing sollet ETH
@@ -132,11 +135,11 @@ export function TradePanel(): JSX.Element {
         tradeError = dictionary.cockpit.lessFunds;
         // Otherwise, send withdraw
       } else {
-        // If user is withdrawing all, set to 0
+        // If user is withdrawing all, set to 0 to withdraw dust
         const withdrawAmount =
           tradeAmount.tokens === accountPoolPosition.depositBalance.tokens
             ? PoolTokenChange.setTo(0)
-            : PoolTokenChange.setTo(accountPoolPosition.depositBalance.sub(tradeAmount));
+            : PoolTokenChange.shiftBy(tradeAmount);
         res = await withdraw(currentPool.symbol, withdrawAmount);
       }
       // Borrowing
@@ -154,7 +157,7 @@ export function TradePanel(): JSX.Element {
           .replaceAll('{{ASSET}}', currentPool.symbol);
         // Otherwise, send borrow
       } else {
-        const borrowAmount = PoolTokenChange.setTo(accountPoolPosition.loanBalance.add(tradeAmount));
+        const borrowAmount = PoolTokenChange.shiftBy(tradeAmount);
         res = await borrow(currentPool.symbol, borrowAmount);
       }
       // Repaying
@@ -167,11 +170,11 @@ export function TradePanel(): JSX.Element {
         tradeError = dictionary.cockpit.notEnoughAsset.replaceAll('{{ASSET}}', currentPool.symbol);
         // Otherwise, send repay
       } else {
-        // If user is repaying all, use loan notes
+        // If user is repaying all, set to 0 to repay dust
         const repayAmount =
           tradeAmount.tokens === accountPoolPosition.loanBalance.tokens
             ? PoolTokenChange.setTo(0)
-            : PoolTokenChange.setTo(accountPoolPosition.loanBalance.sub(tradeAmount));
+            : PoolTokenChange.shiftBy(tradeAmount);
         res = await repay(currentPool.symbol, repayAmount);
       }
     }
@@ -184,7 +187,7 @@ export function TradePanel(): JSX.Element {
     }
 
     // Notify user of successful/unsuccessful trade
-    if (res === TxnResponse.Success) {
+    if (res.response === TxResponseType.Success) {
       notification.success({
         message: dictionary.cockpit.txSuccessShort.replaceAll(
           '{{TRADE ACTION}}',
@@ -193,19 +196,23 @@ export function TradePanel(): JSX.Element {
         description: dictionary.cockpit.txSuccess
           .replaceAll('{{TRADE ACTION}}', currentAction)
           .replaceAll('{{AMOUNT AND ASSET}}', `${currentAmount} ${currentPool.symbol}`),
-        placement: 'bottomLeft'
+        placement: 'bottomLeft',
+        onClick: () => {
+          res.txid && window.open(getExplorerUrl(res.txid), '_blank');
+        }
       });
 
-      // Add Tx Log
-      refreshLogs();
       setCurrentAmount(null);
-    } else if (res === TxnResponse.Failed) {
+    } else if (res.response === TxResponseType.Failed) {
       notification.error({
         message: dictionary.cockpit.txFailedShort,
         description: dictionary.cockpit.txFailed,
-        placement: 'bottomLeft'
+        placement: 'bottomLeft',
+        onClick: () => {
+          res.txid && window.open(getExplorerUrl(res.txid), '_blank');
+        }
       });
-    } else if (res === TxnResponse.Cancelled) {
+    } else if (res.response === TxResponseType.Cancelled) {
       notification.error({
         message: dictionary.cockpit.txFailedShort,
         description: dictionary.cockpit.txCancelled,
@@ -217,6 +224,8 @@ export function TradePanel(): JSX.Element {
     checkDisabledInput();
     // End trade submit
     setSendingTrade(false);
+    // Add Tx Log
+    refreshLogs();
   }
 
   // Readjust interface onmount
@@ -235,7 +244,8 @@ export function TradePanel(): JSX.Element {
   useEffect(() => {
     setDisabledButton(false);
     setInputError('');
-    if (!currentPool || !currentAmount) {
+    setInputWarning('');
+    if (!currentPool || !currentAmount || !walletBalances) {
       return;
     }
 
@@ -253,6 +263,14 @@ export function TradePanel(): JSX.Element {
             currencyFormatter(predictedRiskIndicator, false, 2)
           )
         );
+      } else if (predictedRiskIndicator > MarginAccount.RISK_LIQUIDATION_LEVEL) {
+        setInputError(
+          dictionary.cockpit.subjectToLiquidation.replaceAll(
+            '{{NEW-RISK}}',
+            currencyFormatter(predictedRiskIndicator, false, 2)
+          )
+        );
+        setSendingTrade(false);
       }
       // Borrowing
     } else if (currentAction === 'borrow') {
@@ -264,7 +282,7 @@ export function TradePanel(): JSX.Element {
         );
       } else if (
         predictedRiskIndicator >= MarginAccount.RISK_WARNING_LEVEL &&
-        predictedRiskIndicator <= MarginAccount.RISK_LIQUIDATION_LEVEL
+        predictedRiskIndicator < MarginAccount.RISK_LIQUIDATION_LEVEL
       ) {
         setInputWarning(
           dictionary.cockpit.subjectToLiquidation.replaceAll(
@@ -286,7 +304,7 @@ export function TradePanel(): JSX.Element {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentAmount, currentAction]);
+  }, [currentAmount, predictedRiskIndicator, currentAction]);
 
   const availBalance = () => {
     if (currentAction === 'deposit') {
@@ -371,7 +389,7 @@ export function TradePanel(): JSX.Element {
             <div className="flex-centered">
               <span className="center-text bold-text">{dictionary.cockpit.predictedRiskLevel.toUpperCase()}</span>
             </div>
-            <p>{userFetched && currentAmount ? currencyFormatter(predictedRiskIndicator, false, 2) : '--'}</p>
+            <p>{userFetched && marginAccount ? currencyFormatter(predictedRiskIndicator, false, 2) : '--'}</p>
           </div>
         </>
       )}

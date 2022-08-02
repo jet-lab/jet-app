@@ -52,8 +52,7 @@ export function LocalizationProvider(props: { children: JSX.Element }): JSX.Elem
         const countryCode = locale.location.country.code;
         geoBannedCountries.forEach(c => {
           if (c.code === countryCode) {
-            // If country is Ukraine, checks if first two digits
-            // of the postal code further match Crimean postal codes.
+            // If country is Ukraine, checks if in Crimea.
             if (countryCode !== 'UA' || isCrimea(locale)) {
               setIsGeobanned(true);
             }
@@ -65,14 +64,10 @@ export function LocalizationProvider(props: { children: JSX.Element }): JSX.Elem
     }
 
     // Check to see if user's locale is special case of Crimea
-    function isCrimea(locale: any) {
-      const postalCode: string = locale?.postal.toString().substring(0, 2);
-      if (postalCode === '95' || postalCode === '96' || postalCode === '97' || postalCode === '98') {
-        return true;
-      } else {
-        return false;
-      }
-    }
+    const isCrimea = (locale: any) => {
+      // Crimea region code for ipregistry is UA-43
+      return locale.location.region.code === 'UA-43';
+    };
 
     getIP();
   }, [setPreferredLanguage]);

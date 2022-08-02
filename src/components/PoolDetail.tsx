@@ -3,7 +3,7 @@ import { Pool } from '@jet-lab/margin';
 import { useConnectWalletModal } from '../contexts/connectWalletModal';
 import { useLanguage } from '../contexts/localization/localization';
 import { useNativeValues } from '../contexts/nativeValues';
-import { currencyFormatter } from '../utils/currency';
+import { currencyFormatter, totalAbbrev } from '../utils/currency';
 import { Modal, Button, Divider } from 'antd';
 import { NativeToggle } from './NativeToggle';
 import { PercentageChart } from './PercentageChart';
@@ -78,11 +78,7 @@ export function PoolDetail({ pool, close }: { pool: Pool | undefined; close: () 
                     {dictionary.reserveDetail.availableLiquidity.toUpperCase()}
                     <br></br>
                     <p>
-                      {currencyFormatter(
-                        nativeValues ? pool.vault.tokens : pool.vault.muln(price).tokens,
-                        !nativeValues,
-                        2
-                      )}
+                      {totalAbbrev(pool.vault.tokens, pool.tokenPrice, nativeValues, 2)}
                       {nativeValues && ' ' + pool.tokenConfig?.symbol}
                     </p>
                   </span>

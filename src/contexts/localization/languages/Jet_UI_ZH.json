@@ -51,7 +51,7 @@
     "noLiquidity": "流动性不足",
     "minCRatio": "这将使您的头寸处于我们的最低抵押率，从而使您的账户处于清算区域。 你确定吗？",
     "belowMinRatio": "您已低于最小质押率。请多存一些抵押物或偿还一些债务",
-    "subjectToLiquidation": "This trade increases your Risk Level to {{NEW-RISK}}, which puts you in range of liquidation.",
+    "subjectToLiquidation": "This trade increases your Risk Level to {{NEW-RISK}}, which puts you dangerously close to liquidation.",
     "confirm": "确认",
     "repay": "偿还",
     "amountOwed": "以借贷金额",
@@ -99,7 +99,10 @@
     "disconnect": "Disconnect Wallet",
     "connected": "Connected",
     "explorer": "",
-    "degradedNetworkPerformance": "NOTICE: The Solana blockchain is currently experiencing difficulties due to network congestion:"
+    "degradedNetworkPerformance": "NOTICE: The Solana blockchain is currently experiencing difficulties due to network congestion:",
+    "network": "Network",
+    "mainnet": "Mainnet-Beta",
+    "devnet": "Devnet"
   },
   "reserveDetail": {
     "reserveSize": "储备规模",

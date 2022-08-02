@@ -99,7 +99,10 @@
     "disconnect": "Wallet trennen",
     "connected": "verbunden",
     "explorer": "",
-    "degradedNetworkPerformance": "NOTICE: The Solana blockchain is currently experiencing difficulties due to network congestion:"
+    "degradedNetworkPerformance": "NOTICE: The Solana blockchain is currently experiencing difficulties due to network congestion:",
+    "network": "Network",
+    "mainnet": "Mainnet-Beta",
+    "devnet": "Devnet"
   },
   "reserveDetail": {
     "reserveSize": "Grösse der Reserve",

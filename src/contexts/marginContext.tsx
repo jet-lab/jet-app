@@ -5,33 +5,25 @@ import {
   Pool,
   PoolManager,
   AssociatedToken,
-  MarginClient,
-  MarginPools
+  MarginClient
 } from '@jet-lab/margin';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { createContext, useContext, useMemo } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 import { AnchorProvider } from '@project-serum/anchor';
 import { ConfirmOptions, Connection, PublicKey } from '@solana/web3.js';
 import { useRpcNode } from './rpcNode';
-import { timeout } from '../utils/utils';
-
-export const cluster = (process.env.REACT_APP_CLUSTER ?? 'devnet') as MarginCluster;
-const config: MarginConfig = MarginClient.getConfig(cluster);
-
-const DEFAULT_WALLET_BALANCES = Object.fromEntries(
-  Object.values(config.tokens).map(token => [token.symbol, AssociatedToken.zeroAux(PublicKey.default, token.decimals)])
-) as Record<MarginPools, AssociatedToken>;
+import { Cluster, useClusterSetting } from './clusterSetting';
 
 interface MarginContextState {
-  connection: Connection;
-  manager: PoolManager;
-  config: MarginConfig;
+  connection?: Connection;
+  manager?: PoolManager;
+  config?: MarginConfig;
   poolsFetched: boolean;
-  pools: Record<MarginPools, Pool> | undefined;
+  pools?: Record<string, Pool>;
   userFetched: boolean;
-  marginAccount: MarginAccount | undefined;
-  walletBalances: Record<MarginPools, AssociatedToken>;
+  marginAccount?: MarginAccount;
+  walletBalances?: Record<string, AssociatedToken>;
   cluster: MarginCluster;
   refresh: () => Promise<void>;
 }
@@ -47,44 +39,63 @@ const confirmOptions = {
   preflightCommitment: 'recent'
 } as ConfirmOptions;
 
-function useProvider() {
+const endpoints: Record<Cluster, string> = {
+  'mainnet-beta': `https://jetprot-main-0d7b.mainnet.rpcpool.com/${process.env.REACT_APP_RPC_TOKEN ?? ''}`,
+  devnet: `https://jetprot-develope-26c4.devnet.rpcpool.com/${process.env.REACT_APP_RPC_DEV_TOKEN ?? ''}`
+};
+
+function useProvider(): { manager?: PoolManager } {
+  const config = useConfig();
+  const { clusterSetting } = useClusterSetting();
   const { preferredNode } = useRpcNode();
-  const connection = useMemo(() => new Connection(preferredNode ?? config.url, 'recent'), [preferredNode]);
   const wallet = useWallet();
-
-  const provider = useMemo(
-    () => new AnchorProvider(connection, wallet as any, confirmOptions),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [connection, confirmOptions]
-  );
-  (provider as any).wallet = wallet;
-
-  const programs = useMemo(() => MarginClient.getPrograms(provider, config), [provider]);
-  const manager = useMemo(() => new PoolManager(programs, provider), [programs, provider]);
+  const manager = useMemo(() => {
+    if (!config) {
+      return;
+    }
+    const connection = new Connection(preferredNode ?? endpoints[clusterSetting], 'recent');
+    const provider = new AnchorProvider(connection, wallet as any, confirmOptions);
+    const programs = MarginClient.getPrograms(provider, config);
+    return new PoolManager(programs, provider);
+  }, [config, clusterSetting, preferredNode, wallet]);
   return { manager };
+}
+
+function useConfig() {
+  const { clusterSetting } = useClusterSetting();
+  const [config, setConfig] = useState<MarginConfig | undefined>(undefined);
+  useEffect(() => {
+    MarginClient.getConfig(clusterSetting).then(config => setConfig(config));
+  }, [clusterSetting]);
+
+  return config;
 }
 
 // Trade info context provider
 export function MarginContextProvider(props: { children: JSX.Element }): JSX.Element {
+  const config = useConfig();
+  const { clusterSetting } = useClusterSetting();
   const queryClient = useQueryClient();
   const { publicKey } = useWallet();
 
   const { manager } = useProvider();
-  const { connection } = manager.provider;
-  const endpoint = connection.rpcEndpoint;
+  const { connection } = manager ? manager.provider : { connection: undefined };
+  const endpoint = connection?.rpcEndpoint;
 
   const { data: pools, isFetched: poolsFetched } = useQuery(
     ['pools', endpoint],
     async () => {
-      return await manager.loadAll();
+      if (manager) {
+        return await manager.loadAll();
+      }
     },
-    { enabled: !!manager.programs }
+    { enabled: manager && !!manager.programs }
   );
 
   const { data: user, isFetched: userFetched } = useQuery(
     ['user', endpoint, publicKey?.toBase58()],
     async () => {
-      if (!publicKey) {
+      if (!publicKey || !manager) {
         return;
       }
       const walletTokens = await MarginAccount.loadTokens(manager.programs, publicKey);
@@ -104,7 +115,7 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
       }
       return { marginAccount, walletBalances };
     },
-    { enabled: !!manager.programs && !!pools && !!publicKey }
+    { enabled: manager && !!manager.programs && !!pools && !!publicKey }
   );
 
   async function refresh() {
@@ -113,6 +124,15 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
       queryClient.invalidateQueries('pools');
     }, 2000);
   }
+
+  const DEFAULT_WALLET_BALANCES = config
+    ? (Object.fromEntries(
+        Object.values(config.tokens).map(token => [
+          token.symbol,
+          AssociatedToken.zeroAux(PublicKey.default, token.decimals)
+        ])
+      ) as Record<string, AssociatedToken>)
+    : undefined;
 
   return (
     <MarginContext.Provider
@@ -125,7 +145,7 @@ export function MarginContextProvider(props: { children: JSX.Element }): JSX.Ele
         userFetched,
         marginAccount: user?.marginAccount,
         walletBalances: user?.walletBalances ?? DEFAULT_WALLET_BALANCES,
-        cluster,
+        cluster: clusterSetting,
         refresh
       }}>
       {props.children}

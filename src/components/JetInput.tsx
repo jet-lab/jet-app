@@ -26,13 +26,21 @@ export function JetInput(props: {
     <div className={`jet-input flex-centered ${props.disabled ? 'disabled' : ''}`}>
       <div className={`flex-centered ${props.currency ? 'currency-input' : ''}`}>
         <Input
+          data-testid="jet-trade-input"
           type={props.type}
           disabled={props.disabled}
           value={props.value || ''}
           placeholder={props.placeholder}
           className={props.error ? 'error' : props.warning ? 'warning' : ''}
           onClick={() => (props.onClick ? props.onClick() : null)}
-          onChange={e => props.onChange(e.target.value)}
+          onChange={e => {
+            if (currentPool && props.maxInput && props.maxInput < e.target.valueAsNumber) {
+              e.target.value = props.maxInput.toString();
+              props.onChange(props.maxInput);
+            } else {
+              props.onChange(e.target.value);
+            }
+          }}
           onPressEnter={() => (props.disabled || props.error ? null : props.submit())}
         />
         {props.currency && currentPool && (
@@ -53,11 +61,14 @@ export function JetInput(props: {
         )}
       </div>
       <div
+        data-testid="jet-trade-button"
         className={`input-btn flex-centered ${props.loading ? 'loading' : ''} ${
           props.disabledButton ? 'disabled' : ''
         }`}
         onClick={() => {
-          if (!props.disabled && !props.disabledButton && !props.error && props.value) {
+          if (props.loading) {
+            return;
+          } else if (!props.disabled && !props.disabledButton && !props.error && props.value) {
             props.submit();
           }
         }}>

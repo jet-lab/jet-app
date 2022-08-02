@@ -11,8 +11,10 @@ import {
   SolflareWalletAdapter,
   SolongWalletAdapter,
   SolletWalletAdapter,
-  SlopeWalletAdapter
+  SlopeWalletAdapter,
+  BraveWalletAdapter
 } from '@solana/wallet-adapter-wallets';
+import { E2EWalletAdapter } from '@jet-lab/e2e-react-adapter';
 import { MarginContextProvider } from './contexts/marginContext';
 import { RpcNodeContextProvider } from './contexts/rpcNode';
 import { BlockExplorerProvider } from './contexts/blockExplorer';
@@ -34,31 +36,59 @@ import { Cockpit } from './views/Cockpit';
 import { TransactionLogs } from './views/TransactionLogs';
 import { DialectProviders } from './contexts/dialectContext';
 import { LiquidationModal } from './components/LiquidationModal';
+import { Keypair } from '@solana/web3.js';
+import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
+import { ClusterSettingProvider } from './contexts/clusterSetting';
 
 const queryClient = new QueryClient();
 export function App(): JSX.Element {
-  const wallets = useMemo(
-    () => [
+  const urlParams = new URLSearchParams(window.location.search);
+  const debugWallet: string = urlParams.get('debug-wallet-secret-key') as string;
+  const isDevnet = window.location.href.includes('devnet') || window.location.href.includes('localhost');
+  const wallets = useMemo(() => {
+    const walletArray: (
+      | PhantomWalletAdapter
+      | BraveWalletAdapter
+      | MathWalletAdapter
+      | SolflareWalletAdapter
+      | SolongWalletAdapter
+      | SolletWalletAdapter
+      | SlopeWalletAdapter
+      | E2EWalletAdapter
+    )[] = [
       new PhantomWalletAdapter(),
+      new BraveWalletAdapter(),
       new MathWalletAdapter(),
       new SolflareWalletAdapter(),
       new SolongWalletAdapter(),
       new SolletWalletAdapter(),
       new SlopeWalletAdapter()
-    ],
-    []
-  );
+    ];
+    if (isDevnet) {
+      walletArray.push(
+        new E2EWalletAdapter(
+          debugWallet && debugWallet.length > 0
+            ? {
+                keypair: Keypair.fromSecretKey(bs58.decode(debugWallet))
+              }
+            : undefined
+        )
+      );
+    }
+    return walletArray;
+  }, [debugWallet, isDevnet]);
 
   return (
     <HashRouter basename={'/'}>
       <QueryClientProvider client={queryClient}>
         <LocalizationProvider>
-          <WalletProvider wallets={wallets} autoConnect>
-            <MarginContextProvider>
-              <SettingsModalProvider>
-                <RpcNodeContextProvider>
-                  <ConnectWalletModalProvider>
-                    <DialectProviders>
+          <ClusterSettingProvider>
+            <WalletProvider wallets={wallets} autoConnect>
+              <MarginContextProvider>
+                <SettingsModalProvider>
+                  <RpcNodeContextProvider>
+                    <ConnectWalletModalProvider>
+                        <DialectProviders>
                       <LiquidationModalProvider>
                         <BlockExplorerProvider>
                           <TransactionsProvider>
@@ -83,12 +113,13 @@ export function App(): JSX.Element {
                           </TransactionsProvider>
                         </BlockExplorerProvider>
                       </LiquidationModalProvider>
-                    </DialectProviders>
-                  </ConnectWalletModalProvider>
-                </RpcNodeContextProvider>
-              </SettingsModalProvider>
-            </MarginContextProvider>
-          </WalletProvider>
+                        </DialectProviders>
+                    </ConnectWalletModalProvider>
+                  </RpcNodeContextProvider>
+                </SettingsModalProvider>
+              </MarginContextProvider>
+            </WalletProvider>
+          </ClusterSettingProvider>
         </LocalizationProvider>
       </QueryClientProvider>
     </HashRouter>
