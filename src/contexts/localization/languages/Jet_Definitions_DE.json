@@ -45,6 +45,6 @@
   },
   "riskLevel": {
     "term": "Risk Level",
-    "definition": "The ratio of the collateral required to support your debt, to the weight-adjusted value of your deposits."
+    "definition": "The ratio of liabilities and required collateral to the (weight-adjusted) collateral in your account."
   }
 }
