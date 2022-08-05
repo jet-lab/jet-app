@@ -17,6 +17,9 @@ export function TermsPrivacy(): JSX.Element {
         rel="noopener noreferrer">
         <span className="text-btn">{dictionary.termsPrivacy.glossary}</span>
       </a>
+      <a href="https://v1.jetprotocol.io/" target="_blank" rel="noopener noreferrer">
+        <span className="text-btn">Jet V1</span>
+      </a>
     </div>
   );
 }
