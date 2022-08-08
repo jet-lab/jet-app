@@ -1,88 +1,112 @@
 import { useEffect, useState } from 'react';
+import { NATIVE_MINT } from '@solana/spl-token-latest';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { Pool, TokenAmount, TokenFaucet } from '@jet-lab/margin';
+import { CloudFilled, FilterFilled } from '@ant-design/icons';
 import { currencyFormatter, totalAbbrev } from '../utils/currency';
 import { useLanguage } from '../contexts/localization/localization';
 import { useConnectWalletModal } from '../contexts/connectWalletModal';
 import { useTradeContext } from '../contexts/tradeContext';
 import { useNativeValues } from '../contexts/nativeValues';
 import { useRadarModal } from '../contexts/radarModal';
-import { cluster } from '../hooks/jet-client/useClient';
+import { useMargin } from '../contexts/marginContext';
 import { Input, notification } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 import { NativeToggle } from './NativeToggle';
 import { Info } from './Info';
-import { ReserveDetail } from './ReserveDetail';
+import { PoolDetail } from './PoolDetail';
+import { AssetLogo } from './AssetLogo';
 import { ReactComponent as ArrowIcon } from '../styles/icons/arrow_icon.svg';
 import { ReactComponent as RadarIcon } from '../styles/icons/radar_icon.svg';
-
-// Jet V1
-import { NATIVE_MINT } from '@solana/spl-token';
-import { useUser } from '../v1/contexts/user';
-import { useMarket } from '../v1/contexts/market';
-import { Reserve, TxnResponse } from '../v1/models/JetTypes';
-import { useJetV1 } from '../v1/hooks/useJetV1';
-import { TokenAmount } from '../v1/util/tokens';
+import { useClusterSetting } from '../contexts/clusterSetting';
+import { useBlockExplorer } from '../contexts/blockExplorer';
 
 export function MarketTable(): JSX.Element {
+  const { clusterSetting } = useClusterSetting();
   const { dictionary } = useLanguage();
+  const { config, manager, pools, marginAccount, walletBalances, userFetched, refresh } = useMargin();
   const { publicKey } = useWallet();
   const { setConnecting } = useConnectWalletModal();
-  const { currentReserve, setCurrentReserve, setCurrentAction, setCurrentAmount } = useTradeContext();
+  const { currentPool, setCurrentPool, setCurrentAction, setCurrentAmount } = useTradeContext();
+  const getPoolPosition = (pool?: Pool) =>
+    marginAccount && pool?.symbol ? marginAccount.poolPositions[pool.symbol] : undefined;
+  const poolPosition = getPoolPosition(currentPool);
+
   const { setRadarOpen } = useRadarModal();
   const { nativeValues } = useNativeValues();
-  const [reservesArray, setReservesArray] = useState<Reserve[]>([]);
-  const [filteredMarketTable, setFilteredMarketTable] = useState<Reserve[]>([]);
-  const [reserveDetail, setReserveDetail] = useState<any | null>(null);
-  const [hasSolletEth, setHasSolletEth] = useState(false);
-  // Jet V1
-  const user = useUser();
-  const market = useMarket();
-  const { airdrop } = useJetV1();
+  const { getExplorerUrl } = useBlockExplorer();
+  const [poolsArray, setPoolsArray] = useState<Pool[]>([]);
+  const [filteredMarketTable, setFilteredMarketTable] = useState<Pool[]>([]);
+  const [poolDetail, setPoolDetail] = useState<Pool | undefined>();
+  const [filter, setFilter] = useState('');
 
   // If in development, can request airdrop for testing
-  const doAirdrop = async (reserve: Reserve): Promise<void> => {
-    let amount = TokenAmount.tokens('100', reserve.decimals);
-    if (reserve.tokenMintPubkey.equals(NATIVE_MINT)) {
-      amount = TokenAmount.tokens('1', reserve.decimals);
+  const doAirdrop = async (pool: Pool): Promise<void> => {
+    let amount = TokenAmount.tokens('100', pool.decimals);
+    if (pool.addresses.tokenMint.equals(NATIVE_MINT)) {
+      amount = TokenAmount.tokens('1', pool.decimals);
     }
 
-    const [res] = await airdrop(reserve.abbrev, amount.amount);
-    if (res === TxnResponse.Success) {
+    if (!config || !manager) {
+      return;
+    }
+
+    const token = config.tokens[pool.symbol as string];
+
+    try {
+      if (!publicKey) {
+        throw new Error('Wallet not connected');
+      }
+      const transaction = await TokenFaucet.airdrop(
+        manager.programs,
+        manager.provider,
+        amount.lamports,
+        token.mint,
+        publicKey,
+        token.faucet
+      );
       notification.success({
         message: dictionary.copilot.alert.success,
         description: dictionary.copilot.alert.airdropSuccess
-          .replaceAll('{{UI AMOUNT}}', amount.uiAmount)
-          .replaceAll('{{RESERVE ABBREV}}', reserve.abbrev),
-        placement: 'bottomLeft'
+          .replaceAll('{{UI AMOUNT}}', amount.uiTokens)
+          .replaceAll('{{RESERVE ABBREV}}', pool.symbol),
+        placement: 'bottomLeft',
+        onClick: () => {
+          window.open(getExplorerUrl(transaction), '_blank');
+        }
       });
-    } else if (res === TxnResponse.Failed) {
+    } catch (err: any) {
+      console.log(err);
       notification.error({
         message: dictionary.copilot.alert.failed,
         description: dictionary.cockpit.txFailed,
         placement: 'bottomLeft'
       });
+    } finally {
+      refresh();
     }
   };
 
-  // Update reserves array on market changes
+  // Update pools array on market changes
   useEffect(() => {
-    const reserves = [];
-    for (const reserve of Object.values(market.reserves)) {
-      reserves.push(reserve);
-    }
-    setReservesArray(reserves);
+    if (pools) {
+      const poolsArray = [];
+      for (const pool of Object.values(pools)) {
+        poolsArray.push(pool);
+      }
+      setPoolsArray(poolsArray);
 
-    if (!filteredMarketTable.length) {
-      setFilteredMarketTable(reserves);
-    }
+      if (!filteredMarketTable.length) {
+        setFilteredMarketTable(poolsArray);
+      }
 
-    if (user.collateralBalances['ETH'] > 0 || user.loanBalances['ETH'] > 0) {
-      setHasSolletEth(true);
+      // Initialize current pool on first load
+      if (!currentPool) {
+        setCurrentPool(pools.SOL);
+      }
     }
-    // Initialize current reserve on first load
-    if (!currentReserve) {
-      setCurrentReserve(market.reserves['SOL']);
-    }
-  }, [market.reserves]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPool, pools]);
 
   return (
     <>
@@ -92,22 +116,11 @@ export function MarketTable(): JSX.Element {
             type="text"
             placeholder={dictionary.cockpit.search + '...'}
             onChange={e => {
-              const i = e.target.value.toLowerCase();
-              let filteredMarket = [];
-              if (i.length) {
-                for (const reserve of reservesArray) {
-                  if (reserve.name.toLowerCase().includes(i) || reserve.abbrev.toLowerCase().includes(i)) {
-                    filteredMarket.push(reserve);
-                  }
-                }
-              } else {
-                filteredMarket = reservesArray;
-              }
-
-              setFilteredMarketTable(filteredMarket);
+              const val = e.target.value.toLowerCase();
+              setFilter(val);
             }}
           />
-          <i className="gradient-text fas fa-search"></i>
+          <FilterFilled />
         </div>
         <div className="table-container">
           <table>
@@ -134,107 +147,144 @@ export function MarketTable(): JSX.Element {
               </tr>
             </thead>
             <tbody>
-              {filteredMarketTable.map((reserve, i) => {
-                if (!hasSolletEth && reserve.abbrev === 'ETH') {
-                  return null;
-                } else {
+              {poolsArray.length ? (
+                poolsArray.map((pool, index) => {
+                  const walletBalance =
+                    userFetched && pool.symbol !== undefined && walletBalances
+                      ? walletBalances[pool.symbol]
+                      : undefined;
+                  if (
+                    !pool.name?.toLocaleLowerCase().includes(filter) &&
+                    !pool.symbol?.toLocaleLowerCase().includes(filter)
+                  )
+                    return null;
                   return (
                     <tr
-                      key={i}
-                      className={currentReserve?.abbrev === reserve.abbrev ? 'active' : ''}
-                      onClick={() => setCurrentReserve(reserve)}>
+                      key={index}
+                      className={currentPool?.symbol === pool.symbol ? 'active' : ''}
+                      onClick={() => {
+                        setCurrentPool(pool);
+                      }}>
                       <td className="market-table-asset">
-                        <img src={`img/cryptos/${reserve.abbrev}.png`} alt={`${reserve.abbrev} Icon`} />
-                        <span className="semi-bold-text">{reserve.name}</span>
-                        <span>≈{market.marketInit ? currencyFormatter(reserve.price, true, 2) : '--'}</span>
+                        <AssetLogo symbol={String(pool.symbol)} height={25} />
+                        <span className="semi-bold-text">{pool.name}</span>
+                        <span>
+                          ≈{pool && pool.tokenPrice !== undefined ? currencyFormatter(pool.tokenPrice, true, 2) : '--'}
+                        </span>
                       </td>
-                      <td onClick={() => setReserveDetail(reserve)} className="reserve-detail text-btn bold-text">
-                        {reserve.abbrev} {dictionary.cockpit.detail}
+                      <td
+                        onClick={() => {
+                          setPoolDetail(pool);
+                          setCurrentPool(pool);
+                        }}
+                        className="reserve-detail text-btn bold-text">
+                        {pool.symbol} {dictionary.cockpit.detail}
                       </td>
                       <td className="cell-border-right">
-                        {market.marketInit
-                          ? `${totalAbbrev(reserve.availableLiquidity.tokens, reserve.price, nativeValues, 2)} ${
-                              nativeValues ? reserve.abbrev : ''
-                            }`
-                          : '--'}
+                        {totalAbbrev(pool.vault.tokens, pool.tokenPrice, nativeValues, 2)}
                       </td>
-                      <td>
-                        {market.marketInit ? (reserve.depositRate ? (reserve.depositRate * 100).toFixed(2) : 0) : '--'}%
+                      <td>{`${(pool.depositApy * 100).toFixed(2)}%`}</td>
+                      <td>{`${(pool.borrowApr * 100).toFixed(2)}%`}</td>
+                      <td className="clickable-icon cell-border-right">
+                        <RadarIcon width="18px" onClick={() => setRadarOpen(true)} />
                       </td>
-                      <td>
-                        {market.marketInit ? (reserve.borrowRate ? (reserve.borrowRate * 100).toFixed(2) : 0) : '--'}%
+                      <td data-testid={`${pool.name}-balance`}>
+                        {pool && walletBalance ? (
+                          <p
+                            className={walletBalance ? 'user-wallet-value text-btn semi-bold-text' : ''}
+                            onClick={() => {
+                              const position = getPoolPosition(pool);
+                              setCurrentAction('deposit');
+                              setCurrentAmount(position?.maxTradeAmounts.deposit.tokens || 0);
+                            }}>
+                            {walletBalance.amount.tokens > 0 && walletBalance.amount.tokens < 0.0005
+                              ? '~0'
+                              : totalAbbrev(walletBalance.amount.tokens ?? 0, pool.tokenPrice, nativeValues, 3)}
+                          </p>
+                        ) : (
+                          '--'
+                        )}
                       </td>
-                      <td className="clickable-icon cell-border-right" onClick={() => setRadarOpen(true)}>
-                        <RadarIcon width="18px" />
+                      <td data-testid={`${pool.name}-deposit`}>
+                        {userFetched &&
+                        pool.symbol &&
+                        pool.tokenPrice !== undefined &&
+                        marginAccount?.poolPositions?.[pool.symbol]?.depositBalance.tokens ? (
+                          <p
+                            className={
+                              userFetched &&
+                              pool.symbol &&
+                              marginAccount?.poolPositions?.[pool.symbol]?.depositBalance.tokens
+                                ? 'user-collateral-value text-btn semi-bold-text'
+                                : ''
+                            }
+                            onClick={() => {
+                              if (pool.symbol && marginAccount?.poolPositions?.[pool.symbol]?.depositBalance.tokens) {
+                                const position = getPoolPosition(pool);
+                                setCurrentAction('withdraw');
+                                setCurrentAmount(position?.maxTradeAmounts.withdraw.tokens || 0);
+                              }
+                            }}>
+                            {marginAccount.poolPositions[pool.symbol].depositBalance.tokens > 0 &&
+                            marginAccount.poolPositions[pool.symbol].depositBalance.tokens < 0.0005
+                              ? '~0'
+                              : totalAbbrev(
+                                  marginAccount.poolPositions[pool.symbol].depositBalance.tokens,
+                                  pool.tokenPrice,
+                                  nativeValues,
+                                  3
+                                )}
+                          </p>
+                        ) : (
+                          '--'
+                        )}
                       </td>
-                      <td
-                        className={
-                          user.walletInit && user.walletBalances[reserve.abbrev]
-                            ? 'user-wallet-value text-btn semi-bold-text'
-                            : ''
-                        }
-                        onClick={() => {
-                          if (user.walletInit && user.walletBalances[reserve.abbrev]) {
-                            setCurrentAction('deposit');
-                            setCurrentAmount(user.walletBalances[reserve.abbrev]);
-                          }
-                        }}>
-                        {user.walletInit
-                          ? user.walletBalances[reserve.abbrev] > 0 && user.walletBalances[reserve.abbrev] < 0.0005
-                            ? '~0'
-                            : totalAbbrev(user.walletBalances[reserve.abbrev] ?? 0, reserve.price, nativeValues, 3)
-                          : '--'}
-                      </td>
-                      <td
-                        className={
-                          user.walletInit && user.collateralBalances[reserve.abbrev]
-                            ? 'user-collateral-value text-btn semi-bold-text'
-                            : ''
-                        }
-                        onClick={() => {
-                          if (user.walletInit && user.collateralBalances[reserve.abbrev]) {
-                            setCurrentAction('withdraw');
-                            setCurrentAmount(user.collateralBalances[reserve.abbrev]);
-                          }
-                        }}>
-                        {user.walletInit
-                          ? user.collateralBalances[reserve.abbrev] > 0 &&
-                            user.collateralBalances[reserve.abbrev] < 0.0005
-                            ? '~0'
-                            : totalAbbrev(user.collateralBalances[reserve.abbrev] ?? 0, reserve.price, nativeValues, 3)
-                          : '--'}
-                      </td>
-                      <td
-                        className={
-                          user.walletInit && user.loanBalances[reserve.abbrev]
-                            ? 'user-loan-value text-btn semi-bold-text'
-                            : ''
-                        }
-                        onClick={() => {
-                          if (user.walletInit && user.loanBalances[reserve.abbrev]) {
-                            setCurrentAction('repay');
-                            setCurrentAmount(user.loanBalances[reserve.abbrev]);
-                          }
-                        }}>
-                        {user.walletInit
-                          ? user.loanBalances[reserve.abbrev] > 0 && user.loanBalances[reserve.abbrev] < 0.0005
-                            ? '~0'
-                            : totalAbbrev(user.loanBalances[reserve.abbrev] ?? 0, reserve.price, nativeValues, 3)
-                          : '--'}
+                      <td data-testid={`${pool.name}-borrow`}>
+                        {userFetched &&
+                        pool.symbol &&
+                        pool.tokenPrice !== undefined &&
+                        marginAccount?.poolPositions?.[pool.symbol]?.loanBalance.tokens ? (
+                          <p
+                            className={
+                              userFetched &&
+                              pool.symbol &&
+                              marginAccount?.poolPositions?.[pool.symbol]?.loanBalance.tokens
+                                ? 'user-loan-value text-btn semi-bold-text'
+                                : ''
+                            }
+                            onClick={() => {
+                              if (pool.symbol && marginAccount?.poolPositions?.[pool.symbol]?.loanBalance.tokens) {
+                                const position = getPoolPosition(pool);
+                                setCurrentAction('repay');
+                                setCurrentAmount(position?.maxTradeAmounts.repay.tokens || 0);
+                              }
+                            }}>
+                            {marginAccount.poolPositions[pool.symbol].loanBalance.tokens > 0 &&
+                            marginAccount.poolPositions[pool.symbol].loanBalance.tokens < 0.0005
+                              ? '~0'
+                              : totalAbbrev(
+                                  marginAccount.poolPositions[pool.symbol].loanBalance.tokens,
+                                  pool.tokenPrice,
+                                  nativeValues,
+                                  3
+                                )}
+                          </p>
+                        ) : (
+                          '--'
+                        )}
                       </td>
                       {/* Faucet for testing if in development */}
-                      {cluster === 'devnet' ? (
+                      {clusterSetting === 'devnet' ? (
                         <td
+                          data-testid={`airdrop-${pool.name}`}
                           onClick={async () => {
-                            if (user.walletInit && publicKey) {
-                              doAirdrop(reserve);
+                            if (userFetched && publicKey) {
+                              doAirdrop(pool);
                             } else {
                               setConnecting(true);
                             }
                           }}>
-                          <i
-                            className="clickable-icon gradient-text fas fa-parachute-box"
-                            title={`Airdrop ${reserve.abbrev}`}></i>
+                          <CloudFilled />
                         </td>
                       ) : (
                         <td>
@@ -243,13 +293,28 @@ export function MarketTable(): JSX.Element {
                       )}
                     </tr>
                   );
-                }
-              })}
+                })
+              ) : (
+                <tr className="no-interaction">
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <LoadingOutlined className="green-text" style={{ fontSize: 25, marginLeft: -35 }} />
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
       </div>
-      <ReserveDetail reserve={reserveDetail} close={() => setReserveDetail(null)} />
+      <PoolDetail pool={poolDetail} close={() => setPoolDetail(undefined)} />
     </>
   );
 }

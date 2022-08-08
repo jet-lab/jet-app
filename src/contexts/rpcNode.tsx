@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Connection } from '@solana/web3.js';
-import { cluster, useProvider, idl } from '../hooks/jet-client/useClient';
+import { useMargin } from './marginContext';
+import { useClusterSetting } from './clusterSetting';
 
 // RPC node context
 interface RpcNode {
@@ -20,14 +21,19 @@ const RpcNodeContext = createContext<RpcNode>({
 
 // RPC node context provider
 export function RpcNodeContextProvider(props: { children: JSX.Element }): JSX.Element {
+  const { clusterSetting } = useClusterSetting();
   const [preferredNode, setPreferredNode] = useState(localStorage.getItem('jetPreferredNode') ?? null);
   const [ping, setPing] = useState(0);
   const [degradedNetworkPerformance, setDegradedNetworkPerformance] = useState(false);
 
   // Update ping and check for network congestion
   // whenever user's connection changes
-  const { connection } = useProvider();
+  const { connection } = useMargin();
   useEffect(() => {
+    if (!connection) {
+      return;
+    }
+
     const getPing = async () => {
       const startTime = Date.now();
       await connection.getVersion();
@@ -36,7 +42,11 @@ export function RpcNodeContextProvider(props: { children: JSX.Element }): JSX.El
     };
 
     const checkNetworkPerformance = async () => {
-      const connection = new Connection(idl.metadata.cluster);
+      if (preferredNode === null) {
+        setDegradedNetworkPerformance(false);
+        return;
+      }
+      const connection = new Connection(preferredNode);
       const samples = await connection.getRecentPerformanceSamples(15);
       const totalTps = samples.reduce((acc, val) => {
         return acc + val.numTransactions / val.samplePeriodSecs;
@@ -46,10 +56,10 @@ export function RpcNodeContextProvider(props: { children: JSX.Element }): JSX.El
     };
 
     getPing();
-    if (cluster === 'mainnet-beta') {
+    if (clusterSetting === 'mainnet-beta') {
       checkNetworkPerformance();
     }
-  }, [connection, preferredNode]);
+  }, [clusterSetting, connection, preferredNode]);
 
   return (
     <RpcNodeContext.Provider

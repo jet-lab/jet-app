@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { useWallet } from '@solana/wallet-adapter-react';
 import LogRocket from 'logrocket';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { useConnectWalletModal } from '../contexts/connectWalletModal';
 import { useLanguage } from '../contexts/localization/localization';
 import { Modal, Divider } from 'antd';
@@ -10,12 +10,13 @@ export function ConnectWalletModal(): JSX.Element {
   const { dictionary } = useLanguage();
   const { wallets, select, connected, wallet, publicKey } = useWallet();
   const { connecting, setConnecting } = useConnectWalletModal();
+
   useEffect(() => {
     if (connected) {
       setConnecting(false);
 
       const project = process.env.REACT_APP_LOGROCKET_PROJECT;
-      if (connected && publicKey && project) {
+      if (project && publicKey) {
         LogRocket.init(project);
         LogRocket.identify(publicKey.toBase58());
       }
@@ -26,15 +27,28 @@ export function ConnectWalletModal(): JSX.Element {
     <Modal
       footer={null}
       visible={connecting && !connected}
-      className="connect-wallet-modal"
+      className="connect-modal"
       onCancel={() => setConnecting(false)}>
       <div className="flex-centered column">
-        <img src="img/jet/jet_logo_gradient.png" width="120px" height="auto" alt="Jet Protocol" />
+        <div className="flex-centered">
+          <img
+            style={{ opacity: 0.8 }}
+            className="logo"
+            src="img/jet/jet_logo_white.png"
+            width="120px"
+            height="auto"
+            alt="Jet Protocol"
+          />
+          <span className="green-text" style={{ fontWeight: 'bold', marginLeft: 4 }}>
+            V2 BETA
+          </span>
+        </div>
         <span>{dictionary.settings.worldOfDefi}</span>
         <Divider />
         <div className="wallets flex-centered column">
           {wallets.map(w => (
             <div
+              data-testid={`connect-wallet-${w.adapter.name}`}
               key={w.adapter.name}
               className={`wallet flex align-center justify-between
                 ${wallet?.adapter.name === w.adapter.name ? 'active' : ''}`}

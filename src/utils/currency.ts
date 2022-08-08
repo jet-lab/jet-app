@@ -1,5 +1,6 @@
 // Format USD or crypto with default or desired decimals
 export function currencyFormatter(value: number, usd: boolean, digits?: number): string {
+  const amount = Math.floor(value * 10 ** (digits ?? 2)) / 10 ** (digits ?? 2);
   let currencyFormat: Intl.NumberFormat;
   let uiCurrency: string;
   if (usd) {
@@ -17,7 +18,7 @@ export function currencyFormatter(value: number, usd: boolean, digits?: number):
   }
 
   // Set and strip trailing 0's / unnecessary decimal if not USD
-  uiCurrency = currencyFormat.format(value);
+  uiCurrency = currencyFormat.format(amount);
   if (!usd) {
     while (
       uiCurrency.indexOf('.') !== -1 &&

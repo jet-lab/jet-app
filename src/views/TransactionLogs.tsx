@@ -1,24 +1,33 @@
+import { useWallet } from '@solana/wallet-adapter-react';
 import { useLanguage } from '../contexts/localization/localization';
+import { useConnectWalletModal } from '../contexts/connectWalletModal';
 import { useTransactionLogs } from '../contexts/transactionLogs';
 import { useBlockExplorer } from '../contexts/blockExplorer';
-import { totalAbbrev } from '../utils/currency';
 import { shortenPubkey } from '../utils/utils';
-import { Loader } from '../components/Loader';
-
-// Jet V1
-import { useUser } from '../v1/contexts/user';
+import { ReactComponent as ArrowIcon } from '../styles/icons/arrow_icon.svg';
+import { Button, Divider } from 'antd';
+import { totalAbbrev } from '../utils/currency';
+import { useEffect } from 'react';
 
 export function TransactionLogs(): JSX.Element {
   const { dictionary } = useLanguage();
+  const { connected, publicKey } = useWallet();
+  const { setConnecting } = useConnectWalletModal();
   const { getExplorerUrl } = useBlockExplorer();
-  const { loadingLogs, logs, noMoreSignatures, searchMoreLogs } = useTransactionLogs();
+  const { logs, refreshLogs } = useTransactionLogs();
 
-  // Jet V1
-  const user = useUser();
+  useEffect(() => {
+    refreshLogs();
+  }, []);
 
   return (
     <div className="transaction-logs view">
       <div className="table-container">
+        <div className="flex align-center justify-start">
+          <h1>{dictionary.transactions.title}</h1>
+          {connected && <span>{shortenPubkey(publicKey?.toString() ?? '')}</span>}
+        </div>
+        <Divider />
         <table>
           <thead>
             <tr>
@@ -27,47 +36,45 @@ export function TransactionLogs(): JSX.Element {
               <th>{dictionary.transactions.signature}</th>
               <th>{dictionary.transactions.tradeAction}</th>
               <th>{dictionary.transactions.tradeAmount}</th>
-              <th>{/* Empty column for loader */}</th>
             </tr>
           </thead>
           <tbody>
             {logs.map((log, i) => (
               <tr key={i} onClick={() => window.open(getExplorerUrl(log.signature), '_blank')}>
                 <td>{log.blockDate}</td>
-                <td>{log.time}</td>
+                <td>{log.blockTime}</td>
                 <td style={{ color: 'var(--success)' }}>{shortenPubkey(log.signature, 4)}</td>
                 <td className="reserve-detail">{log.tradeAction}</td>
                 <td className="asset">
-                  {totalAbbrev(Math.abs(log.tradeAmount.tokens), log.tokenPrice, true, log.tokenDecimals)}
+                  {totalAbbrev(Math.abs(log.tradeAmount.tokens), undefined, true, log.tokenDecimals)}
                   &nbsp;
-                  {log.tokenAbbrev}
+                  {log.tokenSymbol}
                 </td>
-                <td style={{ paddingRight: '40px' }}>
-                  <i className="fas fa-external-link-alt"></i>
+                <td>
+                  <ArrowIcon className="jet-icon" />
                 </td>
               </tr>
             ))}
             <tr className="no-interaction">
               <td></td>
               <td></td>
-              <td style={{ padding: '10px 0 0 0' }}>
-                {loadingLogs ? (
-                  <Loader button />
-                ) : (
-                  <span
-                    className={`text-btn ${!user.walletInit || loadingLogs || noMoreSignatures ? 'disabled' : ''}`}
-                    onClick={() => {
-                      if (user.walletInit && !(loadingLogs || noMoreSignatures)) {
-                        searchMoreLogs();
-                      }
-                    }}>
-                    {dictionary.loading.loadMore.toUpperCase()}
-                  </span>
-                )}
-              </td>
+              <td></td>
               <td></td>
               <td></td>
             </tr>
+            {!connected && (
+              <tr className="no-interaction">
+                <td>
+                  <Button type="dashed" onClick={() => setConnecting(true)}>
+                    {dictionary.settings.connect + ' ' + dictionary.settings.wallet}
+                  </Button>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

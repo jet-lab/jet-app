@@ -1,22 +1,20 @@
 import { useState } from 'react';
-import { useWallet } from '@solana/wallet-adapter-react';
-import { useDarkTheme } from '../contexts/darkTheme';
 import { useLanguage, uiDictionary } from '../contexts/localization/localization';
-import { useConnectWalletModal } from '../contexts/connectWalletModal';
+import { useSettingsModal } from '../contexts/settingsModal';
 import { useRpcNode } from '../contexts/rpcNode';
 import { useBlockExplorer } from '../contexts/blockExplorer';
-import { shortenPubkey, isValidHttpUrl } from '../utils/utils';
-import { Button, Select, Switch, Divider } from 'antd';
+import { isValidHttpUrl } from '../utils/utils';
+import { Select, Divider, Modal, Radio } from 'antd';
 import { JetInput } from '../components/JetInput';
-import { ReactComponent as WalletIcon } from '../styles/icons/wallet_icon.svg';
+import { GithubFilled, TwitterCircleFilled } from '@ant-design/icons';
+import { useClusterSetting } from '../contexts/clusterSetting';
 
 export function Settings(): JSX.Element {
   const { dictionary, language, changeLanguage } = useLanguage();
-  const { darkTheme, toggleDarkTheme } = useDarkTheme();
+  const { clusterSetting, setClusterSetting } = useClusterSetting();
+  const { open, setOpen } = useSettingsModal();
   const { preferredNode, ping, updateRpcNode } = useRpcNode();
   const { blockExplorers, preferredExplorer, changePreferredExplorer } = useBlockExplorer();
-  const { connected, wallet, publicKey, disconnect } = useWallet();
-  const { setConnecting } = useConnectWalletModal();
   const { Option } = Select;
 
   // RPC node input checking
@@ -35,8 +33,9 @@ export function Settings(): JSX.Element {
   }
 
   return (
-    <div className="view flex justify-center column">
+    <Modal footer={null} visible={open} onCancel={() => setOpen(false)}>
       <div className="settings">
+        <h2>{dictionary.settings.title}</h2>
         <div className="setting flex align-start justify-center column">
           <span className="setting-title bold-text">{dictionary.settings.rpcNode.toUpperCase()}</span>
           <div className="rpc-info flex align-center justify-start" style={{ padding: 'var(--spacing-xs) 0' }}>
@@ -46,7 +45,7 @@ export function Settings(): JSX.Element {
                 <div
                   className="ping-indicator"
                   style={{
-                    background: ping < 1000 ? 'var(--success)' : 'var(--failure)'
+                    background: ping < 1000 ? 'var(--success)' : 'var(--danger)'
                   }}></div>
                 <span className={ping < 1000 ? 'success-text' : 'danger-text'}>({ping}ms)</span>
               </>
@@ -61,48 +60,24 @@ export function Settings(): JSX.Element {
             type="text"
             value={rpcNodeInput || ''}
             error={rpcInputError}
-            placeholder="ex: https://api.devnet.solana.com/"
+            placeholder="ex: api.devnet.solana.com/"
             onClick={() => setRpcInputError('')}
             onChange={(value: string) => setRpcNodeInput(value.toString())}
             submit={checkRPC}
           />
         </div>
         <Divider />
-        <div className="setting wallet flex align-start justify-center column">
-          <span className="setting-title bold-text">{dictionary.settings.wallet.toUpperCase()}</span>
-          {wallet && connected && publicKey ? (
-            <div className="flex-centered">
-              <img
-                width="20px"
-                height="auto"
-                src={`img/wallets/${wallet.adapter.name.replace(' ', '_').toLowerCase()}.png`}
-                alt={`${wallet.adapter.name} Logo`}
-              />
-              <span className="wallet-address">{shortenPubkey(publicKey.toString(), 4)}</span>
-              <Button ghost size="small" onClick={() => disconnect()}>
-                {dictionary.settings.disconnect}
-              </Button>
-            </div>
-          ) : (
-            <div>
-              <Button ghost className="flex-centered small-btn" onClick={() => setConnecting(true)}>
-                <WalletIcon width="17px" />
-                {dictionary.settings.connect}
-              </Button>
-            </div>
-          )}
-        </div>
-        <Divider />
         <div className="setting flex align-start justify-center column">
-          <span className="setting-title bold-text">{dictionary.settings.theme.toUpperCase()}</span>
-          <div className="theme-toggle-container flex align-center justify-start">
-            <Switch
-              onClick={() => toggleDarkTheme()}
-              checkedChildren="Dark"
-              unCheckedChildren="Light"
-              checked={darkTheme}
-            />
-          </div>
+          <span className="setting-title bold-text">{dictionary.settings.network.toUpperCase()}</span>
+          <Radio.Group
+            value={clusterSetting}
+            onChange={(e: any) => {
+              setClusterSetting(e.target.value);
+              localStorage.setItem('jetCluster', e.target.value);
+            }}>
+            <Radio value="mainnet-beta">{dictionary.settings.mainnet}</Radio>
+            <Radio value="devnet">{dictionary.settings.devnet}</Radio>
+          </Radio.Group>
         </div>
         <Divider />
         <div className="setting flex align-start justify-center column">
@@ -126,19 +101,11 @@ export function Settings(): JSX.Element {
             ))}
           </Select>
         </div>
-        <Divider />
         <div className="socials flex align-center justify-start">
-          <a href="https://twitter.com/jetprotocol" target="_blank" rel="noopener noreferrer">
-            <i className="gradient-text fab fa-twitter"></i>
-          </a>
-          <a href="https://discord.gg/RW2hsqwfej" target="_blank" rel="noopener noreferrer">
-            <i className="gradient-text fab fa-discord"></i>
-          </a>
-          <a href="https://github.com/jet-lab" target="_blank" rel="noopener noreferrer">
-            <i className="gradient-text fab fa-github"></i>
-          </a>
+          <TwitterCircleFilled onClick={() => window.open('https://twitter.com/jetprotocol', '_blank', 'noopener')} />
+          <GithubFilled onClick={() => window.open('https://github.com/jet-lab', '_blank', 'noopener')} />
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }

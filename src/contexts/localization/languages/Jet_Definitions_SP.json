@@ -38,5 +38,13 @@
   "liquidationPremium": {
     "term": "Liquidación Premium",
     "definition": "Se entrega colateral adicional a los liquidadores que pagan la deuda de cuentas que han caído por debajo del índice mínimo de colateralización. El valor en dólares de este colateral adicional es igual a la Liquidación Premium multiplicada por el valor en dólares de la deuda pagada. El colateral adicional es pagado por la cuenta del usuario que ha sido liquidada.\n"
+  },
+  "accountLeverage": {
+    "term": "Account Leverage",
+    "definition": "TODO: Norman definition here"
+  },
+  "riskLevel": {
+    "term": "Risk Level",
+    "definition": "The ratio of liabilities and required collateral to the (weight-adjusted) collateral in your account."
   }
 }

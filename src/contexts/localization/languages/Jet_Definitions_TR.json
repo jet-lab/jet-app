@@ -38,5 +38,13 @@
   "liquidationPremium": {
     "term": "Premium Likidasyon",
     "definition": "Kullanıcının varlıklarına likidasyon sırasında uygulanan teminat açığındaki (%) artış"
+  },
+  "accountLeverage": {
+    "term": "Account Leverage",
+    "definition": "TODO: Norman definition here"
+  },
+  "riskLevel": {
+    "term": "Risk Level",
+    "definition": "The ratio of liabilities and required collateral to the (weight-adjusted) collateral in your account."
   }
 }
