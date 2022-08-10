@@ -167,10 +167,13 @@ export function MarketTable(): JSX.Element {
                       }}>
                       <td className="market-table-asset">
                         <AssetLogo symbol={String(pool.symbol)} height={25} />
-                        <span className="semi-bold-text">{pool.name}</span>
-                        <span>
-                          ≈{pool && pool.tokenPrice !== undefined ? currencyFormatter(pool.tokenPrice, true, 2) : '--'}
-                        </span>
+                        <div>
+                          <span className="semi-bold-text">{pool.name}</span>
+                          <span>
+                            ≈
+                            {pool && pool.tokenPrice !== undefined ? currencyFormatter(pool.tokenPrice, true, 2) : '--'}
+                          </span>
+                        </div>
                       </td>
                       <td
                         onClick={() => {
