@@ -1286,6 +1286,35 @@
   }
 }
 
+// Special handling for asset name overlap
+@media screen and (max-width: 1100px) {
+  .jet-app {
+    .market-table {
+      .table-container {
+        .market-table-asset {
+          height: 25px;
+          div {
+            display: flex;
+            flex-direction: column;
+          }
+          span {
+            position: relative !important;
+            transform: unset !important;
+            top: 0 !important;
+            &:first-of-type {
+              width: calc(100% - 45px);
+            }
+            &:last-of-type {
+              opacity: @disabled-opacity;
+              font-size: @sm-font-size;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 // Mobile styling
 @media screen and (max-width: 600px) {
   .jet-app {
