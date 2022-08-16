@@ -50,7 +50,8 @@ export const RadarModal: React.FC = () => {
     const protocols: ProtocolData[] = Object.entries(data).reduce<ProtocolData[]>((acc, protocol) => {
       const [protocolName, tokenList] = protocol;
       let tokenData = tokenList[token];
-      if (protocolName == 'jet' && pools && pools[token]) {  //TODO dirty fix, long term fix https://jetprotocol.atlassian.net/browse/JV2M-656
+      if (protocolName == 'jet' && pools && pools[token]) {
+        //TODO dirty fix, long term fix https://jetprotocol.atlassian.net/browse/JV2M-656
         tokenData = {
           name: token,
           logo: '',
