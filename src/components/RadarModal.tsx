@@ -7,6 +7,7 @@ import { useTradeContext } from '../contexts/tradeContext';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { useRpcNode } from '../contexts/rpcNode';
+import { useMargin } from '../contexts/marginContext';
 interface RadarResponse {
   [protocol: string]: Record<
     string,
@@ -36,6 +37,7 @@ export const RadarModal: React.FC = () => {
   const [currentToken, setCurrentToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const { preferredNode } = useRpcNode();
+  const { pools } = useMargin();
 
   const fetchProtocols = async (token: string) => {
     setLoading(true);
@@ -54,8 +56,8 @@ export const RadarModal: React.FC = () => {
           tokenName: tokenData.name,
           tokenLogo: tokenData.logo,
           price: tokenData.price,
-          depositRate: tokenData.depositRate,
-          borrowRate: tokenData.borrowRate
+          depositRate: protocolName === 'jet' && pools ? pools[token].depositApy : tokenData.depositRate,
+          borrowRate: protocolName === 'jet' && pools ? pools[token].borrowApr : tokenData.borrowRate
         });
       return acc;
     }, []);
