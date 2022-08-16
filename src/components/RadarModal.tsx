@@ -49,15 +49,26 @@ export const RadarModal: React.FC = () => {
     const data: RadarResponse = await response.json();
     const protocols: ProtocolData[] = Object.entries(data).reduce<ProtocolData[]>((acc, protocol) => {
       const [protocolName, tokenList] = protocol;
-      const tokenData = tokenList[token];
+      let tokenData = tokenList[token];
+      if (protocolName == 'jet' && pools){
+        tokenData = {
+          name: token,
+          logo: "",
+          price: pools[token].tokenPrice,
+          depositRate: pools[token].depositApy,
+          borrowRate: pools[token].borrowApr
+        }
+      }
+
+      console.log(tokenData)
       tokenData &&
         acc.push({
           protocolName,
           tokenName: tokenData.name,
           tokenLogo: tokenData.logo,
           price: tokenData.price,
-          depositRate: protocolName === 'jet' && pools ? pools[token].depositApy : tokenData.depositRate,
-          borrowRate: protocolName === 'jet' && pools ? pools[token].borrowApr : tokenData.borrowRate
+          depositRate: tokenData.depositRate,
+          borrowRate: tokenData.borrowRate
         });
       return acc;
     }, []);
