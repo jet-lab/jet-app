@@ -3,12 +3,14 @@ import reactStringReplace from 'react-string-replace';
 import { useLanguage } from '../contexts/localization/localization';
 import { Button, Checkbox, Modal, Typography } from 'antd';
 import { useClusterSetting } from '../contexts/clusterSetting';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 export function DisclaimerModal(): JSX.Element {
   const { clusterSetting } = useClusterSetting();
   const { dictionary } = useLanguage();
-  const [disclaimerAccepted, setDisclaimerAccepted] = useState(
-    localStorage.getItem('jetV1DisclaimerAccepted') === 'true'
+  const { publicKey } = useWallet();
+  const [disclaimersAccepted, setDisclaimersAccepted] = useState(
+    JSON.parse(localStorage.getItem('jetV1DisclaimersAccepted') ?? '{}')
   );
   const [dislaimerChecked, setDisclaimerChecked] = useState(false);
   const { Text } = Typography;
@@ -40,7 +42,7 @@ export function DisclaimerModal(): JSX.Element {
       className="disclaimer-modal"
       footer={null}
       closable={false}
-      visible={clusterSetting === 'mainnet-beta' && !disclaimerAccepted}>
+      visible={publicKey !== null && clusterSetting === 'mainnet-beta' && !disclaimersAccepted[publicKey.toBase58()]}>
       <div className="modal-content flex-centered column">
         <img src="img/jet/jet_logo.png" width="100px" height="auto" alt="Jet Protocol" />
         <br></br>
@@ -55,8 +57,11 @@ export function DisclaimerModal(): JSX.Element {
           size="small"
           disabled={!dislaimerChecked}
           onClick={() => {
-            localStorage.setItem('jetV1DisclaimerAccepted', 'true');
-            setDisclaimerAccepted(true);
+            if (publicKey) {
+              disclaimersAccepted[publicKey.toBase58()] = true;
+              localStorage.setItem('jetV1DisclaimersAccepted', JSON.stringify(disclaimersAccepted));
+              setDisclaimersAccepted({ ...disclaimersAccepted });
+            }
           }}>
           {dictionary.copilot.alert.disclaimer.enterMainnet}
         </Button>
